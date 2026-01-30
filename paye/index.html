@@ -1305,6 +1305,10 @@ document.getElementById("importFile").addEventListener("change", importJSONFile)
   © Tous droits réservés – C. Anthony<br>
   Outil indicatif – ne constitue pas un bulletin de paie
 </footer>
+   <script>
+  // 🔐 Indique que l'app est vivante (anti-refresh / anti-retour menu)
+  sessionStorage.setItem("appAlive", "true");
+</script>
 
 </body>
 </html>
