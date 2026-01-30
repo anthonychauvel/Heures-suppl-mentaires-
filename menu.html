@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu</title>
+
+<style>
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #5cc6d0, #3aa6b1);
+  font-family: system-ui, -apple-system, sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 360px;
+  padding-top: 40px;
+}
+
+h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 15px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+  cursor: pointer;
+  animation: fadeUp 0.6s ease forwards;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 14px;
+}
+
+.label {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3aa6b1;
+  margin-top: 12px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.footer {
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.8rem;
+  margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Choisis ton compteur</h1>
+
+  <div class="card" onclick="openApp('heures')">
+    <img src="icons/btn-compteur.png" alt="Compteur annuel">
+    <div class="label">Compteur annuel</div>
+  </div>
+
+  <div class="card" onclick="openApp('paye')">
+    <img src="icons/btn-paye.png" alt="Paye mensuelle">
+    <div class="label">Paye mensuelle</div>
+  </div>
+
+  <div class="footer">
+    Développé par © Anthony
+  </div>
+</div>
+
+<script>
+function openApp(app) {
+  localStorage.setItem("lastApp", app);
+  sessionStorage.setItem("appAlive", "true");
+  window.location.href = app + "/index.html";
+}
+</script>
+
+</body>
+</html>
