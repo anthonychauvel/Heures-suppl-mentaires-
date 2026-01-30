@@ -1,13 +1,18 @@
 {
-  "name": "Compteur",
-  "short_name": "Compteur",
-  "start_url": "index.html",
+  "name": "Heures Sup",
+  "short_name": "Heures Sup",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#5cc6d0",
-  "theme_color": "#5cc6d0",
+  "background_color": "#4FB3C2",
+  "theme_color": "#4FB3C2",
   "icons": [
     {
-      "src": "icons/btn-compteur.png",
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
