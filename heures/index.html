@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <link rel="manifest" href="manifest.json">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta name="theme-color" content="#4FB3C2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Heures Sup">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta charset="UTF-8">
+<title>Compteur Heures Sup – AUTO (Report + détail majorations)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* 🛠️ FIX SAFARI iOS — Empêcher le rétrécissement des select */
+.month-nav {
+  display: flex; /* Utiliser flex pour plus de stabilité */
+  gap: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.month-nav select {
+  flex: 1;           /* Partage l'espace équitablement */
+  min-height: 40px;  /* Taille tactile confortable */
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fff;
+  /* Force l'apparence standard pour éviter le bug de rendu iOS */
+  -webkit-appearance: menulist; 
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+/* PARTIE 1 — configuration repliable */
+.section summary{
+  cursor:pointer;
+  font-weight:bold;
+  background:#eeeeee;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:10px;
+}
+
+.section[open] summary{
+  background:#e0e0e0;
+}
+
+/* PARTIE 3 — détails repliables */
+.calc-details summary{
+  cursor:pointer;
+  font-weight:bold;
+  background:#e3f2fd;
+  padding:8px;
+  border-radius:6px;
+  margin-bottom:8px;
+}
+
+.calc-details[open] summary{
+  background:#bbdefb;
+}
+body{font-family:Arial,sans-serif;background:#f2f2f2;padding:15px}
+h1,h2{text-align:center}
+.config,.totaux{background:#fff;padding:15px;border-radius:8px;max-width:900px;margin:15px auto}
+.calendar-wrapper{max-width:900px;margin:20px auto}
+.weekdays,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.weekday{text-align:center;font-weight:bold;background:#ddd;padding:8px 0;border-radius:6px}
+.day{
+  background:#fff;
+  padding:6px;
+  border-radius:6px;
+  cursor:pointer;
+  text-align:center;
+  height:80px;              /* 🔒 taille fixe */
+  box-sizing:border-box;
+  overflow:hidden;          /* empêche l’agrandissement */
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+  .day small{
+  font-size:11px;
+  line-height:1.1;
+  white-space:nowrap;
+}
+.day.in-period{border:2px solid #2e7d32;background:#e8f5e9}
+button,
+input,
+textarea{
+  width:100%;
+  padding:8px;
+  margin:5px 0;
+}
+.popup{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:10}
+.popup-content{background:#fff;padding:20px;width:380px;border-radius:10px}
+.breakdown{background:#f9f9f9;padding:10px;border-radius:6px;margin-top:10px;font-size:14px}
+.day.today{outline:3px solid #ff9800;box-shadow:0 0 6px rgba(255,152,0,.8)}
+</style>
+</head>
+
+<body>
+  <div id="exerciseAlert" style="
+  display:none;
+  max-width:900px;
+  margin:10px auto;
+  background:#fff3cd;
+  border:1px solid #ffeeba;
+  color:#856404;
+  padding:12px;
+  border-radius:8px;
+  font-weight:bold;
+  text-align:center;
+">
+  ⚠️ Action requise : Définissez votre date de début d'exercice dans la Configuration pour activer le calendrier.
+</div>
+
+
+<div class="popup" id="popupNotice">
+  <div class="popup-content" style="max-width:800px;max-height:80vh;overflow:auto;">
+    <h3>📘 Notice utilisateur – Compteur annuel d’heures</h3>
+
+    <p>
+      Cet outil permet de suivre et d’estimer les heures de travail,
+      les heures supplémentaires, les récupérations et les absences
+      dans le cadre d’un <b>compteur annuel</b>.
+    </p>
+
+    <hr>
+
+    <h4>🗓️ Principe général</h4>
+    <p>
+      Le suivi est organisé par exercice annuel, découpé en périodes
+      comptables. Les calculs sont réalisés semaine par semaine,
+      puis cumulés sur l’année.
+    </p>
+
+    <h4>⏱️ Base hebdomadaire</h4>
+    <p>
+      La base hebdomadaire (ex : 35h) représente une semaine complète
+      théorique avant prise en compte des absences, récupérations
+      et jours fériés.
+    </p>
+
+    <h4>❌ Absences</h4>
+    <p>
+      Les absences correspondent à du temps non travaillé.
+      Elles réduisent le volume d’heures attendues dans la semaine
+      et ne génèrent pas d’heures supplémentaires.
+    </p>
+
+    <h4>🔁 Récupérations</h4>
+    <p>
+      Les récupérations sont des heures précédemment travaillées,
+      reprises ultérieurement sous forme de repos.
+    </p>
+
+    <p>
+      <b>Dans cet outil, les récupérations sont assimilées à du temps
+      non travaillé et réduisent le volume hebdomadaire de référence
+      dans le cadre d’un compteur annuel.</b>
+    </p>
+
+    <h4>➕ Heures supplémentaires</h4>
+    <p>
+      Les heures supplémentaires sont déclenchées uniquement
+      après dépassement de l’équivalent de 35 heures
+      réellement travaillées sur la semaine.
+    </p>
+
+    <ul>
+      <li>36ᵉ à 43ᵉ heure : majoration 25 %</li>
+      <li>Au-delà : majoration 50 %</li>
+    </ul>
+
+    <h4>📆 Périodes et clôtures</h4>
+    <p>
+      Les périodes se terminent le dimanche.
+      La période suivante débute automatiquement le lundi.
+    </p>
+
+ <h4>🔒 Verrouillage de la configuration</h4>
+<p>
+  Il est possible de verrouiller les paramètres généraux
+  (date de début, base hebdomadaire, clôture annuelle)
+  afin d’éviter toute modification involontaire.
+</p>
+    <h4>💾 Sauvegarde</h4>
+    <p>
+      Les données sont enregistrées localement sur l’appareil utilisé.
+      Il est fortement recommandé d’effectuer des exports réguliers
+      pour sécuriser le suivi annuel.
+    </p>
+
+    <hr>
+
+    <p style="font-size:12px;color:#777">
+      Cette notice est fournie à titre informatif.
+      L’outil ne constitue pas un logiciel de paie
+      et ne se substitue pas aux documents officiels de l’employeur.
+    </p>
+<hr>
+<button onclick="closeNotice()">Fermer</button>
+  </div>
+</div>
+<h1>Compteur Heures Sup</h1>
+<p style="text-align:center">
+
+</p>
+<p style="text-align:center">
+  Exercice : <b id="activeYearLabel"></b>
+  <button onclick="switchYear()">📁 Changer</button>
+</p>
+
+
+<details class="section">
+ <summary>
+  🔧 Configuration
+</summary>
+
+  <div class="config">
+
+    <label><b>Date de début d’exercice</b></label>
+    <input type="date" id="exerciseStartInput">
+<hr>
+<label><b>Base hebdomadaire (heures)</b></label>
+<input
+  type="number"
+  step="0.5"
+  id="baseHebdoInput"
+>
+  <h2>Clôtures mensuelles</h2>
+   <button onclick="openClosures()">📅 Clôtures mensuelles</button>
+    <select id="periodSelect"></select>
+    <p id="periodInfo"></p>
+
+    <div id="rateContainer"></div>
+<hr>
+<button onclick="toggleConfigLock()">🔒 / 🔓 Verrouiller la configuration</button>
+<p id="configLockInfo"></p>
+  <hr>
+<button onclick="importJSON()">⬆️ Importer (.json)</button>
+<button onclick="exportMonthlyFullPDF()">📄 PDF mensuel complet</button>
+<button onclick="exportAnnualPDF()">📕 PDF annuel complet</button>
+<button onclick="exportPeriodPDF()">📘 Export PDF de la période</button>
+    <hr>
+    <label>Date de clôture annuelle</label>
+    <input type="date" id="annualDateInput">
+
+    <hr>
+    <h2>Jours fériés</h2>
+    <button onclick="importFeries()">🇫🇷 Importer les jours fériés officiels</button>
+<hr>
+<button
+  onclick="resetCurrentExercise()"
+  style="background:#ffcdd2;color:#b71c1c;font-weight:bold"
+>
+  ♻️ Réinitialiser l’exercice en cours
+</button>
+  </div>
+</details>
+<div id="activePeriodBanner" style="
+  max-width:900px;
+  margin:10px auto;
+  background:#e3f2fd;
+  border:1px solid #90caf9;
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:bold;
+">
+</div>
+<div class="calendar-wrapper main-zone">
+<div class="month-nav">
+<select id="monthSelect"></select>
+<select id="yearSelect"></select>
+</div>
+
+<div class="weekdays">
+<div class="weekday">Lun</div><div class="weekday">Mar</div><div class="weekday">Mer</div>
+<div class="weekday">Jeu</div><div class="weekday">Ven</div><div class="weekday">Sam</div><div class="weekday">Dim</div>
+</div>
+<div class="calendar" id="calendar"></div>
+</div>
+<div style="
+  max-width:900px;
+  margin:15px auto;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:space-between;
+">
+
+ <div style="display:flex; gap:10px; flex-wrap:wrap;">
+  <button onclick="exportJSON()" style="
+    background:#e8f5e9;
+    border:1px solid #2e7d32;
+    font-weight:bold;
+  ">
+    💾 Sauvegarde dans un fichier
+  </button>
+</div>
+<div id="saveBadges" style="
+  font-size:13px;
+  color:#2e7d32;
+  margin-top:6px;
+  width:100%;
+">
+  <span id="autoSaveBadge">🟢 Dans l’application : —</span><br>
+  <span id="fileSaveBadge">💾 Sauvegarde fichier : —</span>
+</div>
+  <span style="
+    font-size:13px;
+    color:#2e7d32;
+    align-self:center;
+  ">
+    Sauvegarde automatique dans l’application · Sauvegarde fichier recommandée
+  </span>
+
+</div>
+<div class="totaux main-zone" id="totaux"></div>
+
+<div class="popup" id="popup">
+<div class="popup-content">
+<h3 id="popupDate"></h3>
+
+<fieldset>
+  <legend>➕ Heures supplémentaires</legend>
+  <button onclick="addExtra(0.25)">+15 min</button>
+  <button onclick="addExtra(0.5)">+30 min</button>
+  <button onclick="addExtra(1)">+1 h</button>
+  <button onclick="addExtra(2)">+2 h</button>
+  <input id="manualExtra" type="number" step="0.25">
+</fieldset>
+
+<fieldset>
+  <legend>➖ Récupération</legend>
+  <button onclick="addRecup(0.25)">-15 min</button>
+  <button onclick="addRecup(0.5)">-30 min</button>
+  <button onclick="addRecup(1)">-1 h</button>
+  <input id="manualRecup" type="number" step="0.25">
+</fieldset>
+
+<fieldset>
+  <legend>❌ Absence</legend>
+  <label>
+    <input type="checkbox" id="isAbsent"> Jour d'absence
+  </label>
+  <input id="absentHours" type="number" step="0.25">
+</fieldset>
+
+<button onclick="saveManual()">Enregistrer</button>
+<button onclick="closePopup()">Fermer</button>
+</div>
+</div>
+
+<div class="popup" id="popupJSON">
+<div class="popup-content">
+<h3 id="jsonTitle"></h3>
+<textarea id="jsonArea" style="width:100%;height:200px"></textarea>
+<button onclick="confirmImportJSON()">Importer</button>
+<button onclick="closeJSONPopup()">Fermer</button>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+let midnightTimer = null
+
+function autoSwitchPeriodAtMidnight(){
+  const now = new Date()
+
+  const nextMidnight = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+    0, 0, 0, 0
+  )
+
+  const delay = nextMidnight - now
+
+  // 🔒 Sécurisation : un seul timer actif
+  if(midnightTimer){
+    clearTimeout(midnightTimer)
+  }
+
+  midnightTimer = setTimeout(() => {
+    buildPeriods()
+    update()
+    showToast()
+    autoSwitchPeriodAtMidnight() // relance pour la nuit suivante
+  }, delay)
+}
+
+// ===== MULTI-ANNÉE =====
+let currentSuffix = localStorage.getItem("ACTIVE_YEAR_SUFFIX") || new Date().getFullYear();
+document.getElementById("activeYearLabel").textContent = currentSuffix;
+
+function resetCurrentExercise(){
+  if(!confirm("⚠️ Réinitialiser complètement l’exercice " + currentSuffix + " ?\n\nToutes les données seront supprimées.")) {
+    return;
+  }
+
+  const suffix = currentSuffix;
+
+  const keys = [
+    "DATA_REPORT_",
+    "CLOSURES_REPORT_",
+    "REPORTS_REPORT_",
+    "PERIOD_META_REPORT_",
+    "ANNUAL_DATE_",
+    "SPECIAL_DAYS_",
+    "EXERCISE_START_"
+  ];
+
+  keys.forEach(prefix => {
+    localStorage.removeItem(prefix + suffix);
+  });
+
+  alert("✅ Exercice " + suffix + " remis à zéro");
+  location.reload();
+}
+function checkExerciseStartAlert(){
+  const alertBox = document.getElementById("exerciseAlert")
+  if(!exerciseStart){
+    alertBox.style.display = "block"
+  } else {
+    alertBox.style.display = "none"
+  }
+}
+function switchYear(){
+  openYearsPopup()
+}
+function openYearsPopup(){
+  const box = document.getElementById("yearsList")
+  box.innerHTML = ""
+
+  const years = getExistingYears()
+
+  if(years.length === 0){
+    box.innerHTML = "<i>Aucun exercice existant</i>"
+  } else {
+    years.forEach(y=>{
+      const btn = document.createElement("button")
+      btn.textContent = y + (String(y) === String(currentSuffix) ? " (actif)" : "")
+      btn.onclick = () => {
+        localStorage.setItem("ACTIVE_YEAR_SUFFIX", y)
+        location.reload()
+      }
+      box.appendChild(btn)
+    })
+  }
+
+  document.getElementById("popupYears").style.display = "flex"
+}
+function saveManual(){
+  if(!selectedDate) return
+
+  if(!data[selectedDate]){
+    data[selectedDate] = { extra:0, recup:0, absent:0 }
+  }
+
+  data[selectedDate].extra = Number(manualExtra.value) || 0
+  data[selectedDate].recup = Number(manualRecup.value) || 0
+
+  if(isAbsent.checked){
+    data[selectedDate].absent =
+      Number(absentHours.value) || DAILY_WORK_HOURS
+  } else {
+    data[selectedDate].absent = 0
+  }
+
+  save()
+  closePopup()
+}
+function closeYearsPopup(){
+  document.getElementById("popupYears").style.display = "none"
+}
+
+function confirmSwitchYear(){
+  const val = document.getElementById("newYearInput").value
+  if(!val) return
+
+  // 🔹 Initialisation minimale si l'exercice n'existe pas
+  const baseKey = "DATA_REPORT_" + val
+  if(!localStorage.getItem(baseKey)){
+    localStorage.setItem(baseKey, JSON.stringify({}))
+    localStorage.setItem("CLOSURES_REPORT_" + val, JSON.stringify([]))
+    localStorage.setItem("REPORTS_REPORT_" + val, JSON.stringify({}))
+    localStorage.setItem("PERIOD_META_REPORT_" + val, JSON.stringify({}))
+  }
+
+  localStorage.setItem("ACTIVE_YEAR_SUFFIX", val)
+  location.reload()
+}
+function addRecup(h){
+  if(!data[selectedDate]) data[selectedDate]={extra:0,recup:0}
+
+  const newVal =
+    Math.round((data[selectedDate].recup + h) * 4) / 4
+
+  data[selectedDate].recup = ALLOW_RECUP_FREE
+    ? newVal
+    : Math.min(newVal, data[selectedDate].extra)
+
+  save()
+  closePopup()
+}
+function addExtra(h){
+  if(!data[selectedDate]) data[selectedDate]={extra:0,recup:0}
+  data[selectedDate].extra =
+    Math.round((data[selectedDate].extra + h) * 4) / 4
+  save()
+  closePopup()
+}
+function getExistingYears(){
+  const years = new Set()
+
+  for(let i=0; i<localStorage.length; i++){
+    const key = localStorage.key(i)
+    if(key.startsWith("DATA_REPORT_")){
+      years.add(key.replace("DATA_REPORT_", ""))
+    }
+  }
+
+  return Array.from(years).sort()
+}
+// ===== STOCKAGE DYNAMIQUE =====
+const STORAGE = {
+  data: "DATA_REPORT_" + currentSuffix,
+  closures: "CLOSURES_REPORT_" + currentSuffix,
+  reports: "REPORTS_REPORT_" + currentSuffix,
+  annualDate: "ANNUAL_DATE_" + currentSuffix,
+  specialDays: "SPECIAL_DAYS_" + currentSuffix,
+  exerciseStart: "EXERCISE_START_" + currentSuffix
+};
+
+STORAGE.periodMeta = "PERIOD_META_REPORT_" + currentSuffix;
+
+// ===== DONNÉES =====
+let data = JSON.parse(localStorage.getItem(STORAGE.data)) || {};
+let closures = JSON.parse(localStorage.getItem(STORAGE.closures)) || [];
+let reports = JSON.parse(localStorage.getItem(STORAGE.reports)) || {};
+
+let annualDate = localStorage.getItem(STORAGE.annualDate) || "";
+let annualRate =
+  Number(localStorage.getItem("ANNUAL_RATE_" + currentSuffix)) || 10;
+let specialDays = JSON.parse(localStorage.getItem(STORAGE.specialDays)) || {};
+let exerciseStart = localStorage.getItem(STORAGE.exerciseStart) || "";
+let periodMeta = JSON.parse(localStorage.getItem(STORAGE.periodMeta)) || {}
+let BASE_HEBDO =
+  Number(localStorage.getItem("BASE_HEBDO_" + currentSuffix)) || 35;
+const DAILY_WORK_HOURS = 7; // base journalière légale
+// OPTION : autoriser la récup même sans heures sup le même jour
+const ALLOW_RECUP_FREE = true;
+const months=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]
+const monthSelect=document.getElementById("monthSelect")
+const yearSelect=document.getElementById("yearSelect")
+const periodSelect=document.getElementById("periodSelect")
+const calendar=document.getElementById("calendar")
+const periodInfo=document.getElementById("periodInfo")
+const totaux=document.getElementById("totaux")
+const popup = document.getElementById("popup")
+const popupDate = document.getElementById("popupDate")
+const manualExtra = document.getElementById("manualExtra")
+const manualRecup = document.getElementById("manualRecup")
+const isAbsent = document.getElementById("isAbsent")
+const absentHours = document.getElementById("absentHours")
+
+const popupJSON = document.getElementById("popupJSON")
+const jsonTitle = document.getElementById("jsonTitle")
+const jsonArea = document.getElementById("jsonArea")
+  
+let view=new Date()
+let viewMonth=view.getMonth()
+let viewYear=view.getFullYear()
+let selectedDate=""
+let currentPeriodIndex=0
+// 🔒 Clé de date locale (évite les bugs UTC / changement d’année)
+function dateKeyLocal(d){
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}-${m}-${day}`
+}
+function getBaseStartDate(){
+  if(!exerciseStart){
+    return null;
+  }
+  return new Date(exerciseStart);
+}
+
+
+function initSelectors(){
+monthSelect.innerHTML=""
+months.forEach((m,i)=>{
+const o=document.createElement("option")
+o.value=i;o.textContent=m
+if(i===viewMonth)o.selected=true
+monthSelect.appendChild(o)
+})
+yearSelect.innerHTML=""
+for(let y=viewYear-2;y<=2050;y++){
+const o=document.createElement("option")
+o.value=y;o.textContent=y
+if(y===viewYear)o.selected=true
+yearSelect.appendChild(o)
+}
+}
+
+function openClosures(){
+const box=document.getElementById("closuresInputs")
+box.innerHTML=""
+for(let i=0;i<12;i++){
+const input=document.createElement("input")
+input.type="date"
+input.value=closures[i]||""
+box.appendChild(input)
+}
+document.getElementById("popupClosures").style.display="flex"
+}
+
+function closeClosures(){document.getElementById("popupClosures").style.display="none"}
+function forceSunday(dateStr){
+  if(!dateStr) return dateStr;
+  const d = new Date(dateStr);
+  const day = d.getDay(); // 0 = dimanche
+  if(day === 0) return dateStr;
+  d.setDate(d.getDate() - day);
+  return d.toISOString().slice(0,10);
+}
+function saveClosures(){
+  let adjusted = false
+
+  const inputs = [...document.querySelectorAll("#closuresInputs input")]
+
+  closures = inputs
+    .map(i => {
+      const original = i.value
+      const forced = forceSunday(i.value)
+      if(original && original !== forced) adjusted = true
+      return forced
+    })
+    .filter(v => v)
+    .sort()
+
+  localStorage.setItem(STORAGE.closures, JSON.stringify(closures))
+
+  if(adjusted){
+    alert("ℹ️ Toute clôture doit être un dimanche.\nLes dates saisies ont été automatiquement ajustées.")
+  }
+
+  buildPeriods()
+  closeClosures()
+}
+function deletePeriod(i){
+  if(!confirm("❌ Supprimer cette période ? Elle sera ignorée mais conservée.")) return;
+
+  periodMeta[i] = { status: "deleted" }
+  localStorage.setItem(STORAGE.periodMeta, JSON.stringify(periodMeta))
+  update()
+}
+function buildPeriods(){
+  const base = getBaseStartDate();
+  if(!base){
+    update(); // 🔥 afficher le calendrier même sans exercice
+    return;
+  }
+
+  periodSelect.innerHTML = "";
+
+  let start = new Date(base);
+  let today = new Date();
+  today.setHours(0,0,0,0);
+
+  let foundIndex = null;
+
+  closures.forEach((c, i) => {
+    const end = new Date(c);
+    end.setHours(0,0,0,0);
+
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = `${start.toLocaleDateString()} → ${end.toLocaleDateString()}`;
+    periodSelect.appendChild(opt);
+
+    if (today >= start && today <= end) {
+      foundIndex = i;
+    }
+
+    start = new Date(end);
+    start.setDate(start.getDate() + 1);
+  });
+
+  // 👉 si aujourd’hui est après la dernière clôture
+
+if (closures.length === 0) {
+  foundIndex = 0;
+} else if (foundIndex === null) {
+  foundIndex = closures.length - 1;
+}
+
+foundIndex = Math.max(0, foundIndex);
+
+currentPeriodIndex = foundIndex;
+periodSelect.selectedIndex = foundIndex;
+
+update();
+}
+
+function toggleConfigLock(){
+  const key = "CONFIG_LOCK_" + currentSuffix;
+  const locked = localStorage.getItem(key) === "true";
+  localStorage.setItem(key, !locked);
+  applyConfigLock();
+}
+
+function applyConfigLock(){
+  const locked =
+    localStorage.getItem("CONFIG_LOCK_" + currentSuffix) === "true";
+
+  document.querySelectorAll(
+    "#exerciseStartInput, #baseHebdoInput, #annualDateInput"
+  ).forEach(el => el.disabled = locked);
+
+  const info = document.getElementById("configLockInfo");
+  if(info){
+    info.textContent = locked
+      ? "🔒 Configuration verrouillée"
+      : "🔓 Configuration modifiable";
+  }
+}
+function getCurrentPeriod(){
+  let start = getBaseStartDate()
+
+  for(let i = 0; i <= closures.length; i++){
+    const end = i < closures.length ? new Date(closures[i]) : new Date(2099,11,31)
+    if(i === currentPeriodIndex){
+      return { start, end, index: i }
+    }
+    start = new Date(end)
+    start.setDate(start.getDate() + 1)
+  }
+  return null
+}
+function ensureReportsUpTo(index){
+  for(let i = 0; i < index; i++){
+    if(reports[i] === undefined){
+      // forcer calcul de la période i
+      const savedIndex = currentPeriodIndex
+      currentPeriodIndex = i
+      calculate()
+      currentPeriodIndex = savedIndex
+    }
+  }
+}
+function generateCalendar(){
+  calendar.innerHTML = ""
+
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay()
+  const offset = firstDay === 0 ? 6 : firstDay - 1
+  const days = new Date(viewYear, viewMonth + 1, 0).getDate()
+
+  for(let i = 0; i < offset; i++){
+    calendar.appendChild(document.createElement("div"))
+  }
+
+  const period = getCurrentPeriod()
+  let pStart = null, pEnd = null
+
+  if(period){
+    pStart = new Date(period.start)
+    pEnd = new Date(period.end)
+    pStart.setHours(0,0,0,0)
+    pEnd.setHours(0,0,0,0)
+  }
+
+  for(let d = 1; d <= days; d++){
+    const key = `${viewYear}-${String(viewMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`
+    const div = document.createElement("div")
+    div.className = "day"
+
+    if(period){
+      const dk = new Date(key)
+      if(pStart && dk >= pStart && dk <= pEnd){
+        div.classList.add("in-period")
+      }
+    }
+
+    const day = data[key] || { extra:0, recup:0, absent:0 }
+    let html = `<strong>${d}</strong>`
+
+    if(day.extra){
+      html += `<small style="color:#1976d2">+${day.extra}h</small>`
+    }
+
+    if(day.recup){
+      html += `<small style="color:#ef6c00">-${day.recup}h</small>`
+    }
+
+    if (specialDays[key] === "ferie") {
+      html += `<small style="color:#0d47a1;font-weight:bold">🎌 Férié</small>`
+      div.style.background = "#e3f2fd"
+      div.style.border = "2px dashed #1976d2"
+    }
+    else if (day.absent) {
+      html += `<small style="color:#c62828;font-weight:bold">ABS ${day.absent}h</small>`
+      div.style.background = "#ffebee"
+      div.style.border = "2px solid #c62828"
+    }
+
+    div.innerHTML = html
+
+    if(key === dateKeyLocal(new Date())){
+      div.classList.add("today")
+    }
+
+    div.onclick = () => openPopup(key)
+    calendar.appendChild(div)
+  }
+}
+function getLastValidReport(index) {
+  for (let i = index - 1; i >= 0; i--) {
+    if (reports[i] !== undefined && reports[i] !== null) {
+      return Number(reports[i]) || 0;
+    }
+  }
+  return 0;
+}
+function calculate(){
+
+  const period = getCurrentPeriod()
+  if(!period){
+    totaux.innerHTML = `
+      <div style="background:#fff3cd;border:1px solid #ffeeba;padding:12px;border-radius:8px;color:#856404">
+        ℹ️ Définissez une date de début d’exercice et des clôtures
+        pour activer les calculs.
+      </div>
+    `
+    return
+  }
+
+  let weeks = {}
+let absences = {}
+let totalRecup = 0
+let recups = {}
+let feries = {} // ⬅️ ICI
+let details = []
+let h25 = 0
+let h50 = 0
+
+  
+  if(periodMeta[period.index]?.status === "deleted"){
+  totaux.innerHTML = "<i>❌ Cette période est supprimée</i>"
+  return
+}
+
+  // ✅ CORRECTION IMAGE 4 : Sécurisation du reportPrev contre les valeurs NaN ou vides
+ensureReportsUpTo(period.index)
+const reportPrev = getLastValidReport(period.index)
+
+  periodInfo.innerHTML=`<b>Période :</b> ${period.start.toLocaleDateString()} → ${period.end.getFullYear()===2099?"en cours":period.end.toLocaleDateString()}<br>
+  <b>Report précédent :</b> ${reportPrev.toFixed(2)} h`
+// 🔒 Normalisation des bornes de période
+const pStart = new Date(period.start)
+const pEnd = new Date(period.end)
+pStart.setHours(0,0,0,0)
+pEnd.setHours(0,0,0,0)
+// --- 1. TRAITEMENT DES DONNÉES (HEBDOMADAIRE) ---
+Object.entries(data).forEach(([date, v]) => {
+
+  const [y, m, d] = date.split("-").map(Number)
+  const dayDate = new Date(y, m - 1, d)
+  const dayOfWeek = dayDate.getDay() // 0 = dim
+
+  if (dayDate < pStart || dayDate > pEnd) return
+
+// 📅 Lundi de la semaine
+const isoDay = dayOfWeek === 0 ? 7 : dayOfWeek
+const monday = new Date(dayDate)
+monday.setDate(monday.getDate() - (isoDay - 1))
+
+// ❌ ignorer les semaines dont le lundi est hors période
+if (monday < pStart || monday > pEnd) {
+  return
+}
+// ✅ semaine valide → on peut créer la clé
+const weekKey = dateKeyLocal(monday)
+
+  // 🎌 FÉRIÉ = absence automatique 7h (jours ouvrés)
+  let absentHours = v.absent || 0
+  if (
+    specialDays[date] === "ferie" &&
+    dayOfWeek !== 0 &&
+    dayOfWeek !== 6
+  ) {
+    absentHours = DAILY_WORK_HOURS
+    feries[weekKey] = (feries[weekKey] || 0) + DAILY_WORK_HOURS
+  }
+
+  // ➕ Heures effectuées au-delà de la base ajustée
+  weeks[weekKey] = (weeks[weekKey] || 0) + (v.extra || 0)
+
+  // ❌ Absences (inclut férié car transformé en absence)
+  if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+    absences[weekKey] = (absences[weekKey] || 0) + absentHours
+  }
+
+  // 🔁 Récupérations
+  recups[weekKey] = (recups[weekKey] || 0) + (v.recup || 0)
+  totalRecup += v.recup || 0
+})
+
+  // --- 2. CALCUL DES MAJORATIONS (RÈGLE DÉFINITIVE) ---
+Object.entries(weeks).forEach(([week, extra]) => {
+  const absent = absences[week] || 0;
+  const recup = recups[week] || 0;
+
+
+// base juridique = heures réellement travaillables
+const base = Math.max(
+  0,
+  BASE_HEBDO - absent - recup
+);
+  const total = base + extra;
+
+  let w25 = 0;
+  let w50 = 0;
+
+  // 🔹 25 % : dès qu'on dépasse 35h jusqu'à 43h inclus
+  if (total > BASE_HEBDO) {
+  w25 = Math.min(total, BASE_HEBDO + 8) - BASE_HEBDO;
+}
+
+  // 🔹 50 % : dès qu'on dépasse 43h
+  if (total > BASE_HEBDO + 8) {
+  w50 = total - (BASE_HEBDO + 8);
+}
+
+  // Sécurisation
+  w25 = Math.max(0, w25);
+  w50 = Math.max(0, w50);
+
+  h25 += w25;
+  h50 += w50;
+
+  // (optionnel) détail affichage
+  const [y, m, d] = week.split("-");
+  const weekDate = new Date(y, m - 1, d);
+  details.push(
+    `Semaine du ${weekDate.toLocaleDateString()} : ${w25.toFixed(2)}h à 25% / ${w50.toFixed(2)}h à 50%`
+  );
+});
+    
+    // ✅ CORRECTION IMAGE 3 : Affichage sans bug UTC pour la date de 
+
+  const brut25 = h25 * 1.25;
+  const brut50 = h50 * 1.5;
+  const brut = brut25 + brut50 + reportPrev;
+  const net = brut - totalRecup;
+reports[period.index] = net;
+localStorage.setItem(STORAGE.reports, JSON.stringify(reports));
+
+  // --- 3. AFFICHAGE HTML ---
+  totaux.innerHTML = `
+  <details class="calc-details">
+    <summary>📊 Détails des calculs</summary>
+    <div class="breakdown">
+      ${details.join("<br>")}
+      <hr>
+      25% : ${h25}h × 1,25 = ${brut25.toFixed(2)} h<br>
+      50% : ${h50}h × 1,50 = ${brut50.toFixed(2)} h<br>
+      Report précédent : ${reportPrev.toFixed(2)} h
+    </div>
+  </details>
+  <hr>
+  <b>Solde brut :</b> ${brut.toFixed(2)} h<br>
+  Récup : ${totalRecup.toFixed(2)} h<br>
+  <b>Solde net :</b> ${net.toFixed(2)} h
+  `;
+
+  // --- 4. TAUX ET CLÔTURE (IMAGE 5 - Toujours avec 10€ par défaut) ---
+  const rateContainer = document.getElementById("rateContainer");
+  rateContainer.innerHTML = "";
+
+  if (shouldShowAnnualClosure()) {
+    rateContainer.innerHTML = `
+      <div style="background:#fff3e0;padding:10px;border-radius:6px;border:1px solid #ff9800;margin-top:10px;">
+        <label><b>Taux horaire (€)</b></label>
+        <input type="number" id="hourlyRateInput" step="0.5"
+        value="${annualRate}"
+   oninput="annualRate = Number(this.value) || 10;
+localStorage.setItem('ANNUAL_RATE_' + currentSuffix, annualRate);
+calculate()"
+      </div>`;
+
+    const rate = annualRate || 10;
+    const paiement = net * rate;
+
+    // Récapitulatif absences/fériés annuel
+    let annAbsH = 0, annAbsD = 0, annFerH = 0, annFerD = 0;
+    const limit = annualDate ? new Date(annualDate) : null;
+    
+    Object.entries(data).forEach(([date, v]) => {
+      const parts = date.split('-');
+      const d = new Date(parts[0], parts[1]-1, parts[2]);
+      const dayOfWeek = d.getDay(); // 0 = dim, 6 = sam
+
+if (
+  limit &&
+  d <= limit &&
+  dayOfWeek !== 0 &&
+  dayOfWeek !== 6
+) {
+        const abs = v.absent || 0;
+        if(abs > 0){
+          if(specialDays[date] === "ferie"){
+            annFerD++; annFerH += abs;
+          } else {
+            annAbsH += abs;
+            if(abs >= 7) annAbsD++;
+          }
+        }
+      }
+    });
+
+    totaux.innerHTML += `
+      <hr>
+      <div style="background:#e8f5e9;padding:15px;border:2px solid #2e7d32;border-radius:8px;">
+        <h3 style="margin:0;color:#2e7d32;">🎯 Clôture Annuelle</h3>
+        <b>Paiement (${rate}€/h) :</b> ${paiement.toFixed(2)} €
+      </div>`;
+  }
+}
+function openNotice(){
+  document.getElementById("popupNotice").style.display = "flex";
+}
+
+function closeNotice(){
+  document.getElementById("popupNotice").style.display = "none";
+}
+function openPopup(date){
+  selectedDate = date
+
+  // ℹ️ Info non bloquante si exercice non défini
+  if(!exerciseStart){
+    console.warn("Date de début d’exercice non définie")
+  }
+
+  // 🎌 FÉRIÉ = absence forcée 7h
+  if (specialDays[date] === "ferie") {
+    if (!data[date]) data[date] = {extra:0, recup:0, absent:0}
+    data[date].absent = DAILY_WORK_HOURS
+  }
+
+  const d = data[date] || {extra:0, recup:0, absent:0}
+
+  popupDate.textContent = date
+  manualExtra.value = d.extra
+  manualRecup.value = d.recup
+  absentHours.value = d.absent || 0
+  isAbsent.checked = (d.absent || 0) > 0
+
+  popup.style.display = "flex"
+}
+function closePopup(){
+  document.getElementById("popup").style.display = "none";
+  selectedDate = "";   // 🔥 FIX CRITIQUE
+  update();
+}
+
+
+
+
+
+function save(){
+  localStorage.setItem(STORAGE.data, JSON.stringify(data));
+
+  const stamp = new Date().toISOString();
+  localStorage.setItem("AUTO_SAVE_DATE_" + currentSuffix, stamp);
+
+  updateSaveBadges();
+}
+
+function isIOS(){return /iPad|iPhone|iPod/.test(navigator.userAgent)}
+
+function exportJSON(){
+  const payload = {
+    version: 1,                // ✅ version
+    exercise: currentSuffix,   // ✅ année d’exercice
+    data,
+    closures,
+    reports,
+    periodMeta,
+    exerciseStart,
+    annualDate,
+    specialDays,
+    BASE_HEBDO,
+    annualRate
+  }
+  const json = JSON.stringify(payload, null, 2)
+  const blob = new Blob([json], { type: "application/json" })
+  const filename = `heures_sup_${currentSuffix}.json`
+
+  // 🌍 iOS + Android récents → feuille de partage
+  if (navigator.canShare && navigator.canShare({ files: [new File([blob], filename)] })) {
+  const stamp = new Date().toISOString()
+  localStorage.setItem("FILE_SAVE_DATE_" + currentSuffix, stamp)
+  updateSaveBadges()
+
+  const file = new File([blob], filename, { type: "application/json" })
+  navigator.share({
+    files: [file],
+    title: "Sauvegarde heures supplémentaires"
+  })
+  return
+}
+
+  // 💻 PC / Mac / anciens navigateurs → téléchargement
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+  const stamp = new Date().toISOString()
+localStorage.setItem("FILE_SAVE_DATE_" + currentSuffix, stamp)
+updateSaveBadges()
+}
+
+
+function importJSON(){
+if(isIOS()){
+jsonTitle.textContent = "Collez le texte JSON (Import)"
+jsonArea.value = ""
+popupJSON.style.display = "flex"
+}else{
+const input = document.createElement("input")
+input.type = "file"
+input.accept = ".json"
+input.onchange = e => {
+const reader = new FileReader()
+reader.onload = () => loadJSON(reader.result)
+reader.readAsText(e.target.files[0])
+}
+input.click()
+}
+}
+function updateSaveBadges(){
+  const autoEl = document.getElementById("autoSaveBadge")
+  const fileEl = document.getElementById("fileSaveBadge")
+
+  if(!autoEl || !fileEl) return
+
+  const auto = localStorage.getItem("AUTO_SAVE_DATE_" + currentSuffix)
+  const file = localStorage.getItem("FILE_SAVE_DATE_" + currentSuffix)
+
+  autoEl.textContent = auto
+  ? "🟢 Dans l’application : " + new Date(auto).toLocaleString()
+  : "🟢 Dans l’application : —"
+
+fileEl.textContent = file
+  ? "💾 Sauvegarde fichier : " + new Date(file).toLocaleString()
+  : "💾 Sauvegarde fichier : —"
+  }
+function confirmImportJSON(){loadJSON(jsonArea.value);closeJSONPopup()}
+
+function loadJSON(text){
+  let obj;
+
+  // 1️⃣ Parsing sécurisé
+  try {
+    obj = JSON.parse(text);
+  } catch(e){
+    alert("❌ JSON invalide");
+    return;
+  }
+
+  // 2️⃣ Vérification version
+  if(obj.version !== 1){
+    alert("❌ Version de sauvegarde incompatible");
+    return;
+  }
+
+  // 3️⃣ Vérification exercice (ANNÉE)
+  if(obj.exercise && String(obj.exercise) !== String(currentSuffix)){
+    const ok = confirm(
+      `⚠️ Ce fichier appartient à l’exercice ${obj.exercise}.\n\n` +
+      `Voulez-vous basculer automatiquement dessus ?`
+    );
+    if(!ok) return;
+
+    localStorage.setItem("ACTIVE_YEAR_SUFFIX", obj.exercise);
+    location.reload();
+    return;
+  }
+
+  // 4️⃣ Vérification contenu minimal
+  if(!obj.data || !obj.closures){
+    alert("❌ Sauvegarde invalide ou incomplète");
+    return;
+  }
+
+  // 5️⃣ Confirmation utilisateur
+  if(!confirm(
+    "⚠️ Cette action va remplacer les données de l’exercice en cours.\n\nContinuer ?"
+  )){
+    return;
+  }
+
+  // 6️⃣ Import réel (SANS RISQUE D’ÉCRASER UNE AUTRE ANNÉE)
+  data = obj.data;
+  closures = obj.closures;
+  reports = obj.reports || {};
+  periodMeta = obj.periodMeta || {};
+  exerciseStart = obj.exerciseStart || "";
+  annualDate = obj.annualDate || "";
+  specialDays = obj.specialDays || {};
+
+  BASE_HEBDO = Number(obj.BASE_HEBDO) || 35;
+  annualRate = Number(obj.annualRate) || 10;
+
+  // 7️⃣ Sauvegarde STRICTEMENT sur l’exercice actif
+  localStorage.setItem(STORAGE.data, JSON.stringify(data));
+  localStorage.setItem(STORAGE.closures, JSON.stringify(closures));
+  localStorage.setItem(STORAGE.reports, JSON.stringify(reports));
+  localStorage.setItem(STORAGE.periodMeta, JSON.stringify(periodMeta));
+  localStorage.setItem(STORAGE.exerciseStart, exerciseStart);
+  localStorage.setItem(STORAGE.annualDate, annualDate);
+  localStorage.setItem(STORAGE.specialDays, JSON.stringify(specialDays));
+  localStorage.setItem("BASE_HEBDO_" + currentSuffix, BASE_HEBDO);
+  localStorage.setItem("ANNUAL_RATE_" + currentSuffix, annualRate);
+
+  update();
+  alert("✅ Import complet réussi");
+}
+
+function closeJSONPopup(){popupJSON.style.display = "none"}
+
+async function importFeries(){
+  const baseYear = Number(currentSuffix);
+  const years = [baseYear - 1, baseYear, baseYear + 1];
+
+  if(!confirm(
+    `Importer les jours fériés officiels pour ${years.join(", ")} ?`
+  )) return;
+
+  try{
+    for(const year of years){
+      const res = await fetch(
+        `https://calendrier.api.gouv.fr/jours-feries/metropole/${year}.json`
+      );
+      const feries = await res.json();
+
+      Object.keys(feries).forEach(date=>{
+        // marquer comme férié (sans écraser)
+        if(!specialDays[date]){
+          specialDays[date] = "ferie";
+        }
+      });
+    }
+
+    localStorage.setItem(STORAGE.specialDays, JSON.stringify(specialDays));
+    localStorage.setItem(STORAGE.data, JSON.stringify(data));
+
+    update();
+    alert("✅ Jours fériés importés (N-1 / N / N+1)");
+  }catch(e){
+    alert("❌ Impossible d’importer les jours fériés");
+  }
+}
+function update(){
+  checkExerciseStartAlert()
+  generateCalendar()
+  calculate()
+  applyConfigLock()
+  updateSaveBadges()
+
+  // 🔔 Bandeau période active
+  const banner = document.getElementById("activePeriodBanner")
+  const period = getCurrentPeriod()
+
+  if(banner){
+    if(period && exerciseStart){
+      const start = period.start.toLocaleDateString()
+      const end = period.end.getFullYear() === 2099
+        ? "en cours"
+        : period.end.toLocaleDateString()
+
+      banner.innerHTML =
+  `📘 Période ${period.index + 1} : ${start} → ${end}`;
+    } else {
+      banner.innerHTML = ""
+    }
+  }
+}
+monthSelect.onchange = () => {
+  viewMonth = +monthSelect.value;
+  update(); // 🔥 recalcul complet (calendrier + soldes + clôture annuelle)
+};
+
+yearSelect.onchange = () => {
+  viewYear = +yearSelect.value;
+  update(); // 🔥 recalcul complet
+};
+periodSelect.onchange = () => {
+  currentPeriodIndex = +periodSelect.value;
+  update();
+  showToast();
+};
+
+
+const annualDateInput = document.getElementById("annualDateInput");
+annualDateInput.value = annualDate;
+
+annualDateInput.onchange = () => {
+  annualDate = forceSunday(annualDateInput.value);
+  annualDateInput.value = annualDate;
+  localStorage.setItem(STORAGE.annualDate, annualDate);
+};
+const exerciseStartInput = document.getElementById("exerciseStartInput");
+exerciseStartInput.value = exerciseStart;
+const baseHebdoInput = document.getElementById("baseHebdoInput");
+baseHebdoInput.value = BASE_HEBDO;
+
+baseHebdoInput.oninput = () => {
+  BASE_HEBDO = Number(baseHebdoInput.value) || 35;
+  localStorage.setItem("BASE_HEBDO_" + currentSuffix, BASE_HEBDO);
+  update();
+};
+exerciseStartInput.onchange = ()=>{
+  exerciseStart = exerciseStartInput.value;
+  localStorage.setItem(STORAGE.exerciseStart, exerciseStart);
+  buildPeriods();
+};
+
+  // ===== FONCTION DE VÉRIFICATION DU MOIS EXACT =====
+function exportMonthlyFullPDF(){
+  const { jsPDF } = window.jspdf
+  const pdf = new jsPDF()
+
+  const title = `Compteur annuel d’heures – Récapitulatif mensuel`
+  const monthName = months[viewMonth]
+
+  let y = 15
+  pdf.setFontSize(14)
+  pdf.text(title, 10, y)
+  y += 10
+
+  pdf.setFontSize(10)
+  pdf.text(`Mois : ${monthName} ${viewYear}`, 10, y); y+=6
+  pdf.text(`Base hebdomadaire : ${BASE_HEBDO} h`, 10, y); y+=6
+const period = getCurrentPeriod();
+if(period){
+  pdf.text(
+    "Période comptable : période active au moment de l’export",
+    10, y
+  );
+  y += 6;
+}
+  pdf.line(10, y, 200, y)
+  y += 8
+
+  let weeks = {}
+  let absences = {}
+  let recups = {}
+  let feries = {}
+
+  Object.entries(data).forEach(([date, v])=>{
+    const d = new Date(date)
+    if(d.getFullYear() !== viewYear || d.getMonth() !== viewMonth) return
+
+    const day = d.getDay()
+    const iso = day === 0 ? 7 : day
+    const monday = new Date(d)
+    monday.setDate(monday.getDate() - (iso - 1))
+    const wk = dateKeyLocal(monday)
+
+    weeks[wk] = (weeks[wk] || 0) + (v.extra || 0)
+    recups[wk] = (recups[wk] || 0) + (v.recup || 0)
+
+    if(day !== 0 && day !== 6){
+      absences[wk] = (absences[wk] || 0) + (v.absent || 0)
+    }
+
+    if(specialDays[date] === "ferie"){
+      feries[wk] = (feries[wk] || 0) + DAILY_WORK_HOURS
+    }
+  })
+
+  let t25=0, t50=0, tRec=0
+
+  Object.keys(weeks).sort().forEach(w=>{
+    const base = Math.max(0, BASE_HEBDO - (absences[w]||0) - (recups[w]||0))
+    const total = base + weeks[w]
+
+    let h25 = 0, h50 = 0
+    if(total > BASE_HEBDO) h25 = Math.min(total, BASE_HEBDO+8)-BASE_HEBDO
+    if(total > BASE_HEBDO+8) h50 = total-(BASE_HEBDO+8)
+
+    t25 += Math.max(0,h25)
+    t50 += Math.max(0,h50)
+    tRec += recups[w]||0
+
+    pdf.text(
+      `Semaine du ${new Date(w).toLocaleDateString()} : ${h25.toFixed(2)}h 25% / ${h50.toFixed(2)}h 50%`,
+      10, y
+    )
+    y+=6
+    if(y>270){pdf.addPage();y=15}
+  })
+
+  y+=6
+  pdf.line(10,y,200,y);y+=8
+  pdf.text(`Total 25 % : ${t25.toFixed(2)} h`,10,y);y+=6
+  pdf.text(`Total 50 % : ${t50.toFixed(2)} h`,10,y);y+=6
+  pdf.text(`Récupérations : ${tRec.toFixed(2)} h`,10,y)
+
+  y+=10
+  pdf.setFontSize(8)
+  pdf.text("Document informatif – ne constitue pas un bulletin de paie.",10,y)
+
+  pdf.save(`mensuel_${monthName}_${viewYear}.pdf`)
+}
+function exportAnnualPDF(){
+  const { jsPDF } = window.jspdf
+  const pdf = new jsPDF()
+
+  let y = 15
+
+  const addHeader = (title) => {
+    pdf.setFontSize(14)
+    pdf.text(title, 10, y)
+    y += 8
+    pdf.setFontSize(10)
+    pdf.text(`Exercice : ${currentSuffix}`, 10, y)
+    y += 8
+    pdf.line(10, y, 200, y)
+    y += 6
+  }
+
+  addHeader("Compteur annuel d’heures – Bilan annuel")
+
+  let annualNet = 0
+
+  closures.forEach((_, index) => {
+
+    const period = (() => {
+      let start = getBaseStartDate()
+      for(let i=0;i<=closures.length;i++){
+        const end = i < closures.length
+          ? new Date(closures[i])
+          : new Date(2099,11,31)
+        if(i === index){
+          return { start, end, index:i }
+        }
+        start = new Date(end)
+        start.setDate(start.getDate()+1)
+      }
+      return null
+    })()
+
+    if(!period) return
+    if(periodMeta[index]?.status === "deleted") return
+
+    if(y > 230){
+      pdf.addPage()
+      y = 15
+      addHeader("Suite – Bilan annuel")
+    }
+
+    pdf.setFontSize(12)
+    pdf.text(
+      `📘 Période ${index + 1} : ${period.start.toLocaleDateString()} → ${
+        period.end.getFullYear() === 2099 ? "en cours" : period.end.toLocaleDateString()
+      }`,
+      10, y
+    )
+    y += 6
+
+    pdf.setFontSize(9)
+    pdf.text(
+  `Base hebdomadaire : ${BASE_HEBDO} h`,
+  10, y
+)
+    y += 5
+
+    let weeks = {}
+    let absences = {}
+    let recups = {}
+
+    Object.entries(data).forEach(([date, v])=>{
+      const d = new Date(date)
+      if(d < period.start || d > period.end) return
+
+      const day = d.getDay()
+      const iso = day === 0 ? 7 : day
+      const monday = new Date(d)
+      monday.setDate(monday.getDate() - (iso - 1))
+      const wk = dateKeyLocal(monday)
+
+      weeks[wk] = (weeks[wk] || 0) + (v.extra || 0)
+      recups[wk] = (recups[wk] || 0) + (v.recup || 0)
+
+      if(day !== 0 && day !== 6){
+        absences[wk] = (absences[wk] || 0) + (v.absent || 0)
+      }
+    })
+
+    let p25 = 0, p50 = 0, pRec = 0
+
+    Object.keys(weeks).sort().forEach(w=>{
+      const base = Math.max(
+        0,
+        BASE_HEBDO - (absences[w]||0) - (recups[w]||0)
+      )
+      const total = base + weeks[w]
+
+      let h25 = 0, h50 = 0
+      if(total > BASE_HEBDO) h25 = Math.min(total, BASE_HEBDO+8)-BASE_HEBDO
+      if(total > BASE_HEBDO+8) h50 = total-(BASE_HEBDO+8)
+
+      p25 += Math.max(0,h25)
+      p50 += Math.max(0,h50)
+      pRec += recups[w]||0
+
+      pdf.text(
+        `• Semaine du ${new Date(w).toLocaleDateString()} : ${h25.toFixed(2)}h 25% / ${h50.toFixed(2)}h 50%`,
+        12, y
+      )
+      y += 4
+
+      if(y > 270){
+        pdf.addPage()
+        y = 15
+      }
+    })
+
+    const reportPrev = getLastValidReport(index)
+    const brut = p25*1.25 + p50*1.5 + reportPrev
+    const net = brut - pRec
+
+annualNet += net
+
+    y += 4
+    pdf.text(`Total 25 % : ${p25.toFixed(2)} h`, 12, y); y+=4
+    pdf.text(`Total 50 % : ${p50.toFixed(2)} h`, 12, y); y+=4
+    pdf.text(`Récupérations : ${pRec.toFixed(2)} h`, 12, y); y+=4
+    pdf.text(`Solde net de période : ${net.toFixed(2)} h`, 12, y); y+=6
+
+    pdf.line(10, y, 200, y)
+    y += 6
+  })
+
+  if(y > 240){
+    pdf.addPage()
+    y = 15
+  }
+
+  pdf.setFontSize(14)
+  pdf.text("📊 Synthèse annuelle", 10, y)
+  y += 10
+
+  pdf.setFontSize(12)
+  pdf.text(`Solde annuel net cumulé : ${annualNet.toFixed(2)} h`, 10, y)
+  y += 14
+
+  pdf.setFontSize(10)
+  pdf.text("Validation / Signature :", 10, y)
+  y += 10
+  pdf.rect(10, y, 90, 20)
+
+  y += 30
+  pdf.setFontSize(8)
+  pdf.text(
+  "Bilan annuel généré automatiquement.\nDocument indicatif – ne constitue pas un bulletin de paie.",
+  10,
+  y
+)
+
+pdf.save(`annuel_${currentSuffix}.pdf`)
+}
+function exportPeriodPDF(){
+  const { jsPDF } = window.jspdf
+  const pdf = new jsPDF()
+
+  const period = getCurrentPeriod()
+  if(!period){
+    alert("❌ Aucune période active")
+    return
+  }
+
+  const title = "Compteur annuel d’heures – Récapitulatif de période"
+
+  let y = 15
+  pdf.setFontSize(14)
+  pdf.text(title, 10, y)
+
+  y += 10
+  pdf.setFontSize(10)
+
+  pdf.text(
+  `Période : ${period.start.toLocaleDateString()} → ${
+    period.end.getFullYear() === 2099
+      ? "en cours"
+      : period.end.toLocaleDateString()
+  }`,
+  10,
+  y
+);
+y += 6;
+  pdf.text(`Base hebdomadaire : ${BASE_HEBDO} h`, 10, y)
+
+  y += 6
+    
+
+  y += 8
+  pdf.line(10, y, 200, y)
+  y += 6
+
+  // 🔢 Données hebdomadaires
+  let weeks = {}
+  let absences = {}
+  let recups = {}
+  let feries = {}
+
+  Object.entries(data).forEach(([date, v])=>{
+    const d = new Date(date)
+    if(d < period.start || d > period.end) return
+
+    const day = d.getDay()
+    const isoDay = day === 0 ? 7 : day
+    const monday = new Date(d)
+    monday.setDate(monday.getDate() - (isoDay - 1))
+    const wk = dateKeyLocal(monday)
+
+    weeks[wk] = (weeks[wk] || 0) + (v.extra || 0)
+    recups[wk] = (recups[wk] || 0) + (v.recup || 0)
+
+    if(day !== 0 && day !== 6){
+      absences[wk] = (absences[wk] || 0) + (v.absent || 0)
+    }
+
+    if(specialDays[date] === "ferie"){
+      feries[wk] = (feries[wk] || 0) + DAILY_WORK_HOURS
+    }
+  })
+
+  let total25 = 0
+  let total50 = 0
+  let totalRecup = 0
+
+  Object.keys(weeks).sort().forEach(week=>{
+    const base = Math.max(
+      0,
+      BASE_HEBDO - (absences[week] || 0) - (recups[week] || 0)
+    )
+    const total = base + weeks[week]
+
+    let h25 = 0
+    let h50 = 0
+
+    if(total > BASE_HEBDO){
+      h25 = Math.min(total, BASE_HEBDO + 8) - BASE_HEBDO
+    }
+    if(total > BASE_HEBDO + 8){
+      h50 = total - (BASE_HEBDO + 8)
+    }
+
+    total25 += Math.max(0, h25)
+    total50 += Math.max(0, h50)
+    totalRecup += recups[week] || 0
+
+    const d = new Date(week)
+    pdf.text(
+      `Semaine du ${d.toLocaleDateString()} : ${h25.toFixed(2)}h à 25% / ${h50.toFixed(2)}h à 50%`,
+      10,
+      y
+    )
+    y += 6
+
+    if(y > 270){
+      pdf.addPage()
+      y = 15
+    }
+  })
+
+  const reportPrev = getLastValidReport(period.index)
+  const brut = total25 * 1.25 + total50 * 1.5 + reportPrev
+  const net = brut - totalRecup
+
+  y += 6
+  pdf.line(10, y, 200, y)
+  y += 8
+
+  pdf.text(`Total 25 % : ${total25.toFixed(2)} h`, 10, y); y+=6
+  pdf.text(`Total 50 % : ${total50.toFixed(2)} h`, 10, y); y+=6
+  pdf.text(`Récupérations : ${totalRecup.toFixed(2)} h`, 10, y); y+=6
+  pdf.text(`Report précédent : ${reportPrev.toFixed(2)} h`, 10, y); y+=6
+
+  pdf.setFontSize(12)
+  pdf.text(`Solde net de période : ${net.toFixed(2)} h`, 10, y)
+  y += 12
+
+  pdf.setFontSize(10)
+  pdf.text("Validation / Signature :", 10, y)
+  y += 10
+  pdf.rect(10, y, 90, 20)
+
+  y += 30
+  pdf.setFontSize(8)
+  pdf.text(
+    "Document généré automatiquement à titre informatif.\nNe constitue pas un bulletin de paie.",
+    10,
+    y
+  )
+
+  pdf.save(
+    `periode_${period.start.toISOString().slice(0,10)}_${currentSuffix}.pdf`
+  )
+}
+function shouldShowAnnualClosure() {
+  if (!annualDate) return false;
+
+  const ad = new Date(annualDate);
+
+  return (
+    ad.getFullYear() === viewYear &&
+    ad.getMonth() === viewMonth
+  );
+}
+function showToast(){
+  const toast = document.getElementById("toast")
+  if(!toast) return
+
+  toast.style.opacity = "1"
+  setTimeout(() => {
+    toast.style.opacity = "0"
+  }, 3000)
+}
+// 🛠️ Amélioration du FIX Safari iOS
+document.querySelectorAll("details.section").forEach(d => {
+  d.addEventListener("toggle", () => {
+    // On cible la zone qui bug
+    const nav = document.querySelector(".month-nav");
+    if (nav) {
+      // Forcer un "repaint" complet
+      nav.style.display = 'none';
+      setTimeout(() => {
+        nav.style.display = 'flex'; // On remet en flex comme défini dans le CSS
+      }, 10);
+    }
+  });
+});
+
+initSelectors()
+applyConfigLock();
+buildPeriods()
+autoSwitchPeriodAtMidnight()
+
+function openLegalPopup(){
+  document.getElementById("popupLegal").style.display = "flex";
+}
+
+function closeLegalPopup(){
+  document.getElementById("popupLegal").style.display = "none";
+}
+</script>
+<div id="toast" style="
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#323232;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:20px;
+  font-size:14px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .4s;
+  z-index:9999;
+">
+  🕛 Nouvelle période activée automatiquement
+</div>
+<div class="popup" id="popupClosures">
+  <div class="popup-content">
+    <h3>📅 Clôtures comptables</h3>
+    <div id="closuresInputs"></div>
+    <button onclick="saveClosures()">Enregistrer</button>
+    <button onclick="closeClosures()">Fermer</button>
+  </div>
+</div>
+<p style="text-align:center; font-size:12px; color:#666; margin-top:30px;">
+  © Tous droits réservés C.Anthony ·
+  <a href="#" onclick="openLegalPopup()" style="margin-right:10px">
+  ℹ️ Informations légales & calcul
+</a>
+<a href="#" onclick="openNotice()">
+  📘 Notice utilisateur
+</a>
+</p>
+<p style="
+  max-width:900px;
+  margin:20px auto;
+  font-size:12px;
+  color:#555;
+  background:#fffde7;
+  border:1px solid #ffe082;
+  padding:12px;
+  border-radius:8px;
+  text-align:center;
+">
+  ⚠️ <b>Sauvegarde des données</b><br><br>
+
+  Les données saisies dans cette application sont enregistrées
+  <b>localement sur cet appareil</b> (navigateur / téléphone / tablette).<br><br>
+
+  Elles peuvent être perdues en cas de suppression du navigateur,
+  de changement d’appareil, de réinitialisation ou de nettoyage des données.<br><br>
+
+  <b>Il est fortement recommandé d’effectuer des exports réguliers</b>
+  (mensuels ou après chaque clôture) afin de conserver une sauvegarde fiable
+  de votre suivi annuel.
+</p>
+<!-- 🔽 POPUP LÉGAL -->
+<div class="popup" id="popupLegal">
+  <div class="popup-content" style="max-width:700px;max-height:80vh;overflow:auto;">
+    <h3>ℹ️ Informations légales & règles de calcul</h3>
+
+
+<p>
+Cet outil a pour finalité d’aider au suivi, à l’estimation et à la compréhension
+du temps de travail, des heures supplémentaires, des récupérations et des soldes
+horaires, à partir des données saisies par l’utilisateur.
+</p>
+<hr>
+<p>
+<b>Fonctionnement général</b><br><br>
+Cet outil fonctionne comme un <b>compteur annuel du temps de travail</b>.<br><br>
+Lorsqu’une semaine n’est pas complète (absence ou récupération),
+le nombre d’heures attendues est automatiquement ajusté.<br><br>
+Les récupérations sont assimilées à du temps non travaillé et
+réduisent le volume hebdomadaire de référence dans le cadre
+d’un compteur annuel.<br><br>
+Les heures supplémentaires ne sont jamais déclenchées avant
+d’avoir dépassé l’équivalent de <b>35 heures réellement travaillées</b>.
+</p>
+<hr>
+<p>
+Il s’agit d’un outil d’aide au calcul et à la lecture des données, dont les résultats
+sont fournis à titre indicatif. Il ne constitue ni un logiciel de paie, ni un document
+officiel, ni un support contractuel.
+</p>
+
+<hr>
+
+<h4>⚖️ Cadre juridique de référence</h4>
+
+<p>
+Les règles de calcul appliquées reposent sur les principes généraux du Code du travail
+et de la convention collective nationale du commerce de gros (IDCC 573), dans leur
+version en vigueur au moment de l’utilisation.
+</p>
+
+<p>
+Ces règles sont susceptibles d’évoluer et peuvent être aménagées par des accords
+d’entreprise, des usages internes ou des dispositions contractuelles spécifiques,
+qui ne peuvent être intégrés automatiquement par l’outil.
+</p>
+
+<hr>
+
+<h4>🎌 Jours fériés</h4>
+
+<p>
+Lorsqu’un jour férié est chômé et payé, il ouvre droit au maintien de la rémunération
+lorsque les conditions légales et conventionnelles sont remplies.
+</p>
+
+<p>
+Un jour férié chômé et payé ne constitue pas du temps de travail effectif. Il n’est
+pas assimilé à une absence et ne doit pas entraîner de pénalisation du salarié.
+</p>
+
+<p>
+Dans le calcul hebdomadaire, la présence d’un jour férié chômé entraîne une réduction
+du temps de travail attendu (par défaut 7 heures pour une journée complète), sans
+modifier le seuil légal de déclenchement des heures supplémentaires.
+</p>
+
+<p>
+Les heures supplémentaires sont déclenchées uniquement à partir de la
+<b>36ᵉ heure réellement travaillée</b> dans la semaine, y compris lorsqu’un ou plusieurs
+jours fériés sont présents.
+</p>
+
+<hr>
+
+<h4>❌ Absences</h4>
+
+<p>
+Les absences correspondent à des périodes non travaillées imputables au salarié
+(congés sans solde, absences injustifiées, absences autorisées non assimilées à du
+temps de travail effectif, selon les paramètres saisis).
+</p>
+
+<p>
+Les absences sont prises en compte uniquement sur les jours ouvrés et réduisent
+le volume d’heures travaillables servant de base au calcul hebdomadaire.
+</p>
+
+<p>
+Les jours fériés chômés et payés ne sont pas comptabilisés comme des absences.
+</p>
+
+<hr>
+
+<h4>🔁 Récupérations</h4>
+
+<p>
+Les récupérations correspondent à des heures précédemment travaillées et ultérieurement
+non travaillées. Elles sont traitées comme du temps non travaillé sur la période
+concernée.
+</p>
+
+<p>
+Les récupérations réduisent le solde horaire final et peuvent également diminuer
+le volume d’heures travaillables dans la semaine selon le paramétrage retenu.
+</p>
+
+<hr>
+
+<h4>➕ Heures supplémentaires</h4>
+
+<p>
+Les heures supplémentaires sont calculées dans une logique de
+compteur annuel, à partir des heures réellement travaillées.
+</p>
+
+<p>
+Le seuil de déclenchement correspond à l’équivalent de
+35 heures hebdomadaires, ajusté selon les absences
+et les récupérations.
+</p>
+
+<p>
+Les majorations sont calculées selon les seuils légaux en vigueur :
+</p>
+
+<ul>
+  <li>Heures de la 36ᵉ à la 43ᵉ heure : majoration de 25 %</li>
+  <li>Heures au-delà de la 43ᵉ heure : majoration de 50 %</li>
+</ul>
+
+<p>
+Seules les heures réellement travaillées sont prises en compte pour le déclenchement
+des heures supplémentaires.
+</p>
+
+<hr>
+
+<h4>⚠️ Limites, paramétrage et responsabilité</h4>
+
+<p>
+Malgré le soin apporté à sa conception, cet outil peut comporter des limites,
+des erreurs de paramétrage, des imprécisions ou des dysfonctionnements techniques,
+notamment en cas de données incomplètes, incorrectes ou incohérentes.
+</p>
+
+<p>
+Il appartient à l’utilisateur de vérifier la cohérence des paramètres saisis
+(base hebdomadaire, absences, récupérations, jours fériés, périodes de clôture, etc.)
+et de contrôler les résultats obtenus.
+</p>
+
+<p>
+Les résultats affichés ne sauraient engager la responsabilité de l’éditeur.
+Seuls les documents établis par l’employeur (bulletins de paie, décomptes officiels)
+et l’interprétation des textes légaux et conventionnels font foi.
+</p>
+
+<hr>
+
+<h4>📚 Sources officielles</h4>
+
+<ul>
+  <li>
+    <a href="https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006072050/"
+       target="_blank" rel="noopener">
+      Code du travail – Légifrance
+    </a>
+  </li>
+  <li>
+    <a href="https://www.legifrance.gouv.fr/conv_coll/id/KALICONT000005635624"
+       target="_blank" rel="noopener">
+      Convention collective nationale du commerce de gros (IDCC 573)
+    </a>
+  </li>
+</ul>
+
+<p>
+Cet outil ne constitue pas un conseil juridique et ne se substitue pas à l’analyse
+d’un professionnel compétent.
+</p>
+
+    <button onclick="closeLegalPopup()">Fermer</button>
+  </div>
+</div>
+<!-- 🔼 FIN POPUP LÉGAL -->
+
+<div class="popup" id="popupYears">
+  <div class="popup-content">
+    <h3>📁 Exercices existants</h3>
+    <div id="yearsList"></div>
+    <hr>
+    <label>Créer / ouvrir un nouvel exercice</label>
+    <input type="number" id="newYearInput" placeholder="Ex : 2039">
+    <button onclick="confirmSwitchYear()">Ouvrir</button>
+    <button onclick="closeYearsPopup()">Fermer</button>
+  </div>
+</div>
+
+</body>
+</html>
