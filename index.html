@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Compteur</title>
+  <script>
+    const isAlive = sessionStorage.getItem("appAlive");
+    const lastApp = localStorage.getItem("lastApp");
+
+    if (!isAlive) {
+      sessionStorage.setItem("appAlive", "true");
+      window.location.replace("menu.html");
+    } else {
+      window.location.replace(
+        lastApp ? lastApp + "/index.html" : "menu.html"
+      );
+    }
+  </script>
+</head>
+<body></body>
+</html>
