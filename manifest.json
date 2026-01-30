@@ -1,0 +1,15 @@
+{
+  "name": "Compteur",
+  "short_name": "Compteur",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#5cc6d0",
+  "theme_color": "#5cc6d0",
+  "icons": [
+    {
+      "src": "icons/btn-compteur.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
