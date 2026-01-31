@@ -2,30 +2,56 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <title>Compteur Heures & Paie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- PWA -->
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <style>
+    body {
+      margin: 0;
+      background: #4FB3C2;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 20px;
+    }
 
-  <meta name="theme-color" content="#4FB3C2">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Heures Sup">
+    .btn {
+      width: 220px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+      cursor: pointer;
+    }
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Heures Sup</title>
+    .btn img {
+      width: 100%;
+      display: block;
+    }
+
+    .title {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 8px;
+      color: #ffffff;
+      font-size: 16px;
+    }
+  </style>
 </head>
 
 <body>
-<script>
-  const lastApp = localStorage.getItem("lastApp");
 
-  if (lastApp === "heures") {
-    location.replace("/heures/index.html");
-  } else if (lastApp === "paye") {
-    location.replace("/paye/index.html");
-  } else {
-    location.replace("/menu.html");
-  }
-</script>
+  <div class="btn" onclick="location.href='heures/index.html'">
+    <img src="images/renard-annuel.png.jpg">
+    <div class="title">Compteur annuel</div>
+  </div>
+
+  <div class="btn" onclick="location.href='paye/index.html'">
+    <img src="images/renard-mensuel.png.jpg">
+    <div class="title">Paye mensuelle</div>
+  </div>
+
 </body>
 </html>
