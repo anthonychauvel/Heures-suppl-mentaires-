@@ -2,9 +2,17 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Compteur & Paye</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <meta name="theme-color" content="#4FB3C2">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Heures Sup">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heures Sup</title>
 </head>
 
 <body>
@@ -12,11 +20,11 @@
   const lastApp = localStorage.getItem("lastApp");
 
   if (lastApp === "heures") {
-    window.location.replace("heures/index.html");
+    location.replace("/heures/index.html");
   } else if (lastApp === "paye") {
-    window.location.replace("paye/index.html");
+    location.replace("/paye/index.html");
   } else {
-    window.location.replace("menu.html");
+    location.replace("/menu.html");
   }
 </script>
 </body>
