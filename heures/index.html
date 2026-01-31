@@ -121,7 +121,6 @@ textarea{
 }
 .breakdown{background:#f9f9f9;padding:10px;border-radius:6px;margin-top:10px;font-size:14px}
 .day.today{outline:3px solid #ff9800;box-shadow:0 0 6px rgba(255,152,0,.8)}
-</style>
 /* 👇 Indicateur visuel bottom sheet */
 .sheet-handle{
   width:40px;
@@ -144,6 +143,7 @@ textarea{
   background:#fff;
   padding-top:10px;
 }
+</style>
 </head>
 
 <body>
@@ -391,7 +391,6 @@ textarea{
 
 <fieldset class="block absence">
   <legend>❌ Absence</legend>
-  <legend>❌ Absence</legend>
   <label>
     <input type="checkbox" id="isAbsent"> Jour d'absence
   </label>
@@ -423,11 +422,9 @@ textarea{
 <script>
 document.querySelectorAll('.popup').forEach(p=>{
   p.addEventListener('click', e=>{
-    if(e.target === p){
-      p.style.display = 'none'
-    }
-  })
-})
+    if(e.target === p && p.id === "popup"){
+  closePopup()
+}
 let midnightTimer = null
 
 function autoSwitchPeriodAtMidnight(){
@@ -1136,12 +1133,13 @@ function openPopup(date){
   manualRecup.value = d.recup
   absentHours.value = d.absent || 0
   isAbsent.checked = (d.absent || 0) > 0
-
+document.body.style.overflow = "hidden";
   popup.style.display = "flex"
 }
 function closePopup(){
   document.getElementById("popup").style.display = "none";
   selectedDate = "";   // 🔥 FIX CRITIQUE
+document.body.style.overflow = "";
   update();
 }
 
