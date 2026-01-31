@@ -1,7 +1,7 @@
 {
-  "name": "Heures Sup",
-  "short_name": "Heures Sup",
-  "start_url": ".",
+  "name": "Compteur & Paye",
+  "short_name": "Compteur",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#4FB3C2",
   "theme_color": "#4FB3C2",
