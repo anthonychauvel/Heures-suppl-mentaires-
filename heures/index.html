@@ -11,8 +11,20 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta charset="UTF-8">
 <title>Compteur Heures Sup – AUTO (Report + détail majorations)</title>
+<button class="menu-btn" onclick="goMenu()">⬅ Retour au menu</button>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+.menu-btn {
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255,255,255,0.85);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
 /* 🛠️ FIX SAFARI iOS — Empêcher le rétrécissement des select */
 .month-nav {
   display: flex; /* Utiliser flex pour plus de stabilité */
@@ -143,24 +155,11 @@ textarea{
   background:#fff;
   padding-top:10px;
 }
-.back-menu {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  z-index: 1000;
-  background: rgba(255,255,255,0.85);
-  border: none;
-  border-radius: 20px;
-  padding: 8px 14px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
+
 </style>
 </head>
 
 <body>
-  <button class="back-menu" onclick="goMenu()">⬅ Menu</button>
   <div id="exerciseAlert" style="
   display:none;
   max-width:900px;
