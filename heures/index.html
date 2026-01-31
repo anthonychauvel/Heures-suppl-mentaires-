@@ -423,8 +423,10 @@ textarea{
 document.querySelectorAll('.popup').forEach(p=>{
   p.addEventListener('click', e=>{
     if(e.target === p && p.id === "popup"){
-  closePopup()
-}
+      closePopup();
+    }
+  });
+});
 let midnightTimer = null
 
 function autoSwitchPeriodAtMidnight(){
