@@ -3,9 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <title>Heures supplémentaires – Paie mensuelle</title>
+<button class="menu-btn" onclick="goMenu()">⬅ Retour au menu</button>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+.menu-btn {
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255,255,255,0.85);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
 /* =======================
    TOP BAR
 ======================= */
@@ -182,26 +194,13 @@ input[type="number"]{
   opacity: 1 !important;
   border-style: solid;
 }
-.back-menu {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  z-index: 1000;
-  background: rgba(255,255,255,0.85);
-  border: none;
-  border-radius: 20px;
-  padding: 8px 14px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
+
 </style>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
 
-<button class="back-menu" onclick="goMenu()">⬅ Menu</button>
 
 <!-- le reste de ton compteur ici -->
 <div class="topbar">
