@@ -1,27 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-
-  <meta name="theme-color" content="#4FB3C2">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta charset="UTF-8">
-
-  <title>Compteur</title>
-
-  <script>
-    const isAlive = sessionStorage.getItem("appAlive");
-    const lastApp = localStorage.getItem("lastApp");
-
-    if (!isAlive) {
-      sessionStorage.setItem("appAlive", "true");
-      window.location.replace("menu.html");
-    } else {
-      window.location.replace(
-        lastApp ? lastApp + "/index.html" : "menu.html"
-      );
-    }
-  </script>
+  <title>Compteur & Paye</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
+
+<body>
+<script>
+  const lastApp = localStorage.getItem("lastApp");
+
+  if (lastApp === "heures") {
+    window.location.replace("heures/index.html");
+  } else if (lastApp === "paye") {
+    window.location.replace("paye/index.html");
+  } else {
+    window.location.replace("menu.html");
+  }
+</script>
 </body>
 </html>
