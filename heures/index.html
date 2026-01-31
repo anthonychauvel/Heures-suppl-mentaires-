@@ -143,10 +143,24 @@ textarea{
   background:#fff;
   padding-top:10px;
 }
+.back-menu {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1000;
+  background: rgba(255,255,255,0.85);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
 </style>
 </head>
 
 <body>
+  <button class="back-menu" onclick="goMenu()">⬅ Menu</button>
   <div id="exerciseAlert" style="
   display:none;
   max-width:900px;
@@ -429,6 +443,9 @@ document.querySelectorAll('.popup').forEach(p=>{
 });
 let midnightTimer = null
 
+function goMenu() {
+    localStorage.removeItem("lastApp");
+    window.location.href = "../menu.html";
 function autoSwitchPeriodAtMidnight(){
   const now = new Date()
 
