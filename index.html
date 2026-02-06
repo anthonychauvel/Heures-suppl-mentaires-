@@ -2,8 +2,26 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <title>Simulateur heures supplémentaires</title>
+
   <script>
-    location.replace("./menu.html");
+    const APP_VERSION = "1.4.0"; // VERSION MAÎTRE
+
+    const stored = localStorage.getItem("APP_VERSION");
+
+    if (stored !== APP_VERSION) {
+      console.log("🔄 Nouvelle version détectée :", APP_VERSION);
+
+      localStorage.setItem("APP_VERSION", APP_VERSION);
+
+      if (!sessionStorage.getItem("APP_RELOADED")) {
+        sessionStorage.setItem("APP_RELOADED", "1");
+        location.reload();
+      }
+    } else {
+      // Version identique → accès normal
+      location.replace("./menu.html");
+    }
   </script>
 </head>
 <body></body>
