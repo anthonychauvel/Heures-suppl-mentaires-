@@ -949,18 +949,12 @@ function confirmProfileMode(mode) {
 
 function initializeWithModule() {
   ModuleBridge.detect();
-
-  if (ModuleBridge.available) {
-    ModuleBridge.sync();
-  } else if (DEV_MANUAL_MODE) {
-    debugLog("🧪 Mode DEV manuel actif (aucun module détecté)", "info");
-  }
+  ModuleBridge.sync();
 
   calculateInitialXP();
   save();
   updateUI();
 }
-
 function attemptModeSwitch() {
   if (!canSwitchMode()) {
     const lockDate = new Date(PROFILE.lockedUntil).toLocaleDateString();
@@ -1093,13 +1087,11 @@ function updateProfileDisplay() {
   }
 }
 function detectExistingModules() {
-  const m1Data = MODULE_BRIDGES.module1.getAnnualData();
   const hasModule1 = m1Data.available && (
     parseFloat(m1Data.totalHours) > 0 || 
     m1Data.months.length > 0
   );
-  
-  const m2Data = MODULE_BRIDGES.module2.getCurrentExercise();
+
   const hasModule2 = m2Data.available && (
     Object.keys(m2Data.data).length > 0
   );
@@ -1141,7 +1133,6 @@ function handleInitialSetup() {
   if (!detection.hasModule1 && detection.hasModule2) {
     debugLog("📊 Auto-sélection Module 2 (Annualisé)", "success");
     
-    const stats = MODULE_BRIDGES.module2.getExerciseStats();
     
     confirmAutoImport(
       "annual",
@@ -1172,8 +1163,6 @@ function openDualModuleChoice(detection) {
     <b>Mois suivis :</b> ${detection.m1Data.months.length}<br>
     <b>Report actuel :</b> ${detection.m1Data.carry}h
   `;
-  
-  const m2Stats = MODULE_BRIDGES.module2.getExerciseStats();
   document.getElementById("m2Info").innerHTML = `
     <b>Jours travaillés :</b> ${m2Stats.daysWorked}<br>
     <b>Exercice :</b> ${detection.m2Data.exercise}<br>
@@ -1234,7 +1223,6 @@ function performAutoImport(mode, moduleData) {
   if (mode === "monthly") {
     localStorage.setItem(`M1_LAST_SYNC_${moduleData.year}`, String(parseFloat(moduleData.totalHours) || 0));
   } else {
-    const syncStats = MODULE_BRIDGES.module2.getExerciseStats();
     localStorage.setItem(`M2_LAST_SYNC_${moduleData.exercise}`, String(parseInt(syncStats.daysWorked) || 0));
   }
 
@@ -1284,34 +1272,6 @@ function calculateInitialXP() {
   STATE.xp = rest;
   STATE.totalXP = xp;
 }
-const ModuleBridge = {
-  available: false,
-  m1: null,
-  m2: null,
-
-  detect() {
-    try {
-      const m1 = MODULE_BRIDGES?.module1?.getAnnualData?.();
-      const m2 = MODULE_BRIDGES?.module2?.getCurrentExercise?.();
-
-      this.m1 = m1?.available ? m1 : null;
-      this.m2 = m2?.available ? m2 : null;
-
-      this.available = !!(this.m1 || this.m2);
-      return this.available;
-    } catch (e) {
-      console.warn("❌ Bridge detection error", e);
-      this.available = false;
-    }
-  },
-
-  sync() {
-    if (!this.available) return;
-
-    if (this.m1) syncFromModule1(this.m1);
-    if (this.m2) syncFromModule2(this.m2);
-  }
-};
 function syncFromModule1(m1Data) {
   if (!m1Data) return;
 
@@ -1522,7 +1482,6 @@ function save() {
     alert("⚠️ Stockage plein ou erreur de sauvegarde.\nPense à exporter tes données.");
   }
 }
-
 function load() {
   const saved = localStorage.getItem("MODULE3_ULTIMATE_STATE");
 
@@ -1533,6 +1492,7 @@ function load() {
     STATE = getDefaultState();
   }
 }
+
 function snapshot(reason, force = false) {
   try {
     const key = "SNAPSHOT_" + Date.now();
@@ -1584,11 +1544,23 @@ function exportData() {
   debugLog("💾 Export réussi", "success");
   alert("✅ Export réussi !");
 }
-
 function importData() {
   document.getElementById("importFile").click();
 }
+const ModuleBridge = {
+  m1: null,
+  m2: null,
 
+  detect() {
+    this.m1 = MODULE_BRIDGES?.module1?.getAnnualData?.() || null;
+    this.m2 = MODULE_BRIDGES?.module2?.getCurrentExercise?.() || null;
+  },
+
+  sync() {
+    if (this.m1?.available) syncFromModule1(this.m1);
+    if (this.m2?.available) syncFromModule2(this.m2);
+  }
+};
 document.getElementById("importFile").addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -1865,25 +1837,6 @@ function updateUI() {
     updateAIDashboard();
   }
 }
-
-function toggleWorkMode() {
-  const mode = document.getElementById("workMode").value;
-  const manualSection = document.getElementById("manualInputSection");
-  const syncSection = document.getElementById("syncStatusSection");
-  
-  STATE.workMode = mode;
-  save();
-  
-  if (mode === "manual" || mode === "demo") {
-    manualSection.classList.remove("hidden");
-    syncSection.classList.add("hidden");
-  } else {
-    manualSection.classList.add("hidden");
-    syncSection.classList.remove("hidden");
-    updateSyncStatus();
-  }
-}
-
 function updateSyncStatus() {
   const statusEl = document.getElementById("syncStatus");
   
@@ -1911,7 +1864,6 @@ function manualSync() {
   debugLog("🔄 Synchronisation manuelle...", "info");
   
   if (PROFILE.mode === "monthly") {
-    const m1Data = MODULE_BRIDGES.module1.getAnnualData();
     if (m1Data.available) {
       syncFromModule1(m1Data);
       alert("✅ Synchronisation Module 1 réussie");
@@ -1919,7 +1871,6 @@ function manualSync() {
       alert("❌ Module 1 vide");
     }
   } else {
-    const m2Data = MODULE_BRIDGES.module2.getCurrentExercise();
     if (m2Data.available) {
       syncFromModule2(m2Data);
       alert("✅ Synchronisation Module 2 réussie");
@@ -1932,53 +1883,27 @@ function manualSync() {
   updateSyncStatus();
   displayModulesData();
 }
-
 function syncFromModule1(m1Data) {
-  if (!m1Data || !m1Data.available) return;
+  const key = `M1_LAST_SYNC_${m1Data.year}`;
+  const last = Number(localStorage.getItem(key) || 0);
+  const current = Number(m1Data.totalHours || 0);
 
-  const lastSync =
-    parseFloat(localStorage.getItem(`M1_LAST_SYNC_${m1Data.year}`)) || 0;
-
-  const currentTotal = parseFloat(m1Data.totalHours);
-
-  if (currentTotal <= lastSync) {
-    debugLog("🔄 Module 1 déjà synchronisé", "info");
-    return;
-  }
+  if (current <= last) return;
 
   importFromModule1();
-
-  localStorage.setItem(
-    `M1_LAST_SYNC_${m1Data.year}`,
-    String(currentTotal)
-  );
-
-  debugLog("✅ Synchronisation Module 1 réussie", "success");
+  localStorage.setItem(key, current);
 }
+
 function syncFromModule2(m2Data) {
-  if (!m2Data || !m2Data.available) return;
+  const key = `M2_LAST_SYNC_${m2Data.exercise}`;
+  const last = Number(localStorage.getItem(key) || 0);
+  const current = Object.keys(m2Data.data || {}).length;
 
-  const lastSync =
-    parseInt(localStorage.getItem(`M2_LAST_SYNC_${m2Data.exercise}`)) || 0;
-
-  const currentDays = Object.keys(m2Data.data || {}).length;
-
-  if (currentDays <= lastSync) {
-    debugLog("🔄 Module 2 déjà synchronisé", "info");
-    return;
-  }
+  if (current <= last) return;
 
   importFromModule2(m2Data);
-
-  localStorage.setItem(
-    `M2_LAST_SYNC_${m2Data.exercise}`,
-    String(currentDays)
-  );
-
-  debugLog("✅ Synchronisation Module 2 réussie", "success");
+  localStorage.setItem(key, current);
 }
-}
-
 function displayModulesData() {
   const availability = MODULE_BRIDGES.checkAvailability();
   
@@ -1989,7 +1914,6 @@ function displayModulesData() {
   let html = '<h3>📊 Données des modules</h3>';
 
   if (availability.module1) {
-    const m1 = MODULE_BRIDGES.module1.getAnnualData();
     html += `
       <div style="background:rgba(79,179,194,0.1);padding:10px;border-radius:6px;margin:10px 0">
         <h4 style="margin-top:0">📅 Module 1 - Compteur Mensuel</h4>
@@ -2006,8 +1930,6 @@ function displayModulesData() {
   }
 
   if (availability.module2) {
-    const m2 = MODULE_BRIDGES.module2.getCurrentExercise();
-    const stats = MODULE_BRIDGES.module2.getExerciseStats();
     
     html += `
       <div style="background:rgba(241,196,15,0.1);padding:10px;border-radius:6px;margin:10px 0">
