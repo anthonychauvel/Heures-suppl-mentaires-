@@ -5452,9 +5452,7 @@ window.addEventListener("load", () => {
 window.addEventListener("load", () => {
   debugLog("🚀 Initialisation Module 3", "info");
 
-  loadProfile();
-  loadAnnualThresholds();
-
+  
   const savedState = localStorage.getItem("MODULE3_ULTIMATE_STATE");
   if (savedState) {
     STATE = JSON.parse(savedState);
@@ -5462,10 +5460,14 @@ window.addEventListener("load", () => {
   } else {
     STATE = getDefaultState();
   }
-
+loadProfile();
+  loadAnnualThresholds();
+  load();
   initCheatCode();
   handleInitialSetup();
 });
+
+  
 </script>
 </body>
 </html>
