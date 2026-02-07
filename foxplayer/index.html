@@ -3494,6 +3494,913 @@ window.addEventListener("load", function() {
     debugLog("✅ Moteur IA opérationnel", "success");
   }, 100);
 });
+// ============================================================
+//  MODULE 3 — LEGAL ENGINE v1.0
+//  Semaines civiles · Heures Supplémentaires · Détections · Fiabilité
+//  100% additif · 0 modification existante
+//  
+//  INSTALLATION : Ajouter ce <script> APRÈS le bloc IA dans Module 3
+//  USAGE CONSOLE : LegalEngine.dashboard() / LegalEngine.help()
+// ============================================================
+
+const LegalEngine = (function() {
+
+// ── Configuration légale (Code du travail) ──────────────────
+
+const CONFIG = {
+WEEKLY_BASE:        35,    // Durée légale hebdomadaire
+DAILY_MAX:          10,    // L3121-18 : max journalier
+DAILY_MAX_DEROG:    12,    // L3121-19 : max avec dérogation
+WEEKLY_MAX:         48,    // L3121-35 : max hebdo absolu
+WEEKLY_AVG_MAX:     44,    // L3121-36 : moyenne 12 semaines
+WEEKLY_AVG_WINDOW:  12,    // Fenêtre glissante (semaines)
+DAILY_REST:         11,    // L3131-1  : repos quotidien min
+WEEKLY_REST:        35,    // L3132-2  : repos hebdo min (consécutif)
+MAX_CONSECUTIVE:    6,     // L3132-1  : jours consécutifs max
+OT_THRESHOLD_25:    8,     // 8 premières HS à +25%
+DEFAULT_START:      “08:00” // Heure début par défaut si inconnue
+};
+
+// ── Utilitaires dates ───────────────────────────────────────
+
+/**
+
+- Calcule la semaine ISO (lun=début) → “YYYY-WNN”
+- Conforme à ISO 8601 (semaine civile française = lundi → dimanche)
+  */
+  function getISOWeek(dateStr) {
+  const d = new Date(dateStr);
+  d.setHours(0, 0, 0, 0);
+
+```
+// Trouver le jeudi de la même semaine ISO
+const thursday = new Date(d);
+thursday.setDate(d.getDate() - ((d.getDay() + 6) % 7) + 3);
+
+// Premier janvier de l'année ISO
+const jan1 = new Date(thursday.getFullYear(), 0, 1);
+const weekNum = Math.ceil(((thursday - jan1) / 86400000 + 1) / 7);
+
+return thursday.getFullYear() + "-W" + String(weekNum).padStart(2, "0");
+```
+
+}
+
+/**
+
+- Lundi de la semaine ISO donnée → “YYYY-MM-DD”
+  */
+  function getMondayOfWeek(isoWeek) {
+  const [yearStr, weekStr] = isoWeek.split(”-W”);
+  const year = parseInt(yearStr);
+  const week = parseInt(weekStr);
+
+```
+// 4 janvier est toujours en semaine 1
+const jan4 = new Date(year, 0, 4);
+const dayOfWeek = jan4.getDay() || 7; // lundi=1 ... dimanche=7
+const monday = new Date(jan4);
+monday.setDate(jan4.getDate() - dayOfWeek + 1 + (week - 1) * 7);
+
+return monday.toISOString().slice(0, 10);
+```
+
+}
+
+/**
+
+- Dimanche de la semaine ISO → “YYYY-MM-DD”
+  */
+  function getSundayOfWeek(isoWeek) {
+  const monday = new Date(getMondayOfWeek(isoWeek));
+  monday.setDate(monday.getDate() + 6);
+  return monday.toISOString().slice(0, 10);
+  }
+
+/**
+
+- Estime l’heure de fin à partir de l’heure de début et des heures travaillées
+- Ajoute 1h de pause déjeuner si > 6h
+  */
+  function estimateEndTime(startTime, hours) {
+  const [h, m] = startTime.split(”:”).map(Number);
+  const pauseMin = hours > 6 ? 60 : 0;
+  const totalMin = h * 60 + m + Math.round(hours * 60) + pauseMin;
+  const endH = Math.floor(totalMin / 60) % 24;
+  const endM = Math.floor(totalMin % 60);
+  return String(endH).padStart(2, “0”) + “:” + String(endM).padStart(2, “0”);
+  }
+
+/**
+
+- Différence en heures entre deux datetime strings
+  */
+  function hoursBetween(dateStr1, timeStr1, dateStr2, timeStr2) {
+  const dt1 = new Date(dateStr1 + “T” + timeStr1);
+  const dt2 = new Date(dateStr2 + “T” + timeStr2);
+  return (dt2 - dt1) / 3600000;
+  }
+
+// ── 1. Construction des legalDays[] ─────────────────────────
+//    Fusionne les données M1 + M2 en structure normalisée
+
+/**
+
+- Collecte et normalise tous les jours depuis les modules
+- @param {number} baseHebdo - durée hebdomadaire de référence (défaut: 35)
+- @returns {Array} legalDays trié par date
+  */
+  function buildLegalDays(baseHebdo) {
+  baseHebdo = baseHebdo || CONFIG.WEEKLY_BASE;
+  const defaultDailyH = baseHebdo / 5;
+  const rawDays = [];
+
+```
+// ── Collecte Module 1 (prioritaire — données réelles) ──
+if (typeof MODULE1_API !== "undefined" && MODULE1_API.getIndividualDays) {
+  try {
+    const m1Days = MODULE1_API.getIndividualDays();
+    m1Days.forEach(function(d) {
+      if (!d.date || !d.hours || d.hours <= 0) return;
+      rawDays.push({
+        date:       d.date,
+        hours:      d.hours,
+        startTime:  d.startTime || null,   // si M1 l'expose un jour
+        endTime:    d.endTime   || null,
+        source:     "module1",
+        estimated:  false,
+        confidence: "hours_only"           // heures réelles, horaires inconnus
+      });
+    });
+  } catch (e) {
+    console.warn("[LegalEngine] Erreur lecture Module 1:", e);
+  }
+}
+
+// ── Collecte Module 2 (complémentaire — jours non couverts par M1) ──
+const m1Dates = new Set(rawDays.map(function(d) { return d.date; }));
+
+if (typeof MODULE2_API !== "undefined" && MODULE2_API.getCurrentExercise) {
+  try {
+    const m2 = MODULE2_API.getCurrentExercise();
+    if (m2.available && m2.data) {
+      Object.entries(m2.data).forEach(function([date, day]) {
+        if (m1Dates.has(date)) return;          // M1 prioritaire
+        if ((day.extra || 0) <= 0) return;       // pas de travail ce jour
+
+        rawDays.push({
+          date:       date,
+          hours:      defaultDailyH,             // estimé depuis base hebdo
+          startTime:  null,
+          endTime:    null,
+          source:     "module2",
+          estimated:  true,                      // heures estimées
+          confidence: "presence_only"            // on sait juste : jour travaillé
+        });
+      });
+    }
+  } catch (e) {
+    console.warn("[LegalEngine] Erreur lecture Module 2:", e);
+  }
+}
+
+// ── Collecte depuis STATE.days (saisie manuelle Module 3) ──
+const coveredDates = new Set(rawDays.map(function(d) { return d.date; }));
+
+if (typeof STATE !== "undefined" && Array.isArray(STATE.days)) {
+  STATE.days.forEach(function(d) {
+    if (!d.date || !d.hours || d.hours <= 0) return;
+    if (coveredDates.has(d.date)) return;        // déjà couvert par M1/M2
+
+    rawDays.push({
+      date:       d.date,
+      hours:      d.hours,
+      startTime:  null,
+      endTime:    null,
+      source:     "manual",
+      estimated:  false,
+      confidence: "hours_only",
+      dayType:    d.type || "normal"
+    });
+  });
+}
+
+// ── Enrichissement de chaque jour ──
+return rawDays.map(function(d) {
+  const dt = new Date(d.date);
+  const dow = dt.getDay();  // 0=dim, 1=lun ... 6=sam
+  const estimatedFields = [];
+
+  // Estimer les horaires manquants
+  var startTime = d.startTime;
+  var endTime = d.endTime;
+
+  if (!startTime) {
+    startTime = CONFIG.DEFAULT_START;
+    estimatedFields.push("startTime");
+  }
+  if (!endTime) {
+    endTime = estimateEndTime(startTime, d.hours);
+    estimatedFields.push("endTime");
+  }
+
+  // Déterminer le type
+  var type = d.dayType || "normal";
+  if (dow === 0) type = "sunday";
+  else if (dow === 6) type = "saturday";
+
+  // Détection nuit (heuristique : fin après 21h ou début avant 6h)
+  var isNight = false;
+  if (type === "nuit" || (d.dayType === "nuit")) {
+    isNight = true;
+  } else {
+    var startH = parseInt(startTime.split(":")[0]);
+    var endH = parseInt(endTime.split(":")[0]);
+    if (startH < 6 || endH >= 21) isNight = true;
+  }
+
+  return {
+    // Identité
+    date:       d.date,
+    dow:        dow,
+    isoWeek:    getISOWeek(d.date),
+
+    // Heures
+    hours:      d.hours,
+    startTime:  startTime,
+    endTime:    endTime,
+
+    // Qualificatifs
+    type:       type,
+    isNight:    isNight,
+    isWeekend:  dow === 0 || dow === 6,
+    isSunday:   dow === 0,
+    isSaturday: dow === 6,
+
+    // Repos (calculé plus tard)
+    restBefore: null,
+    restAfter:  null,
+
+    // Fiabilité
+    source:          d.source,
+    estimated:       d.estimated,
+    confidence:      d.confidence,
+    estimatedFields: estimatedFields
+  };
+}).sort(function(a, b) {
+  return a.date.localeCompare(b.date);
+});
+```
+
+}
+
+// ── 2. Construction des legalWeeks[] ────────────────────────
+
+/**
+
+- Groupe les legalDays par semaine civile ISO
+  */
+  function buildWeeks(legalDays) {
+  var weekMap = new Map();
+
+```
+legalDays.forEach(function(day) {
+  var wk = day.isoWeek;
+  if (!weekMap.has(wk)) {
+    weekMap.set(wk, {
+      isoWeek:        wk,
+      startDate:      getMondayOfWeek(wk),
+      endDate:        getSundayOfWeek(wk),
+      days:           [],
+      totalHours:     0,
+      daysWorked:     0,
+      nightHours:     0,
+      sundayWorked:   false,
+      saturdayWorked: false,
+
+      // HS (calculées après)
+      overtime25:     0,
+      overtime50:     0,
+      totalOvertime:  0,
+      overtimeCost:   0,
+
+      // Alertes
+      alerts:         [],
+
+      // Fiabilité
+      estimatedCount: 0,
+      reliability:    "no_data"
+    });
+  }
+
+  var week = weekMap.get(wk);
+  week.days.push(day);
+  week.totalHours += day.hours;
+  week.daysWorked++;
+  if (day.isNight)    week.nightHours += day.hours;
+  if (day.isSunday)   week.sundayWorked = true;
+  if (day.isSaturday) week.saturdayWorked = true;
+  if (day.estimated)  week.estimatedCount++;
+});
+
+return Array.from(weekMap.values()).sort(function(a, b) {
+  return a.isoWeek.localeCompare(b.isoWeek);
+});
+```
+
+}
+
+// ── 3. Calcul des heures supplémentaires ────────────────────
+
+/**
+
+- Calcule les HS pour chaque semaine
+- Règle : 8 premières HS à +25%, au-delà à +50%
+  */
+  function computeAllOvertime(weeks, baseHebdo) {
+  baseHebdo = baseHebdo || CONFIG.WEEKLY_BASE;
+
+```
+weeks.forEach(function(w) {
+  var overtime = Math.max(0, w.totalHours - baseHebdo);
+
+  w.overtime25    = Math.min(overtime, CONFIG.OT_THRESHOLD_25);
+  w.overtime50    = Math.max(0, overtime - CONFIG.OT_THRESHOLD_25);
+  w.totalOvertime = overtime;
+  w.overtimeCost  = w.overtime25 * 1.25 + w.overtime50 * 1.50;
+});
+```
+
+}
+
+// ── 4. Détections légales ───────────────────────────────────
+
+// 4.1 — Dépassement 48h/semaine (L3121-35)
+function detect48h(weeks) {
+weeks.forEach(function(w) {
+if (w.totalHours > CONFIG.WEEKLY_MAX) {
+w.alerts.push({
+code:     “MAX_48H”,
+level:    “critical”,
+legal:    “L3121-35 C. trav.”,
+message:  w.totalHours.toFixed(1) + “h cette semaine (” + w.isoWeek + “). “
++ “Maximum absolu : “ + CONFIG.WEEKLY_MAX + “h.”,
+reliable: w.estimatedCount === 0
+});
+} else if (w.totalHours > 44) {
+w.alerts.push({
+code:     “NEAR_48H”,
+level:    “warning”,
+legal:    “L3121-35 C. trav.”,
+message:  w.totalHours.toFixed(1) + “h — proche limite “ + CONFIG.WEEKLY_MAX + “h.”,
+reliable: w.estimatedCount === 0
+});
+}
+});
+}
+
+// 4.2 — Moyenne 44h sur 12 semaines glissantes (L3121-36)
+function detect44hAvg(weeks) {
+weeks.forEach(function(w, idx) {
+var start = Math.max(0, idx - CONFIG.WEEKLY_AVG_WINDOW + 1);
+var slice = weeks.slice(start, idx + 1);
+
+```
+  // Besoin d'au moins 4 semaines pour pertinence
+  if (slice.length < 4) return;
+
+  var sumHours = slice.reduce(function(s, x) { return s + x.totalHours; }, 0);
+  var avg = sumHours / slice.length;
+  var estimatedWeeks = slice.filter(function(x) { return x.estimatedCount > 0; }).length;
+
+  if (avg > CONFIG.WEEKLY_AVG_MAX) {
+    w.alerts.push({
+      code:     "AVG_44H_12W",
+      level:    "critical",
+      legal:    "L3121-36 C. trav.",
+      message:  "Moyenne " + avg.toFixed(1) + "h sur " + slice.length
+              + " semaines. Maximum : " + CONFIG.WEEKLY_AVG_MAX + "h.",
+      reliable: estimatedWeeks === 0,
+      meta:     { avg: avg, weeksCount: slice.length, estimatedWeeks: estimatedWeeks }
+    });
+  } else if (avg > 42) {
+    w.alerts.push({
+      code:     "NEAR_AVG_44H",
+      level:    "info",
+      legal:    "L3121-36 C. trav.",
+      message:  "Moyenne " + avg.toFixed(1) + "h sur " + slice.length
+              + " semaines — surveillance recommandée.",
+      reliable: estimatedWeeks === 0
+    });
+  }
+});
+```
+
+}
+
+// 4.3 — Jours consécutifs (L3132-1 : max 6)
+function detectConsecutiveDays(legalDays) {
+var alerts = [];
+if (legalDays.length < 2) return alerts;
+
+```
+var streak = 1;
+var streakStart = legalDays[0].date;
+
+for (var i = 1; i < legalDays.length; i++) {
+  var prevDate = new Date(legalDays[i - 1].date);
+  var currDate = new Date(legalDays[i].date);
+  var diffDays = Math.round((currDate - prevDate) / 86400000);
+
+  if (diffDays === 1) {
+    streak++;
+  } else {
+    streak = 1;
+    streakStart = legalDays[i].date;
+  }
+
+  if (streak === CONFIG.MAX_CONSECUTIVE) {
+    alerts.push({
+      code:    "CONSECUTIVE_6",
+      level:   "warning",
+      legal:   "L3132-1 C. trav.",
+      message: "6 jours consécutifs travaillés (" + streakStart
+             + " → " + legalDays[i].date + "). Maximum légal atteint.",
+      date:    legalDays[i].date
+    });
+  }
+
+  if (streak > CONFIG.MAX_CONSECUTIVE) {
+    alerts.push({
+      code:    "CONSECUTIVE_7_ILLEGAL",
+      level:   "critical",
+      legal:   "L3132-1 C. trav.",
+      message: streak + " jours consécutifs (" + streakStart
+             + " → " + legalDays[i].date + "). INTERDIT — repos hebdomadaire violé.",
+      date:    legalDays[i].date
+    });
+  }
+}
+
+return alerts;
+```
+
+}
+
+// 4.4 — Repos quotidien < 11h (L3131-1)
+function detectDailyRest(legalDays) {
+var alerts = [];
+
+```
+for (var i = 1; i < legalDays.length; i++) {
+  var prev = legalDays[i - 1];
+  var curr = legalDays[i];
+
+  // Vérifier que les dates sont consécutives ou proches
+  var dayGap = Math.round(
+    (new Date(curr.date) - new Date(prev.date)) / 86400000
+  );
+  if (dayGap !== 1) continue;  // pas de problème si jour de repos entre
+
+  // Calcul du repos
+  if (!prev.endTime || !curr.startTime) continue;
+
+  var gap = hoursBetween(prev.date, prev.endTime, curr.date, curr.startTime);
+  curr.restBefore = parseFloat(gap.toFixed(1));
+
+  var isEstimated = (prev.estimatedFields && prev.estimatedFields.indexOf("endTime") !== -1)
+                 || (curr.estimatedFields && curr.estimatedFields.indexOf("startTime") !== -1);
+
+  if (gap < CONFIG.DAILY_REST) {
+    alerts.push({
+      code:     "REST_DAILY_11H",
+      level:    gap < 9 ? "critical" : "warning",
+      legal:    "L3131-1 C. trav.",
+      message:  "Repos " + gap.toFixed(1) + "h entre " + prev.date
+              + " et " + curr.date + ". Minimum légal : " + CONFIG.DAILY_REST + "h.",
+      date:     curr.date,
+      reliable: !isEstimated
+    });
+  }
+}
+
+return alerts;
+```
+
+}
+
+// 4.5 — Repos hebdomadaire < 35h consécutives (L3132-2)
+function detectWeeklyRest(legalDays, weeks) {
+var alerts = [];
+
+```
+// Analyser le gap entre dernier jour semaine N et premier jour semaine N+1
+for (var i = 0; i < weeks.length - 1; i++) {
+  var thisWeek = weeks[i];
+  var nextWeek = weeks[i + 1];
+
+  if (thisWeek.days.length === 0 || nextWeek.days.length === 0) continue;
+
+  var lastDay = thisWeek.days[thisWeek.days.length - 1];
+  var firstNext = nextWeek.days[0];
+
+  if (!lastDay.endTime || !firstNext.startTime) continue;
+
+  var gap = hoursBetween(
+    lastDay.date, lastDay.endTime,
+    firstNext.date, firstNext.startTime
+  );
+
+  if (gap < CONFIG.WEEKLY_REST) {
+    alerts.push({
+      code:    "REST_WEEKLY_35H",
+      level:   "critical",
+      legal:   "L3132-2 C. trav.",
+      message: "Repos hebdomadaire " + gap.toFixed(1) + "h ("
+             + lastDay.date + " → " + firstNext.date
+             + "). Minimum légal : " + CONFIG.WEEKLY_REST + "h consécutives.",
+      date:    firstNext.date,
+      reliable: !(lastDay.estimatedFields && lastDay.estimatedFields.indexOf("endTime") !== -1)
+    });
+  }
+}
+
+return alerts;
+```
+
+}
+
+// 4.6 — Dépassement journalier > 10h (L3121-18 / L3121-19)
+function detectDailyMax(legalDays) {
+return legalDays
+.filter(function(d) { return d.hours > CONFIG.DAILY_MAX; })
+.map(function(d) {
+return {
+code:     d.hours > CONFIG.DAILY_MAX_DEROG ? “DAILY_MAX_12H” : “DAILY_MAX_10H”,
+level:    d.hours > CONFIG.DAILY_MAX_DEROG ? “critical” : “warning”,
+legal:    “L3121-18 / L3121-19 C. trav.”,
+message:  d.hours + “h le “ + d.date + “. Maximum légal : “
++ CONFIG.DAILY_MAX + “h (dérogation exceptionnelle : “
++ CONFIG.DAILY_MAX_DEROG + “h).”,
+date:     d.date,
+reliable: !d.estimated
+};
+});
+}
+
+// ── 5. Système de fiabilité ─────────────────────────────────
+
+/**
+
+- Calcule le niveau de fiabilité d’une semaine
+- “full” | “partial” | “mixed” | “estimated” | “no_data”
+  */
+  function computeWeekReliability(week) {
+  var total = week.days.length;
+  if (total === 0) return “no_data”;
+
+```
+var fullCount = week.days.filter(function(d) {
+  return d.confidence === "full";
+}).length;
+
+var estimatedCount = week.days.filter(function(d) {
+  return d.estimated;
+}).length;
+
+if (estimatedCount === 0 && fullCount === total) return "full";
+if (estimatedCount === 0) return "partial";
+if (estimatedCount < total) return "mixed";
+return "estimated";
+```
+
+}
+
+/**
+
+- Retourne icône + label + couleur pour affichage
+  */
+  function getReliabilityDisplay(reliability) {
+  var MAP = {
+  “full”:      { icon: “✅”, label: “Juridiquement fiable”,          color: “#34d399” },
+  “partial”:   { icon: “📊”, label: “Heures fiables, repos estimé”,  color: “#38bdf8” },
+  “mixed”:     { icon: “⚠️”, label: “Partiellement estimé”,          color: “#fbbf24” },
+  “estimated”: { icon: “⚠️”, label: “Estimation — informatif”,       color: “#fb923c” },
+  “no_data”:   { icon: “❌”, label: “Données insuffisantes”,         color: “#f87171” }
+  };
+  return MAP[reliability] || MAP[“no_data”];
+  }
+
+// ── 6. Pipeline principal ───────────────────────────────────
+
+/**
+
+- Exécute l’analyse complète
+- @param {number} baseHebdo - durée légale (défaut: 35)
+- @returns {object} { legalDays, weeks, globalAlerts, summary }
+  */
+  function analyze(baseHebdo) {
+  baseHebdo = baseHebdo || CONFIG.WEEKLY_BASE;
+
+```
+// Étape 1 : Construire les jours normalisés
+var legalDays = buildLegalDays(baseHebdo);
+
+// Étape 2 : Construire les semaines civiles
+var weeks = buildWeeks(legalDays);
+
+// Étape 3 : Calculer les HS
+computeAllOvertime(weeks, baseHebdo);
+
+// Étape 4 : Détections hebdomadaires
+detect48h(weeks);
+detect44hAvg(weeks);
+
+// Étape 5 : Fiabilité par semaine
+weeks.forEach(function(w) {
+  w.reliability = computeWeekReliability(w);
+});
+
+// Étape 6 : Détections transversales (sur tous les jours)
+var consecutiveAlerts = detectConsecutiveDays(legalDays);
+var dailyMaxAlerts    = detectDailyMax(legalDays);
+var dailyRestAlerts   = detectDailyRest(legalDays);
+var weeklyRestAlerts  = detectWeeklyRest(legalDays, weeks);
+
+var globalAlerts = [].concat(
+  consecutiveAlerts,
+  dailyMaxAlerts,
+  dailyRestAlerts,
+  weeklyRestAlerts
+);
+
+// Étape 7 : Résumé
+var totalOvertime = weeks.reduce(function(s, w) { return s + w.totalOvertime; }, 0);
+var criticalWeekAlerts = weeks.reduce(function(s, w) {
+  return s + w.alerts.filter(function(a) { return a.level === "critical"; }).length;
+}, 0);
+var criticalGlobalAlerts = globalAlerts.filter(function(a) {
+  return a.level === "critical";
+}).length;
+
+return {
+  legalDays:    legalDays,
+  weeks:        weeks,
+  globalAlerts: globalAlerts,
+  summary: {
+    totalDays:          legalDays.length,
+    totalWeeks:         weeks.length,
+    totalOvertime:      parseFloat(totalOvertime.toFixed(2)),
+    totalOvertime25:    parseFloat(weeks.reduce(function(s,w){return s+w.overtime25},0).toFixed(2)),
+    totalOvertime50:    parseFloat(weeks.reduce(function(s,w){return s+w.overtime50},0).toFixed(2)),
+    totalOvertimeCost:  parseFloat(weeks.reduce(function(s,w){return s+w.overtimeCost},0).toFixed(2)),
+    criticalAlerts:     criticalWeekAlerts + criticalGlobalAlerts,
+    warningAlerts:      weeks.reduce(function(s,w){return s+w.alerts.filter(function(a){return a.level==="warning"}).length},0)
+                      + globalAlerts.filter(function(a){return a.level==="warning"}).length,
+    estimatedWeeks:     weeks.filter(function(w){return w.estimatedCount > 0}).length,
+    fullyReliableWeeks: weeks.filter(function(w){return w.reliability==="full"||w.reliability==="partial"}).length
+  }
+};
+```
+
+}
+
+// ── 7. Intégration scénarios ────────────────────────────────
+
+/**
+
+- Enrichit un scénario existant avec le contexte juridique réel
+- À appeler dans AI_findClosestScenario() après le match
+  */
+  function enrichScenarioWithLegal(scenario, currentWeek) {
+  if (!scenario || !currentWeek) return scenario;
+
+```
+var enriched = Object.assign({}, scenario);
+
+enriched.legalContext = {
+  weeklyHours:     currentWeek.totalHours,
+  overtime:        currentWeek.totalOvertime,
+  overtime25:      currentWeek.overtime25,
+  overtime50:      currentWeek.overtime50,
+  alerts:          currentWeek.alerts,
+  reliability:     currentWeek.reliability,
+  daysWorked:      currentWeek.daysWorked,
+  sundayWorked:    currentWeek.sundayWorked,
+  saturdayWorked:  currentWeek.saturdayWorked,
+  nightHours:      currentWeek.nightHours
+};
+
+// Ajuster le risque si alertes critiques détectées
+var hasCritical = currentWeek.alerts.some(function(a) {
+  return a.level === "critical";
+});
+if (hasCritical && enriched.risk !== "critique") {
+  enriched.risk = "critique";
+}
+
+// Ajouter le label de fiabilité
+var rel = getReliabilityDisplay(currentWeek.reliability);
+enriched.reliabilityLabel = rel.icon + " " + rel.label;
+
+return enriched;
+```
+
+}
+
+/**
+
+- Trouve la semaine courante dans les résultats d’analyse
+  */
+  function getCurrentWeek(analysisResult) {
+  if (!analysisResult || !analysisResult.weeks || analysisResult.weeks.length === 0) {
+  return null;
+  }
+
+```
+var todayWeek = getISOWeek(new Date().toISOString().slice(0, 10));
+var found = analysisResult.weeks.find(function(w) {
+  return w.isoWeek === todayWeek;
+});
+
+// Si pas de données cette semaine, prendre la dernière
+return found || analysisResult.weeks[analysisResult.weeks.length - 1];
+```
+
+}
+
+// ── 8. Dashboard console ────────────────────────────────────
+
+function dashboard(baseHebdo) {
+var result = analyze(baseHebdo);
+var s = result.summary;
+
+```
+console.log("");
+console.log("═".repeat(55));
+console.log("  ⚖️  LEGAL ENGINE v1.0 — ANALYSE JURIDIQUE");
+console.log("═".repeat(55));
+console.log("  📅 Jours analysés  : " + s.totalDays);
+console.log("  📊 Semaines        : " + s.totalWeeks);
+console.log("  ⏱️  HS total        : " + s.totalOvertime.toFixed(1) + "h");
+console.log("     └ +25%          : " + s.totalOvertime25.toFixed(1) + "h");
+console.log("     └ +50%          : " + s.totalOvertime50.toFixed(1) + "h");
+console.log("     └ Coût majoré   : " + s.totalOvertimeCost.toFixed(1) + "h équiv.");
+console.log("  🚨 Alertes critiq. : " + s.criticalAlerts);
+console.log("  ⚠️  Alertes warning : " + s.warningAlerts);
+console.log("  ✅ Sem. fiables    : " + s.fullyReliableWeeks + "/" + s.totalWeeks);
+console.log("  ⚠️  Sem. estimées   : " + s.estimatedWeeks + "/" + s.totalWeeks);
+console.log("─".repeat(55));
+
+// Détail par semaine
+result.weeks.forEach(function(w) {
+  var rel = getReliabilityDisplay(w.reliability);
+  var otLabel = w.totalOvertime > 0
+    ? " | HS:" + w.totalOvertime.toFixed(1) + "h"
+    : "";
+  var alertLabel = w.alerts.length > 0
+    ? " | 🚨×" + w.alerts.length
+    : "";
+
+  console.log(
+    "  " + rel.icon + " " + w.isoWeek
+    + " | " + w.totalHours.toFixed(1) + "h"
+    + " | " + w.daysWorked + "j"
+    + otLabel
+    + alertLabel
+  );
+
+  // Afficher les alertes critiques
+  w.alerts.forEach(function(a) {
+    if (a.level === "critical") {
+      console.log("     🚨 " + a.message
+        + (a.reliable ? "" : " [⚠️ estimé]"));
+    }
+  });
+});
+
+// Alertes globales
+if (result.globalAlerts.length > 0) {
+  console.log("─".repeat(55));
+  console.log("  📋 ALERTES TRANSVERSALES :");
+  result.globalAlerts.forEach(function(a) {
+    var icon = a.level === "critical" ? "🚨" : a.level === "warning" ? "⚠️" : "ℹ️";
+    console.log("  " + icon + " [" + a.code + "] " + a.message
+      + (a.reliable === false ? " [estimé]" : ""));
+  });
+}
+
+console.log("═".repeat(55));
+console.log("");
+
+return result;
+```
+
+}
+
+// ── API publique ────────────────────────────────────────────
+
+return {
+// Pipeline
+analyze:                analyze,
+buildLegalDays:         buildLegalDays,
+buildWeeks:             buildWeeks,
+
+```
+// Détections unitaires (utiles pour tests)
+detect48h:              detect48h,
+detect44hAvg:           detect44hAvg,
+detectConsecutiveDays:  detectConsecutiveDays,
+detectDailyRest:        detectDailyRest,
+detectWeeklyRest:       detectWeeklyRest,
+detectDailyMax:         detectDailyMax,
+
+// Fiabilité
+getReliabilityDisplay:  getReliabilityDisplay,
+
+// Intégration
+enrichScenarioWithLegal: enrichScenarioWithLegal,
+getCurrentWeek:          getCurrentWeek,
+
+// Utilitaires
+getISOWeek:             getISOWeek,
+
+// Console
+dashboard:              dashboard,
+
+// Config (lecture seule)
+CONFIG:                 Object.freeze(Object.assign({}, CONFIG)),
+
+version: "1.0",
+
+help: function() {
+  console.log([
+    "",
+    "═══════════════════════════════════════════",
+    "  ⚖️  LEGAL ENGINE v1.0 — COMMANDES",
+    "═══════════════════════════════════════════",
+    "",
+    "  LegalEngine.analyze()              Pipeline complet → { legalDays, weeks, alerts, summary }",
+    "  LegalEngine.dashboard()            Tableau de bord console",
+    "  LegalEngine.getCurrentWeek(r)      Semaine courante depuis résultat analyze()",
+    "",
+    "  LegalEngine.buildLegalDays()       Étape 1 : jours normalisés",
+    "  LegalEngine.buildWeeks(days)       Étape 2 : semaines civiles",
+    "",
+    "  LegalEngine.enrichScenarioWithLegal(scenario, week)",
+    "                                     Enrichir un scénario avec contexte juridique",
+    "",
+    "  LegalEngine.getReliabilityDisplay('partial')",
+    "                                     → { icon, label, color }",
+    "",
+    "  LegalEngine.CONFIG                 Seuils légaux utilisés",
+    "  LegalEngine.help()                 Cette aide",
+    "",
+    "═══════════════════════════════════════════",
+    ""
+  ].join("\n"));
+}
+```
+
+};
+
+})();
+
+// ── Initialisation au chargement ──────────────────────────────
+
+window.addEventListener(“load”, function() {
+setTimeout(function() {
+if (typeof STATE === “undefined”) return;
+
+```
+console.log("[LegalEngine] ⚖️ Legal Engine v1.0 chargé. Tapez LegalEngine.help()");
+
+// Lancer une première analyse silencieuse
+try {
+  var result = LegalEngine.analyze();
+  var s = result.summary;
+
+  if (s.criticalAlerts > 0) {
+    console.warn(
+      "[LegalEngine] 🚨 " + s.criticalAlerts + " alerte(s) critique(s) détectée(s) !"
+    );
+  }
+
+  if (typeof debugLog === "function") {
+    debugLog(
+      "⚖️ Legal Engine : " + s.totalWeeks + " sem. | "
+      + s.totalOvertime.toFixed(1) + "h HS | "
+      + s.criticalAlerts + " alertes",
+      s.criticalAlerts > 0 ? "warn" : "success"
+    );
+  }
+} catch (e) {
+  console.warn("[LegalEngine] Erreur analyse initiale:", e);
+}
+```
+
+}, 200);
+});
 </script>
 </body>
 </html>
