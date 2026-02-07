@@ -949,27 +949,19 @@ function confirmProfileMode(mode) {
 
 function initializeWithModule(mode) {
   debugLog(`🔄 Initialisation avec mode : ${mode}`, "info");
-  
+
   if (mode === "monthly") {
-    const m1Data = MODULE_BRIDGES.module1.getAnnualData();
-    
-    if (m1Data.available) {
-      debugLog(`✅ Module 1 disponible : ${m1Data.totalHours}h`, "success");
-      syncFromModule1(m1Data);
-    } else {
-      debugLog(`ℹ️ Module 1 vide, démarrage à zéro`, "info");
-    }
-  } else if (mode === "annual") {
-    const m2Data = MODULE_BRIDGES.module2.getCurrentExercise();
-    
-    if (m2Data.available) {
-      debugLog(`✅ Module 2 disponible : ${m2Data.totals.net}h`, "success");
-      syncFromModule2(m2Data);
-    } else {
-      debugLog(`ℹ️ Module 2 vide, démarrage à zéro`, "info");
-    }
+    const m1 = MODULE_BRIDGES.module1.getAnnualData();
+    syncFromModule1(m1);
   }
-  
+
+  if (mode === "annual") {
+    const m2 = MODULE_BRIDGES.module2.getCurrentExercise();
+    syncFromModule2(m2);
+  }
+
+  calculateInitialXP();
+  save();
   updateUI();
 }
 
@@ -1318,23 +1310,24 @@ function importFromModule1() {
 }
 
 function importFromModule2(m2Data) {
-  if (!m2Data || !Array.isArray(m2Data.entries)) return;
+  if (!m2Data || !m2Data.data) return;
 
-  m2Data.entries.forEach(e => {
-    if (!STATE.days.some(day => day.date === e.date)) {
-      STATE.days.push({
-        id: (typeof crypto.randomUUID === "function"
-          ? crypto.randomUUID()
-          : Date.now().toString() + Math.random().toString(36).slice(2)),
-        date: e.date,
-        hours: e.hours,
-        type: e.type || "normal"
-      });
+  Object.entries(m2Data.data).forEach(([date, day]) => {
+    if (STATE.days.some(d => d.date === date)) return;
 
-      STATE.totalDays++;
-      STATE.totalHours += e.hours || 0;
-      STATE.dayTypesWorked.add(e.type || "normal");
-    }
+    const hours = day.extra || 0;
+    if (hours <= 0) return;
+
+    STATE.days.push({
+      id: crypto.randomUUID(),
+      date,
+      hours,
+      type: "normal"
+    });
+
+    STATE.totalDays++;
+    STATE.totalHours += hours;
+    STATE.dayTypesWorked.add("normal");
   });
 
   STATE.calculations += m2Data.closures?.length || 0;
@@ -1342,14 +1335,7 @@ function importFromModule2(m2Data) {
 }
 
 function calculateInitialXP() {
-  // Éviter double comptage après import/reset
-  if (STATE.totalXPInitialized) {
-    debugLog("⏭️ XP déjà initialisé, skip", "info");
-    return;
-  }
   STATE.totalXPInitialized = true;
-
-  debugLog("🎮 Calcul XP initial...", "info");
 
   let baseXP = 0;
   baseXP += STATE.totalDays * 10;
@@ -1358,24 +1344,17 @@ function calculateInitialXP() {
   baseXP += STATE.weekendDays * 15;
   baseXP += STATE.calculations * 50;
 
-  let currentLevel = 1;
-  let xpRemaining = baseXP;
+  let level = 1;
+  let remainingXP = baseXP;
 
-  while (xpRemaining > 0 && currentLevel < 200) {
-    const xpForLevel = getXPForLevel(currentLevel);
-    if (xpRemaining >= xpForLevel) {
-      xpRemaining -= xpForLevel;
-      currentLevel++;
-    } else {
-      break;
-    }
+  while (remainingXP >= getXPForLevel(level)) {
+    remainingXP -= getXPForLevel(level);
+    level++;
   }
 
-  STATE.level = currentLevel;
-  STATE.xp = xpRemaining;
+  STATE.level = level;
+  STATE.xp = remainingXP;
   STATE.totalXP = baseXP;
-
-  debugLog(`✅ ${baseXP} XP calculés → Niveau ${currentLevel} (reste ${xpRemaining} XP)`, "success");
 }
 function loadAnnualThresholds() {
   const saved = localStorage.getItem("MODULE3_ANNUAL_THRESHOLDS");
@@ -1440,91 +1419,77 @@ function checkAnnualReset() {
     localStorage.setItem("MODULE3_LAST_RESET_DATE", PROFILE.resetDate);
   }
 }
+function updateUI() {
+  if (!STATE) return;
 
+  document.getElementById("playerLevel").textContent = STATE.level;
+  document.getElementById("xpLabel").textContent =
+    `${STATE.xp} / ${getXPForLevel(STATE.level)} XP`;
+
+  document.getElementById("statDays").textContent = STATE.totalDays;
+  document.getElementById("statHours").textContent = `${STATE.totalHours.toFixed(1)}h`;
+  document.getElementById("statStreak").textContent = STATE.currentStreak;
+  document.getElementById("statCalcs").textContent = STATE.calculations;
+
+  document.getElementById("xpFill").style.width =
+    `${Math.min(100, (STATE.xp / getXPForLevel(STATE.level)) * 100)}%`;
+}
+function getXPForLevel(level) {
+  return 100 + level * 25;
+}
+function toggleWorkMode() {
+  const mode = document.getElementById("workMode").value;
+
+  document.getElementById("manualInputSection")
+    .classList.toggle("hidden", mode === "sync");
+
+  document.getElementById("syncStatusSection")
+    .classList.toggle("hidden", mode !== "sync");
+
+  STATE.workMode = mode;
+  save();
+}
+function snapshot(label) {
+  localStorage.setItem(
+    "SNAPSHOT_" + Date.now(),
+    JSON.stringify({ label, STATE, date: new Date().toISOString() })
+  );
+}
+function showAchievement(title, desc, reward) {
+  const el = document.getElementById("achievementPopup");
+  if (!el) return;
+
+  el.innerHTML = `
+    <div class="achievement-title">${title}</div>
+    <div class="achievement-desc">${desc}</div>
+    <div class="achievement-reward">${reward}</div>
+  `;
+  el.classList.remove("hidden");
+  setTimeout(() => el.classList.add("hidden"), 4000);
+}
 function performAnnualReset(newYear, isModeSwitch = false) {
   snapshot("avant reset annuel");
-  
-  const previousYear = newYear - 1;
-  
-  debugLog(`📊 Archivage année ${previousYear}...`, "info");
-  
-  const archive = {
-    year: previousYear,
-    mode: PROFILE.mode,
-    
-    level: STATE.level,
-    totalXP: STATE.totalXP,
-    totalDays: STATE.totalDays,
-    totalHours: STATE.totalHours,
-    calculations: STATE.calculations,
-    
-    badgesUnlocked: STATE.unlockedBadges.length,
-    maxStreak: STATE.maxStreak,
-    nightShifts: STATE.nightShifts,
-    weekendDays: STATE.weekendDays,
-    exports: STATE.exports,
-    
-    weeklyTracking: ANNUAL_THRESHOLDS.weeklyHoursTracking,
-    consecutiveDays: ANNUAL_THRESHOLDS.consecutiveDaysTracking,
-    monthlyOvertime: ANNUAL_THRESHOLDS.monthlyOvertimeTracking,
-    
-    archivedAt: new Date().toISOString()
-  };
-  
-  let archives = JSON.parse(localStorage.getItem("MODULE3_ARCHIVES") || "[]");
-  archives.push(archive);
-  
-  if (archives.length > 10) {
-    archives = archives.slice(-10);
-  }
-  
-  localStorage.setItem("MODULE3_ARCHIVES", JSON.stringify(archives));
-  
-  debugLog(`✅ Année ${previousYear} archivée`, "success");
-  
-  debugLog("🔄 Reset des seuils de conseils...", "info");
-  
-  ANNUAL_THRESHOLDS = {
-    year: newYear,
-    weeklyHoursTracking: {},
-    consecutiveDaysTracking: 0,
-    monthlyOvertimeTracking: {},
-    lastAlertDates: {
-      weekly48h: null,
-      consecutive6days: null,
-      monthlyOvertime: null
-    }
-  };
-  
-  saveAnnualThresholds();
-  
+
+  STATE.days = [];
+  STATE.currentStreak = 0;
+  STATE.lastDayDate = null;
+  STATE.dayTypesWorked = new Set();
+
+  calculateInitialXP();
+  save();
+
   if (!isModeSwitch) {
     PROFILE.lockedUntil = null;
     PROFILE.resetDate = calculateResetDate(PROFILE.mode);
     saveProfile();
-    
-    debugLog("🔓 Mode déverrouillé (changement possible)", "success");
   }
-  
-  STATE.currentStreak = 0;
-  STATE.lastDayDate = null;
-  
-  save();
-  
-  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
-  debugLog("✅ Reset annuel terminé", "success");
-  debugLog(`📊 Cumul conservé : ${STATE.totalDays}j • ${STATE.totalHours.toFixed(0)}h`, "success");
-  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
-  
-  if (!isModeSwitch) {
-    showAchievement(
-      "🎆 NOUVELLE ANNÉE !",
-      `Stats ${previousYear} archivées`,
-      `Cumul préservé • Mode déverrouillé`
-    );
-  }
-}
 
+  showAchievement(
+    "🎆 NOUVELLE ANNÉE",
+    "Données archivées",
+    "Progression réinitialisée"
+  );
+}
 function getCareerStats() {
   const archives = JSON.parse(localStorage.getItem("MODULE3_ARCHIVES") || "[]");
   
@@ -1592,12 +1557,12 @@ function load() {
   if (saved) {
     STATE = JSON.parse(saved);
     STATE.dayTypesWorked = new Set(STATE.dayTypesWorked || []);
-    STATE.totalXPInitialized = !!STATE.totalXPInitialized;
   } else {
     STATE = getDefaultState();
   }
-}
 
+  updateUI();
+}
 function snapshot(reason, force = false) {
   try {
     const key = "SNAPSHOT_" + Date.now();
@@ -1999,52 +1964,49 @@ function manualSync() {
 }
 
 function syncFromModule1(m1Data) {
-  const lastSyncKey = `M1_LAST_SYNC_${m1Data.year}`;
-  const lastSync = localStorage.getItem(lastSyncKey);
+  if (!m1Data || !m1Data.available) return;
 
-  const currentTotal = parseFloat(m1Data.totalHours) || 0;
+  const lastSync =
+    parseFloat(localStorage.getItem(`M1_LAST_SYNC_${m1Data.year}`)) || 0;
 
-  if (!lastSync || lastSync !== String(currentTotal)) {
-    const prevTotal = parseFloat(lastSync) || 0;
-    const delta = currentTotal - prevTotal;
+  const currentTotal = parseFloat(m1Data.totalHours);
 
-    if (delta > 0) {
-      STATE.totalHours += delta;
-      STATE.calculations++;
-
-      const xpGain = Math.floor(delta / 10);
-      addXP(xpGain, "Sync Module 1");
-      checkBadges();
-    }
-
-    localStorage.setItem(lastSyncKey, String(currentTotal));
+  if (currentTotal <= lastSync) {
+    debugLog("🔄 Module 1 déjà synchronisé", "info");
+    return;
   }
+
+  importFromModule1();
+
+  localStorage.setItem(
+    `M1_LAST_SYNC_${m1Data.year}`,
+    String(currentTotal)
+  );
+
+  debugLog("✅ Synchronisation Module 1 réussie", "success");
 }
-
 function syncFromModule2(m2Data) {
-  const lastSyncKey = `M2_LAST_SYNC_${m2Data.exercise}`;
-  const lastSync = localStorage.getItem(lastSyncKey);
+  if (!m2Data || !m2Data.available) return;
 
-  const stats = MODULE_BRIDGES.module2.getExerciseStats();
-  if (!stats.available) return;
+  const lastSync =
+    parseInt(localStorage.getItem(`M2_LAST_SYNC_${m2Data.exercise}`)) || 0;
 
-  const currentDays = parseInt(stats.daysWorked) || 0;
+  const currentDays = Object.keys(m2Data.data || {}).length;
 
-  if (!lastSync || lastSync !== String(currentDays)) {
-    const prevDays = parseInt(lastSync) || 0;
-    const delta = currentDays - prevDays;
-
-    if (delta > 0) {
-      STATE.totalDays += delta;
-      STATE.calculations++;
-
-      const xpGain = delta * 10;
-      addXP(xpGain, "Sync Module 2");
-      checkBadges();
-    }
-
-    localStorage.setItem(lastSyncKey, String(currentDays));
+  if (currentDays <= lastSync) {
+    debugLog("🔄 Module 2 déjà synchronisé", "info");
+    return;
   }
+
+  importFromModule2(m2Data);
+
+  localStorage.setItem(
+    `M2_LAST_SYNC_${m2Data.exercise}`,
+    String(currentDays)
+  );
+
+  debugLog("✅ Synchronisation Module 2 réussie", "success");
+}
 }
 
 function displayModulesData() {
