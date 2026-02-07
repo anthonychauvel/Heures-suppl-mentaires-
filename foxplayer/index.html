@@ -1,1 +1,3499 @@
-text
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Module 3 – Moteur Central HS [ULTIMATE]</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{--bg:#0f1115;--card:#1c1f26;--txt:#e6e6e6;--accent:#4fb3c2;--warn:#f39c12;--crit:#c0392b;--ok:#2ecc71;--info:#3498db;--gold:#f1c40f;--silver:#bdc3c7;--bronze:#cd7f32;--legendary:#9b59b6}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.5;padding-bottom:50px}
+h1,h2,h3{text-align:center;margin:15px 0}
+h1{font-size:28px;margin-top:20px}
+h2{font-size:22px}
+h3{font-size:18px}
+.card{background:var(--card);margin:15px 10px;padding:15px;border-radius:12px;position:relative;box-shadow:0 4px 6px rgba(0,0,0,0.3)}
+label{display:block;margin:10px 0 5px;font-weight:500;font-size:14px}
+input,select,button,textarea{width:100%;padding:12px;border-radius:8px;border:none;margin-top:4px;font-size:15px;font-family:inherit}
+input,select,textarea{background:rgba(255,255,255,0.05);color:var(--txt);border:1px solid rgba(255,255,255,0.1)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+button{background:var(--accent);color:#000;font-weight:bold;cursor:pointer;transition:all 0.3s;border:none}
+button:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(79,179,194,0.4)}
+button:active{transform:translateY(0)}
+button.secondary{background:rgba(255,255,255,0.1);color:var(--txt)}
+button.danger{background:var(--crit);color:#fff}
+.small{font-size:12px;opacity:.7}
+.hidden{display:none !important}
+.cheat-badge{position:fixed;top:10px;right:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:bold;z-index:10000;animation:pulse 2s infinite;box-shadow:0 4px 15px rgba(102,126,234,0.4)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.debug-banner{background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);color:white;text-align:center;padding:12px;font-weight:bold;position:sticky;top:0;z-index:9999;box-shadow:0 4px 10px rgba(0,0,0,0.3);font-size:14px}
+.logo-trigger{cursor:pointer;user-select:none;transition:transform 0.1s;display:inline-block}
+.logo-trigger:active{transform:scale(0.95)}
+@keyframes unlockFlash{0%,100%{opacity:1}50%{opacity:0}}
+.unlock-flash{animation:unlockFlash 0.2s ease 3}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:9000;padding:20px;overflow:auto}
+.modal-content{background:var(--card);padding:25px;border-radius:16px;max-width:600px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.5)}
+.modal-content h2{margin-top:0}
+.player-header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:20px;border-radius:12px;text-align:center;margin:15px 10px;position:relative;overflow:hidden}
+.player-header::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 70%);animation:pulseGlow 3s infinite}
+@keyframes pulseGlow{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:0.8}}
+.player-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(45deg,var(--gold),var(--warn));display:inline-flex;align-items:center;justify-content:center;font-size:40px;border:4px solid rgba(255,255,255,0.3);margin-bottom:10px;position:relative;z-index:1}
+.player-name{font-size:24px;font-weight:bold;margin:10px 0;position:relative;z-index:1}
+.player-title{font-size:14px;opacity:0.9;font-style:italic;position:relative;z-index:1}
+.xp-container{margin:15px 0;position:relative;z-index:1}
+.xp-bar{height:30px;background:rgba(0,0,0,0.3);border-radius:15px;overflow:hidden;position:relative;border:2px solid rgba(255,255,255,0.2)}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--ok),var(--accent),var(--info));background-size:200% 100%;animation:gradientShift 3s ease infinite;transition:width 1s ease;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;position:relative;overflow:hidden}
+.xp-fill::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);animation:shine 2s infinite}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes shine{0%{left:-100%}100%{left:200%}}
+.xp-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-weight:bold;font-size:12px;text-shadow:0 0 5px rgba(0,0,0,0.8);z-index:2}
+.league-badge{display:inline-block;padding:8px 16px;border-radius:20px;font-weight:bold;font-size:14px;margin:5px;border:2px solid;background:rgba(0,0,0,0.3)}
+.league-amateur{border-color:var(--bronze);color:var(--bronze)}
+.league-bronze{border-color:#cd7f32;color:#cd7f32}
+.league-silver{border-color:var(--silver);color:var(--silver)}
+.league-gold{border-color:var(--gold);color:var(--gold)}
+.league-platinum{border-color:#e5e4e2;color:#e5e4e2}
+.league-diamond{border-color:var(--info);color:var(--info)}
+.league-master{border-color:var(--legendary);color:var(--legendary)}
+.league-grandmaster{border-color:var(--gold);color:var(--gold);background:linear-gradient(135deg,rgba(241,196,15,0.2),rgba(155,89,182,0.2));animation:glow 2s infinite}
+.league-legend{border-color:#ff1744;color:#ff1744;background:linear-gradient(135deg,rgba(255,23,68,0.2),rgba(255,215,0,0.2));animation:legendary 3s infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 10px rgba(241,196,15,0.5)}50%{box-shadow:0 0 20px rgba(241,196,15,0.8)}}
+@keyframes legendary{0%,100%{box-shadow:0 0 15px rgba(255,23,68,0.8),0 0 30px rgba(255,215,0,0.5)}50%{box-shadow:0 0 30px rgba(255,23,68,1),0 0 50px rgba(255,215,0,0.8)}}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:15px 0}
+.stat-box{background:rgba(0,0,0,0.3);padding:15px;border-radius:8px;text-align:center;border-left:4px solid var(--accent);transition:transform 0.3s}
+.stat-box:hover{transform:translateY(-3px)}
+.stat-value{font-size:28px;font-weight:bold;background:linear-gradient(45deg,var(--accent),var(--info));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:11px;opacity:0.7;margin-top:5px}
+.badges-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin:10px 0}
+.badge{background:rgba(0,0,0,0.3);padding:10px;border-radius:10px;text-align:center;cursor:pointer;transition:all 0.3s;border:2px solid transparent;position:relative}
+.badge:hover{transform:scale(1.05);border-color:var(--accent)}
+.badge.locked{opacity:0.3;filter:grayscale(100%)}
+.badge.unlocked{animation:badgeUnlock 0.5s ease}
+@keyframes badgeUnlock{0%{transform:scale(0) rotate(-180deg);opacity:0}50%{transform:scale(1.2) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
+.badge-icon{font-size:40px;margin-bottom:5px}
+.badge-name{font-size:11px;font-weight:bold}
+.badge-rarity{position:absolute;top:5px;right:5px;width:10px;height:10px;border-radius:50%}
+.rarity-common{background:var(--silver)}
+.rarity-rare{background:var(--info)}
+.rarity-epic{background:var(--legendary)}
+.rarity-legendary{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.trophy-showcase{display:flex;justify-content:space-around;flex-wrap:wrap;margin:15px 0}
+.trophy{text-align:center;padding:15px;position:relative}
+.trophy-icon{font-size:60px;margin-bottom:10px;filter:drop-shadow(0 5px 10px rgba(0,0,0,0.5))}
+.trophy.gold .trophy-icon{animation:trophyFloat 3s ease-in-out infinite}
+@keyframes trophyFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.trophy-label{font-size:12px;font-weight:bold}
+.trophy-count{font-size:20px;color:var(--gold)}
+.achievement-popup{position:fixed;top:20px;right:20px;background:linear-gradient(135deg,var(--legendary),var(--gold));padding:20px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.5);z-index:9999;animation:slideIn 0.5s ease,slideOut 0.5s ease 3.5s forwards;min-width:300px;max-width:400px}
+@keyframes slideIn{from{transform:translateX(500px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(500px);opacity:0}}
+.achievement-title{font-size:18px;font-weight:bold;margin-bottom:5px}
+.achievement-desc{font-size:14px;opacity:0.9}
+.achievement-reward{font-size:12px;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.3)}
+.particles{position:fixed;inset:0;pointer-events:none;z-index:8000}
+.particle{position:absolute;width:10px;height:10px;background:var(--gold);border-radius:50%;animation:particleRise 2s ease-out forwards}
+@keyframes particleRise{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-200px) scale(0);opacity:0}}
+.days-list{max-height:400px;overflow-y:auto}
+.day-item{background:rgba(0,0,0,0.2);padding:12px;margin:8px 0;border-radius:8px;border-left:4px solid var(--accent);display:flex;justify-content:space-between;align-items:center}
+.day-item.night{border-left-color:var(--legendary);background:rgba(155,89,182,0.1)}
+.day-item.weekend{border-left-color:var(--gold);background:rgba(241,196,15,0.1)}
+.day-info{flex:1}
+.day-date{font-weight:bold;font-size:14px}
+.day-hours{font-size:12px;opacity:0.8}
+.day-delete{background:var(--crit);color:#fff;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:12px;border:none;width:auto}
+.debug-console{background:#000;color:#0f0;padding:15px;border-radius:8px;font-family:'Courier New',monospace;font-size:11px;max-height:400px;overflow-y:auto;line-height:1.4}
+.debug-log{margin:2px 0;white-space:pre-wrap;word-break:break-word}
+.debug-log.info{color:#00bfff}
+.debug-log.success{color:#0f0}
+.debug-log.warn{color:#ffa500}
+.debug-log.error{color:#f00}
+@media (max-width:600px){.stats-grid{grid-template-columns:repeat(2,1fr)}.badges-container{grid-template-columns:repeat(3,1fr)}.modal-content{padding:20px}h1{font-size:24px}h2{font-size:20px}}
+.milestones-list{display:grid;gap:12px;margin:15px 0}
+.milestone{background:rgba(0,0,0,0.3);padding:15px;border-radius:10px;border-left:4px solid var(--silver);display:flex;justify-content:space-between;align-items:center}
+.milestone.completed{border-left-color:var(--gold);background:rgba(241,196,15,0.1)}
+.milestone-info{flex:1}
+.milestone-level{font-size:20px;font-weight:bold;color:var(--gold)}
+.milestone-title{font-size:14px;font-weight:bold;margin:5px 0}
+.milestone-reward{font-size:12px;opacity:0.8}
+.milestone-status{font-size:12px;padding:6px 12px;border-radius:20px;background:rgba(0,0,0,0.3)}
+.milestone-status.unlocked{background:var(--ok);color:#000;font-weight:bold}
+/* AI Dashboard Styles */
+.ai-dashboard{margin:15px 0}
+.ai-gauge{margin:12px 0}
+.ai-gauge-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ai-gauge-label{font-size:13px;font-weight:500}
+.ai-gauge-value{font-size:13px;font-weight:bold}
+.ai-gauge-bar{height:12px;background:rgba(0,0,0,0.3);border-radius:6px;overflow:hidden;position:relative}
+.ai-gauge-fill{height:100%;transition:width 0.5s ease,background 0.5s ease;border-radius:6px}
+.ai-gauge-fill.low{background:linear-gradient(90deg,var(--ok),#58d68d)}
+.ai-gauge-fill.medium{background:linear-gradient(90deg,var(--warn),#f5b041)}
+.ai-gauge-fill.high{background:linear-gradient(90deg,var(--crit),#e74c3c)}
+.ai-gauge-fill.stable{background:linear-gradient(90deg,var(--info),var(--accent))}
+.ai-message{background:rgba(0,0,0,0.3);padding:12px 15px;border-radius:8px;margin-top:15px;border-left:4px solid var(--accent);font-size:13px;line-height:1.5}
+.ai-message.warning{border-left-color:var(--warn);background:rgba(243,156,18,0.1)}
+.ai-message.critical{border-left-color:var(--crit);background:rgba(192,57,43,0.1)}
+.ai-message-title{font-weight:bold;margin-bottom:5px}
+.ai-scenario-match{background:rgba(79,179,194,0.1);padding:10px 15px;border-radius:8px;margin-top:10px;font-size:12px}
+.ai-scenario-match strong{color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="cheatBadge" class="cheat-badge hidden">🎮 MODE DÉVELOPPEUR</div>
+<div id="debugBanner" class="debug-banner hidden">🧪 MODE DEBUG ACTIVÉ | 🎯 MODE DÉMO DÉBLOQUÉ</div>
+<div class="particles" id="particles"></div>
+<div id="achievementPopup" class="achievement-popup hidden"></div>
+<div id="profileSetupModal" class="modal hidden">
+<div class="modal-content">
+<h2>🎮 Bienvenue dans Module 3</h2>
+<p style="font-size:14px;line-height:1.6;margin:20px 0">Avant de commencer, veuillez choisir votre mode de suivi :</p>
+<div class="card" style="margin:15px 0;background:rgba(79,179,194,0.1)">
+<h3>📅 Mode Mensualisé</h3>
+<p style="font-size:13px">• Basé sur <b>Module 1</b> (Compteur mensuel)<br>• Clôtures mensuelles<br>• Suivi période par période</p>
+<button onclick="confirmProfileMode('monthly')" style="background:var(--info)">Choisir Mensualisé</button>
+</div>
+<div class="card" style="margin:15px 0;background:rgba(241,196,15,0.1)">
+<h3>📊 Mode Annualisé</h3>
+<p style="font-size:13px">• Basé sur <b>Module 2</b> (Compteur annuel)<br>• Exercice annuel complet<br>• Périodes comptables</p>
+<button onclick="confirmProfileMode('annual')" style="background:var(--accent)">Choisir Annualisé</button>
+</div>
+<p style="font-size:12px;color:#999;margin-top:20px">⚠️ Ce choix sera <b>verrouillé jusqu'à la fin de l'année</b>.<br>Vous pourrez changer de mode uniquement en décembre.</p>
+</div>
+</div>
+<div id="dualModuleModal" class="modal hidden">
+<div class="modal-content" style="max-width:700px">
+<h2>⚠️ Choix requis</h2>
+<p style="font-size:14px;line-height:1.6;margin:20px 0">Vos <b>deux modules</b> contiennent des données depuis janvier.<br>Vous devez choisir lequel utiliser pour Module 3 :</p>
+<div class="card" style="margin:15px 0;background:rgba(79,179,194,0.1)">
+<h3>📅 Module 1 - Mensualisé</h3>
+<div id="m1Info" style="font-size:13px;margin:10px 0"></div>
+<button onclick="selectModuleFromDual('monthly')" style="background:var(--info)">✅ Choisir Module 1</button>
+</div>
+<div class="card" style="margin:15px 0;background:rgba(241,196,15,0.1)">
+<h3>📊 Module 2 - Annualisé</h3>
+<div id="m2Info" style="font-size:13px;margin:10px 0"></div>
+<button onclick="selectModuleFromDual('annual')" style="background:var(--accent)">✅ Choisir Module 2</button>
+</div>
+<p style="font-size:12px;color:#999;margin-top:20px">ℹ️ L'autre module continuera de fonctionner normalement,<br>mais seul le module choisi sera synchronisé avec Module 3.</p>
+</div>
+</div>
+<div id="mainInterface" class="hidden">
+<h1><span id="logoTrigger" class="logo-trigger">🎮</span> Module 3 – Moteur Central</h1>
+<p class="small" style="text-align:center">Gamification • Conseils Neutres • Sécurité</p>
+<div class="player-header">
+<div class="player-avatar" id="playerAvatar">👤</div>
+<div class="player-name">Niveau <span id="playerLevel">1</span></div>
+<div class="player-title" id="playerTitle">Débutant</div>
+<div class="xp-container">
+<div class="xp-bar">
+<div class="xp-fill" id="xpFill" style="width:0%">
+<span class="xp-label" id="xpLabel">0 / 100 XP</span>
+</div>
+</div>
+</div>
+<div id="leagueBadge" class="league-badge league-amateur">🥉 Ligue Amateur</div>
+</div>
+<div class="card">
+<h2>📊 Statistiques</h2>
+<div class="stats-grid">
+<div class="stat-box"><div class="stat-value" id="statDays">0</div><div class="stat-label">Jours totaux</div></div>
+<div class="stat-box"><div class="stat-value" id="statHours">0h</div><div class="stat-label">Heures totales</div></div>
+<div class="stat-box"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Série active</div></div>
+<div class="stat-box"><div class="stat-value" id="statCalcs">0</div><div class="stat-label">Calculs</div></div>
+</div>
+</div>
+<div id="aiDashboard" class="card hidden">
+<h3>🤖 Intelligence Artificielle</h3>
+<div class="ai-dashboard">
+<div class="ai-gauge">
+<div class="ai-gauge-header"><span class="ai-gauge-label">😓 Fatigue</span><span class="ai-gauge-value" id="aiFatigueValue">0%</span></div>
+<div class="ai-gauge-bar"><div class="ai-gauge-fill low" id="aiFatigueFill" style="width:0%"></div></div>
+</div>
+<div class="ai-gauge">
+<div class="ai-gauge-header"><span class="ai-gauge-label">⚠️ Risque Burnout</span><span class="ai-gauge-value" id="aiOverloadValue">0%</span></div>
+<div class="ai-gauge-bar"><div class="ai-gauge-fill low" id="aiOverloadFill" style="width:0%"></div></div>
+</div>
+<div class="ai-gauge">
+<div class="ai-gauge-header"><span class="ai-gauge-label">📊 Stabilité</span><span class="ai-gauge-value" id="aiStabilityValue">100%</span></div>
+<div class="ai-gauge-bar"><div class="ai-gauge-fill stable" id="aiStabilityFill" style="width:100%"></div></div>
+</div>
+<div id="aiMessage" class="ai-message hidden"></div>
+<div id="aiScenarioMatch" class="ai-scenario-match hidden"></div>
+</div>
+</div>
+<div class="card">
+<h3>⚙️ Mode de saisie</h3>
+<select id="workMode" onchange="toggleWorkMode()">
+<option value="sync">🔄 Synchronisation (Modules 1/2)</option>
+<option value="manual">✍️ Saisie manuelle</option>
+</select>
+</div>
+<div id="manualInputSection" class="card hidden">
+<h3>✍️ Ajouter une journée</h3>
+<label>Date</label><input type="date" id="inputDate">
+<label>Heures travaillées</label><input type="number" step="0.25" id="inputHours" placeholder="7.5">
+<label>Type de journée</label>
+<select id="inputType">
+<option value="normal">🌞 Jour normal</option>
+<option value="nuit">🌙 Travail de nuit</option>
+<option value="saturday">📅 Samedi</option>
+<option value="sunday">🎯 Dimanche</option>
+</select>
+<button onclick="addDay()" style="margin-top:10px">➕ Ajouter la journée</button>
+<h3 style="margin-top:20px">📋 Journées enregistrées</h3>
+<div id="daysList" class="days-list"></div>
+</div>
+<div id="syncStatusSection" class="card">
+<h3>🔄 Synchronisation automatique</h3>
+<p style="font-size:14px;opacity:0.8" id="syncStatus">Vérification...</p>
+<button onclick="manualSync()" style="margin-top:10px">🔄 Synchroniser maintenant</button>
+</div>
+<div id="modulesDataContainer" class="card">
+<h3>📊 Données des modules</h3>
+<p style="font-size:13px;opacity:0.7">Chargement...</p>
+</div>
+<div class="card">
+<h2>🏆 Trophées</h2>
+<div class="trophy-showcase">
+<div class="trophy gold"><div class="trophy-icon">🥇</div><div class="trophy-label">Or</div><div class="trophy-count" id="trophyGold">0</div></div>
+<div class="trophy silver"><div class="trophy-icon">🥈</div><div class="trophy-label">Argent</div><div class="trophy-count" id="trophySilver">0</div></div>
+<div class="trophy bronze"><div class="trophy-icon">🥉</div><div class="trophy-label">Bronze</div><div class="trophy-count" id="trophyBronze">0</div></div>
+</div>
+</div>
+<details class="card" open>
+<summary style="cursor:pointer;font-weight:bold;font-size:18px"><h2 style="display:inline;margin:0">🎖️ Badges (<span id="badgeCount">0</span>/50)</h2></summary>
+<div id="badgesContainer" class="badges-container"></div>
+</details>
+<details class="card">
+<summary style="cursor:pointer;font-weight:bold;font-size:18px"><h2 style="display:inline;margin:0">🎯 Paliers de progression</h2></summary>
+<div id="milestonesContainer" class="milestones-list"></div>
+</details>
+<div class="card">
+<h3>⚙️ Gestion du profil</h3>
+<p style="font-size:13px"><b>Mode actuel :</b> <span id="currentModeDisplay">—</span><br><b>Date de reset :</b> <span id="resetDateDisplay">—</span><br><b>Statut :</b> <span id="lockStatusDisplay">—</span></p>
+<button onclick="attemptModeSwitch()" style="background:var(--warn)">🔄 Changer de mode</button>
+<button onclick="factoryReset()" style="background:var(--crit);color:#fff;margin-top:10px">🧨 Réinitialisation complète</button>
+</div>
+<div class="card">
+<h3>💾 Sauvegarde</h3>
+<button onclick="exportData()">💾 Exporter les données</button>
+<button class="secondary" onclick="importData()" style="margin-top:8px">📥 Importer des données</button>
+<input type="file" id="importFile" accept=".json" style="display:none">
+</div>
+<div id="debugPanel" class="card hidden">
+<h3>🔧 Panel Debug</h3>
+<button onclick="document.getElementById('debugConsole').innerHTML=''">🗑️ Effacer console</button>
+<button class="secondary" onclick="console.log('STATE:',STATE)">📊 Voir STATE complet</button>
+<button class="secondary" onclick="updateUI()">🔄 Forcer MAJ UI</button>
+<h4 style="margin-top:15px">🖥️ Console Debug</h4>
+<div class="debug-console" id="debugConsole"></div>
+</div>
+<div style="text-align:center;margin:30px 0;font-size:12px;opacity:0.5">© Module 3 - Moteur Central HS • v8.0 Ultimate</div>
+</div>
+<script>
+const MODULE1_API = {
+  getAnnualData() {
+    try {
+      const STORAGE_PREFIX = "CA_HS_TRACKER_V1";
+      const currentYear = new Date().getFullYear();
+      const yearKey = `${STORAGE_PREFIX}_DATA_${currentYear}`;
+      const rawData = localStorage.getItem(yearKey);
+      
+      if (!rawData) {
+        return {available: false, year: currentYear, totalHours: 0, carry: 0, months: []};
+      }
+      
+      const yearData = JSON.parse(rawData);
+      let totalHours = 0;
+      let latestCarry = 0;
+      const months = [];
+      
+      Object.entries(yearData)
+        .filter(([key]) => /^\d{4}-\d{2}$/.test(key))
+        .sort(([a], [b]) => a.localeCompare(b))
+        .forEach(([monthKey, monthData]) => {
+          const periodHours = this._getPeriodHours(monthKey, yearData);
+          totalHours += periodHours;
+          latestCarry = monthData.carry || 0;
+          months.push({
+            key: monthKey,
+            periodHours,
+            paid: monthData.paid || 0,
+            carry: monthData.carry || 0,
+            closing: monthData.closing
+          });
+        });
+      
+      return {
+        available: true,
+        year: currentYear,
+        totalHours: totalHours.toFixed(2),
+        carry: latestCarry.toFixed(2),
+        months
+      };
+    } catch (e) {
+      console.warn("⚠️ Erreur lecture Module 1:", e);
+      return {available: false, error: e.message};
+    }
+  },
+  
+  _getPeriodHours(monthKey, yearData) {
+    const {start, end} = this._getPeriodBounds(monthKey, yearData);
+    let total = 0;
+    
+    Object.entries(yearData).forEach(([key, month]) => {
+      if (!/^\d{4}-\d{2}$/.test(key)) return;
+      
+      Object.entries(month.days || {}).forEach(([d, h]) => {
+        const [y, m] = key.split("-").map(Number);
+        const date = new Date(y, m - 1, d);
+        if (date >= start && date <= end) {
+          total += h;
+        }
+      });
+    });
+    
+    return total;
+  },
+  
+  _getPeriodBounds(monthKey, yearData) {
+    const [y, m] = monthKey.split("-").map(Number);
+    const currentMonth = yearData[monthKey];
+    
+    if (!currentMonth) {
+      return {
+        start: new Date(y, m - 1, 1),
+        end: new Date(y, m, 0)
+      };
+    }
+    
+    const prevMonthDate = new Date(y, m - 2, 1);
+    const prevKey = prevMonthDate.getFullYear() + "-" + 
+                    String(prevMonthDate.getMonth() + 1).padStart(2, "0");
+    const prevMonth = yearData[prevKey];
+    
+    let start;
+    if (prevMonth && typeof prevMonth.closing === "number") {
+      start = new Date(
+        prevMonthDate.getFullYear(),
+        prevMonthDate.getMonth(),
+        prevMonth.closing + 1
+      );
+    } else {
+      start = new Date(y, m - 1, 1);
+    }
+    
+    const closing = currentMonth.closing || this._getLastSunday(y, m - 1);
+    const end = new Date(y, m - 1, closing);
+    
+    return {start, end};
+  },
+  
+  _getLastSunday(year, monthIndex) {
+    const lastDay = new Date(year, monthIndex + 1, 0);
+    const day = lastDay.getDay();
+    const diff = day === 0 ? 0 : day;
+    lastDay.setDate(lastDay.getDate() - diff);
+    return lastDay.getDate();
+  },
+
+  getIndividualDays() {
+    try {
+      const STORAGE_PREFIX = "CA_HS_TRACKER_V1";
+      const currentYear = new Date().getFullYear();
+      const yearKey = `${STORAGE_PREFIX}_DATA_${currentYear}`;
+      const rawData = localStorage.getItem(yearKey);
+
+      if (!rawData) return [];
+
+      const yearData = JSON.parse(rawData);
+      const days = [];
+
+      Object.entries(yearData)
+        .filter(([key]) => /^\d{4}-\d{2}$/.test(key))
+        .forEach(([monthKey, monthData]) => {
+          const [y, m] = monthKey.split("-").map(Number);
+          Object.entries(monthData.days || {}).forEach(([day, hours]) => {
+            const h = parseFloat(hours);
+            if (h > 0) {
+              days.push({
+                date: `${y}-${String(m).padStart(2, "0")}-${String(parseInt(day)).padStart(2, "0")}`,
+                hours: h
+              });
+            }
+          });
+        });
+
+      return days;
+    } catch (e) {
+      console.warn("Erreur lecture jours Module 1:", e);
+      return [];
+    }
+  }
+};
+
+const MODULE2_API = {
+  getCurrentExercise() {
+    try {
+      const activeSuffix = localStorage.getItem("ACTIVE_YEAR_SUFFIX") || new Date().getFullYear();
+      const suffix = String(activeSuffix);
+      
+      const data = JSON.parse(localStorage.getItem("DATA_REPORT_" + suffix) || "{}");
+      const closures = JSON.parse(localStorage.getItem("CLOSURES_REPORT_" + suffix) || "[]");
+      const exerciseStart = localStorage.getItem("EXERCISE_START_" + suffix) || "";
+      const baseHebdo = Number(localStorage.getItem("BASE_HEBDO_" + suffix)) || 35;
+      
+      return {
+        available: Object.keys(data).length > 0,
+        exercise: suffix,
+        exerciseStart,
+        baseHebdo,
+        data,
+        closures,
+        totals: this._calculateTotals(data, closures, exerciseStart, baseHebdo)
+      };
+    } catch (e) {
+      console.warn("⚠️ Erreur lecture Module 2:", e);
+      return {available: false, error: e.message};
+    }
+  },
+  
+  getExerciseStats() {
+    try {
+      const current = this.getCurrentExercise();
+      if (!current.available) return {available: false};
+      
+      let totalExtra = 0;
+      let daysWorked = 0;
+      
+      Object.entries(current.data).forEach(([date, day]) => {
+        totalExtra += day.extra || 0;
+        if ((day.extra || 0) > 0) daysWorked++;
+      });
+      
+      return {
+        available: true,
+        totalExtra: totalExtra.toFixed(2),
+        daysWorked,
+        ferieCount: 0
+      };
+    } catch (e) {
+      return {available: false, error: e.message};
+    }
+  },
+  
+  _calculateTotals(data, closures, exerciseStart, baseHebdo) {
+    return {
+      total25: "0.00",
+      total50: "0.00",
+      totalRecup: "0.00",
+      net: "0.00"
+    };
+  }
+};
+
+const MODULE_BRIDGES = {
+  module1: MODULE1_API,
+  module2: MODULE2_API,
+  
+  checkAvailability() {
+    const m1 = this.module1.getAnnualData();
+    const m2 = this.module2.getCurrentExercise();
+    
+    return {
+      module1: m1.available,
+      module2: m2.available,
+      synced: m1.available && m2.available
+    };
+  }
+};
+
+window.MODULE_BRIDGES = MODULE_BRIDGES;
+
+let STATE = null;
+let PROFILE = null;
+let ANNUAL_THRESHOLDS = null;
+let SCENARIOS = [];
+let BADGES = [];
+let MILESTONES = [];
+
+const CHEAT_CONFIG = {
+  CODE: "19871",
+  CLICKS_REQUIRED: 5,
+  TIMEOUT: 3000,
+  STORAGE_KEY: "MODULE3_CHEAT_UNLOCKED"
+};
+
+let cheatState = {
+  clicks: 0,
+  lastClickTime: 0,
+  unlocked: localStorage.getItem(CHEAT_CONFIG.STORAGE_KEY) === "true"
+};
+
+function getDefaultState() {
+  return {
+    meta: {
+      createdAt: new Date().toISOString(),
+      version: "8.0-ultimate",
+      lastPlayed: new Date().toISOString()
+    },
+    level: 1,
+    xp: 0,
+    totalXP: 0,
+    totalDays: 0,
+    totalHours: 0,
+    calculations: 0,
+    maxStreak: 0,
+    currentStreak: 0,
+    nightShifts: 0,
+    weekendDays: 0,
+    exports: 0,
+    days: [],
+    unlockedBadges: [],
+    trophies: {gold: 0, silver: 0, bronze: 0},
+    completedMilestones: [],
+    lastDayDate: null,
+    dayTypesWorked: new Set(),
+    workMode: "sync"
+  };
+}
+function initCheatCode() {
+  const logo = document.getElementById("logoTrigger");
+  
+  if (!logo) {
+    console.warn("⚠️ Logo trigger introuvable");
+    return;
+  }
+  
+  if (cheatState.unlocked) {
+    activateCheatMode();
+    return;
+  }
+  
+  logo.addEventListener("click", handleCheatClick);
+  debugLog("🔐 Système de cheat code initialisé (5 clics sur le logo)", "info");
+}
+
+function handleCheatClick(e) {
+  e.preventDefault();
+  
+  const now = Date.now();
+  
+  if (now - cheatState.lastClickTime > CHEAT_CONFIG.TIMEOUT) {
+    cheatState.clicks = 0;
+  }
+  
+  cheatState.clicks++;
+  cheatState.lastClickTime = now;
+  
+  debugLog(`🔐 Cheat code: ${cheatState.clicks}/${CHEAT_CONFIG.CLICKS_REQUIRED} clics`, "info");
+  
+  const logo = document.getElementById("logoTrigger");
+  logo.style.transform = "scale(1.2) rotate(15deg)";
+  setTimeout(() => {
+    logo.style.transform = "";
+  }, 100);
+  
+  if (cheatState.clicks >= CHEAT_CONFIG.CLICKS_REQUIRED) {
+    promptCheatCode();
+  }
+}
+
+function promptCheatCode() {
+  const code = prompt(
+    "🔐 Zone développeur détectée\n\n" +
+    "Entrez le code d'accès pour déverrouiller les fonctionnalités cachées :"
+  );
+  
+  if (code === null) {
+    cheatState.clicks = 0;
+    return;
+  }
+  
+  if (code === CHEAT_CONFIG.CODE) {
+    cheatState.unlocked = true;
+    localStorage.setItem(CHEAT_CONFIG.STORAGE_KEY, "true");
+    
+    activateCheatMode();
+    
+    const logo = document.getElementById("logoTrigger");
+    logo.classList.add("unlock-flash");
+    
+    showAchievement(
+      "🎮 MODE DÉVELOPPEUR DÉBLOQUÉ !",
+      "Accès complet aux fonctionnalités cachées",
+      "Debug + Démo + Outils avancés"
+    );
+    
+    triggerParticles();
+  } else {
+    alert("❌ Code incorrect");
+    cheatState.clicks = 0;
+  }
+}
+
+function activateCheatMode() {
+  debugLog("🎮 Mode développeur activé", "success");
+  
+  const badge = document.getElementById("cheatBadge");
+  if (badge) badge.classList.remove("hidden");
+  
+  const banner = document.getElementById("debugBanner");
+  if (banner) banner.classList.remove("hidden");
+  
+  const debugPanel = document.getElementById("debugPanel");
+  if (debugPanel) debugPanel.classList.remove("hidden");
+  
+  const workMode = document.getElementById("workMode");
+  if (workMode) {
+    if (!Array.from(workMode.options).some(opt => opt.value === "demo")) {
+      const demoOption = document.createElement("option");
+      demoOption.value = "demo";
+      demoOption.textContent = "🎮 Démo (Mode développeur)";
+      workMode.appendChild(demoOption);
+    }
+  }
+  
+  addCheatFunctions();
+  
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+  debugLog("🎮 FONCTIONNALITÉS DÉBLOQUÉES :", "success");
+  debugLog("  ✅ Panel debug complet", "success");
+  debugLog("  ✅ Mode démo saisie manuelle", "success");
+  debugLog("  ✅ Commandes console avancées", "success");
+  debugLog("  ✅ XP boost (x2)", "success");
+  debugLog("  ✅ Déblocage instantané badges", "success");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+}
+
+function addCheatFunctions() {
+  window.CHEAT = {
+    addXP: (amount) => {
+      addXP(amount * 2, "Cheat code x2 boost");
+      alert(`✅ +${amount * 2} XP ajoutés !`);
+    },
+    
+    unlockBadge: (id) => {
+      const badge = BADGES.find(b => b.id === id);
+      if (!badge) {
+        alert("❌ Badge introuvable");
+        return;
+      }
+      
+      if (STATE.unlockedBadges.includes(id)) {
+        alert(`ℹ️ Badge "${badge.name}" déjà débloqué`);
+        return;
+      }
+      
+      unlockBadge(badge);
+      alert(`✅ Badge "${badge.name}" débloqué !`);
+    },
+    
+    levelUp: (levels = 1) => {
+      for (let i = 0; i < levels; i++) {
+        STATE.level++;
+        showLevelUpAnimation();
+      }
+      updateUI();
+      save();
+      alert(`✅ +${levels} niveau(x) !`);
+    },
+    
+    unlockAll: () => {
+      if (!confirm("🎮 Débloquer TOUS les badges ?")) return;
+      
+      BADGES.forEach(badge => {
+        if (!STATE.unlockedBadges.includes(badge.id)) {
+          unlockBadge(badge);
+        }
+      });
+      
+      alert(`✅ ${BADGES.length} badges débloqués !`);
+    },
+    
+    showState: () => {
+      console.log("📊 STATE COMPLET:", STATE);
+      return STATE;
+    },
+    
+    career: () => {
+      displayCareerStats();
+      return getCareerStats();
+    },
+    
+    thresholds: () => {
+      console.log("🗓️ SEUILS ANNUELS (année " + ANNUAL_THRESHOLDS.year + ")");
+      console.table(ANNUAL_THRESHOLDS.weeklyHoursTracking);
+      console.log("Jours consécutifs:", ANNUAL_THRESHOLDS.consecutiveDaysTracking);
+      return ANNUAL_THRESHOLDS;
+    },
+    
+    reimport: (mode) => {
+      if (mode !== "monthly" && mode !== "annual") {
+        console.error("❌ Mode invalide. Utilisez 'monthly' ou 'annual'");
+        return;
+      }
+      
+      if (!confirm(`⚠️ Réimporter depuis Module ${mode === "monthly" ? "1" : "2"} ?`)) {
+        return;
+      }
+      
+      const detection = detectExistingModules();
+      const moduleData = mode === "monthly" ? detection.m1Data : detection.m2Data;
+      
+      snapshot("avant réimport");
+      
+      PROFILE.mode = mode;
+      PROFILE.importedFrom = mode === "monthly" ? "Module 1" : "Module 2";
+      PROFILE.importDate = new Date().toISOString();
+      saveProfile();
+      
+      STATE = getDefaultState();
+      
+      if (mode === "monthly") {
+        importFromModule1(moduleData);
+      } else {
+        importFromModule2(moduleData);
+      }
+      
+      calculateInitialXP();
+      save();
+      
+      console.log("✅ Réimport terminé");
+      location.reload();
+    },
+    
+    modules: () => {
+      const detection = detectExistingModules();
+      console.log("📅 Module 1:", detection.m1Data);
+      console.log("📊 Module 2:", detection.m2Data);
+      return detection;
+    },
+    
+    forceReset: () => {
+      if (!confirm("⚠️ Forcer le reset annuel (TEST) ?")) return;
+      performAnnualReset(new Date().getFullYear());
+      alert("✅ Reset annuel forcé");
+    },
+    
+    reset: () => {
+      if (!confirm("⚠️ Désactiver le mode développeur ?")) return;
+      
+      localStorage.removeItem(CHEAT_CONFIG.STORAGE_KEY);
+      cheatState.unlocked = false;
+      
+      alert("✅ Mode développeur désactivé. Rechargez la page.");
+    },
+    
+    help: () => {
+      console.log(`
+🎮 COMMANDES CHEAT CODE :
+
+CHEAT.addXP(100)          → +200 XP (x2 boost)
+CHEAT.unlockBadge(5)      → Débloque badge #5
+CHEAT.levelUp(10)         → +10 niveaux
+CHEAT.unlockAll()         → Tous les badges
+CHEAT.career()            → Stats carrière
+CHEAT.thresholds()        → Seuils annuels
+CHEAT.reimport("monthly") → Réimporte Module 1
+CHEAT.reimport("annual")  → Réimporte Module 2
+CHEAT.modules()           → Voir données modules
+CHEAT.forceReset()        → Force reset annuel
+CHEAT.showState()         → État complet
+CHEAT.reset()             → Désactive mode dev
+CHEAT.help()              → Affiche cette aide
+      `);
+    }
+  };
+  
+  console.log("🎮 Commandes cheat disponibles : tapez CHEAT.help() pour la liste");
+}
+
+function debugLog(message, type = 'info') {
+  const console_div = document.getElementById('debugConsole');
+  if (!console_div) return;
+  
+  const timestamp = new Date().toLocaleTimeString();
+  const log = document.createElement('div');
+  log.className = `debug-log ${type}`;
+  log.textContent = `[${timestamp}] ${message}`;
+  
+  console_div.appendChild(log);
+  console_div.scrollTop = console_div.scrollHeight;
+  
+  console.log(`[${type.toUpperCase()}] ${message}`);
+}
+function loadProfile() {
+  const saved = localStorage.getItem("MODULE3_PROFILE_CONFIG");
+  
+  if (saved) {
+    PROFILE = JSON.parse(saved);
+  } else {
+    PROFILE = {
+      initialized: false,
+      mode: null,
+      lockedUntil: null,
+      resetDate: null,
+      startedAt: null,
+      lastModeSwitch: null
+    };
+  }
+}
+
+function saveProfile() {
+  localStorage.setItem(
+    "MODULE3_PROFILE_CONFIG",
+    JSON.stringify(PROFILE)
+  );
+}
+
+function calculateResetDate(mode) {
+  const currentYear = new Date().getFullYear();
+  let resetDate = `${currentYear}-12-31`;
+  
+  if (mode === "monthly") {
+    const annualDate = localStorage.getItem(`ANNUAL_DATE_${currentYear}`);
+    
+    if (annualDate) {
+      const closureDate = new Date(annualDate);
+      const month = closureDate.getMonth() + 1;
+      
+      if (month === 12) {
+        resetDate = annualDate;
+        debugLog(`✅ Clôture Module 1 détectée en décembre : ${annualDate}`, "success");
+      }
+    }
+  } else if (mode === "annual") {
+    const annualDate = localStorage.getItem(`ANNUAL_DATE_${currentYear}`);
+    
+    if (annualDate) {
+      const closureDate = new Date(annualDate);
+      const month = closureDate.getMonth() + 1;
+      
+      if (month === 12) {
+        resetDate = annualDate;
+        debugLog(`✅ Clôture Module 2 détectée en décembre : ${annualDate}`, "success");
+      }
+    }
+  }
+  
+  return resetDate;
+}
+
+function calculateLockDate() {
+  const currentYear = new Date().getFullYear();
+  return `${currentYear}-12-31`;
+}
+
+function canSwitchMode() {
+  if (!PROFILE.lockedUntil) return true;
+  
+  const lockDate = new Date(PROFILE.lockedUntil);
+  const now = new Date();
+  
+  return now >= lockDate;
+}
+
+function confirmProfileMode(mode) {
+  if (mode !== "monthly" && mode !== "annual") {
+    alert("❌ Mode invalide");
+    return;
+  }
+  
+  debugLog(`🎮 Mode sélectionné : ${mode}`, "info");
+  
+  const resetDate = calculateResetDate(mode);
+  
+  PROFILE = {
+    initialized: true,
+    mode: mode,
+    lockedUntil: calculateLockDate(),
+    resetDate: resetDate,
+    startedAt: new Date().toISOString(),
+    lastModeSwitch: new Date().toISOString()
+  };
+  
+  saveProfile();
+  
+  debugLog(`📅 Date de reset : ${resetDate}`, "success");
+  debugLog(`🔒 Mode verrouillé jusqu'au : ${PROFILE.lockedUntil}`, "info");
+  
+  document.getElementById("profileSetupModal").classList.add("hidden");
+  document.getElementById("mainInterface").classList.remove("hidden");
+
+  STATE = getDefaultState();
+  initializeWithModule(mode);
+
+  renderDaysList();
+  renderBadges();
+  renderMilestones();
+  toggleWorkMode();
+  checkBadges();
+  checkMilestones();
+  displayModulesData();
+  updateProfileDisplay();
+  save();
+
+  showAchievement(
+    "🎮 PROFIL CRÉÉ !",
+    mode === "monthly" ? "Mode Mensualisé" : "Mode Annualisé",
+    `Verrouillé jusqu'en décembre ${new Date().getFullYear()}`
+  );
+}
+
+function initializeWithModule(mode) {
+  debugLog(`🔄 Initialisation avec mode : ${mode}`, "info");
+  
+  if (mode === "monthly") {
+    const m1Data = MODULE_BRIDGES.module1.getAnnualData();
+    
+    if (m1Data.available) {
+      debugLog(`✅ Module 1 disponible : ${m1Data.totalHours}h`, "success");
+      syncFromModule1(m1Data);
+    } else {
+      debugLog(`ℹ️ Module 1 vide, démarrage à zéro`, "info");
+    }
+  } else if (mode === "annual") {
+    const m2Data = MODULE_BRIDGES.module2.getCurrentExercise();
+    
+    if (m2Data.available) {
+      debugLog(`✅ Module 2 disponible : ${m2Data.totals.net}h`, "success");
+      syncFromModule2(m2Data);
+    } else {
+      debugLog(`ℹ️ Module 2 vide, démarrage à zéro`, "info");
+    }
+  }
+  
+  updateUI();
+}
+
+function attemptModeSwitch() {
+  if (!canSwitchMode()) {
+    const lockDate = new Date(PROFILE.lockedUntil).toLocaleDateString();
+    
+    alert(
+      `🔒 Mode verrouillé jusqu'au ${lockDate}\n\n` +
+      `Vous pourrez changer de mode uniquement après cette date.\n\n` +
+      `Mode actuel : ${PROFILE.mode === "monthly" ? "Mensualisé" : "Annualisé"}`
+    );
+    
+    return;
+  }
+  
+  openModeSwitch();
+}
+
+function openModeSwitch() {
+  const currentMode = PROFILE.mode === "monthly" ? "Mensualisé" : "Annualisé";
+  const newMode = PROFILE.mode === "monthly" ? "annual" : "monthly";
+  const newModeName = PROFILE.mode === "monthly" ? "Annualisé" : "Mensualisé";
+  
+  if (!confirm(
+    `🔄 CHANGEMENT DE MODE\n\n` +
+    `Mode actuel : ${currentMode}\n` +
+    `Nouveau mode : ${newModeName}\n\n` +
+    `⚠️ Cette action va :\n` +
+    `• Archiver votre progression actuelle\n` +
+    `• Basculer vers ${newModeName === "Mensualisé" ? "Module 1" : "Module 2"}\n` +
+    `• Verrouiller le mode jusqu'à fin d'année\n\n` +
+    `Continuer ?`
+  )) {
+    return;
+  }
+  
+  snapshot("avant changement de mode");
+  
+  performAnnualReset(new Date().getFullYear(), true);
+  
+  PROFILE.mode = newMode;
+  PROFILE.lockedUntil = calculateLockDate();
+  PROFILE.lastModeSwitch = new Date().toISOString();
+  PROFILE.resetDate = calculateResetDate(newMode);
+  
+  saveProfile();
+  
+  alert(`✅ Mode changé vers ${newModeName} !\n\nVerrouillé jusqu'au 31/12/${new Date().getFullYear()}`);
+  
+  location.reload();
+}
+
+function factoryReset() {
+  const confirmation = prompt(
+    `⚠️ RÉINITIALISATION COMPLÈTE\n\n` +
+    `Cette action va SUPPRIMER :\n` +
+    `• Votre niveau et XP\n` +
+    `• Tous vos badges et trophées\n` +
+    `• Toutes vos statistiques\n` +
+    `• Tout votre historique\n\n` +
+    `Cette action est IRRÉVERSIBLE.\n\n` +
+    `Tapez "RESET" pour confirmer :`
+  );
+  
+  if (confirmation !== "RESET") {
+    alert("❌ Réinitialisation annulée");
+    return;
+  }
+  
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "info");
+  debugLog("🧨 FACTORY RESET EN COURS...", "info");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "info");
+  
+  snapshot("avant factory reset", true);
+  
+  const keysToRemove = [
+    "MODULE3_ULTIMATE_STATE",
+    "MODULE3_HISTORY",
+    "MODULE3_SNAPSHOTS",
+    "MODULE3_ANNUAL_THRESHOLDS",
+    "MODULE3_ARCHIVES",
+    "MODULE3_PROFILE_CONFIG",
+    "MODULE3_LAST_YEAR",
+    "MODULE3_CHEAT_UNLOCKED"
+  ];
+  
+  keysToRemove.forEach(key => {
+    localStorage.removeItem(key);
+    debugLog(`🗑️ Supprimé : ${key}`, "info");
+  });
+  
+  Object.keys(localStorage)
+    .filter(k => k.startsWith("SNAPSHOT_"))
+    .forEach(k => localStorage.removeItem(k));
+  
+  debugLog("✅ Factory reset terminé", "success");
+  
+  alert(
+    "✅ Réinitialisation complète effectuée\n\n" +
+    "L'application va redémarrer."
+  );
+  
+  location.reload();
+}
+
+function updateProfileDisplay() {
+  if (!PROFILE || !PROFILE.initialized) return;
+  
+  const modeDisplay = document.getElementById("currentModeDisplay");
+  const resetDisplay = document.getElementById("resetDateDisplay");
+  const lockDisplay = document.getElementById("lockStatusDisplay");
+  
+  if (modeDisplay) {
+    modeDisplay.textContent = PROFILE.mode === "monthly" 
+      ? "📅 Mensualisé (Module 1)" 
+      : "📊 Annualisé (Module 2)";
+  }
+  
+  if (resetDisplay) {
+    resetDisplay.textContent = new Date(PROFILE.resetDate).toLocaleDateString();
+  }
+  
+  if (lockDisplay) {
+    if (canSwitchMode()) {
+      lockDisplay.textContent = "🔓 Déverrouillé (changement possible)";
+      lockDisplay.style.color = "var(--ok)";
+    } else {
+      const lockDate = new Date(PROFILE.lockedUntil).toLocaleDateString();
+      lockDisplay.textContent = `🔒 Verrouillé jusqu'au ${lockDate}`;
+      lockDisplay.style.color = "var(--warn)";
+    }
+  }
+}
+function detectExistingModules() {
+  const m1Data = MODULE_BRIDGES.module1.getAnnualData();
+  const hasModule1 = m1Data.available && (
+    parseFloat(m1Data.totalHours) > 0 || 
+    m1Data.months.length > 0
+  );
+  
+  const m2Data = MODULE_BRIDGES.module2.getCurrentExercise();
+  const hasModule2 = m2Data.available && (
+    Object.keys(m2Data.data).length > 0
+  );
+  
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "info");
+  debugLog("🔍 DÉTECTION MODULES EXISTANTS", "info");
+  debugLog(`📅 Module 1 : ${hasModule1 ? "✅ Données trouvées" : "❌ Vide"}`, "info");
+  debugLog(`📊 Module 2 : ${hasModule2 ? "✅ Données trouvées" : "❌ Vide"}`, "info");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "info");
+  
+  return {
+    hasModule1,
+    hasModule2,
+    m1Data,
+    m2Data
+  };
+}
+
+function handleInitialSetup() {
+  const detection = detectExistingModules();
+  
+  if (detection.hasModule1 && detection.hasModule2) {
+    debugLog("⚠️ Les deux modules ont des données", "info");
+    openDualModuleChoice(detection);
+    return;
+  }
+  
+  if (detection.hasModule1 && !detection.hasModule2) {
+    debugLog("📅 Auto-sélection Module 1 (Mensualisé)", "success");
+    
+    confirmAutoImport(
+      "monthly",
+      detection.m1Data,
+      `Module 1 détecté avec ${detection.m1Data.totalHours}h sur ${detection.m1Data.months.length} mois`
+    );
+    return;
+  }
+  
+  if (!detection.hasModule1 && detection.hasModule2) {
+    debugLog("📊 Auto-sélection Module 2 (Annualisé)", "success");
+    
+    const stats = MODULE_BRIDGES.module2.getExerciseStats();
+    
+    confirmAutoImport(
+      "annual",
+      detection.m2Data,
+      `Module 2 détecté avec ${stats.daysWorked} jours travaillés`
+    );
+    return;
+  }
+  
+  debugLog("ℹ️ Aucune donnée existante, choix libre", "info");
+  openProfileSetup();
+}
+
+function openProfileSetup() {
+  document.getElementById("profileSetupModal").classList.remove("hidden");
+  document.getElementById("mainInterface").classList.add("hidden");
+}
+
+function openDualModuleChoice(detection) {
+  const modal = document.getElementById("dualModuleModal");
+  
+  document.getElementById("m1Info").innerHTML = `
+    <b>Total :</b> ${detection.m1Data.totalHours}h<br>
+    <b>Mois suivis :</b> ${detection.m1Data.months.length}<br>
+    <b>Report actuel :</b> ${detection.m1Data.carry}h
+  `;
+  
+  const m2Stats = MODULE_BRIDGES.module2.getExerciseStats();
+  document.getElementById("m2Info").innerHTML = `
+    <b>Jours travaillés :</b> ${m2Stats.daysWorked}<br>
+    <b>Exercice :</b> ${detection.m2Data.exercise}<br>
+    <b>Solde net :</b> ${detection.m2Data.totals.net}h
+  `;
+  
+  modal.classList.remove("hidden");
+}
+
+function confirmAutoImport(mode, moduleData, description) {
+  const modeName = mode === "monthly" ? "Mensualisé" : "Annualisé";
+  const moduleNum = mode === "monthly" ? "1" : "2";
+  
+  if (!confirm(
+    `🔍 DONNÉES EXISTANTES DÉTECTÉES\n\n` +
+    `${description}\n\n` +
+    `Module 3 va automatiquement :\n` +
+    `• Se configurer en mode ${modeName}\n` +
+    `• Importer vos données du Module ${moduleNum}\n` +
+    `• Démarrer votre progression gamifiée\n\n` +
+    `Continuer ?`
+  )) {
+    openProfileSetup();
+    return;
+  }
+  
+  performAutoImport(mode, moduleData);
+}
+
+function performAutoImport(mode, moduleData) {
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "info");
+  debugLog(`📥 IMPORT AUTOMATIQUE (${mode})`, "info");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "info");
+  
+  PROFILE = {
+    initialized: true,
+    mode: mode,
+    lockedUntil: calculateLockDate(),
+    resetDate: calculateResetDate(mode),
+    startedAt: new Date().toISOString(),
+    lastModeSwitch: new Date().toISOString(),
+    importedFrom: mode === "monthly" ? "Module 1" : "Module 2",
+    importDate: new Date().toISOString()
+  };
+  
+  saveProfile();
+  
+  STATE = getDefaultState();
+  
+  if (mode === "monthly") {
+    importFromModule1(moduleData);
+  } else {
+    importFromModule2(moduleData);
+  }
+  
+  calculateInitialXP();
+
+  if (mode === "monthly") {
+    localStorage.setItem(`M1_LAST_SYNC_${moduleData.year}`, String(parseFloat(moduleData.totalHours) || 0));
+  } else {
+    const syncStats = MODULE_BRIDGES.module2.getExerciseStats();
+    localStorage.setItem(`M2_LAST_SYNC_${moduleData.exercise}`, String(parseInt(syncStats.daysWorked) || 0));
+  }
+
+  save();
+
+  debugLog("✅ Import terminé", "success");
+  debugLog(`📊 Cumul importé : ${STATE.totalDays}j • ${STATE.totalHours.toFixed(1)}h`, "success");
+  debugLog(`🎮 XP calculé : ${STATE.totalXP} (Niveau ${STATE.level})`, "success");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+  
+  document.getElementById("profileSetupModal")?.classList.add("hidden");
+  document.getElementById("dualModuleModal")?.classList.add("hidden");
+  document.getElementById("mainInterface")?.classList.remove("hidden");
+  
+  updateUI();
+  updateProfileDisplay();
+  renderDaysList();
+  renderBadges();
+  renderMilestones();
+  toggleWorkMode();
+  checkBadges();
+  checkMilestones();
+  displayModulesData();
+
+  showAchievement(
+    "✅ IMPORT RÉUSSI !",
+    `Mode ${mode === "monthly" ? "Mensualisé" : "Annualisé"}`,
+    `${STATE.totalDays} jours • ${STATE.totalHours.toFixed(0)}h importés`
+  );
+}
+
+function selectModuleFromDual(mode) {
+  const detection = detectExistingModules();
+  const moduleData = mode === "monthly" ? detection.m1Data : detection.m2Data;
+  
+  performAutoImport(mode, moduleData);
+}
+
+function importFromModule1(m1Data) {
+  debugLog("📅 Import depuis Module 1...", "info");
+
+  const individualDays = MODULE1_API.getIndividualDays();
+
+  if (individualDays.length > 0) {
+    individualDays.forEach(d => {
+      const date = new Date(d.date);
+      const dow = date.getDay();
+      let type = "normal";
+      if (dow === 0) type = "sunday";
+      else if (dow === 6) type = "saturday";
+
+      STATE.days.push({
+        id: Date.now() + Math.random(),
+        date: d.date,
+        hours: d.hours,
+        type: type
+      });
+    });
+  } else {
+    debugLog("Pas de jours individuels, import agrege", "warn");
+    STATE.totalHours = parseFloat(m1Data.totalHours) || 0;
+  }
+
+  STATE.calculations = m1Data.months.length;
+  recalculateFromDays();
+
+  debugLog(`✅ ${STATE.totalHours.toFixed(1)}h importées`, "success");
+  debugLog(`✅ ${STATE.totalDays} jours importés`, "success");
+}
+
+function importFromModule2(m2Data) {
+  debugLog("📊 Import depuis Module 2...", "info");
+
+  Object.entries(m2Data.data).forEach(([date, day]) => {
+    const hours = parseFloat(day.extra) || 0;
+    if (hours > 0) {
+      const d = new Date(date);
+      const dow = d.getDay();
+      let type = "normal";
+      if (dow === 0) type = "sunday";
+      else if (dow === 6) type = "saturday";
+
+      STATE.days.push({
+        id: Date.now() + Math.random(),
+        date: date,
+        hours: hours,
+        type: type
+      });
+    }
+  });
+
+  STATE.calculations = m2Data.closures.length;
+  recalculateFromDays();
+
+  debugLog(`✅ ${STATE.totalDays} jours importés`, "success");
+  debugLog(`✅ ${STATE.totalHours.toFixed(1)}h importées`, "success");
+}
+
+function calculateInitialXP() {
+  // Éviter double comptage après import/reset
+  if (STATE.totalXPInitialized) {
+    debugLog("⏭️ XP déjà initialisé, skip", "info");
+    return;
+  }
+  STATE.totalXPInitialized = true;
+
+  debugLog("🎮 Calcul XP initial...", "info");
+
+  let baseXP = 0;
+  baseXP += STATE.totalDays * 10;
+  baseXP += Math.floor(STATE.totalHours / 10);
+  baseXP += STATE.nightShifts * 10;
+  baseXP += STATE.weekendDays * 15;
+  baseXP += STATE.calculations * 50;
+
+  let currentLevel = 1;
+  let xpRemaining = baseXP;
+
+  while (xpRemaining > 0 && currentLevel < 200) {
+    const xpForLevel = getXPForLevel(currentLevel);
+    if (xpRemaining >= xpForLevel) {
+      xpRemaining -= xpForLevel;
+      currentLevel++;
+    } else {
+      break;
+    }
+  }
+
+  STATE.level = currentLevel;
+  STATE.xp = xpRemaining;
+  STATE.totalXP = baseXP;
+
+  debugLog(`✅ ${baseXP} XP calculés → Niveau ${currentLevel} (reste ${xpRemaining} XP)`, "success");
+}
+function loadAnnualThresholds() {
+  const saved = localStorage.getItem("MODULE3_ANNUAL_THRESHOLDS");
+  
+  if (saved) {
+    try {
+      ANNUAL_THRESHOLDS = JSON.parse(saved);
+    } catch (e) {
+      console.warn("⚠️ Erreur chargement seuils:", e);
+      ANNUAL_THRESHOLDS = getDefaultThresholds();
+    }
+  } else {
+    ANNUAL_THRESHOLDS = getDefaultThresholds();
+  }
+}
+
+function getDefaultThresholds() {
+  return {
+    year: new Date().getFullYear(),
+    weeklyHoursTracking: {},
+    consecutiveDaysTracking: 0,
+    monthlyOvertimeTracking: {},
+    lastAlertDates: {
+      weekly48h: null,
+      consecutive6days: null,
+      monthlyOvertime: null
+    }
+  };
+}
+
+function saveAnnualThresholds() {
+  localStorage.setItem(
+    "MODULE3_ANNUAL_THRESHOLDS",
+    JSON.stringify(ANNUAL_THRESHOLDS)
+  );
+}
+
+function checkAnnualReset() {
+  if (!PROFILE || !PROFILE.resetDate) {
+    return;
+  }
+  
+  const resetDate = new Date(PROFILE.resetDate);
+  const today = new Date();
+  
+  resetDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  
+  if (today > resetDate) {
+    const lastReset = localStorage.getItem("MODULE3_LAST_RESET_DATE");
+    
+    if (lastReset === PROFILE.resetDate) {
+      return;
+    }
+    
+    debugLog(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'info');
+    debugLog(`🎆 DATE DE RESET ATTEINTE : ${PROFILE.resetDate}`, 'info');
+    debugLog(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'info');
+    
+    performAnnualReset(today.getFullYear());
+    
+    localStorage.setItem("MODULE3_LAST_RESET_DATE", PROFILE.resetDate);
+  }
+}
+
+function performAnnualReset(newYear, isModeSwitch = false) {
+  snapshot("avant reset annuel");
+  
+  const previousYear = newYear - 1;
+  
+  debugLog(`📊 Archivage année ${previousYear}...`, "info");
+  
+  const archive = {
+    year: previousYear,
+    mode: PROFILE.mode,
+    
+    level: STATE.level,
+    totalXP: STATE.totalXP,
+    totalDays: STATE.totalDays,
+    totalHours: STATE.totalHours,
+    calculations: STATE.calculations,
+    
+    badgesUnlocked: STATE.unlockedBadges.length,
+    maxStreak: STATE.maxStreak,
+    nightShifts: STATE.nightShifts,
+    weekendDays: STATE.weekendDays,
+    exports: STATE.exports,
+    
+    weeklyTracking: ANNUAL_THRESHOLDS.weeklyHoursTracking,
+    consecutiveDays: ANNUAL_THRESHOLDS.consecutiveDaysTracking,
+    monthlyOvertime: ANNUAL_THRESHOLDS.monthlyOvertimeTracking,
+    
+    archivedAt: new Date().toISOString()
+  };
+  
+  let archives = JSON.parse(localStorage.getItem("MODULE3_ARCHIVES") || "[]");
+  archives.push(archive);
+  
+  if (archives.length > 10) {
+    archives = archives.slice(-10);
+  }
+  
+  localStorage.setItem("MODULE3_ARCHIVES", JSON.stringify(archives));
+  
+  debugLog(`✅ Année ${previousYear} archivée`, "success");
+  
+  debugLog("🔄 Reset des seuils de conseils...", "info");
+  
+  ANNUAL_THRESHOLDS = {
+    year: newYear,
+    weeklyHoursTracking: {},
+    consecutiveDaysTracking: 0,
+    monthlyOvertimeTracking: {},
+    lastAlertDates: {
+      weekly48h: null,
+      consecutive6days: null,
+      monthlyOvertime: null
+    }
+  };
+  
+  saveAnnualThresholds();
+  
+  if (!isModeSwitch) {
+    PROFILE.lockedUntil = null;
+    PROFILE.resetDate = calculateResetDate(PROFILE.mode);
+    saveProfile();
+    
+    debugLog("🔓 Mode déverrouillé (changement possible)", "success");
+  }
+  
+  STATE.currentStreak = 0;
+  STATE.lastDayDate = null;
+  
+  save();
+  
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+  debugLog("✅ Reset annuel terminé", "success");
+  debugLog(`📊 Cumul conservé : ${STATE.totalDays}j • ${STATE.totalHours.toFixed(0)}h`, "success");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+  
+  if (!isModeSwitch) {
+    showAchievement(
+      "🎆 NOUVELLE ANNÉE !",
+      `Stats ${previousYear} archivées`,
+      `Cumul préservé • Mode déverrouillé`
+    );
+  }
+}
+
+function getCareerStats() {
+  const archives = JSON.parse(localStorage.getItem("MODULE3_ARCHIVES") || "[]");
+  
+  return {
+    currentYear: new Date().getFullYear(),
+    level: STATE.level,
+    totalXP: STATE.totalXP,
+    totalDays: STATE.totalDays,
+    totalHours: STATE.totalHours,
+    calculations: STATE.calculations,
+    maxStreak: STATE.maxStreak,
+    badgesUnlocked: STATE.unlockedBadges.length,
+    
+    yearsTracked: archives.length + 1,
+    firstYear: archives[0]?.year || new Date().getFullYear(),
+    
+    archives: archives.map(a => ({
+      year: a.year,
+      days: a.totalDays,
+      hours: a.totalHours,
+      level: a.level
+    }))
+  };
+}
+
+function displayCareerStats() {
+  const stats = getCareerStats();
+  
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("📊 STATISTIQUES DE CARRIÈRE");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log(`📅 Années suivies : ${stats.yearsTracked} (depuis ${stats.firstYear})`);
+  console.log(`📈 Niveau : ${stats.level}`);
+  console.log(`💎 XP total : ${stats.totalXP.toLocaleString()}`);
+  console.log(`📊 Jours totaux : ${stats.totalDays} jours`);
+  console.log(`⏱️ Heures totales : ${stats.totalHours.toFixed(0)}h`);
+  console.log(`🏆 Badges : ${stats.badgesUnlocked}/50`);
+  console.log(`🔥 Record série : ${stats.maxStreak} jours`);
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  
+  if (stats.archives.length > 0) {
+    console.log("📚 HISTORIQUE ANNÉES PRÉCÉDENTES :");
+    stats.archives.forEach(a => {
+      console.log(`  ${a.year} : ${a.days}j • ${a.hours.toFixed(0)}h • Niv.${a.level}`);
+    });
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  }
+}
+
+function save() {
+  try {
+    const saveState = {
+      ...STATE,
+      dayTypesWorked: Array.from(STATE.dayTypesWorked),
+      lastSaved: new Date().toISOString()
+    };
+    
+    localStorage.setItem("MODULE3_ULTIMATE_STATE", JSON.stringify(saveState));
+    
+    debugLog("💾 Sauvegarde effectuée", "success");
+  } catch (e) {
+    debugLog("❌ Erreur sauvegarde : " + e.message, "error");
+  }
+}
+
+function load() {
+  try {
+    const saved = localStorage.getItem("MODULE3_ULTIMATE_STATE");
+    
+    if (!saved) {
+      STATE = getDefaultState();
+      debugLog("ℹ️ Nouvel utilisateur, état par défaut", "info");
+      return;
+    }
+
+    STATE = JSON.parse(saved);
+    
+    if (Array.isArray(STATE.dayTypesWorked)) {
+      STATE.dayTypesWorked = new Set(STATE.dayTypesWorked);
+    }
+    
+    debugLog("✅ État chargé depuis localStorage", "success");
+  } catch (e) {
+    debugLog("❌ Erreur chargement, état par défaut : " + e.message, "error");
+    STATE = getDefaultState();
+  }
+}
+
+function snapshot(reason, force = false) {
+  try {
+    const key = "SNAPSHOT_" + Date.now();
+    const payload = {
+      reason,
+      date: new Date().toISOString(),
+      STATE: JSON.parse(JSON.stringify(STATE)),
+      PROFILE: JSON.parse(JSON.stringify(PROFILE))
+    };
+
+    localStorage.setItem(key, JSON.stringify(payload));
+
+    const snaps = Object.keys(localStorage)
+      .filter(k => k.startsWith("SNAPSHOT_"))
+      .sort();
+
+    while (snaps.length > 50) {
+      localStorage.removeItem(snaps.shift());
+    }
+    
+    debugLog(`📸 Snapshot créé : ${reason}`, "info");
+  } catch (e) {
+    debugLog("⚠️ Snapshot échoué : " + e.message, "warn");
+  }
+}
+
+function exportData() {
+  snapshot("avant export");
+  
+  const data = {
+    version: "8.0",
+    exportDate: new Date().toISOString(),
+    STATE,
+    PROFILE,
+    ANNUAL_THRESHOLDS
+  };
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `module3_export_${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  STATE.exports++;
+  save();
+  
+  debugLog("💾 Export réussi", "success");
+  alert("✅ Export réussi !");
+}
+
+function importData() {
+  document.getElementById("importFile").click();
+}
+
+document.getElementById("importFile").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(reader.result);
+
+      if (!data.STATE || !data.version) {
+        alert("❌ Fichier invalide : STATE ou version manquant");
+        return;
+      }
+
+      const s = data.STATE;
+      const requiredFields = ["level", "xp", "totalXP", "totalDays", "totalHours", "days", "unlockedBadges", "trophies"];
+      const missing = requiredFields.filter(f => s[f] === undefined);
+      if (missing.length > 0) {
+        alert("❌ Fichier corrompu : champs manquants (" + missing.join(", ") + ")");
+        return;
+      }
+
+      if (typeof s.level !== "number" || typeof s.xp !== "number" || !Array.isArray(s.days) || !Array.isArray(s.unlockedBadges)) {
+        alert("❌ Fichier corrompu : types de donnees invalides");
+        return;
+      }
+
+      snapshot("avant import");
+
+      STATE = s;
+
+      if (!STATE.dayTypesWorked || Array.isArray(STATE.dayTypesWorked)) {
+        STATE.dayTypesWorked = new Set(Array.isArray(STATE.dayTypesWorked) ? STATE.dayTypesWorked : []);
+      }
+      if (!STATE.trophies || typeof STATE.trophies !== "object") {
+        STATE.trophies = { gold: 0, silver: 0, bronze: 0 };
+      }
+      if (typeof STATE.calculations !== "number") STATE.calculations = 0;
+      if (typeof STATE.nightShifts !== "number") STATE.nightShifts = 0;
+      if (typeof STATE.weekendDays !== "number") STATE.weekendDays = 0;
+      if (typeof STATE.currentStreak !== "number") STATE.currentStreak = 0;
+      if (typeof STATE.maxStreak !== "number") STATE.maxStreak = 0;
+      if (typeof STATE.exports !== "number") STATE.exports = 0;
+      if (!Array.isArray(STATE.completedMilestones)) STATE.completedMilestones = [];
+      STATE.ai = STATE.ai || null;
+      STATE.aiHistory = Array.isArray(STATE.aiHistory) ? STATE.aiHistory : [];
+      STATE.totalXPInitialized = false; // Permettre recalcul si nécessaire
+
+      if (data.PROFILE) PROFILE = data.PROFILE;
+      if (data.ANNUAL_THRESHOLDS) ANNUAL_THRESHOLDS = data.ANNUAL_THRESHOLDS;
+
+      recalculateFromDays();
+      recalculateTrophies();
+
+      // Recalculer l'IA sur toutes les journées importées
+      if (typeof AI !== "undefined" && AI.process) {
+        STATE.ai = null;
+        STATE.aiHistory = [];
+        STATE.days.slice().sort((a, b) => new Date(a.date) - new Date(b.date)).forEach(d => AI.process(d));
+        debugLog(`🤖 IA recalculée sur ${STATE.days.length} jours importés`, 'info');
+      }
+
+      save();
+      saveProfile();
+      saveAnnualThresholds();
+
+      updateUI();
+      renderDaysList();
+      renderBadges();
+      renderMilestones();
+      updateProfileDisplay();
+
+      debugLog("✅ Import réussi", "success");
+      alert("✅ Import réussi !");
+    } catch (e) {
+      debugLog("❌ Import échoué : " + e.message, "error");
+      alert("❌ Erreur lors de l'import : " + e.message);
+    }
+  };
+  reader.readAsText(file);
+  
+  e.target.value = "";
+});
+function getXPForLevel(level) {
+  if (level <= 10) return Math.floor(100 * Math.pow(1.2, level - 1));
+  if (level <= 50) return Math.floor(100 * Math.pow(1.15, level - 1));
+  if (level <= 100) return Math.floor(100 * Math.pow(1.1, level - 1));
+  return Math.floor(100 * Math.pow(1.05, level - 1));
+}
+
+function getLeagueForLevel(level) {
+  if (level >= 200) return { name: "Légende", class: "league-legend" };
+  if (level >= 150) return { name: "Grand Maître", class: "league-grandmaster" };
+  if (level >= 100) return { name: "Maître", class: "league-master" };
+  if (level >= 75) return { name: "Diamant", class: "league-diamond" };
+  if (level >= 50) return { name: "Platine", class: "league-platinum" };
+  if (level >= 30) return { name: "Or", class: "league-gold" };
+  if (level >= 15) return { name: "Argent", class: "league-silver" };
+  if (level >= 5) return { name: "Bronze", class: "league-bronze" };
+  return { name: "Amateur", class: "league-amateur" };
+}
+
+function getTitleForLevel(level) {
+  if (level >= 200) return "LÉGENDE ABSOLUE";
+  if (level >= 150) return "Grand Maître";
+  if (level >= 100) return "Centurion";
+  if (level >= 75) return "Expert Confirmé";
+  if (level >= 50) return "Professionnel Aguerri";
+  if (level >= 30) return "Travailleur Assidu";
+  if (level >= 15) return "En Progression";
+  if (level >= 5) return "Débutant Motivé";
+  return "Débutant";
+}
+
+function getAvatarForLevel(level) {
+  if (level >= 200) return "👑";
+  if (level >= 150) return "⭐";
+  if (level >= 100) return "💎";
+  if (level >= 75) return "🔥";
+  if (level >= 50) return "🎯";
+  if (level >= 30) return "🏅";
+  if (level >= 15) return "🌟";
+  if (level >= 5) return "⚡";
+  return "👤";
+}
+
+function addXP(amount, reason = "") {
+  if (amount <= 0) return;
+  
+  debugLog(`➕ +${amount} XP - ${reason}`, "success");
+  
+  const oldLevel = STATE.level;
+  
+  STATE.xp += amount;
+  STATE.totalXP += amount;
+  
+  while (STATE.xp >= getXPForLevel(STATE.level)) {
+    STATE.xp -= getXPForLevel(STATE.level);
+    STATE.level++;
+    
+    debugLog(`🎉 LEVEL UP! Niveau ${STATE.level}`, "success");
+    
+    showLevelUpAnimation();
+    checkMilestones();
+  }
+  
+  updateUI();
+  save();
+  
+  if (reason) {
+    log(`+${amount} XP - ${reason}`, "success");
+  }
+}
+
+function removeXP(amount, reason = "") {
+  debugLog(`━━━ RETRAIT XP: ${amount} ━━━`, 'info');
+  
+  STATE.xp -= amount;
+  STATE.totalXP = Math.max(0, STATE.totalXP - amount);
+  
+  while (STATE.xp < 0 && STATE.level > 1) {
+    STATE.level--;
+    const xpForPrevLevel = getXPForLevel(STATE.level);
+    STATE.xp += xpForPrevLevel;
+    
+    debugLog(`⬇️ LEVEL DOWN! Nouveau niveau: ${STATE.level}`, 'info');
+    
+    checkBadgeLoss();
+    checkMilestoneLoss();
+  }
+  
+  if (STATE.level === 1 && STATE.xp < 0) {
+    STATE.xp = 0;
+  }
+  
+  updateUI();
+  save();
+  
+  if (reason) {
+    log(`-${amount} XP - ${reason}`, "info");
+  }
+  
+  debugLog(`XP final: ${STATE.xp} | Niveau: ${STATE.level}`, 'success');
+}
+
+function checkBadgeLoss() {
+  const stats = calculateStats();
+  
+  const badgesToRemove = [];
+  
+  STATE.unlockedBadges.forEach(badgeId => {
+    const badge = BADGES.find(b => b.id === badgeId);
+    if (badge && !badge.condition(stats)) {
+      badgesToRemove.push(badgeId);
+    }
+  });
+  
+  if (badgesToRemove.length > 0) {
+    badgesToRemove.forEach(id => {
+      const index = STATE.unlockedBadges.indexOf(id);
+      if (index > -1) {
+        STATE.unlockedBadges.splice(index, 1);
+        const badge = BADGES.find(b => b.id === id);
+        debugLog(`🔻 Badge retiré: ${badge.name}`, 'info');
+      }
+    });
+    
+    renderBadges();
+  }
+}
+
+function checkMilestoneLoss() {
+  const milestonesToRemove = [];
+  
+  STATE.completedMilestones.forEach(milestoneId => {
+    const milestone = MILESTONES.find(m => m.id === milestoneId);
+    if (milestone && STATE.level < milestone.level) {
+      milestonesToRemove.push(milestoneId);
+    }
+  });
+  
+  if (milestonesToRemove.length > 0) {
+    milestonesToRemove.forEach(id => {
+      const index = STATE.completedMilestones.indexOf(id);
+      if (index > -1) {
+        STATE.completedMilestones.splice(index, 1);
+        debugLog(`🔻 Palier retiré: ${id}`, 'info');
+      }
+    });
+    
+    renderMilestones();
+  }
+}
+
+function showLevelUpAnimation() {
+  showAchievement(
+    `🎉 LEVEL UP!`,
+    `Niveau ${STATE.level}`,
+    getTitleForLevel(STATE.level)
+  );
+  
+  triggerParticles();
+}
+
+function updateUI() {
+  document.getElementById("playerLevel").textContent = STATE.level;
+  document.getElementById("playerTitle").textContent = getTitleForLevel(STATE.level);
+  document.getElementById("playerAvatar").textContent = getAvatarForLevel(STATE.level);
+  
+  const league = getLeagueForLevel(STATE.level);
+  const leagueBadge = document.getElementById("leagueBadge");
+  leagueBadge.textContent = `🏆 Ligue ${league.name}`;
+  leagueBadge.className = `league-badge ${league.class}`;
+  
+  const xpForLevel = getXPForLevel(STATE.level);
+  const xpPercent = (STATE.xp / xpForLevel) * 100;
+  
+  document.getElementById("xpFill").style.width = xpPercent + "%";
+  document.getElementById("xpLabel").textContent = `${STATE.xp} / ${xpForLevel} XP`;
+  
+  document.getElementById("statDays").textContent = STATE.totalDays;
+  document.getElementById("statHours").textContent = STATE.totalHours.toFixed(0) + "h";
+  document.getElementById("statStreak").textContent = STATE.currentStreak;
+  document.getElementById("statCalcs").textContent = STATE.calculations;
+  
+  document.getElementById("trophyGold").textContent = STATE.trophies.gold;
+  document.getElementById("trophySilver").textContent = STATE.trophies.silver;
+  document.getElementById("trophyBronze").textContent = STATE.trophies.bronze;
+  
+  document.getElementById("badgeCount").textContent = STATE.unlockedBadges.length;
+
+  // Mise à jour dashboard IA (si disponible)
+  if (typeof updateAIDashboard === "function") {
+    updateAIDashboard();
+  }
+}
+
+function toggleWorkMode() {
+  const mode = document.getElementById("workMode").value;
+  const manualSection = document.getElementById("manualInputSection");
+  const syncSection = document.getElementById("syncStatusSection");
+  
+  STATE.workMode = mode;
+  save();
+  
+  if (mode === "manual" || mode === "demo") {
+    manualSection.classList.remove("hidden");
+    syncSection.classList.add("hidden");
+  } else {
+    manualSection.classList.add("hidden");
+    syncSection.classList.remove("hidden");
+    updateSyncStatus();
+  }
+}
+
+function updateSyncStatus() {
+  const statusEl = document.getElementById("syncStatus");
+  
+  if (!PROFILE || !PROFILE.mode) {
+    statusEl.innerHTML = "⚠️ Mode non configuré";
+    return;
+  }
+  
+  const mode = PROFILE.mode === "monthly" ? "Module 1" : "Module 2";
+  
+  statusEl.innerHTML = `
+    ✅ Synchronisé avec <b>${mode}</b><br>
+    <span style="font-size:12px;opacity:0.7">
+      Cumul : ${STATE.totalDays} jours • ${STATE.totalHours.toFixed(0)}h
+    </span>
+  `;
+}
+
+function manualSync() {
+  if (!PROFILE || !PROFILE.mode) {
+    alert("⚠️ Profil non configuré");
+    return;
+  }
+  
+  debugLog("🔄 Synchronisation manuelle...", "info");
+  
+  if (PROFILE.mode === "monthly") {
+    const m1Data = MODULE_BRIDGES.module1.getAnnualData();
+    if (m1Data.available) {
+      syncFromModule1(m1Data);
+      alert("✅ Synchronisation Module 1 réussie");
+    } else {
+      alert("❌ Module 1 vide");
+    }
+  } else {
+    const m2Data = MODULE_BRIDGES.module2.getCurrentExercise();
+    if (m2Data.available) {
+      syncFromModule2(m2Data);
+      alert("✅ Synchronisation Module 2 réussie");
+    } else {
+      alert("❌ Module 2 vide");
+    }
+  }
+  
+  updateUI();
+  updateSyncStatus();
+  displayModulesData();
+}
+
+function syncFromModule1(m1Data) {
+  const lastSyncKey = `M1_LAST_SYNC_${m1Data.year}`;
+  const lastSync = localStorage.getItem(lastSyncKey);
+
+  const currentTotal = parseFloat(m1Data.totalHours) || 0;
+
+  if (!lastSync || lastSync !== String(currentTotal)) {
+    const prevTotal = parseFloat(lastSync) || 0;
+    const delta = currentTotal - prevTotal;
+
+    if (delta > 0) {
+      STATE.totalHours += delta;
+      STATE.calculations++;
+
+      const xpGain = Math.floor(delta / 10);
+      addXP(xpGain, "Sync Module 1");
+      checkBadges();
+    }
+
+    localStorage.setItem(lastSyncKey, String(currentTotal));
+  }
+}
+
+function syncFromModule2(m2Data) {
+  const lastSyncKey = `M2_LAST_SYNC_${m2Data.exercise}`;
+  const lastSync = localStorage.getItem(lastSyncKey);
+
+  const stats = MODULE_BRIDGES.module2.getExerciseStats();
+  if (!stats.available) return;
+
+  const currentDays = parseInt(stats.daysWorked) || 0;
+
+  if (!lastSync || lastSync !== String(currentDays)) {
+    const prevDays = parseInt(lastSync) || 0;
+    const delta = currentDays - prevDays;
+
+    if (delta > 0) {
+      STATE.totalDays += delta;
+      STATE.calculations++;
+
+      const xpGain = delta * 10;
+      addXP(xpGain, "Sync Module 2");
+      checkBadges();
+    }
+
+    localStorage.setItem(lastSyncKey, String(currentDays));
+  }
+}
+
+function displayModulesData() {
+  const availability = MODULE_BRIDGES.checkAvailability();
+  
+  const container = document.getElementById("modulesDataContainer");
+  
+  if (!container) return;
+
+  let html = '<h3>📊 Données des modules</h3>';
+
+  if (availability.module1) {
+    const m1 = MODULE_BRIDGES.module1.getAnnualData();
+    html += `
+      <div style="background:rgba(79,179,194,0.1);padding:10px;border-radius:6px;margin:10px 0">
+        <h4 style="margin-top:0">📅 Module 1 - Compteur Mensuel</h4>
+        <p style="font-size:13px;margin:5px 0">
+          <b>Année :</b> ${m1.year}<br>
+          <b>Total :</b> ${m1.totalHours}h<br>
+          <b>Report :</b> ${m1.carry}h<br>
+          <b>Mois suivis :</b> ${m1.months.length}
+        </p>
+      </div>
+    `;
+  } else {
+    html += `<p style="font-size:13px;opacity:0.5">❌ Module 1 non disponible</p>`;
+  }
+
+  if (availability.module2) {
+    const m2 = MODULE_BRIDGES.module2.getCurrentExercise();
+    const stats = MODULE_BRIDGES.module2.getExerciseStats();
+    
+    html += `
+      <div style="background:rgba(241,196,15,0.1);padding:10px;border-radius:6px;margin:10px 0">
+        <h4 style="margin-top:0">📊 Module 2 - Compteur Annuel</h4>
+        <p style="font-size:13px;margin:5px 0">
+          <b>Exercice :</b> ${m2.exercise}<br>
+          <b>Base hebdo :</b> ${m2.baseHebdo}h<br>
+          <b>Solde net :</b> ${m2.totals.net}h<br>
+          <b>Jours travaillés :</b> ${stats.daysWorked}
+        </p>
+      </div>
+    `;
+  } else {
+    html += `<p style="font-size:13px;opacity:0.5">❌ Module 2 non disponible</p>`;
+  }
+
+  container.innerHTML = html;
+}
+
+function log(message, type = "info") {
+  console.log(`[${type}] ${message}`);
+}
+function addDay() {
+  const date = document.getElementById("inputDate").value;
+  const hours = parseFloat(document.getElementById("inputHours").value);
+  const type = document.getElementById("inputType").value;
+  
+  if (!date) {
+    alert("⚠️ Sélectionnez une date");
+    return;
+  }
+  
+  if (!hours || hours <= 0) {
+    alert("⚠️ Entrez des heures valides");
+    return;
+  }
+  
+  const day = {
+    id: Date.now(),
+    date,
+    hours,
+    type
+  };
+  
+  STATE.days.push(day);
+  STATE.totalDays++;
+  STATE.totalHours += hours;
+  
+  if (type === "nuit") STATE.nightShifts++;
+  if (type === "saturday" || type === "sunday") STATE.weekendDays++;
+  
+  STATE.dayTypesWorked.add(type);
+  STATE.calculations++;
+  recalculateStreak();
+
+  let xp = 10;
+  if (hours >= 8) xp += 5;
+  if (type === "nuit") xp += 10;
+  if (type === "sunday") xp += 15;
+
+  addXP(xp, "Journée ajoutée");
+
+  checkBadges();
+
+  // Pipeline IA automatique
+  if (typeof AI !== "undefined" && AI.process) {
+    const aiResult = AI.process(day);
+    if (aiResult?.warnings?.length) {
+      console.warn("⚠️ IA warnings :", aiResult.warnings);
+      const critical = aiResult.warnings.find(w => w.level === "critical");
+      if (critical) {
+        showAchievement("⚠️ Attention", critical.message, "Repos conseillé");
+      }
+    }
+  }
+
+  document.getElementById("inputDate").value = "";
+  document.getElementById("inputHours").value = "";
+
+  renderDaysList();
+  updateUI();
+
+  debugLog(`✅ Journée ajoutée : ${date} - ${hours}h (${type})`, "success");
+}
+
+function deleteDay(id) {
+  if (!confirm("Supprimer cette journée ?")) return;
+  
+  const day = STATE.days.find(d => d.id === id);
+  if (!day) return;
+  
+  snapshot("suppression journée");
+  
+  debugLog(`━━━ SUPPRESSION JOURNÉE ━━━`, 'info');
+  debugLog(`Date: ${day.date}`, 'info');
+  debugLog(`Heures: ${day.hours}h`, 'info');
+  
+  let xpToRemove = 10;
+  if (day.hours >= 8) xpToRemove += 5;
+  if (day.type === "nuit") xpToRemove += 10;
+  if (day.type === "sunday") xpToRemove += 15;
+  
+  debugLog(`XP à retirer: ${xpToRemove}`, 'info');
+  debugLog(`XP actuel AVANT: ${STATE.xp} | Niveau: ${STATE.level}`, 'info');
+  
+  STATE.days = STATE.days.filter(d => d.id !== id);
+  STATE.totalDays--;
+  STATE.totalHours -= day.hours;
+
+  if (day.type === "nuit") STATE.nightShifts--;
+  if (day.type === "saturday" || day.type === "sunday") STATE.weekendDays--;
+
+  recalculateStreak();
+
+  // Recalculer l'IA depuis le début (aiHistory devient incohérent sinon)
+  if (typeof AI !== "undefined" && AI.process) {
+    STATE.ai = null;
+    STATE.aiHistory = [];
+    STATE.days.slice().sort((a, b) => new Date(a.date) - new Date(b.date)).forEach(d => AI.process(d));
+    debugLog(`🤖 IA recalculée sur ${STATE.days.length} jours`, 'info');
+  }
+
+  removeXP(xpToRemove, "Suppression journée");
+
+  renderDaysList();
+  updateUI();
+
+  debugLog(`XP actuel APRÈS: ${STATE.xp} | Niveau: ${STATE.level}`, 'success');
+  debugLog(`━━━ FIN SUPPRESSION ━━━`, 'success');
+}
+
+function renderDaysList() {
+  const container = document.getElementById("daysList");
+  if (!container) return;
+  
+  if (STATE.days.length === 0) {
+    container.innerHTML = '<p style="font-size:13px;opacity:0.5">Aucune journée enregistrée</p>';
+    return;
+  }
+  
+  container.innerHTML = STATE.days
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .map(day => {
+      const typeClass = day.type === "nuit" ? "night" : 
+                       (day.type === "saturday" || day.type === "sunday") ? "weekend" : "";
+      
+      const typeIcon = day.type === "nuit" ? "🌙" :
+                      day.type === "sunday" ? "🎯" :
+                      day.type === "saturday" ? "📅" : "🌞";
+      
+      return `
+        <div class="day-item ${typeClass}">
+          <div class="day-info">
+            <div class="day-date">${typeIcon} ${new Date(day.date).toLocaleDateString()}</div>
+            <div class="day-hours">${day.hours}h</div>
+          </div>
+          <button class="day-delete" onclick="deleteDay(${day.id})">
+            🗑️
+          </button>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function initBadges() {
+  BADGES = [
+    {id:1,name:"Premier pas",icon:"👣",rarity:"common",condition:s=>s.days>=1},
+    {id:2,name:"Marathon",icon:"🏃",rarity:"rare",condition:s=>s.days>=50},
+    {id:3,name:"Centurion",icon:"💯",rarity:"epic",condition:s=>s.days>=100},
+    {id:4,name:"Légende",icon:"👑",rarity:"legendary",condition:s=>s.days>=365},
+    {id:5,name:"Noctambule",icon:"🌙",rarity:"rare",condition:s=>s.nightShifts>=10},
+    {id:6,name:"Weekend Warrior",icon:"📅",rarity:"rare",condition:s=>s.weekendDays>=10},
+    {id:7,name:"Calculateur",icon:"🧮",rarity:"common",condition:s=>s.calculations>=10},
+    {id:8,name:"Régulier",icon:"📊",rarity:"epic",condition:s=>s.streak>=7},
+    {id:9,name:"Acharné",icon:"🔥",rarity:"legendary",condition:s=>s.streak>=30},
+    {id:10,name:"Archiviste",icon:"💾",rarity:"rare",condition:s=>s.exports>=5},
+    {id:11,name:"Débutant",icon:"🌱",rarity:"common",condition:s=>s.level>=5},
+    {id:12,name:"Bronze",icon:"🥉",rarity:"common",condition:s=>s.level>=15},
+    {id:13,name:"Argent",icon:"🥈",rarity:"rare",condition:s=>s.level>=30},
+    {id:14,name:"Or",icon:"🥇",rarity:"epic",condition:s=>s.level>=50},
+    {id:15,name:"Platine",icon:"💎",rarity:"legendary",condition:s=>s.level>=75},
+    {id:16,name:"Diamant",icon:"💠",rarity:"legendary",condition:s=>s.level>=100},
+    {id:17,name:"Maître",icon:"⭐",rarity:"legendary",condition:s=>s.level>=150},
+    {id:18,name:"Grand Maître",icon:"🌟",rarity:"legendary",condition:s=>s.level>=200},
+    {id:19,name:"Heures sup",icon:"⏱️",rarity:"common",condition:s=>s.hours>=100},
+    {id:20,name:"Marathonien",icon:"🏅",rarity:"rare",condition:s=>s.hours>=500},
+    {id:21,name:"Titan",icon:"💪",rarity:"epic",condition:s=>s.hours>=1000},
+    {id:22,name:"Légende heures",icon:"⚡",rarity:"legendary",condition:s=>s.hours>=2500},
+    {id:23,name:"Explorateur",icon:"🗺️",rarity:"rare",condition:s=>s.dayTypes>=3},
+    {id:24,name:"Polyvalent",icon:"🎭",rarity:"epic",condition:s=>s.dayTypes>=4},
+    {id:25,name:"Maître temps",icon:"⏰",rarity:"legendary",condition:s=>s.level>=50&&s.streak>=14},
+    {id:26,name:"Ultra",icon:"🚀",rarity:"legendary",condition:s=>s.level>=100&&s.days>=200},
+    {id:27,name:"ULTIME",icon:"👑",rarity:"legendary",condition:s=>s.level>=200&&s.days>=500},
+    {id:28,name:"Rapide",icon:"⚡",rarity:"common",condition:s=>s.level>=10&&s.days<=20},
+    {id:29,name:"Efficace",icon:"🎯",rarity:"rare",condition:s=>s.xp>=1000},
+    {id:30,name:"Performant",icon:"📈",rarity:"epic",condition:s=>s.xp>=5000},
+    {id:31,name:"Collectionneur",icon:"🎖️",rarity:"epic",condition:s=>s.badges>=20},
+    {id:32,name:"Chasseur",icon:"🏹",rarity:"legendary",condition:s=>s.badges>=40},
+    {id:33,name:"Nuit blanche",icon:"☕",rarity:"epic",condition:s=>s.nightShifts>=50},
+    {id:34,name:"Vampire",icon:"🦇",rarity:"legendary",condition:s=>s.nightShifts>=100},
+    {id:35,name:"Week-end Man",icon:"🎊",rarity:"epic",condition:s=>s.weekendDays>=25},
+    {id:36,name:"Sans repos",icon:"😴",rarity:"legendary",condition:s=>s.weekendDays>=50},
+    {id:37,name:"Statisticien",icon:"📊",rarity:"rare",condition:s=>s.calculations>=50},
+    {id:38,name:"Analyste",icon:"📉",rarity:"epic",condition:s=>s.calculations>=100},
+    {id:39,name:"Expert Data",icon:"💻",rarity:"legendary",condition:s=>s.calculations>=200},
+    {id:40,name:"Trophée Bronze x3",icon:"🥉🥉🥉",rarity:"rare",condition:s=>s.trophies.bronze>=3},
+    {id:41,name:"Trophée Argent x3",icon:"🥈🥈🥈",rarity:"epic",condition:s=>s.trophies.silver>=3},
+    {id:42,name:"Trophée Or x3",icon:"🥇🥇🥇",rarity:"legendary",condition:s=>s.trophies.gold>=3},
+    {id:43,name:"Infatigable",icon:"💪",rarity:"epic",condition:s=>s.hours>=1500&&s.days>=150},
+    {id:44,name:"Force nature",icon:"🌪️",rarity:"legendary",condition:s=>s.hours>=3000&&s.days>=300},
+    {id:45,name:"Expérimenté",icon:"🎓",rarity:"rare",condition:s=>s.level>=25&&s.calculations>=25},
+    {id:46,name:"Vétéran",icon:"🏛️",rarity:"epic",condition:s=>s.level>=75&&s.calculations>=75},
+    {id:47,name:"Sage",icon:"🧙",rarity:"legendary",condition:s=>s.level>=125&&s.calculations>=125},
+    {id:48,name:"Perfectionniste",icon:"✨",rarity:"epic",condition:s=>s.badges>=30&&s.level>=60},
+    {id:49,name:"Complétiste",icon:"🏆",rarity:"legendary",condition:s=>s.badges>=45&&s.level>=100},
+    {id:50,name:"ULTIME LÉGENDE",icon:"🌌",rarity:"legendary",condition:s=>s.level>=200&&s.badges>=49&&s.hours>=5000}
+  ];
+}
+
+function calculateStats() {
+  return {
+    days: STATE.totalDays,
+    hours: STATE.totalHours,
+    level: STATE.level,
+    xp: STATE.totalXP,
+    nightShifts: STATE.nightShifts,
+    weekendDays: STATE.weekendDays,
+    calculations: STATE.calculations,
+    streak: STATE.currentStreak,
+    exports: STATE.exports,
+    badges: STATE.unlockedBadges.length,
+    dayTypes: STATE.dayTypesWorked.size,
+    trophies: STATE.trophies
+  };
+}
+
+function recalculateFromDays() {
+  STATE.totalDays = STATE.days.length;
+  STATE.totalHours = STATE.days.reduce((sum, d) => sum + (d.hours || 0), 0);
+  STATE.nightShifts = STATE.days.filter(d => d.type === "nuit").length;
+  STATE.weekendDays = STATE.days.filter(d => d.type === "saturday" || d.type === "sunday").length;
+  STATE.dayTypesWorked = new Set(STATE.days.map(d => d.type));
+  recalculateStreak();
+}
+
+function recalculateStreak() {
+  if (!STATE.days || STATE.days.length === 0) {
+    STATE.currentStreak = 0;
+    return;
+  }
+
+  const timestamps = [...new Set(
+    STATE.days.map(d => {
+      const dt = new Date(d.date);
+      dt.setHours(0, 0, 0, 0);
+      return dt.getTime();
+    })
+  )].sort((a, b) => a - b);
+
+  let streak = 1;
+  let maxStreak = 1;
+
+  for (let i = 1; i < timestamps.length; i++) {
+    const diffDays = (timestamps[i] - timestamps[i - 1]) / 86400000;
+    if (diffDays === 1) {
+      streak++;
+      maxStreak = Math.max(maxStreak, streak);
+    } else if (diffDays > 1) {
+      streak = 1;
+    }
+  }
+
+  const lastDay = timestamps[timestamps.length - 1];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const diffToday = (today.getTime() - lastDay) / 86400000;
+
+  if (diffToday > 1) {
+    streak = 0;
+  }
+
+  STATE.currentStreak = streak;
+  STATE.maxStreak = Math.max(STATE.maxStreak, maxStreak);
+}
+
+function recalculateTrophies() {
+  STATE.trophies = { gold: 0, silver: 0, bronze: 0 };
+
+  STATE.unlockedBadges.forEach(badgeId => {
+    const badge = BADGES.find(b => b.id === badgeId);
+    if (!badge) return;
+
+    if (badge.rarity === "legendary") STATE.trophies.gold++;
+    else if (badge.rarity === "epic") STATE.trophies.silver++;
+    else STATE.trophies.bronze++;
+  });
+}
+
+function checkBadges() {
+  const stats = calculateStats();
+  
+  BADGES.forEach(badge => {
+    if (!STATE.unlockedBadges.includes(badge.id) && badge.condition(stats)) {
+      unlockBadge(badge);
+    }
+  });
+}
+
+function unlockBadge(badge) {
+  STATE.unlockedBadges.push(badge.id);
+  
+  let trophy = "bronze";
+  if (badge.rarity === "epic") trophy = "silver";
+  if (badge.rarity === "legendary") trophy = "gold";
+  
+  STATE.trophies[trophy]++;
+  
+  addXP(50, `Badge débloqué : ${badge.name}`);
+  
+  showAchievement(
+    "🎖️ NOUVEAU BADGE !",
+    badge.name,
+    `Rareté : ${badge.rarity}`
+  );
+  
+  renderBadges();
+  save();
+  
+  debugLog(`🎖️ Badge débloqué : ${badge.name} (${badge.rarity})`, "success");
+}
+
+function renderBadges() {
+  const container = document.getElementById("badgesContainer");
+  if (!container) return;
+  
+  container.innerHTML = BADGES.map(badge => {
+    const unlocked = STATE.unlockedBadges.includes(badge.id);
+    return `
+      <div class="badge ${unlocked ? 'unlocked' : 'locked'}">
+        <div class="badge-rarity rarity-${badge.rarity}"></div>
+        <div class="badge-icon">${badge.icon}</div>
+        <div class="badge-name">${badge.name}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function initMilestones() {
+  MILESTONES = [];
+  for (let i = 1; i <= 40; i++) {
+    const level = i * 5;
+    MILESTONES.push({
+      id: i,
+      level: level,
+      title: `Palier ${level}`,
+      reward: level === 200 ? "Badge Ultime + 1000 XP" : `+${50 + i * 10} XP`,
+      xpBonus: level === 200 ? 1000 : 50 + i * 10
+    });
+  }
+}
+
+function checkMilestones() {
+  MILESTONES.forEach(milestone => {
+    if (STATE.level >= milestone.level && !STATE.completedMilestones.includes(milestone.id)) {
+      completeMilestone(milestone);
+    }
+  });
+}
+
+function completeMilestone(milestone) {
+  STATE.completedMilestones.push(milestone.id);
+  
+  if (milestone.xpBonus) {
+    addXP(milestone.xpBonus, `Palier ${milestone.title}`);
+  }
+  
+  showAchievement(
+    "🎯 PALIER ATTEINT !",
+    milestone.title,
+    milestone.reward
+  );
+  
+  renderMilestones();
+  save();
+  
+  debugLog(`🎯 Palier atteint : Niv.${milestone.level} - ${milestone.title}`, "success");
+}
+
+function renderMilestones() {
+  const container = document.getElementById("milestonesContainer");
+  if (!container) return;
+  
+  container.innerHTML = MILESTONES.map(milestone => {
+    const completed = STATE.completedMilestones.includes(milestone.id);
+    return `
+      <div class="milestone ${completed ? 'completed' : ''}">
+        <div class="milestone-info">
+          <div class="milestone-level">Niv. ${milestone.level}</div>
+          <div class="milestone-title">${milestone.title}</div>
+          <div class="milestone-reward">${milestone.reward}</div>
+        </div>
+        <div class="milestone-status ${completed ? 'unlocked' : ''}">
+          ${completed ? '✅ Débloqué' : '🔒 Verrouillé'}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function showAchievement(title, desc, reward = "") {
+  const popup = document.getElementById("achievementPopup");
+  
+  popup.innerHTML = `
+    <div class="achievement-title">${title}</div>
+    <div class="achievement-desc">${desc}</div>
+    ${reward ? `<div class="achievement-reward">${reward}</div>` : ''}
+  `;
+  
+  popup.classList.remove("hidden");
+  
+  setTimeout(() => {
+    popup.classList.add("hidden");
+  }, 4000);
+}
+
+function triggerParticles() {
+  const container = document.getElementById("particles");
+  if (!container) return;
+  
+  for (let i = 0; i < 20; i++) {
+    setTimeout(() => {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.style.left = Math.random() * window.innerWidth + "px";
+      particle.style.bottom = "0";
+      
+      container.appendChild(particle);
+      
+      setTimeout(() => {
+        particle.remove();
+      }, 2000);
+    }, i * 50);
+  }
+}
+function initScenarios() {
+  debugLog('🎲 Chargement de 200 scénarios avec conseils neutres...', 'info');
+  
+  const BASE_SCENARIOS = [
+    // SCÉNARIOS 1-20 : STANDARDS & TEMPS PLEIN
+    {id:1,name:"Semaine Standard 35h",category:"standard",tags:["temps plein","classique"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Semaine classique de travail à temps plein",legal:"✅ Conforme",risk:"aucun",conseil:{titre:"💚 Organisation Saine",message:"Cette répartition respecte la durée légale de 35h. Veillez à maintenir cet équilibre.",actions:["Repos quotidien : minimum 11h entre deux journées","Repos hebdomadaire : 35h consécutives obligatoires","Planifiez vos congés annuels à l'avance"],alerte:null}},
+    {id:2,name:"Semaine 40h",category:"intense",tags:["heures sup","charge normale"],days:[{h:8,type:"normal"},{h:8,type:"normal"},{h:8,type:"normal"},{h:8,type:"normal"},{h:8,type:"normal"}],desc:"5h supplémentaires",legal:"⚠️ Heures sup à déclarer",risk:"faible",conseil:{titre:"💡 Heures Supplémentaires",message:"5h supplémentaires cette semaine. Vérifiez leur enregistrement.",actions:["Les 8 premières heures sup/semaine : majoration +25%","Au-delà de 8h : majoration +50%","Ou récupération équivalente selon accord"],alerte:{niveau:"info",texte:"📊 5h sup : vérifiez votre compteur"}}},
+    {id:3,name:"Semaine 45h",category:"intense",tags:["surcharge"],days:[{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"}],desc:"10h supplémentaires",legal:"⚠️ Proche limite légale",risk:"moyen",conseil:{titre:"⚠️ Charge Élevée",message:"45h approche la limite de 48h/semaine. Situation à surveiller.",actions:["Maximum légal : 48h par semaine","Moyenne sur 12 semaines : 44h maximum","Repos compensateur obligatoire au-delà de 41h"],alerte:{niveau:"warning",texte:"⚠️ 45h/semaine - Surveillez votre moyenne"}}},
+    {id:4,name:"Semaine 48h",category:"limite",tags:["maximum légal"],days:[{h:9.5,type:"normal"},{h:9.5,type:"normal"},{h:9.5,type:"normal"},{h:9.5,type:"normal"},{h:10.5,type:"normal"}],desc:"Maximum légal atteint",legal:"🚨 Limite absolue",risk:"élevé",conseil:{titre:"🚨 Plafond Légal",message:"48h est le maximum absolu. Ne peut être dépassé.",actions:["Cette limite ne peut être franchie","Documentez vos horaires","Moyenne 12 semaines : 44h max","Contact représentants du personnel si récurrent"],alerte:{niveau:"danger",texte:"🚨 48h : MAXIMUM LÉGAL atteint"}}},
+    {id:5,name:"Semaine 4 jours 35h",category:"standard",tags:["semaine courte"],days:[{h:8.75,type:"normal"},{h:8.75,type:"normal"},{h:8.75,type:"normal"},{h:8.75,type:"normal"}],desc:"Temps plein sur 4 jours",legal:"✅ Conforme si accord",risk:"aucun",conseil:{titre:"💡 Semaine Compressée",message:"Organisation 4 jours nécessite un accord écrit.",actions:["Vérifiez votre contrat de travail","Limite journalière : 10h maximum","Profitez du jour off pour récupérer"],alerte:null}},
+    {id:6,name:"Semaine 6 jours",category:"intense",tags:["6 jours consécutifs"],days:[{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:5,type:"saturday"}],desc:"6 jours travaillés",legal:"⚠️ Repos hebdomadaire à surveiller",risk:"moyen",conseil:{titre:"📅 Six Jours Consécutifs",message:"Attention au respect du repos hebdomadaire.",actions:["Maximum : 6 jours consécutifs travaillés","Repos hebdomadaire : 35h consécutives obligatoires","Samedi travaillé : compensation selon convention"],alerte:{niveau:"warning",texte:"⚠️ 6 jours : vérifiez votre repos hebdo"}}},
+    {id:7,name:"Temps partiel 80%",category:"partiel",tags:["temps partiel"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"4 jours/semaine",legal:"✅ Conforme",risk:"aucun",conseil:{titre:"💚 Temps Partiel",message:"80% : vos droits sont calculés proportionnellement.",actions:["Heures complémentaires : maximum 10% (3,5h/semaine)","Droits aux congés proratisés","Refusez toute charge de travail excessive"],alerte:null}},
+    {id:8,name:"Mi-temps",category:"partiel",tags:["mi-temps"],days:[{h:3.5,type:"normal"},{h:3.5,type:"normal"},{h:3.5,type:"normal"},{h:3.5,type:"normal"},{h:3.5,type:"normal"}],desc:"17,5h/semaine",legal:"✅ Conforme",risk:"aucun",conseil:{titre:"💚 Mi-Temps",message:"50% : équilibre vie pro/perso préservé.",actions:["Heures complémentaires max : 1h45/semaine (10%)","Salaire et droits calculés à 50%","Charge de travail adaptée obligatoire"],alerte:null}},
+    {id:9,name:"Temps partiel 60%",category:"partiel",tags:["temps réduit"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"21h/semaine",legal:"✅ Conforme",risk:"aucun",conseil:{titre:"💚 60% du Temps Plein",message:"Organisation sur 3 jours travaillés.",actions:["Heures complémentaires max : 2h06/semaine","4 jours de repos hebdomadaire","Vérifiez votre couverture sociale"],alerte:null}},
+    {id:10,name:"Semaine 30h",category:"reduit",tags:["temps réduit"],days:[{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"}],desc:"Semaine allégée",legal:"✅ Conforme",risk:"aucun",conseil:{titre:"💚 Temps Réduit",message:"30h offre un bon équilibre.",actions:["Vérifiez l'ajustement salarial (30/35)","Congés calculés proportionnellement","Ne pas accepter charge temps plein"],alerte:null}},
+    
+    // SCÉNARIOS 11-30 : NUIT & ASTREINTES
+    {id:11,name:"1 Nuit isolée",category:"nuit",tags:["nuit"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:8,type:"nuit"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Une garde de nuit",legal:"⚠️ Majoration applicable",risk:"faible",conseil:{titre:"🌙 Travail de Nuit",message:"Nuit = 21h-6h. Compensations spécifiques.",actions:["Majoration minimale : +25%","Repos après nuit : 11h minimum","Surveillance médicale si régulier (50 nuits/an)"],alerte:{niveau:"info",texte:"🌙 Garde de nuit : vérifiez majorations"}}},
+    {id:12,name:"2 Nuits consécutives",category:"nuit",tags:["nuits enchaînées"],days:[{h:7,type:"normal"},{h:8,type:"nuit"},{h:8,type:"nuit"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Deux nuits d'affilée",legal:"⚠️ Repos compensateur requis",risk:"moyen",conseil:{titre:"🌙 Nuits Consécutives",message:"2 nuits nécessitent récupération renforcée.",actions:["Repos après : minimum 24h","Double majoration à vérifier","Si fatigue excessive : médecine du travail"],alerte:{niveau:"warning",texte:"⚠️ 2 nuits : repos 24h obligatoire"}}},
+    {id:13,name:"3 Nuits consécutives",category:"nuit",tags:["série nuits"],days:[{h:7,type:"normal"},{h:8,type:"nuit"},{h:8,type:"nuit"},{h:8,type:"nuit"},{h:7,type:"normal"}],desc:"Trois nuits enchaînées",legal:"🚨 Récupération impérative",risk:"élevé",conseil:{titre:"🚨 Trois Nuits",message:"Risque santé important. Compensations obligatoires.",actions:["Repos après : minimum 48h","Triple majoration exigible","Surveillance médicale obligatoire","Maximum 8h par période 24h en nuit régulière"],alerte:{niveau:"danger",texte:"🚨 3 nuits : REPOS 48h MINIMUM"}}},
+    {id:14,name:"Garde 12h nuit",category:"nuit",tags:["garde longue"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:12,type:"nuit"},{h:7,type:"normal"}],desc:"Garde nocturne 12h",legal:"⚠️ Repos compensateur requis",risk:"moyen",conseil:{titre:"🌙 Garde Longue",message:"12h nuit = éprouvant. Compensations adaptées.",actions:["Repos après : 11h minimum","Majoration : +50% minimum pour 12h","Repos compensateur supplémentaire","12h = maximum garde, ne pas dépasser"],alerte:{niveau:"warning",texte:"⚠️ 12h nuit : double compensation"}}},
+    {id:15,name:"Alternance jour/nuit",category:"mixte",tags:["rotation"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:8,type:"nuit"},{h:7,type:"normal"},{h:8,type:"nuit"}],desc:"Rotation jour-nuit",legal:"⚠️ Majorations multiples",risk:"moyen",conseil:{titre:"🔄 Alternance",message:"Alternance perturbe rythme circadien.",actions:["Vérifiez 11h repos entre postes","Cumul majorations de nuit","Surveillance fatigue recommandée","Planning stable préférable"],alerte:{niveau:"warning",texte:"⚠️ Alternance : vigilance fatigue"}}},
+    {id:16,name:"Semaine nuit complète",category:"nuit",tags:["100% nuit"],days:[{h:7,type:"nuit"},{h:7,type:"nuit"},{h:7,type:"nuit"},{h:7,type:"nuit"},{h:7,type:"nuit"}],desc:"5 nuits d'affilée",legal:"⚠️ Statut travailleur nuit",risk:"élevé",conseil:{titre:"🌙 Semaine Nuit",message:"5 nuits = travailleur de nuit.",actions:["Statut officiel si 50 nuits/an","Surveillance médicale tous les 6 mois","Maximum 8h/jour en nuit régulière","Droit à passer en poste jour si santé"],alerte:{niveau:"danger",texte:"🌙 5 nuits : statut travailleur nuit"}}},
+    {id:17,name:"Astreinte simple",category:"astreinte",tags:["disponibilité"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Astreinte sans intervention",legal:"⚠️ Indemnité due",risk:"faible",conseil:{titre:"📱 Astreinte",message:"Disponibilité = indemnisation même sans appel.",actions:["Indemnité d'astreinte obligatoire","Si intervention : heures travail effectif","Majorations si intervention nuit/weekend","Vérifiez montants convention collective"],alerte:{niveau:"info",texte:"📱 Astreinte : indemnité due"}}},
+    {id:18,name:"Astreinte weekend",category:"astreinte",tags:["weekend","disponibilité"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Astreinte samedi-dimanche",legal:"⚠️ Indemnités weekend",risk:"faible",conseil:{titre:"📱 Astreinte Weekend",message:"Astreinte weekend = indemnités renforcées.",actions:["Indemnité weekend supérieure à semaine","Interventions : majorations samedi/dimanche","Temps intervention = travail effectif","Ne peut être permanente sans accord"],alerte:{niveau:"info",texte:"📱 Weekend : indemnités majorées"}}},
+    {id:19,name:"Garde passive",category:"astreinte",tags:["garde"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Garde à domicile",legal:"⚠️ Distinction temps astreinte/travail",risk:"faible",conseil:{titre:"🏠 Garde Passive",message:"Distinction importante : astreinte ≠ travail effectif.",actions:["Période astreinte : indemnité forfaitaire","Intervention effective : heures comptées","Repos quotidien maintenu (11h)","Interventions multiples : temps cumulé"],alerte:null}},
+    {id:20,name:"Permanence téléphonique",category:"astreinte",tags:["téléphone"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Permanence téléphonique",legal:"⚠️ Qualification à vérifier",risk:"faible",conseil:{titre:"☎️ Permanence Tel",message:"Nature de la permanence détermine qualification.",actions:["Si obligation répondre immédiatement : travail effectif","Si simple disponibilité : astreinte","Durée appels = temps travail","Vérifiez qualification dans contrat"],alerte:{niveau:"info",texte:"☎️ Vérifiez qualification permanence"}}},
+    
+    // SCÉNARIOS 21-40 : WEEKEND & JOURS FÉRIÉS
+    {id:21,name:"Samedi travaillé",category:"weekend",tags:["samedi"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"saturday"}],desc:"Semaine + samedi",legal:"⚠️ Repos compensateur",risk:"faible",conseil:{titre:"📅 Samedi Travaillé",message:"Samedi = repos hebdomadaire entamé.",actions:["Repos compensateur équivalent obligatoire","Ou majoration selon convention collective","Vérifier 35h repos hebdo restantes","Ne peut devenir systématique sans accord"],alerte:{niveau:"info",texte:"📅 Samedi : repos compensateur dû"}}},
+    {id:22,name:"Dimanche travaillé",category:"weekend",tags:["dimanche"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"sunday"}],desc:"Semaine + dimanche",legal:"⚠️ Majoration +100%",risk:"moyen",conseil:{titre:"📅 Dimanche Travaillé",message:"Dimanche = jour repos hebdomadaire. Protection renforcée.",actions:["Majoration minimale : +100%","Repos compensateur obligatoire","Accord écrit préalable nécessaire","Droit de refuser sauf secteurs dérogation"],alerte:{niveau:"warning",texte:"⚠️ Dimanche : +100% + repos compensateur"}}},
+    {id:23,name:"Weekend complet",category:"weekend",tags:["samedi-dimanche"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"saturday"},{h:7,type:"sunday"}],desc:"Samedi + dimanche",legal:"⚠️ Compensations multiples",risk:"moyen",conseil:{titre:"📅 Weekend Complet",message:"Travail samedi ET dimanche = situation exceptionnelle.",actions:["Dimanche : +100% minimum + repos compensateur","Samedi : compensation selon convention","Total 49h : 14h supplémentaires","Repos hebdo 35h à préserver absolument"],alerte:{niveau:"warning",texte:"⚠️ Weekend complet : double compensation"}}},
+    {id:24,name:"Férié travaillé",category:"ferie",tags:["jour férié"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Jour férié dans semaine",legal:"⚠️ Selon convention",risk:"faible",conseil:{titre:"🎊 Jour Férié",message:"11 jours fériés/an. Régime selon convention.",actions:["Vérifiez votre convention collective","Généralement : majoration ou jour repos","1er mai : chômé et payé pour tous","Autres fériés : selon secteur activité"],alerte:{niveau:"info",texte:"🎊 Férié : vérifiez convention"}}},
+    {id:25,name:"1er mai travaillé",category:"ferie",tags:["1er mai"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Travail 1er mai",legal:"⚠️ Majoration +100% minimum",risk:"faible",conseil:{titre:"🎊 1er Mai",message:"1er mai = seul férié chômé obligatoire.",actions:["Majoration minimale : +100%","Dérogations très limitées (secteurs continus)","Refus possible hors dérogation","Repos compensateur en plus majoration"],alerte:{niveau:"warning",texte:"⚠️ 1er mai : +100% obligatoire"}}},
+    {id:26,name:"Pont travaillé",category:"ferie",tags:["pont"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Travail jour de pont",legal:"⚠️ Selon accord entreprise",risk:"faible",conseil:{titre:"🌉 Jour de Pont",message:"Pont = usage, pas obligation légale.",actions:["Vérifiez accord d'entreprise","Si pont accordé : récupération obligatoire","Si travaillé : compensation possible","RTT parfois utilisées"],alerte:null}},
+    {id:27,name:"Semaine fériée",category:"ferie",tags:["semaine courte"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Semaine avec férié chômé",legal:"✅ Conforme",risk:"aucun",conseil:{titre:"🎊 Semaine Fériée",message:"Férié chômé réduit semaine travaillée.",actions:["Maintien salaire si conditions ancienneté","4 jours travaillés = semaine complète","Heures sup calculées au-delà durée réduite","Profitez du repos supplémentaire"],alerte:null}},
+    {id:28,name:"2 fériés semaine",category:"ferie",tags:["double férié"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Deux fériés dans semaine",legal:"✅ Conforme",risk:"aucun",conseil:{titre:"🎊 Double Férié",message:"Semaine courte avec 2 jours fériés.",actions:["Maintien salaire intégral","3 jours travaillés = semaine complète","Heures sup : au-delà de 21h cette semaine","Organisez votre charge de travail"],alerte:null}},
+    {id:29,name:"Férié + weekend",category:"ferie",tags:["férié weekend"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Férié tombant weekend",legal:"⚠️ Pas de récupération légale",risk:"aucun",conseil:{titre:"🎊 Férié Weekend",message:"Férié un dimanche = pas récupération automatique.",actions:["Aucune obligation légale de report","Certaines conventions prévoient récupération","Vérifiez accord d'entreprise","1er mai weekend : idem"],alerte:null}},
+    {id:30,name:"Ascension travaillée",category:"ferie",tags:["jeudi"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Jeudi Ascension travaillé",legal:"⚠️ Compensation selon convention",risk:"faible",conseil:{titre:"🎊 Ascension",message:"Jeudi férié travaillé.",actions:["Vérifiez majoration convention collective","Repos compensateur possible","Pont vendredi souvent accordé","Si travaillé : compensation appropriée"],alerte:{niveau:"info",texte:"🎊 Ascension : vérifiez compensation"}}},
+    
+    // SCÉNARIOS 31-50 : HEURES SUPPLÉMENTAIRES VARIÉES
+    {id:31,name:"42h semaine",category:"intense",tags:["heures sup modérées"],days:[{h:8.5,type:"normal"},{h:8.5,type:"normal"},{h:8.5,type:"normal"},{h:8.5,type:"normal"},{h:8,type:"normal"}],desc:"7h supplémentaires",legal:"⚠️ Heures sup",risk:"faible",conseil:{titre:"💡 7h Supplémentaires",message:"7h sup = dans les 8 premières heures.",actions:["Majoration : +25%","Ou récupération 7h + 25% (8h45)","Décomptées dans contingent annuel","Vérifiez compteur heures sup"],alerte:{niveau:"info",texte:"📊 7h sup : majoration +25%"}}},
+    {id:32,name:"43h semaine",category:"intense",tags:["heures sup"],days:[{h:8.5,type:"normal"},{h:8.5,type:"normal"},{h:8.5,type:"normal"},{h:8.5,type:"normal"},{h:9,type:"normal"}],desc:"8h supplémentaires",legal:"⚠️ Limite 8 premières heures",risk:"faible",conseil:{titre:"💡 8h Supplémentaires",message:"8 premières heures sup atteintes.",actions:["Toutes à +25%","Contingent annuel impacté","Prochaines heures : +50%","Planifiez récupération"],alerte:{niveau:"info",texte:"📊 8h sup : seuil +25% atteint"}}},
+    {id:33,name:"44h semaine",category:"intense",tags:["heures sup élevées"],days:[{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"},{h:8,type:"normal"}],desc:"9h supplémentaires",legal:"⚠️ Au-delà 8 premières",risk:"moyen",conseil:{titre:"⚠️ 9h Supplémentaires",message:"Au-delà des 8 premières heures.",actions:["8 premières heures : +25%","9e heure : +50%","Repos compensateur obligatoire au-delà 41h","Moyenne 12 semaines : 44h max"],alerte:{niveau:"warning",texte:"⚠️ 9h sup : majoration +50% sur dernière heure"}}},
+    {id:34,name:"46h semaine",category:"intense",tags:["charge importante"],days:[{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"},{h:9.5,type:"normal"},{h:9.5,type:"normal"}],desc:"11h supplémentaires",legal:"⚠️ Proche limite",risk:"moyen",conseil:{titre:"⚠️ 11h Supplémentaires",message:"46h proche de la limite légale.",actions:["8 premières : +25%, suivantes : +50%","Repos compensateur obligatoire","Limite légale : 48h/semaine","Vérifiez moyenne sur 12 semaines"],alerte:{niveau:"warning",texte:"⚠️ 46h : proche limite légale"}}},
+    {id:35,name:"47h semaine",category:"intense",tags:["très haute charge"],days:[{h:9.5,type:"normal"},{h:9.5,type:"normal"},{h:9.5,type:"normal"},{h:9.5,type:"normal"},{h:9,type:"normal"}],desc:"12h supplémentaires",legal:"⚠️ Très proche limite",risk:"élevé",conseil:{titre:"⚠️ 12h Supplémentaires",message:"47h = 1h du maximum légal.",actions:["Situation exceptionnelle uniquement","Repos compensateur impératif","Documentez horaires","Alertez si devient récurrent"],alerte:{niveau:"warning",texte:"⚠️ 47h : 1h du maximum légal"}}},
+    {id:36,name:"Heures sup réparties",category:"intense",tags:["répartition"],days:[{h:7.5,type:"normal"},{h:8,type:"normal"},{h:7.5,type:"normal"},{h:8.5,type:"normal"},{h:8.5,type:"normal"}],desc:"5h sup réparties",legal:"⚠️ Heures sup",risk:"faible",conseil:{titre:"💡 Heures Sup Réparties",message:"5h sup étalées sur la semaine.",actions:["Majoration : +25%","Flexibilité quotidienne appréciée","Vérifiez enregistrement chaque jour","Limite quotidienne : 10h"],alerte:{niveau:"info",texte:"📊 5h sup réparties : +25%"}}},
+    {id:37,name:"Dépassement ponctuel",category:"intense",tags:["exceptionnel"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:11,type:"normal"}],desc:"Vendredi allongé",legal:"⚠️ Journée longue",risk:"faible",conseil:{titre:"💡 Journée Longue",message:"11h un jour, 7h les autres = 39h total.",actions:["4h supplémentaires à +25%","Limite quotidienne : 10h (dérogation 11h)","Repos 11h après cette journée","Récupération recommandée"],alerte:{niveau:"info",texte:"📊 Journée 11h : vérifiez repos"}}},
+    {id:38,name:"Lundi rallongé",category:"intense",tags:["début semaine"],days:[{h:10,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Lundi chargé",legal:"⚠️ Journée 10h",risk:"faible",conseil:{titre:"💡 Lundi Rallongé",message:"10h lundi = 38h semaine.",actions:["3h supplémentaires à +25%","Limite quotidienne normale : 10h","Organisation possible si ponctuelle","Pas de dépassement quotidien"],alerte:null}},
+    {id:39,name:"Fin semaine intensive",category:"intense",tags:["jeudi-vendredi"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:9,type:"normal"},{h:10,type:"normal"}],desc:"Jeudi-vendredi chargés",legal:"⚠️ Concentration fin semaine",risk:"faible",conseil:{titre:"💡 Fin Semaine Chargée",message:"40h avec concentration jeudi-vendredi.",actions:["5h supplémentaires à +25%","Surveillez fatigue en fin semaine","Repos weekend important","Organisation à revoir si répétitif"],alerte:{niveau:"info",texte:"📊 Concentration fin semaine : 5h sup"}}},
+    {id:40,name:"Semaine irrégulière",category:"atypique",tags:["variabilité"],days:[{h:6,type:"normal"},{h:9,type:"normal"},{h:6,type:"normal"},{h:9,type:"normal"},{h:8,type:"normal"}],desc:"Horaires très variables",legal:"⚠️ Variabilité quotidienne",risk:"faible",conseil:{titre:"🔄 Horaires Variables",message:"Variabilité 6h à 9h selon les jours.",actions:["Total 38h = 3h supplémentaires","Planning prévisionnel souhaitable","Respectez 11h repos quotidien","Limite quotidienne : 10h maximum"],alerte:{niveau:"info",texte:"🔄 Horaires variables : 3h sup"}}},
+    
+    // SCÉNARIOS 41-60 : SITUATIONS ATYPIQUES
+    {id:41,name:"Journée 12h",category:"extreme",tags:["journée longue"],days:[{h:7,type:"normal"},{h:12,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Une journée 12h",legal:"🚨 Dérogation requise",risk:"élevé",conseil:{titre:"🚨 Journée 12h",message:"12h dépasse limite quotidienne normale (10h).",actions:["Dérogation exceptionnelle écrite nécessaire","Repos 11h minimum après","Repos compensateur obligatoire","Ne peut être régulier"],alerte:{niveau:"danger",texte:"🚨 12h : dérogation + repos obligatoires"}}},
+    {id:42,name:"Journée 14h",category:"extreme",tags:["très longue"],days:[{h:7,type:"normal"},{h:14,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Journée exceptionnelle 14h",legal:"🚨 Dérogation stricte",risk:"critique",conseil:{titre:"🚨 Journée 14h",message:"ATTENTION : 14h largement au-delà des limites.",actions:["Dérogation exceptionnelle obligatoire","Repos compensateur 24h minimum","11h repos quotidien impératif","Contact inspection travail si récurrent"],alerte:{niveau:"danger",texte:"🚨 14h : EXCEPTIONNEL - Dérogation stricte"}}},
+    {id:43,name:"Coupure longue",category:"atypique",tags:["coupure"],days:[{h:4,type:"normal"},{h:4,type:"normal"},{h:4,type:"normal"},{h:4,type:"normal"},{h:4,type:"normal"}],desc:"Matinées uniquement avec longue coupure",legal:"⚠️ Coupure à encadrer",risk:"faible",conseil:{titre:"🔄 Coupure Journalière",message:"Travail matin uniquement = coupure longue.",actions:["Coupure > 2h doit être rémunérée ou limitée","Amplitude quotidienne à surveiller","Planning doit être stable","Vérifiez convention collective"],alerte:{niveau:"info",texte:"🔄 Coupures : vérifiez rémunération"}}},
+    {id:44,name:"Horaires décalés",category:"atypique",tags:["décalage"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Début/fin décalés",legal:"✅ Conforme si accord",risk:"faible",conseil:{titre:"🕐 Horaires Décalés",message:"Ex : 6h-13h ou 11h-18h.",actions:["Accord écrit si modification horaires","Respecte durée légale 35h","Amplitude quotidienne : 13h max","Prévisibilité planning importante"],alerte:null}},
+    {id:45,name:"Travail posté 3×8",category:"poste",tags:["équipe"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Équipe en rotation 3×8",legal:"✅ Organisation spécifique",risk:"faible",conseil:{titre:"🔄 Travail Posté",message:"Rotation équipes : matin/après-midi/nuit.",actions:["Planning rotation régulier","Repos compensateur entre changements","Majoration nuit si poste nuit","Surveillance médicale renforcée"],alerte:null}},
+    {id:46,name:"2×12 semaine",category:"poste",tags:["12h"],days:[{h:12,type:"normal"},{h:12,type:"normal"},{h:12,type:"normal"}],desc:"3 jours de 12h",legal:"⚠️ Dérogation requise",risk:"moyen",conseil:{titre:"⚠️ Organisation 12h",message:"Postes 12h = dérogation nécessaire.",actions:["Accord collectif obligatoire","36h sur 3 jours","Limite : 12h par jour","Repos compensateur adapté"],alerte:{niveau:"warning",texte:"⚠️ 3×12h : accord collectif requis"}}},
+    {id:47,name:"Cycle 2 semaines",category:"poste",tags:["cycle"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Cycle sur 2 semaines",legal:"✅ Cycle autorisé",risk:"aucun",conseil:{titre:"🔄 Cycle 2 Semaines",message:"Exemple : 40h puis 30h = moyenne 35h.",actions:["Moyenne doit respecter 35h","Cycle maximum : 9 semaines","Planning prévu à l'avance","Heures sup : au-delà moyenne"],alerte:null}},
+    {id:48,name:"Forfait jours",category:"forfait",tags:["cadre"],days:[],desc:"Forfait jours cadre",legal:"✅ Forfait spécifique",risk:"moyen",conseil:{titre:"📋 Forfait Jours",message:"218 jours/an (ou autre selon accord).",actions:["Autonomie dans organisation","Pas décompte heures mais jours","Droit à déconnexion essentiel","Entretiens annuels charge travail obligatoires"],alerte:{niveau:"warning",texte:"⚠️ Forfait jours : surveillez charge"}}},
+    {id:49,name:"Télétravail complet",category:"teletravail",tags:["remote"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"100% télétravail",legal:"✅ Accord télétravail",risk:"aucun",conseil:{titre:"🏠 Télétravail Complet",message:"5 jours/semaine à domicile.",actions:["Accord écrit obligatoire","Droit à déconnexion renforcé","Frais professionnels à négocier","Horaires à respecter malgré distance"],alerte:null}},
+    {id:50,name:"Télétravail partiel",category:"teletravail",tags:["hybride"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Télétravail 2-3j/semaine",legal:"✅ Organisation hybride",risk:"aucun",conseil:{titre:"🏠 Télétravail Hybride",message:"Mix présentiel/distance.",actions:["Planning télétravail défini","Même durée travail qu'au bureau","Déconnexion hors horaires","Équilibre présentiel/distance"],alerte:null}},
+
+    // SCÉNARIOS 51-70 : SITUATIONS LIMITES & REPOS
+    {id:51,name:"Repos 10h seulement",category:"repos",tags:["repos court"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Repos quotidien réduit",legal:"🚨 Minimum non respecté",risk:"élevé",conseil:{titre:"🚨 Repos Insuffisant",message:"ALERTE : minimum légal 11h non respecté.",actions:["Repos quotidien minimum : 11h obligatoires","Seulement dérogations très limitées","Repos compensateur si dérogation","Signaler si récurrent"],alerte:{niveau:"danger",texte:"🚨 Repos < 11h : MINIMUM LÉGAL non respecté"}}},
+    {id:52,name:"30h repos hebdo",category:"repos",tags:["repos hebdo court"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"saturday"},{h:4,type:"sunday"}],desc:"Repos hebdo insuffisant",legal:"🚨 Minimum non respecté",risk:"critique",conseil:{titre:"🚨 Repos Hebdo Insuffisant",message:"ALERTE : minimum 35h consécutives obligatoires.",actions:["Repos hebdomadaire minimum : 35h consécutives","Généralement dimanche","Dérogations très encadrées","Contact inspection travail si répété"],alerte:{niveau:"danger",texte:"🚨 Repos hebdo < 35h : MINIMUM LÉGAL"}}},
+    {id:53,name:"7 jours consécutifs",category:"repos",tags:["sans repos"],days:[{h:5,type:"normal"},{h:5,type:"normal"},{h:5,type:"normal"},{h:5,type:"normal"},{h:5,type:"normal"},{h:5,type:"saturday"},{h:5,type:"sunday"}],desc:"Pas de repos hebdo",legal:"🚨 INTERDIT",risk:"critique",conseil:{titre:"🚨 SITUATION ILLÉGALE",message:"7 jours consécutifs = INTERDICTION ABSOLUE.",actions:["Maximum : 6 jours travaillés consécutifs","Repos hebdo 35h obligatoire","Situation illégale même avec accord employé","Saisir inspection travail immédiatement"],alerte:{niveau:"danger",texte:"🚨 7 jours : ILLÉGAL - Repos hebdo obligatoire"}}},
+    {id:54,name:"Pause déjeuner supprimée",category:"pause",tags:["pause"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Travail sans pause",legal:"🚨 Pause obligatoire",risk:"élevé",conseil:{titre:"🚨 Pause Obligatoire",message:"ALERTE : pause déjeuner = droit, pas option.",actions:["Au-delà 6h travail : pause 20 min minimum","Pause non rémunérée sauf usage","Ne peut être supprimée","Refus possible si pas de pause"],alerte:{niveau:"danger",texte:"🚨 Pas de pause > 6h : OBLIGATION LÉGALE"}}},
+    {id:55,name:"Amplitude 15h",category:"amplitude",tags:["amplitude"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Amplitude quotidienne 15h",legal:"🚨 Dépassement amplitude",risk:"élevé",conseil:{titre:"🚨 Amplitude Excessive",message:"15h amplitude (début → fin) dépasse maximum.",actions:["Amplitude maximum : 13h par jour","Inclut pauses et coupures","Dérogations très limitées","Repos quotidien 11h en danger"],alerte:{niveau:"danger",texte:"🚨 Amplitude 15h : dépassement maximum 13h"}}},
+    {id:56,name:"Déplacement professionnel",category:"deplacement",tags:["trajet"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Semaine avec déplacements",legal:"⚠️ Temps trajet à qualifier",risk:"faible",conseil:{titre:"🚗 Temps de Déplacement",message:"Qualification temps trajet importante.",actions:["Trajet domicile-travail : temps personnel","Trajet professionnel en journée : temps travail","Amplitude à respecter malgré trajets","Frais kilométriques si véhicule perso"],alerte:{niveau:"info",texte:"🚗 Temps trajet : vérifiez qualification"}}},
+    {id:57,name:"Formation obligatoire",category:"formation",tags:["formation"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Semaine avec formation",legal:"✅ Temps de travail effectif",risk:"aucun",conseil:{titre:"📚 Formation Obligatoire",message:"Formation imposée = temps travail effectif.",actions:["Rémunérée comme temps travail","Compte dans durée hebdomadaire","Frais pris en charge employeur","Maintien salaire intégral"],alerte:null}},
+    {id:58,name:"Réunion hors horaires",category:"reunion",tags:["réunion"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Réunions le soir",legal:"⚠️ Heures sup",risk:"faible",conseil:{titre:"📊 Réunions Hors Horaires",message:"Réunion obligatoire = temps travail.",actions:["Compte comme heures supplémentaires","Ou récupération équivalente","Respecter repos quotidien 11h","Refus possible si repos menacé"],alerte:{niveau:"info",texte:"📊 Réunion soir : heures sup dues"}}},
+    {id:59,name:"Astreinte avec interventions",category:"astreinte",tags:["interventions multiples"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Astreinte + 3 interventions",legal:"⚠️ Temps interventions = travail",risk:"moyen",conseil:{titre:"📱 Interventions Multiples",message:"Chaque intervention = temps travail effectif.",actions:["Durée interventions comptabilisée","Trajet si nécessaire inclus","Majorations si nuit/weekend","Repos quotidien peut être impacté"],alerte:{niveau:"warning",texte:"⚠️ Interventions multiples : vérifiez repos"}}},
+    {id:60,name:"Garde 24h",category:"garde",tags:["garde continue"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Garde continue 24h",legal:"⚠️ Temps présence ≠ travail",risk:"moyen",conseil:{titre:"🏥 Garde 24h",message:"Distinction temps présence / travail effectif.",actions:["Seul temps intervention = travail effectif","Temps repos sur place non décompté","Indemnité garde forfaitaire","Secteur santé : régime spécifique"],alerte:{niveau:"warning",texte:"⚠️ Garde 24h : distinction présence/travail"}}},
+
+    // SCÉNARIOS 61-80 : CAS SPÉCIFIQUES SECTEURS
+    {id:61,name:"Secteur santé jour",category:"sante",tags:["hôpital"],days:[{h:10,type:"normal"},{h:10,type:"normal"},{h:10,type:"normal"},{h:10,type:"normal"}],desc:"Semaine hospitalière",legal:"⚠️ Dérogation santé",risk:"moyen",conseil:{titre:"🏥 Secteur Santé",message:"Dérogations spécifiques secteur santé.",actions:["Forfait spécifique possible","Garde et astreinte régime particulier","Accord temps travail santé","Repos compensateur renforcé"],alerte:{niveau:"warning",texte:"🏥 Santé : régime dérogatoire"}}},
+    {id:62,name:"Transport routier",category:"transport",tags:["routier"],days:[{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"}],desc:"Semaine conducteur",legal:"⚠️ Règlement européen",risk:"moyen",conseil:{titre:"🚚 Transport Routier",message:"Temps conduite et repos spécifiques.",actions:["Amplitude quotidienne : 13h max","Conduite : 9h/jour, 56h/semaine","Repos quotidien : 11h minimum","Chronotachygraphe obligatoire"],alerte:{niveau:"warning",texte:"🚚 Transport : règles européennes"}}},
+    {id:63,name:"Commerce dimanche",category:"commerce",tags:["dimanche commerce"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"sunday"}],desc:"Commerce ouvert dimanche",legal:"⚠️ Dérogation commerce",risk:"faible",conseil:{titre:"🛒 Commerce Dimanche",message:"Ouverture dimanche : dérogations encadrées.",actions:["Zone touristique ou dérogation maire","Volontariat obligatoire","Majoration minimale : +100%","Droit refuser sans sanction"],alerte:{niveau:"warning",texte:"🛒 Dimanche commerce : volontariat"}}},
+    {id:64,name:"Sécurité surveillance",category:"securite",tags:["gardiennage"],days:[{h:12,type:"nuit"},{h:12,type:"nuit"},{h:12,type:"nuit"}],desc:"3 nuits surveillance 12h",legal:"⚠️ Conventions spécifiques",risk:"moyen",conseil:{titre:"🔐 Sécurité",message:"Métiers sécurité : conventions particulières.",actions:["Temps présence ≠ temps travail effectif","Accord branche à consulter","Équivalences possibles","Majorations nuit applicables"],alerte:{niveau:"warning",texte:"🔐 Sécurité : vérifiez convention"}}},
+    {id:65,name:"Hôtellerie-restauration",category:"hotellerie",tags:["HCR"],days:[{h:9,type:"normal"},{h:9,type:"normal"},{h:4,type:"normal"},{h:9,type:"normal"},{h:9,type:"normal"}],desc:"Semaine HCR coupée",legal:"⚠️ Convention HCR",risk:"faible",conseil:{titre:"🏨 Hôtellerie-Restauration",message:"Secteur HCR : coupures fréquentes.",actions:["Convention collective HCR","Coupure quotidienne encadrée (2-3h)","Amplitude max : 13h","Repos compensateur majoré"],alerte:{niveau:"info",texte:"🏨 HCR : coupures convention"}}},
+    {id:66,name:"Agriculture saisonnière",category:"agriculture",tags:["saisonnier"],days:[{h:10,type:"normal"},{h:10,type:"normal"},{h:10,type:"normal"},{h:10,type:"normal"},{h:10,type:"normal"}],desc:"Semaine agricole haute saison",legal:"⚠️ Dérogations agriculture",risk:"moyen",conseil:{titre:"🌾 Agriculture",message:"Saisonnalité : dérogations temporaires.",actions:["Dérogations périodes pointe","Maximum temporaire relevé","Récupération hors saison","Lissage annuel possible"],alerte:{niveau:"warning",texte:"🌾 Agriculture : dérogation saisonnière"}}},
+    {id:67,name:"Spectacle vivant",category:"spectacle",tags:["intermittent"],days:[{h:12,type:"normal"},{h:12,type:"normal"}],desc:"2 jours spectacle",legal:"⚠️ Régime intermittent",risk:"faible",conseil:{titre:"🎭 Spectacle",message:"Intermittents : régime spécifique.",actions:["Cachets et contrats courts","Annexes 8 et 10 chômage","Temps répétition = temps travail","Convention collective spectacle"],alerte:null}},
+    {id:68,name:"Enseignement",category:"enseignement",tags:["professeur"],days:[{h:18,type:"normal"}],desc:"18h face élèves",legal:"✅ Décompte spécifique",risk:"aucun",conseil:{titre:"📚 Enseignement",message:"Enseignants : temps face élèves ≠ temps total.",actions:["Heures cours = décompte officiel","Préparation non comptée mais réelle","Obligations service variables selon corps","Heures sup possibles"],alerte:null}},
+    {id:69,name:"BTP chantier",category:"btp",tags:["bâtiment"],days:[{h:8,type:"normal"},{h:8,type:"normal"},{h:8,type:"normal"},{h:8,type:"normal"},{h:8,type:"saturday"}],desc:"Semaine BTP + samedi",legal:"⚠️ Intempéries",risk:"faible",conseil:{titre:"🏗️ BTP",message:"BTP : samedi fréquent, intempéries.",actions:["Samedi : usage secteur mais compensation","Intempéries : chômage partiel possible","Indemnités selon convention","Conditions climatiques à surveiller"],alerte:{niveau:"info",texte:"🏗️ BTP : samedi usage, compensation"}}},
+    {id:70,name:"Services à personne",category:"services",tags:["aide domicile"],days:[{h:3,type:"normal"},{h:3,type:"normal"},{h:3,type:"normal"},{h:3,type:"normal"},{h:3,type:"normal"},{h:3,type:"saturday"},{h:3,type:"sunday"}],desc:"7 jours interventions courtes",legal:"⚠️ Multi-employeurs",risk:"moyen",conseil:{titre:"🏠 Services Personne",message:"Multi-employeurs : cumul à surveiller.",actions:["Chaque employeur = 35h max","Cumul total à vérifier","Repos hebdo à préserver","Trajets entre interventions = temps perso"],alerte:{niveau:"warning",texte:"🏠 Multi-employeurs : cumul à surveiller"}}},
+
+    // SCÉNARIOS 71-90 : SITUATIONS FAMILIALES & PARENTALITÉ
+    {id:71,name:"Congé paternité",category:"conge",tags:["paternité"],days:[],desc:"Congé naissance",legal:"✅ Droit congé paternité",risk:"aucun",conseil:{titre:"👶 Congé Paternité",message:"28 jours calendaires (dont 7 obligatoires).",actions:["Indemnisation CPAM : conditions remplies","Employeur informé 1 mois avant","Fractionnable en 2 périodes max","Maintien salaire si accord entreprise"],alerte:null}},
+    {id:72,name:"Congé maternité",category:"conge",tags:["maternité"],days:[],desc:"Congé maternité",legal:"✅ Protection maternité",risk:"aucun",conseil:{titre:"👶 Congé Maternité",message:"16 semaines minimum (1er/2e enfant).",actions:["Protection licenciement renforcée","Indemnités journalières CPAM","Interdiction travail 8 semaines dont 6 après","Congés payés acquis normalement"],alerte:null}},
+    {id:73,name:"Allaitement",category:"parentalite",tags:["allaitement"],days:[{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"}],desc:"Réduction pour allaitement",legal:"✅ Droit allaitement",risk:"aucun",conseil:{titre:"👶 Allaitement",message:"1h/jour (2×30min) pendant 1 an.",actions:["Pause allaitement : droit légal","Non rémunérée sauf convention","Local approprié obligatoire si demandé","Protection contre discrimination"],alerte:null}},
+    {id:74,name:"Enfant malade",category:"parentalite",tags:["enfant malade"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Absence enfant malade",legal:"✅ Congé enfant malade",risk:"aucun",conseil:{titre:"👶 Enfant Malade",message:"3 à 5 jours selon âge enfant et nombre.",actions:["Justificatif médical obligatoire","Non rémunéré sauf convention","Augmenté si enfant handicapé","Protection emploi si conditions respectées"],alerte:null}},
+    {id:75,name:"Rentrée scolaire",category:"parentalite",tags:["rentrée"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Absence rentrée scolaire",legal:"⚠️ Selon convention",risk:"aucun",conseil:{titre:"🎒 Rentrée Scolaire",message:"1 jour selon conventions collectives.",actions:["Vérifiez votre convention collective","Généralement rémunéré","Justificatif école nécessaire","Usage mais pas obligation légale"],alerte:null}},
+    {id:76,name:"Télétravail parental",category:"parentalite",tags:["télétravail parent"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Télétravail avec enfants",legal:"⚠️ Organisation adaptée",risk:"faible",conseil:{titre:"🏠 Télétravail Parental",message:"Garde enfant et télétravail : organisation délicate.",actions:["Télétravail ≠ mode garde","Horaires adaptés à négocier","Droit déconnexion essentiel","Possible aménagement si jeunes enfants"],alerte:{niveau:"info",texte:"🏠 Télétravail ≠ garde enfants"}}},
+    {id:77,name:"Temps partiel parental",category:"parentalite",tags:["80% parental"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"80% pour enfants",legal:"✅ Droit temps partiel",risk:"aucun",conseil:{titre:"👶 Temps Partiel Parental",message:"Réduction temps travail jusqu'aux 3 ans enfant.",actions:["Droit si ancienneté 1 an","Durée minimale : 16h/semaine","Protection contre licenciement","Retour temps plein garanti"],alerte:null}},
+    {id:78,name:"Congé parental",category:"conge",tags:["parental complet"],days:[],desc:"Congé parental temps plein",legal:"✅ Congé parental",risk:"aucun",conseil:{titre:"👶 Congé Parental Complet",message:"Jusqu'aux 3 ans de l'enfant.",actions:["Ancienneté 1 an requise","Allocation CAF : PreParE","Protection emploi maintenue","Retour garanti poste équivalent"],alerte:null}},
+    {id:79,name:"Garde alternée",category:"parentalite",tags:["garde alternée"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Organisation garde alternée",legal:"⚠️ Aménagements possibles",risk:"aucun",conseil:{titre:"👶 Garde Alternée",message:"Contraintes familiales légitimes.",actions:["Aménagements horaires négociables","Télétravail facilitant possible","Jours enfants malades partagés","Communication employeur recommandée"],alerte:null}},
+    {id:80,name:"Proche aidant",category:"familial",tags:["aidant"],days:[{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"}],desc:"Réduction pour proche aidant",legal:"✅ Congé proche aidant",risk:"aucun",conseil:{titre:"❤️ Proche Aidant",message:"Congé ou réduction temps travail.",actions:["3 mois renouvelables (max 1 an)","Non rémunéré sauf convention","Protection emploi","Allocation journalière possible (conditions)"],alerte:null}},
+
+    // SCÉNARIOS 81-100 : FORMATION, MOBILITÉ, ÉVOLUTION
+    {id:81,name:"Formation certifiante",category:"formation",tags:["certification"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Semaine formation",legal:"✅ Temps travail effectif",risk:"aucun",conseil:{titre:"📚 Formation Certifiante",message:"Formation imposée = temps travail.",actions:["Rémunération maintenue intégralement","Frais formation pris en charge","Compte dans temps travail","Protection en cas échec examen"],alerte:null}},
+    {id:82,name:"CPF hors temps travail",category:"formation",tags:["CPF perso"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Formation CPF soir/weekend",legal:"✅ Temps personnel",risk:"aucun",conseil:{titre:"📚 CPF Personnel",message:"Formation hors temps travail : choix personnel.",actions:["CPF : droits personnels","Employeur ne peut imposer","Pas rémunérée si hors temps travail","Certifications éligibles nombreuses"],alerte:null}},
+    {id:83,name:"Bilan compétences",category:"formation",tags:["bilan"],days:[{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"}],desc:"Semaine allégée bilan",legal:"✅ Dispositif bilan",risk:"aucun",conseil:{titre:"📊 Bilan Compétences",message:"24h sur temps travail ou hors temps.",actions:["Financement CPF possible","Accord employeur si temps travail","Confidentialité résultats garantie","Accompagnement projet professionnel"],alerte:null}},
+    {id:84,name:"VAE",category:"formation",tags:["validation acquis"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Congé VAE",legal:"✅ Droit VAE",risk:"aucun",conseil:{titre:"🎓 VAE",message:"Validation Acquis Expérience.",actions:["Droit à congé pour jury (24h max)","Accompagnement finançable CPF","Expérience 1 an minimum requise","Diplôme sans retour formation"],alerte:null}},
+    {id:85,name:"Mobilité géographique",category:"mobilite",tags:["mutation"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Semaine + temps déménagement",legal:"⚠️ Clause mobilité",risk:"faible",conseil:{titre:"🚚 Mobilité Géo",message:"Mutation : clause mobilité ou accord.",actions:["Clause mobilité : vérifiez contrat","Aide déménagement à négocier","Délai raisonnable refus possible","Frais pris charge selon accord"],alerte:{niveau:"info",texte:"🚚 Mutation : vérifiez conditions"}}},
+    {id:86,name:"Détachement étranger",category:"mobilite",tags:["expatriation"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Mission à l'étranger",legal:"⚠️ Statut expatrié",risk:"faible",conseil:{titre:"✈️ Détachement",message:"Mission étrangère : statut à définir.",actions:["Détachement : < 2 ans, cotisations France","Expatriation : > 2 ans, régime local","Prime expatriation à négocier","Couverture sociale à vérifier"],alerte:{niveau:"info",texte:"✈️ Étranger : statut détaché/expatrié"}}},
+    {id:87,name:"Télétravail étranger",category:"mobilite",tags:["remote étranger"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Télétravail depuis étranger",legal:"⚠️ Complexité juridique",risk:"moyen",conseil:{titre:"🌍 Télétravail Étranger",message:"Travail depuis étranger = complexe.",actions:["Accord employeur obligatoire","Implications fiscales importantes","Sécurité sociale à clarifier","Durée limitée recommandée"],alerte:{niveau:"warning",texte:"🌍 Étranger : implications juridiques"}}},
+    {id:88,name:"Changement poste",category:"evolution",tags:["mobilité interne"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Période adaptation nouveau poste",legal:"✅ Période essai/adaptation",risk:"aucun",conseil:{titre:"🔄 Nouveau Poste",message:"Changement interne : période adaptation.",actions:["Période essai si mobilité importante","Formation accompagnement usuelle","Maintien salaire garanti","Retour poste précédent si échec"],alerte:null}},
+    {id:89,name:"Promotion",category:"evolution",tags:["évolution"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Semaine avec nouvelles responsabilités",legal:"✅ Avenant contrat",risk:"aucun",conseil:{titre:"📈 Promotion",message:"Promotion = modification contrat.",actions:["Avenant écrit obligatoire si changement majeur","Augmentation salariale à négocier","Formation si nécessaire","Période adaptation prévue"],alerte:null}},
+    {id:90,name:"Reconversion",category:"evolution",tags:["reconversion"],days:[{h:4,type:"normal"},{h:4,type:"normal"},{h:4,type:"normal"},{h:4,type:"normal"},{h:4,type:"normal"}],desc:"Mi-temps pour formation",legal:"✅ Projet transition pro",risk:"aucun",conseil:{titre:"🔄 Reconversion",message:"Projet Transition Professionnelle (PTP).",actions:["Financement formation longue (max 1 an)","Rémunération maintenue (conditions)","Ancienneté requise (24 mois)","Retour emploi ou démission protégée"],alerte:null}},
+
+    // SCÉNARIOS 91-110 : SITUATIONS SANTÉ & HANDICAP
+    {id:91,name:"Arrêt maladie court",category:"sante",tags:["arrêt"],days:[{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Arrêt 3 jours",legal:"✅ Arrêt maladie",risk:"aucun",conseil:{titre:"🏥 Arrêt Maladie",message:"Arrêt < 6 mois : maintien salaire partiel.",actions:["Certificat médical dans 48h","Indemnités CPAM dès J4","Maintien employeur selon ancienneté","Contre-visite patronale possible"],alerte:null}},
+    {id:92,name:"Mi-temps thérapeutique",category:"sante",tags:["temps partiel thérapeutique"],days:[{h:3.5,type:"normal"},{h:3.5,type:"normal"},{h:3.5,type:"normal"},{h:3.5,type:"normal"},{h:3.5,type:"normal"}],desc:"Reprise progressive",legal:"✅ Temps partiel thérapeutique",risk:"aucun",conseil:{titre:"🏥 Mi-Temps Thérapeutique",message:"Reprise progressive après arrêt.",actions:["Prescription médicale obligatoire","Accord CPAM nécessaire","Indemnités complémentaires possibles","Durée limitée (renouvelable)"],alerte:null}},
+    {id:93,name:"Aménagement handicap",category:"handicap",tags:["RQTH"],days:[{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"},{h:6,type:"normal"}],desc:"Horaires aménagés RQTH",legal:"✅ Obligation aménagement",risk:"aucun",conseil:{titre:"♿ Aménagement Handicap",message:"RQTH : employeur doit aménager.",actions:["Aménagements raisonnables obligatoires","Temps travail adapté possible","Poste adapté si nécessaire","Maintien salaire selon modalités"],alerte:null}},
+    {id:94,name:"Télétravail médical",category:"sante",tags:["télétravail santé"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Télétravail prescription",legal:"⚠️ Recommandation médicale",risk:"aucun",conseil:{titre:"🏥 Télétravail Médical",message:"Recommandation médecin travail = poids important.",actions:["Employeur doit examiner sérieusement","Refus doit être motivé","Peut être temporaire","Alternative aménagement possible"],alerte:{niveau:"info",texte:"🏥 Recommandation médicale : à considérer"}}},
+    {id:95,name:"Accident travail",category:"sante",tags:["AT"],days:[],desc:"Arrêt suite accident",legal:"✅ Protection AT",risk:"aucun",conseil:{titre:"🏥 Accident Travail",message:"Accident travail = protection renforcée.",actions:["Déclaration employeur 48h obligatoire","Indemnisation majorée CPAM","Maintien salaire intégral (conditions)","Protection licenciement pendant arrêt"],alerte:null}},
+    {id:96,name:"Maladie professionnelle",category:"sante",tags:["MP"],days:[],desc:"Reconnaissance MP",legal:"✅ Protection MP",risk:"aucun",conseil:{titre:"🏥 Maladie Professionnelle",message:"MP reconnue = droits spécifiques.",actions:["Déclaration CPAM dans 2 ans","Indemnisation majorée","Reclassement obligatoire si possible","Inaptitude : recherche reclassement"],alerte:null}},
+    {id:97,name:"Inaptitude partielle",category:"sante",tags:["restriction"],days:[{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Restrictions médicales",legal:"⚠️ Recherche reclassement",risk:"faible",conseil:{titre:"🏥 Inaptitude Partielle",message:"Restrictions : employeur cherche reclassement.",actions:["Médecin travail définit restrictions","Employeur recherche poste adapté (1 mois)","Maintien salaire pendant recherche","Licenciement si reclassement impossible"],alerte:{niveau:"warning",texte:"🏥 Restrictions : reclassement obligatoire"}}},
+    {id:98,name:"Burn-out",category:"sante",tags:["épuisement"],days:[],desc:"Arrêt épuisement pro",legal:"⚠️ Arrêt maladie classique",risk:"moyen",conseil:{titre:"🏥 Épuisement Pro",message:"Burn-out = arrêt maladie standard actuellement.",actions:["Certificat médecin traitant","Pas reconnaissance MP automatique","Employeur doit évaluer risques psycho","Retour : entretien préalable recommandé"],alerte:{niveau:"warning",texte:"🏥 Burn-out : arrêt + évaluation risques"}}},
+    {id:99,name:"Longue maladie",category:"sante",tags:["ALD"],days:[],desc:"Arrêt > 6 mois",legal:"⚠️ Affection longue durée",risk:"moyen",conseil:{titre:"🏥 Longue Maladie",message:"Arrêt > 6 mois : maintien emploi fragilisé.",actions:["Remplacement possible au-delà 1 an","Maintien salaire limité dans temps","ALD : prise charge 100% CPAM","Contact RH régulier conseillé"],alerte:{niveau:"warning",texte:"🏥 > 6 mois : risque remplacement"}}},
+    {id:100,name:"Reprise après inaptitude",category:"sante",tags:["reprise"],days:[{h:4,type:"normal"},{h:5,type:"normal"},{h:6,type:"normal"},{h:7,type:"normal"},{h:7,type:"normal"}],desc:"Reprise progressive",legal:"✅ Reprise adaptée",risk:"aucun",conseil:{titre:"🏥 Reprise Après Inaptitude",message:"Reprise = visite médicale obligatoire.",actions:["Visite reprise médecin travail obligatoire","Aménagement poste selon avis","Période adaptation possible","Suivi médical renforcé"],alerte:null}},
+];
+
+SCENARIOS = BASE_SCENARIOS;
+}
+window.addEventListener("load", function() {
+  debugLog("📦 Module 3 - Fichier chargé", "info");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "info");
+  debugLog("🚀 DÉMARRAGE MODULE 3", "info");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "info");
+  
+  loadProfile();
+  loadAnnualThresholds();
+  initCheatCode();
+  initScenarios();
+  initBadges();
+  initMilestones();
+
+  if (!PROFILE.initialized) {
+    debugLog("ℹ️ Premier démarrage - Configuration requise", "info");
+    handleInitialSetup();
+    return;
+  }
+
+  checkAnnualReset();
+  
+  load();
+  
+  updateUI();
+  updateProfileDisplay();
+  
+  renderDaysList();
+  renderBadges();
+  renderMilestones();
+  
+  toggleWorkMode();
+  
+  checkBadges();
+  checkMilestones();
+  
+  displayModulesData();
+  
+  document.getElementById("mainInterface").classList.remove("hidden");
+  
+  debugLog("✅ Module 3 chargé avec succès", "success");
+  debugLog(`📊 Niveau ${STATE.level} • ${STATE.totalDays}j • ${STATE.totalHours.toFixed(0)}h`, "success");
+  debugLog("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "success");
+});
+</script>
+<script>
+// ============================================================
+//  MODULE 3 — MOTEUR IA-LIKE v1.0
+//  Fatigue · Stabilite · Risque · Prediction
+//  100% deterministe · 0 appel reseau · 0 modification existant
+// ============================================================
+
+const AI_ENABLED = true;
+const AI_VERSION = "1.0";
+const AI_HISTORY_MAX = 365;
+
+// ── Initialisation STATE (additive uniquement) ──────────────
+
+function AI_initState(state) {
+  if (!AI_ENABLED) return;
+  if (!state.ai) {
+    state.ai = {
+      fatigueScore: 0,
+      motivationScore: 1,
+      stabilityScore: 1,
+      overloadRiskScore: 0,
+      lastWarning: null
+    };
+  }
+  if (!state.aiHistory) {
+    state.aiHistory = [];
+  }
+}
+
+// ── Fatigue Score (0 = repose, 1 = epuise) ──────────────────
+
+function AI_computeFatigueScore(day, state) {
+  if (!AI_ENABLED) return 0;
+
+  let fatigue = 0;
+
+  // Facteur heures : 7h = baseline, au-dela augmente
+  const hoursFactor = Math.max(0, Math.min(1, (day.hours - 7) / 7));
+  fatigue += hoursFactor * 0.40;
+
+  // Facteur nuit
+  if (day.type === "nuit") fatigue += 0.20;
+
+  // Facteur weekend
+  if (day.type === "saturday") fatigue += 0.10;
+  if (day.type === "sunday") fatigue += 0.15;
+
+  // Facteur serie consecutive
+  const streak = state.currentStreak || 0;
+  fatigue += Math.min(1, streak / 14) * 0.25;
+
+  return Math.max(0, Math.min(1, fatigue));
+}
+
+function AI_updateFatigue(day, state) {
+  if (!AI_ENABLED) return;
+  AI_initState(state);
+
+  const dayFatigue = AI_computeFatigueScore(day, state);
+  let prevFatigue = state.ai.fatigueScore;
+
+  // Recuperation pour jours de repos ecoules depuis derniere entree
+  const history = state.aiHistory || [];
+  if (history.length > 0 && day.date) {
+    const lastEntry = history[history.length - 1];
+    if (lastEntry.date) {
+      const last = new Date(lastEntry.date);
+      const current = new Date(day.date);
+      last.setHours(0, 0, 0, 0);
+      current.setHours(0, 0, 0, 0);
+      const daysBetween = Math.floor((current - last) / 86400000);
+
+      if (daysBetween > 1) {
+        const restDays = daysBetween - 1;
+        const REST_DECAY = 0.12;
+        for (let i = 0; i < restDays; i++) {
+          prevFatigue *= (1 - REST_DECAY);
+        }
+      }
+    }
+  }
+
+  const DAILY_DECAY = 0.05;
+  const WEIGHT = 0.30;
+
+  state.ai.fatigueScore = Math.max(0, Math.min(1,
+    prevFatigue * (1 - DAILY_DECAY) + dayFatigue * WEIGHT
+  ));
+}
+
+// ── Stability Score (0 = chaotique, 1 = regulier) ───────────
+
+function AI_updateStability(day, state) {
+  if (!AI_ENABLED) return;
+  AI_initState(state);
+
+  const recentDays = (state.days || []).slice(-14);
+
+  if (recentDays.length < 2) {
+    state.ai.stabilityScore = 1;
+    return;
+  }
+
+  // Variance des heures travaillees
+  const hours = recentDays.map(function(d) { return d.hours || 0; });
+  const mean = hours.reduce(function(a, b) { return a + b; }, 0) / hours.length;
+  const variance = hours.reduce(function(sum, h) { return sum + Math.pow(h - mean, 2); }, 0) / hours.length;
+  const stddev = Math.sqrt(variance);
+  const stabilityFromVariance = Math.max(0, 1 - stddev / 4);
+
+  // Coherence des types de journees
+  var uniqueTypes = new Set(recentDays.map(function(d) { return d.type; })).size;
+  var typeConsistency = Math.max(0, 1 - (uniqueTypes - 1) * 0.15);
+
+  // Regularite des intervalles entre jours travailles
+  var intervalRegularity = 1;
+  if (recentDays.length >= 3) {
+    var dates = recentDays
+      .map(function(d) { var dt = new Date(d.date); dt.setHours(0,0,0,0); return dt.getTime(); })
+      .sort(function(a, b) { return a - b; });
+    var intervals = [];
+    for (var i = 1; i < dates.length; i++) {
+      intervals.push((dates[i] - dates[i - 1]) / 86400000);
+    }
+    if (intervals.length > 0) {
+      var meanInt = intervals.reduce(function(a, b) { return a + b; }, 0) / intervals.length;
+      var varInt = intervals.reduce(function(s, v) { return s + Math.pow(v - meanInt, 2); }, 0) / intervals.length;
+      intervalRegularity = Math.max(0, 1 - Math.sqrt(varInt) / 3);
+    }
+  }
+
+  state.ai.stabilityScore = Math.max(0, Math.min(1,
+    stabilityFromVariance * 0.40 + typeConsistency * 0.25 + intervalRegularity * 0.35
+  ));
+}
+
+// ── Overload / Burnout Risk (0 = safe, 1 = danger) ──────────
+
+function AI_updateOverloadRisk(state) {
+  if (!AI_ENABLED) return;
+  AI_initState(state);
+
+  var fatigue = state.ai.fatigueScore;
+  var stability = state.ai.stabilityScore;
+
+  // Velocite de la fatigue (acceleration)
+  var fatigueVelocity = 0;
+  var history = state.aiHistory || [];
+  if (history.length >= 2) {
+    var tail = history.slice(-5);
+    if (tail.length >= 2) {
+      fatigueVelocity = (tail[tail.length - 1].fatigueScore - tail[0].fatigueScore) / tail.length;
+    }
+  }
+
+  // Formule de risque composite
+  var fatigueContrib = fatigue * 0.45;
+  var instabilityContrib = (1 - stability) * 0.25;
+  var velocityContrib = Math.max(0, fatigueVelocity * 5) * 0.30;
+
+  state.ai.overloadRiskScore = Math.max(0, Math.min(1,
+    fatigueContrib + instabilityContrib + velocityContrib
+  ));
+
+  // Motivation (inverse pondere)
+  state.ai.motivationScore = Math.max(0, Math.min(1,
+    1 - (fatigue * 0.6 + (1 - stability) * 0.4)
+  ));
+}
+
+// ── Pipeline IA Quotidien (jamais appele automatiquement) ───
+
+function AI_processDay(day, state) {
+  if (!AI_ENABLED) return null;
+  AI_initState(state);
+
+  AI_updateFatigue(day, state);
+  AI_updateStability(day, state);
+  AI_updateOverloadRisk(state);
+
+  var snapshot = {
+    date: day.date || new Date().toISOString().slice(0, 10),
+    fatigueScore: +state.ai.fatigueScore.toFixed(4),
+    stabilityScore: +state.ai.stabilityScore.toFixed(4),
+    overloadRiskScore: +state.ai.overloadRiskScore.toFixed(4),
+    motivationScore: +state.ai.motivationScore.toFixed(4),
+    hours: day.hours,
+    type: day.type,
+    timestamp: Date.now()
+  };
+
+  state.aiHistory.push(snapshot);
+  if (state.aiHistory.length > AI_HISTORY_MAX) {
+    state.aiHistory = state.aiHistory.slice(-AI_HISTORY_MAX);
+  }
+
+  var warnings = AI_evaluateWarnings(state);
+  var avoided = AI_checkAvoidedScenario(state, day);
+
+  return { snapshot: snapshot, warnings: warnings, avoided: avoided };
+}
+
+// ── Warnings (alertes non bloquantes, seuils dynamiques) ────
+
+function AI_evaluateWarnings(state) {
+  if (!AI_ENABLED) return [];
+  AI_initState(state);
+
+  var warnings = [];
+  var ai = state.ai;
+
+  // Facteur adaptatif : plus indulgent en debut d'historique
+  var histLen = (state.aiHistory || []).length;
+  var adapt = Math.min(1, histLen / 30);
+
+  // --- Fatigue ---
+  var fatigueThreshold = 0.7 * adapt + 0.3 * (1 - adapt);
+  if (ai.fatigueScore > fatigueThreshold) {
+    warnings.push({
+      type: "fatigue_high",
+      level: ai.fatigueScore > 0.85 ? "critical" : "warning",
+      message: ai.fatigueScore > 0.85
+        ? "Fatigue critique. Repos fortement recommande."
+        : "Fatigue elevee. Journee allegee conseillee.",
+      score: +ai.fatigueScore.toFixed(3)
+    });
+  }
+
+  // --- Surcharge ---
+  if (ai.overloadRiskScore > 0.6) {
+    warnings.push({
+      type: "overload_risk",
+      level: ai.overloadRiskScore > 0.8 ? "critical" : "warning",
+      message: ai.overloadRiskScore > 0.8
+        ? "Risque de surcharge imminent."
+        : "Risque de surcharge en augmentation.",
+      score: +ai.overloadRiskScore.toFixed(3)
+    });
+  }
+
+  // --- Stabilite ---
+  if (ai.stabilityScore < 0.3) {
+    warnings.push({
+      type: "stability_low",
+      level: "info",
+      message: "Horaires tres irreguliers. La regularite favorise la recuperation.",
+      score: +ai.stabilityScore.toFixed(3)
+    });
+  }
+
+  // --- Serie consecutive ---
+  var streak = state.currentStreak || 0;
+  if (streak >= 6) {
+    warnings.push({
+      type: "streak_long",
+      level: streak >= 12 ? "critical" : "warning",
+      message: streak + " jours consecutifs. Repos hebdomadaire obligatoire.",
+      score: streak
+    });
+  }
+
+  // --- Heures hebdomadaires (7 derniers jours calendaires) ---
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var sevenAgo = new Date(today.getTime() - 7 * 86400000);
+  var last7 = (state.days || []).filter(function(d) {
+    var dt = new Date(d.date);
+    dt.setHours(0, 0, 0, 0);
+    return dt >= sevenAgo;
+  });
+  var weeklyH = last7.reduce(function(s, d) { return s + (d.hours || 0); }, 0);
+
+  if (weeklyH > 44) {
+    warnings.push({
+      type: "weekly_hours",
+      level: weeklyH > 48 ? "critical" : "warning",
+      message: weeklyH > 48
+        ? weeklyH.toFixed(1) + "h/sem : DEPASSEMENT maximum legal (48h)."
+        : weeklyH.toFixed(1) + "h/sem : proche limite legale.",
+      score: +weeklyH.toFixed(1)
+    });
+  }
+
+  if (warnings.length > 0) {
+    state.ai.lastWarning = {
+      date: new Date().toISOString(),
+      warnings: warnings
+    };
+  }
+
+  return warnings;
+}
+
+// ── Scenarios evites ────────────────────────────────────────
+
+function AI_checkAvoidedScenario(state, day) {
+  if (!AI_ENABLED) return null;
+  AI_initState(state);
+
+  var lastW = state.ai.lastWarning;
+  if (!lastW || !lastW.warnings) return null;
+
+  var wTypes = lastW.warnings.map(function(w) { return w.type; });
+  var avoided = [];
+
+  // Apres alerte fatigue : journee allegee
+  if (wTypes.indexOf("fatigue_high") !== -1 && day.hours <= 7) {
+    avoided.push({
+      type: "fatigue_corrected",
+      message: "Journee allegee apres alerte fatigue. Bon reflexe.",
+      original: "fatigue_high"
+    });
+  }
+
+  // Apres alerte surcharge : charge reduite
+  if (wTypes.indexOf("overload_risk") !== -1 && day.hours <= 7 && day.type === "normal") {
+    avoided.push({
+      type: "overload_avoided",
+      message: "Charge reduite apres risque surcharge. Prevention efficace.",
+      original: "overload_risk"
+    });
+  }
+
+  // Apres alerte heures hebdo : heures reduites
+  if (wTypes.indexOf("weekly_hours") !== -1 && day.hours <= 6) {
+    avoided.push({
+      type: "weekly_corrected",
+      message: "Heures reduites apres alerte hebdomadaire.",
+      original: "weekly_hours"
+    });
+  }
+
+  return avoided.length > 0 ? avoided : null;
+}
+
+// ── Prediction (simulation forward, lecture seule) ──────────
+
+function AI_predictOverloadRisk(futureDays) {
+  if (!AI_ENABLED) return { risk: 0, riskPercent: 0, verdict: "DESACTIVE", projection: [] };
+  if (!futureDays || futureDays.length === 0) {
+    return { risk: 0, riskPercent: 0, verdict: "AUCUNE_DONNEE", projection: [] };
+  }
+
+  // Clone etat actuel pour simulation read-only
+  var currentAi = (typeof STATE !== "undefined" && STATE.ai)
+    ? JSON.parse(JSON.stringify(STATE.ai))
+    : { fatigueScore: 0, motivationScore: 1, stabilityScore: 1, overloadRiskScore: 0, lastWarning: null };
+
+  var currentHistory = (typeof STATE !== "undefined" && STATE.aiHistory)
+    ? STATE.aiHistory.slice(-30).map(function(e) { return Object.assign({}, e); })
+    : [];
+
+  var currentDays = (typeof STATE !== "undefined" && STATE.days)
+    ? STATE.days.slice(-14).map(function(d) { return Object.assign({}, d); })
+    : [];
+
+  var vState = {
+    ai: currentAi,
+    aiHistory: currentHistory,
+    days: currentDays,
+    currentStreak: (typeof STATE !== "undefined" ? STATE.currentStreak : 0) || 0,
+    maxStreak: (typeof STATE !== "undefined" ? STATE.maxStreak : 0) || 0
+  };
+
+  var projection = [];
+
+  futureDays.forEach(function(day, i) {
+    vState.days.push(day);
+    vState.currentStreak++;
+
+    AI_updateFatigue(day, vState);
+    AI_updateStability(day, vState);
+    AI_updateOverloadRisk(vState);
+
+    projection.push({
+      day: i + 1,
+      date: day.date || ("J+" + (i + 1)),
+      fatigue: +vState.ai.fatigueScore.toFixed(3),
+      risk: +vState.ai.overloadRiskScore.toFixed(3),
+      stability: +vState.ai.stabilityScore.toFixed(3),
+      motivation: +vState.ai.motivationScore.toFixed(3)
+    });
+
+    vState.aiHistory.push({
+      date: day.date,
+      fatigueScore: vState.ai.fatigueScore,
+      overloadRiskScore: vState.ai.overloadRiskScore
+    });
+  });
+
+  var finalRisk = vState.ai.overloadRiskScore;
+
+  return {
+    risk: +finalRisk.toFixed(3),
+    riskPercent: Math.round(finalRisk * 100),
+    verdict: finalRisk > 0.8 ? "CRITIQUE"
+           : finalRisk > 0.6 ? "ELEVE"
+           : finalRisk > 0.4 ? "MODERE"
+           : "FAIBLE",
+    projection: projection
+  };
+}
+
+// ── Convenience : "Si tu continues comme ca..." ─────────────
+
+function AI_predictIfContinue(horizonDays) {
+  if (!AI_ENABLED) return AI_predictOverloadRisk([]);
+
+  horizonDays = horizonDays || 14;
+  var recentDays = (STATE.days || []).slice(-7);
+
+  if (recentDays.length === 0) {
+    return { risk: 0, riskPercent: 0, verdict: "AUCUNE_DONNEE", projection: [] };
+  }
+
+  var futureDays = [];
+  for (var i = 0; i < horizonDays; i++) {
+    var template = recentDays[i % recentDays.length];
+    var futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + i + 1);
+    futureDays.push({
+      date: futureDate.toISOString().slice(0, 10),
+      hours: template.hours,
+      type: template.type
+    });
+  }
+
+  return AI_predictOverloadRisk(futureDays);
+}
+
+// ── Dashboard Console ───────────────────────────────────────
+
+function AI_dashboard() {
+  if (!AI_ENABLED) { console.log("IA desactivee"); return; }
+  AI_initState(STATE);
+
+  var ai = STATE.ai;
+  var bar = function(v, len) {
+    len = len || 20;
+    var filled = Math.round(v * len);
+    var empty = len - filled;
+    var result = "[";
+    for (var i = 0; i < filled; i++) result += "\u2588";
+    for (var j = 0; j < empty; j++) result += "\u2591";
+    return result + "]";
+  };
+
+  console.log("");
+  console.log("\u2501".repeat(40));
+  console.log("  MOTEUR IA v" + AI_VERSION + " \u2014 TABLEAU DE BORD");
+  console.log("\u2501".repeat(40));
+  console.log("  Fatigue    " + bar(ai.fatigueScore) + " " + (ai.fatigueScore * 100).toFixed(1) + "%");
+  console.log("  Stabilite  " + bar(ai.stabilityScore) + " " + (ai.stabilityScore * 100).toFixed(1) + "%");
+  console.log("  Motivation " + bar(ai.motivationScore) + " " + (ai.motivationScore * 100).toFixed(1) + "%");
+  console.log("  Risque     " + bar(ai.overloadRiskScore) + " " + (ai.overloadRiskScore * 100).toFixed(1) + "%");
+  console.log("\u2501".repeat(40));
+  console.log("  Historique : " + (STATE.aiHistory || []).length + " entrees");
+
+  if (ai.lastWarning) {
+    console.log("  Dernier warning : " + ai.lastWarning.date);
+    ai.lastWarning.warnings.forEach(function(w) {
+      console.log("    [" + w.level.toUpperCase() + "] " + w.message);
+    });
+  }
+
+  var pred = AI_predictIfContinue(14);
+  console.log("\u2501".repeat(40));
+  console.log("  Prediction 14j : " + pred.riskPercent + "% (" + pred.verdict + ")");
+  console.log("\u2501".repeat(40));
+  console.log("");
+
+  return { ai: ai, prediction: pred };
+}
+
+// ── Comparaison IA + Scénarios ──────────────────────────────
+
+function AI_findClosestScenario() {
+  if (!AI_ENABLED || typeof SCENARIOS === "undefined" || !SCENARIOS.length) return null;
+
+  // Récupérer les 7 derniers jours
+  const sortedDays = (STATE.days || []).slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+  const last7 = sortedDays.slice(0, 7);
+  if (last7.length < 3) return null; // Pas assez de données
+
+  const weekHours = last7.map(d => d.hours || 0);
+  const weekTypes = last7.map(d => d.type || "normal");
+  const totalHours = weekHours.reduce((s, h) => s + h, 0);
+  const avgHours = totalHours / last7.length;
+  const hasNight = weekTypes.includes("nuit");
+  const hasWeekend = weekTypes.includes("saturday") || weekTypes.includes("sunday");
+
+  let bestMatch = null;
+  let bestScore = Infinity;
+
+  SCENARIOS.forEach(scenario => {
+    if (!scenario.days || !scenario.days.length) return;
+
+    const scenarioTotal = scenario.days.reduce((s, d) => s + (d.h || 0), 0);
+    const scenarioAvg = scenarioTotal / scenario.days.length;
+    const scenarioHasNight = scenario.days.some(d => d.type === "nuit");
+    const scenarioHasWeekend = scenario.days.some(d => d.type === "saturday" || d.type === "sunday");
+
+    // Score de similarité (plus bas = meilleur)
+    let score = 0;
+    score += Math.abs(totalHours - scenarioTotal) * 0.5;
+    score += Math.abs(avgHours - scenarioAvg) * 2;
+    score += Math.abs(last7.length - scenario.days.length) * 3;
+    if (hasNight !== scenarioHasNight) score += 10;
+    if (hasWeekend !== scenarioHasWeekend) score += 5;
+
+    if (score < bestScore) {
+      bestScore = score;
+      bestMatch = scenario;
+    }
+  });
+
+  // Seuil de pertinence
+  if (bestScore > 30) return null;
+
+  return {
+    scenario: bestMatch,
+    score: Math.max(0, 100 - bestScore * 2).toFixed(0),
+    risk: bestMatch?.risk || "inconnu",
+    conseil: bestMatch?.conseil || null
+  };
+}
+
+// ── Message intelligent du jour ─────────────────────────────
+
+function AI_getIntelligentMessage() {
+  if (!AI_ENABLED) return null;
+  AI_initState(STATE);
+
+  const ai = STATE.ai;
+  if (!ai) return null;
+
+  const warnings = AI_evaluateWarnings(STATE);
+  const criticalWarnings = warnings.filter(w => w.level === "critical");
+  const highWarnings = warnings.filter(w => w.level === "high");
+
+  // Message critique prioritaire
+  if (criticalWarnings.length > 0) {
+    return {
+      level: "critical",
+      title: "⛔ Alerte Critique",
+      message: criticalWarnings[0].message,
+      actions: ["Repos immédiat conseillé", "Réduisez votre charge de travail", "Consultez si nécessaire"]
+    };
+  }
+
+  // Avertissements importants
+  if (highWarnings.length > 0) {
+    return {
+      level: "warning",
+      title: "⚠️ Attention",
+      message: highWarnings[0].message,
+      actions: ["Planifiez du repos", "Surveillez votre rythme"]
+    };
+  }
+
+  // Messages positifs basés sur l'état
+  if (ai.fatigue < 0.25 && ai.stability > 0.7) {
+    return {
+      level: "good",
+      title: "💚 Excellent équilibre",
+      message: "Votre rythme de travail est sain et régulier. Continuez ainsi !",
+      actions: null
+    };
+  }
+
+  if (ai.stability > 0.8) {
+    return {
+      level: "good",
+      title: "📊 Rythme stable",
+      message: "Votre organisation est très régulière. Bonne discipline !",
+      actions: null
+    };
+  }
+
+  if (ai.fatigue > 0.5 && ai.fatigue < 0.7) {
+    return {
+      level: "info",
+      title: "😓 Fatigue modérée",
+      message: "Un peu de repos vous ferait du bien. Pensez à prendre une pause.",
+      actions: ["Évitez les heures supplémentaires", "Dormez suffisamment"]
+    };
+  }
+
+  return null;
+}
+
+// ── Garbage Collector localStorage ──────────────────────────
+
+function AI_garbageCollect() {
+  const keysToClean = [
+    { prefix: "SNAPSHOT_", keep: 20 },
+    { prefix: "MODULE3_ARCHIVE_", keep: 12 },
+    { prefix: "M1_LAST_SYNC_", keep: 5 },
+    { prefix: "M2_LAST_SYNC_", keep: 5 }
+  ];
+
+  let totalCleaned = 0;
+
+  keysToClean.forEach(({ prefix, keep }) => {
+    const keys = Object.keys(localStorage)
+      .filter(k => k.startsWith(prefix))
+      .sort()
+      .reverse();
+
+    if (keys.length > keep) {
+      const toDelete = keys.slice(keep);
+      toDelete.forEach(k => {
+        localStorage.removeItem(k);
+        totalCleaned++;
+      });
+    }
+  });
+
+  // Nettoyer les entrées IA trop anciennes dans l'historique
+  if (STATE.aiHistory && STATE.aiHistory.length > AI_HISTORY_MAX) {
+    STATE.aiHistory = STATE.aiHistory.slice(-AI_HISTORY_MAX);
+  }
+
+  if (totalCleaned > 0) {
+    debugLog(`🗑️ Garbage collector: ${totalCleaned} entrées nettoyées`, "info");
+  }
+
+  return totalCleaned;
+}
+
+// ── Mise à jour UI Dashboard IA ─────────────────────────────
+
+function updateAIDashboard() {
+  const dashboard = document.getElementById("aiDashboard");
+  if (!dashboard) return;
+
+  if (!AI_ENABLED || !STATE.ai) {
+    dashboard.classList.add("hidden");
+    return;
+  }
+
+  AI_initState(STATE);
+  const ai = STATE.ai;
+
+  // Afficher le dashboard
+  dashboard.classList.remove("hidden");
+
+  // Fatigue
+  const fatiguePercent = Math.round(ai.fatigue * 100);
+  const fatigueFill = document.getElementById("aiFatigueFill");
+  const fatigueValue = document.getElementById("aiFatigueValue");
+  if (fatigueFill && fatigueValue) {
+    fatigueFill.style.width = fatiguePercent + "%";
+    fatigueFill.className = "ai-gauge-fill " + (fatiguePercent < 40 ? "low" : fatiguePercent < 70 ? "medium" : "high");
+    fatigueValue.textContent = fatiguePercent + "%";
+  }
+
+  // Risque burnout
+  const overloadPercent = Math.round(ai.overloadRisk * 100);
+  const overloadFill = document.getElementById("aiOverloadFill");
+  const overloadValue = document.getElementById("aiOverloadValue");
+  if (overloadFill && overloadValue) {
+    overloadFill.style.width = overloadPercent + "%";
+    overloadFill.className = "ai-gauge-fill " + (overloadPercent < 30 ? "low" : overloadPercent < 60 ? "medium" : "high");
+    overloadValue.textContent = overloadPercent + "%";
+  }
+
+  // Stabilité
+  const stabilityPercent = Math.round(ai.stability * 100);
+  const stabilityFill = document.getElementById("aiStabilityFill");
+  const stabilityValue = document.getElementById("aiStabilityValue");
+  if (stabilityFill && stabilityValue) {
+    stabilityFill.style.width = stabilityPercent + "%";
+    stabilityFill.className = "ai-gauge-fill stable";
+    stabilityValue.textContent = stabilityPercent + "%";
+  }
+
+  // Message intelligent
+  const messageBox = document.getElementById("aiMessage");
+  const message = AI_getIntelligentMessage();
+  if (messageBox) {
+    if (message) {
+      messageBox.classList.remove("hidden", "warning", "critical");
+      if (message.level === "critical") messageBox.classList.add("critical");
+      else if (message.level === "warning") messageBox.classList.add("warning");
+
+      let html = `<div class="ai-message-title">${message.title}</div>`;
+      html += `<div>${message.message}</div>`;
+      if (message.actions && message.actions.length) {
+        html += `<ul style="margin:8px 0 0;padding-left:20px;font-size:12px">`;
+        message.actions.forEach(a => html += `<li>${a}</li>`);
+        html += `</ul>`;
+      }
+      messageBox.innerHTML = html;
+    } else {
+      messageBox.classList.add("hidden");
+    }
+  }
+
+  // Scénario le plus proche
+  const scenarioBox = document.getElementById("aiScenarioMatch");
+  const match = AI_findClosestScenario();
+  if (scenarioBox) {
+    if (match && match.scenario) {
+      scenarioBox.classList.remove("hidden");
+      let riskIcon = match.risk === "aucun" ? "✅" : match.risk === "modéré" ? "⚠️" : "⛔";
+      scenarioBox.innerHTML = `
+        <strong>📋 Scénario similaire:</strong> ${match.scenario.name} (${match.score}% de correspondance)<br>
+        <span style="opacity:0.8">${riskIcon} Risque: ${match.risk}</span>
+        ${match.conseil ? `<br><span style="opacity:0.8">💡 ${match.conseil.titre}</span>` : ""}
+      `;
+    } else {
+      scenarioBox.classList.add("hidden");
+    }
+  }
+
+  // Afficher alerte si warning critique
+  const warnings = AI_evaluateWarnings(STATE);
+  const critical = warnings.find(w => w.level === "critical");
+  if (critical && typeof showAchievement === "function") {
+    // Éviter spam: vérifier si déjà affiché récemment
+    const lastAlert = parseInt(localStorage.getItem("AI_LAST_CRITICAL_ALERT") || "0");
+    const now = Date.now();
+    if (now - lastAlert > 3600000) { // 1h entre alertes
+      localStorage.setItem("AI_LAST_CRITICAL_ALERT", now.toString());
+      showAchievement("⚠️ Alerte IA", critical.message, "Repos conseillé");
+    }
+  }
+}
+
+// ── API publique (window.AI) ────────────────────────────────
+
+window.AI = {
+  process: function(day) { return AI_processDay(day, STATE); },
+  predict: AI_predictOverloadRisk,
+  predictIfContinue: AI_predictIfContinue,
+  warnings: function() { return AI_evaluateWarnings(STATE); },
+  dashboard: AI_dashboard,
+  state: function() { AI_initState(STATE); return STATE.ai; },
+  history: function() { return STATE.aiHistory || []; },
+  findScenario: AI_findClosestScenario,
+  getMessage: AI_getIntelligentMessage,
+  gc: AI_garbageCollect,
+  updateUI: updateAIDashboard,
+  version: AI_VERSION,
+  enabled: function() { return AI_ENABLED; },
+  help: function() {
+    console.log([
+      "",
+      "MOTEUR IA v" + AI_VERSION + " \u2014 COMMANDES :",
+      "",
+      "  AI.process({date, hours, type})   Traite une journee",
+      "  AI.dashboard()                    Tableau de bord complet",
+      "  AI.warnings()                     Warnings actuels",
+      "  AI.predict([{hours,type}, ...])   Prediction custom",
+      "  AI.predictIfContinue(14)          \"Si tu continues...\"",
+      "  AI.state()                        Scores actuels",
+      "  AI.history()                      Historique IA",
+      "  AI.findScenario()                 Scenario le plus proche",
+      "  AI.getMessage()                   Message intelligent",
+      "  AI.gc()                           Nettoyage localStorage",
+      "  AI.updateUI()                     Rafraichir dashboard",
+      "  AI.help()                         Cette aide",
+      ""
+    ].join("\n"));
+  }
+};
+
+console.log("[IA] Moteur IA v" + AI_VERSION + " charge. Tapez AI.help() pour commencer.");
+
+// ── Initialisation IA au démarrage ──────────────────────────
+
+window.addEventListener("load", function() {
+  // Attendre que STATE soit chargé
+  setTimeout(function() {
+    if (!AI_ENABLED || typeof STATE === "undefined") return;
+
+    // Garbage collector
+    AI_garbageCollect();
+
+    // Recalculer IA sur toutes les journées si historique vide
+    if (STATE.days && STATE.days.length > 0 && (!STATE.aiHistory || STATE.aiHistory.length === 0)) {
+      AI_initState(STATE);
+      const sortedDays = STATE.days.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+      sortedDays.forEach(d => AI_processDay(d, STATE));
+      debugLog(`🤖 IA initialisée sur ${sortedDays.length} jours existants`, 'info');
+    }
+
+    // Mettre à jour le dashboard
+    updateAIDashboard();
+
+    debugLog("✅ Moteur IA opérationnel", "success");
+  }, 100);
+});
+</script>
+</body>
+</html>
