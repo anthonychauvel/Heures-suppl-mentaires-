@@ -1172,9 +1172,9 @@ function openProfileSetup() {
   document.getElementById("mainInterface").classList.add("hidden");
 }
 function returnToMainMenu() {
-  if (!confirm("⬅️ Revenir au menu principal ?\n\nAucune donnée ne sera supprimée.")) {
-    return;
-  }
+  if (!confirm("⬅️ Revenir au menu principal ?")) return;
+  window.location.href = "../index.html";
+}
 
   // Cacher l’interface principale
   document.getElementById("mainInterface")?.classList.add("hidden");
@@ -1311,7 +1311,9 @@ function importFromModule1(m1Data) {
 
 if (!STATE.days.some(day => day.date === d.date)) {
   STATE.days.push({
-    id: crypto.randomUUID(),
+    (typeof crypto.randomUUID === "function"
+  ? crypto.randomUUID()
+  : Date.now().toString() + Math.random().toString(36).slice(2))
     date: d.date,
     hours: d.hours,
     type: type
@@ -1344,7 +1346,9 @@ function importFromModule2(m2Data) {
 
       if (!STATE.days.some(day => day.date === date)) {
   STATE.days.push({
-    id: crypto.randomUUID(),
+    (typeof crypto.randomUUID === "function"
+  ? crypto.randomUUID()
+  : Date.now().toString() + Math.random().toString(36).slice(2))
     date: date,
     hours: hours,
     type: type
@@ -1597,7 +1601,7 @@ function save() {
   try {
     const saveState = {
       ...STATE,
-      dayTypesWorked: Array.from(STATE.dayTypesWorked),
+    STATE.dayTypesWorked = Array.from(STATE.dayTypesWorked);
       lastSaved: new Date().toISOString()
     };
     
@@ -5491,6 +5495,23 @@ window.addEventListener("load", () => {
   } else {
     if (main) main.classList.remove("hidden");
   }
+});
+window.addEventListener("load", () => {
+  debugLog("🚀 Initialisation Module 3", "info");
+
+  loadProfile();
+  loadAnnualThresholds();
+
+  const savedState = localStorage.getItem("MODULE3_ULTIMATE_STATE");
+  if (savedState) {
+    STATE = JSON.parse(savedState);
+    STATE.dayTypesWorked = new Set(STATE.dayTypesWorked || []);
+  } else {
+    STATE = getDefaultState();
+  }
+
+  initCheatCode();
+  handleInitialSetup();
 });
 </script>
 </body>
