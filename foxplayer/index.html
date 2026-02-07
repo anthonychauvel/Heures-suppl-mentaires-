@@ -552,7 +552,7 @@ function getDefaultState() {
     exports: 0,
     days: [],
     unlockedBadges: [],
-    trophies: {gold: 0, silver: 0, bronze: 0},
+    trophies: { gold: 0, silver: 0, bronze: 0 },
     completedMilestones: [],
     lastDayDate: null,
     dayTypesWorked: new Set(),
@@ -1172,7 +1172,7 @@ function openProfileSetup() {
   document.getElementById("mainInterface").classList.add("hidden");
 }
 function returnToMainMenu() {
-  if (!confirm("⬅️ Revenir au menu principal ?")) return;
+  if (!confirm("⬅️ Revenir au menu principal ?\nAucune donnée ne sera supprimée.")) return;
   window.location.href = "../index.html";
 }
 
@@ -1286,69 +1286,51 @@ function selectModuleFromDual(mode) {
 }
 
 function importFromModule1(m1Data) {
-  debugLog("📅 Import depuis Module 1...", "info");
+  if (!m1Data || !Array.isArray(m1Data.days)) return;
 
-  const individualDays = MODULE1_API.getIndividualDays();
-
-  if (individualDays.length > 0) {
-    individualDays.forEach(d => {
-      const date = new Date(d.date);
-      const dow = date.getDay();
-      let type = "normal";
-      if (dow === 0) type = "sunday";
-      else if (dow === 6) type = "saturday";
-
-STATE.days.push({
-  id: (typeof crypto.randomUUID === "function"
-    ? crypto.randomUUID()
-    : Date.now().toString() + Math.random().toString(36).slice(2)),
-  date: d.date,
-  hours: d.hours,
-  type: type
-});
-}
-    });
-  } else {
-    debugLog("Pas de jours individuels, import agrege", "warn");
-    STATE.totalHours = parseFloat(m1Data.totalHours) || 0;
-  }
-
-  STATE.calculations = m1Data.months.length;
-  recalculateFromDays();
-
-  debugLog(`✅ ${STATE.totalHours.toFixed(1)}h importées`, "success");
-  debugLog(`✅ ${STATE.totalDays} jours importés`, "success");
-}
-
-function importFromModule2(m2Data) {
-  debugLog("📊 Import depuis Module 2...", "info");
-
-  Object.entries(m2Data.data).forEach(([date, day]) => {
-    const hours = parseFloat(day.extra) || 0;
-    if (hours > 0) {
-      const d = new Date(date);
-      const dow = d.getDay();
-      let type = "normal";
-      if (dow === 0) type = "sunday";
-      else if (dow === 6) type = "saturday";
-
+  m1Data.days.forEach(d => {
+    if (!STATE.days.some(day => day.date === d.date)) {
       STATE.days.push({
-  id: (typeof crypto.randomUUID === "function"
-    ? crypto.randomUUID()
-    : Date.now().toString() + Math.random().toString(36).slice(2)),
-  date: date,
-  hours: hours,
-  type: type
-});
-}
+        id: (typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : Date.now().toString() + Math.random().toString(36).slice(2)),
+        date: d.date,
+        hours: d.hours,
+        type: d.type || "normal"
+      });
+
+      STATE.totalDays++;
+      STATE.totalHours += d.hours || 0;
+      STATE.dayTypesWorked.add(d.type || "normal");
     }
   });
 
-  STATE.calculations = m2Data.closures.length;
-  recalculateFromDays();
+  STATE.calculations += m1Data.months?.length || 0;
+  save();
+}
 
-  debugLog(`✅ ${STATE.totalDays} jours importés`, "success");
-  debugLog(`✅ ${STATE.totalHours.toFixed(1)}h importées`, "success");
+function importFromModule2(m2Data) {
+  if (!m2Data || !Array.isArray(m2Data.entries)) return;
+
+  m2Data.entries.forEach(e => {
+    if (!STATE.days.some(day => day.date === e.date)) {
+      STATE.days.push({
+        id: (typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : Date.now().toString() + Math.random().toString(36).slice(2)),
+        date: e.date,
+        hours: e.hours,
+        type: e.type || "normal"
+      });
+
+      STATE.totalDays++;
+      STATE.totalHours += e.hours || 0;
+      STATE.dayTypesWorked.add(e.type || "normal");
+    }
+  });
+
+  STATE.calculations += m2Data.closures?.length || 0;
+  save();
 }
 
 function calculateInitialXP() {
@@ -1586,40 +1568,24 @@ function displayCareerStats() {
 
 function save() {
   try {
-    const saveState = {
+    const data = {
       ...STATE,
-    STATE.dayTypesWorked = Array.from(STATE.dayTypesWorked);
-      lastSaved: new Date().toISOString()
+      dayTypesWorked: Array.from(STATE.dayTypesWorked)
     };
-    
-    localStorage.setItem("MODULE3_ULTIMATE_STATE", JSON.stringify(saveState));
-    
-    debugLog("💾 Sauvegarde effectuée", "success");
+    localStorage.setItem("MODULE3_ULTIMATE_STATE", JSON.stringify(data));
   } catch (e) {
-    debugLog("❌ Erreur sauvegarde : " + e.message, "error");
+    alert("⚠️ Stockage plein ou erreur de sauvegarde.\nPense à exporter tes données.");
   }
 }
 
 function load() {
-  try {
-    const saved = localStorage.getItem("MODULE3_ULTIMATE_STATE");
-    
-    if (!saved) {
-      STATE = getDefaultState();
-      debugLog("ℹ️ Nouvel utilisateur, état par défaut", "info");
-      return;
-    }
+  const saved = localStorage.getItem("MODULE3_ULTIMATE_STATE");
 
+  if (saved) {
     STATE = JSON.parse(saved);
     STATE.dayTypesWorked = new Set(STATE.dayTypesWorked || []);
-    
-    if (Array.isArray(STATE.dayTypesWorked)) {
-      STATE.dayTypesWorked = new Set(STATE.dayTypesWorked);
-    }
-    
-    debugLog("✅ État chargé depuis localStorage", "success");
-  } catch (e) {
-    debugLog("❌ Erreur chargement, état par défaut : " + e.message, "error");
+    STATE.totalXPInitialized = !!STATE.totalXPInitialized;
+  } else {
     STATE = getDefaultState();
   }
 }
