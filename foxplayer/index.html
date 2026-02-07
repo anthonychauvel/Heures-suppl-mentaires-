@@ -272,6 +272,9 @@ button.danger{background:var(--crit);color:#fff}
 <p style="font-size:13px"><b>Mode actuel :</b> <span id="currentModeDisplay">—</span><br><b>Date de reset :</b> <span id="resetDateDisplay">—</span><br><b>Statut :</b> <span id="lockStatusDisplay">—</span></p>
 <button onclick="attemptModeSwitch()" style="background:var(--warn)">🔄 Changer de mode</button>
 <button onclick="factoryReset()" style="background:var(--crit);color:#fff;margin-top:10px">🧨 Réinitialisation complète</button>
+<button class="secondary" onclick="returnToMainMenu()" style="margin-top:10px">
+⬅️ Retour au menu principal
+</button>
 </div>
 <div class="card">
 <h3>💾 Sauvegarde</h3>
@@ -553,6 +556,7 @@ function getDefaultState() {
     completedMilestones: [],
     lastDayDate: null,
     dayTypesWorked: new Set(),
+    totalXPInitialized: false,
     workMode: "sync"
   };
 }
@@ -633,7 +637,10 @@ function promptCheatCode() {
 
 function activateCheatMode() {
   debugLog("🎮 Mode développeur activé", "success");
-  
+  if (location.hostname !== "localhost") {
+  alert("Mode développeur désactivé en production");
+  return;
+}
   const badge = document.getElementById("cheatBadge");
   if (badge) badge.classList.remove("hidden");
   
@@ -1164,7 +1171,22 @@ function openProfileSetup() {
   document.getElementById("profileSetupModal").classList.remove("hidden");
   document.getElementById("mainInterface").classList.add("hidden");
 }
+function returnToMainMenu() {
+  if (!confirm("⬅️ Revenir au menu principal ?\n\nAucune donnée ne sera supprimée.")) {
+    return;
+  }
 
+  // Cacher l’interface principale
+  document.getElementById("mainInterface")?.classList.add("hidden");
+
+  // Cacher d’éventuelles modales ouvertes
+  document.getElementById("dualModuleModal")?.classList.add("hidden");
+
+  // Afficher le menu principal
+  document.getElementById("profileSetupModal")?.classList.remove("hidden");
+
+  debugLog("⬅️ Retour au menu principal", "info");
+}
 function openDualModuleChoice(detection) {
   const modal = document.getElementById("dualModuleModal");
   
@@ -1287,12 +1309,14 @@ function importFromModule1(m1Data) {
       if (dow === 0) type = "sunday";
       else if (dow === 6) type = "saturday";
 
-      STATE.days.push({
-        id: Date.now() + Math.random(),
-        date: d.date,
-        hours: d.hours,
-        type: type
-      });
+if (!STATE.days.some(day => day.date === d.date)) {
+  STATE.days.push({
+    id: crypto.randomUUID(),
+    date: d.date,
+    hours: d.hours,
+    type: type
+  });
+}
     });
   } else {
     debugLog("Pas de jours individuels, import agrege", "warn");
@@ -1318,12 +1342,14 @@ function importFromModule2(m2Data) {
       if (dow === 0) type = "sunday";
       else if (dow === 6) type = "saturday";
 
-      STATE.days.push({
-        id: Date.now() + Math.random(),
-        date: date,
-        hours: hours,
-        type: type
-      });
+      if (!STATE.days.some(day => day.date === date)) {
+  STATE.days.push({
+    id: crypto.randomUUID(),
+    date: date,
+    hours: hours,
+    type: type
+  });
+}
     }
   });
 
@@ -1594,6 +1620,7 @@ function load() {
     }
 
     STATE = JSON.parse(saved);
+    STATE.dayTypesWorked = new Set(STATE.dayTypesWorked || []);
     
     if (Array.isArray(STATE.dayTypesWorked)) {
       STATE.dayTypesWorked = new Set(STATE.dayTypesWorked);
