@@ -947,17 +947,13 @@ function confirmProfileMode(mode) {
   );
 }
 
-function initializeWithModule(mode) {
-  debugLog(`🔄 Initialisation avec mode : ${mode}`, "info");
+function initializeWithModule() {
+  ModuleBridge.detect();
 
-  if (mode === "monthly") {
-    const m1 = MODULE_BRIDGES.module1.getAnnualData();
-    syncFromModule1(m1);
-  }
-
-  if (mode === "annual") {
-    const m2 = MODULE_BRIDGES.module2.getCurrentExercise();
-    syncFromModule2(m2);
+  if (ModuleBridge.available) {
+    ModuleBridge.sync();
+  } else if (DEV_MANUAL_MODE) {
+    debugLog("🧪 Mode DEV manuel actif (aucun module détecté)", "info");
   }
 
   calculateInitialXP();
@@ -1269,92 +1265,80 @@ function performAutoImport(mode, moduleData) {
     `${STATE.totalDays} jours • ${STATE.totalHours.toFixed(0)}h importés`
   );
 }
-
-function importFromModule1() {
-  const days = MODULE_BRIDGES.module1.getIndividualDays();
-
-  if (!Array.isArray(days) || days.length === 0) {
-    debugLog("ℹ️ Aucun jour à importer depuis Module 1", "info");
-    return;
-  }
-
-  let importedDays = 0;
-  let importedHours = 0;
-
-  days.forEach(d => {
-    if (!STATE.days.some(day => day.date === d.date)) {
-      STATE.days.push({
-        id: (typeof crypto.randomUUID === "function"
-          ? crypto.randomUUID()
-          : Date.now().toString() + Math.random().toString(36).slice(2)),
-        date: d.date,
-        hours: d.hours,
-        type: "normal"
-      });
-
-      STATE.totalDays++;
-      STATE.totalHours += d.hours;
-      STATE.dayTypesWorked.add("normal");
-
-      importedDays++;
-      importedHours += d.hours;
-    }
-  });
-
-  debugLog(
-    `✅ Module 1 importé : ${importedDays} jours • ${importedHours.toFixed(1)}h`,
-    "success"
-  );
-
-  save();
-}
-
-function importFromModule2(m2Data) {
-  if (!m2Data || !m2Data.data) return;
-
-  Object.entries(m2Data.data).forEach(([date, day]) => {
-    if (STATE.days.some(d => d.date === date)) return;
-
-    const hours = day.extra || 0;
-    if (hours <= 0) return;
-
-    STATE.days.push({
-      id: crypto.randomUUID(),
-      date,
-      hours,
-      type: "normal"
-    });
-
-    STATE.totalDays++;
-    STATE.totalHours += hours;
-    STATE.dayTypesWorked.add("normal");
-  });
-
-  STATE.calculations += m2Data.closures?.length || 0;
-  save();
-}
-
 function calculateInitialXP() {
-  STATE.totalXPInitialized = true;
+  let xp = 0;
 
-  let baseXP = 0;
-  baseXP += STATE.totalDays * 10;
-  baseXP += Math.floor(STATE.totalHours / 10);
-  baseXP += STATE.nightShifts * 10;
-  baseXP += STATE.weekendDays * 15;
-  baseXP += STATE.calculations * 50;
+  xp += STATE.totalDays * 10;
+  xp += Math.floor(STATE.totalHours / 10);
+  xp += STATE.calculations * 50;
 
   let level = 1;
-  let remainingXP = baseXP;
+  let rest = xp;
 
-  while (remainingXP >= getXPForLevel(level)) {
-    remainingXP -= getXPForLevel(level);
+  while (rest >= getXPForLevel(level)) {
+    rest -= getXPForLevel(level);
     level++;
   }
 
   STATE.level = level;
-  STATE.xp = remainingXP;
-  STATE.totalXP = baseXP;
+  STATE.xp = rest;
+  STATE.totalXP = xp;
+}
+const ModuleBridge = {
+  available: false,
+  m1: null,
+  m2: null,
+
+  detect() {
+    try {
+      const m1 = MODULE_BRIDGES?.module1?.getAnnualData?.();
+      const m2 = MODULE_BRIDGES?.module2?.getCurrentExercise?.();
+
+      this.m1 = m1?.available ? m1 : null;
+      this.m2 = m2?.available ? m2 : null;
+
+      this.available = !!(this.m1 || this.m2);
+      return this.available;
+    } catch (e) {
+      console.warn("❌ Bridge detection error", e);
+      this.available = false;
+    }
+  },
+
+  sync() {
+    if (!this.available) return;
+
+    if (this.m1) syncFromModule1(this.m1);
+    if (this.m2) syncFromModule2(this.m2);
+  }
+};
+function syncFromModule1(m1Data) {
+  if (!m1Data) return;
+
+  const key = `M1_LAST_SYNC_${m1Data.year}`;
+  const last = parseFloat(localStorage.getItem(key) || "0");
+  const current = parseFloat(m1Data.totalHours || 0);
+
+  if (current <= last) return;
+
+  importFromModule1();
+  localStorage.setItem(key, current);
+
+  debugLog("✅ Sync Module 1 OK", "success");
+}
+function syncFromModule2(m2Data) {
+  if (!m2Data || !m2Data.data) return;
+
+  const key = `M2_LAST_SYNC_${m2Data.exercise}`;
+  const last = parseInt(localStorage.getItem(key) || "0");
+  const current = Object.keys(m2Data.data).length;
+
+  if (current <= last) return;
+
+  importFromModule2(m2Data);
+  localStorage.setItem(key, current);
+
+  debugLog("✅ Sync Module 2 OK", "success");
 }
 function loadAnnualThresholds() {
   const saved = localStorage.getItem("MODULE3_ANNUAL_THRESHOLDS");
@@ -1436,18 +1420,6 @@ function updateUI() {
 }
 function getXPForLevel(level) {
   return 100 + level * 25;
-}
-function toggleWorkMode() {
-  const mode = document.getElementById("workMode").value;
-
-  document.getElementById("manualInputSection")
-    .classList.toggle("hidden", mode === "sync");
-
-  document.getElementById("syncStatusSection")
-    .classList.toggle("hidden", mode !== "sync");
-
-  STATE.workMode = mode;
-  save();
 }
 function snapshot(label) {
   localStorage.setItem(
@@ -1560,8 +1532,6 @@ function load() {
   } else {
     STATE = getDefaultState();
   }
-
-  updateUI();
 }
 function snapshot(reason, force = false) {
   try {
@@ -2122,7 +2092,13 @@ function addDay() {
 
   debugLog(`✅ Journée ajoutée : ${date} - ${hours}h (${type})`, "success");
 }
-
+function devAddDay(day) {
+  if (!DEV_MANUAL_MODE) return;
+  STATE.days.push(day);
+}
+function getXPForLevel(level) {
+  return 100 + level * 25;
+}
 function deleteDay(id) {
   if (!confirm("Supprimer cette journée ?")) return;
   
