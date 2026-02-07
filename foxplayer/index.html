@@ -293,6 +293,9 @@ button.danger{background:var(--crit);color:#fff}
 <div style="text-align:center;margin:30px 0;font-size:12px;opacity:0.5">© Module 3 - Moteur Central HS • v8.0 Ultimate</div>
 </div>
 <script>
+window.onerror = function (msg, url, line, col, err) {
+  alert("ERREUR JS : " + msg + " (ligne " + line + ")");
+};
 const MODULE1_API = {
   getAnnualData() {
     try {
