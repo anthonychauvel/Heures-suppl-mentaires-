@@ -5060,6 +5060,22 @@ try {
 
 }, 200);
 });
+window.addEventListener("load", () => {
+  const main = document.getElementById("mainInterface");
+  const setup = document.getElementById("profileSetupModal");
+
+  if (!main && !setup) {
+    console.error("❌ Aucun écran trouvé");
+    return;
+  }
+
+  // Si le profil n'existe pas encore → menu de setup
+  if (!localStorage.getItem("MODULE3_PROFILE")) {
+    if (setup) setup.classList.remove("hidden");
+  } else {
+    if (main) main.classList.remove("hidden");
+  }
+});
 </script>
 </body>
 </html>
