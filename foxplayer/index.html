@@ -1236,7 +1236,7 @@ function performAutoImport(mode, moduleData) {
   STATE = getDefaultState();
   
   if (mode === "monthly") {
-    importFromModule1(moduleData);
+    importFromModule1();
   } else {
     importFromModule2(moduleData);
   }
@@ -1278,17 +1278,18 @@ function performAutoImport(mode, moduleData) {
   );
 }
 
-function selectModuleFromDual(mode) {
-  const detection = detectExistingModules();
-  const moduleData = mode === "monthly" ? detection.m1Data : detection.m2Data;
-  
-  performAutoImport(mode, moduleData);
-}
+function importFromModule1() {
+  const days = MODULE_BRIDGES.module1.getIndividualDays();
 
-function importFromModule1(m1Data) {
-  if (!m1Data || !Array.isArray(m1Data.days)) return;
+  if (!Array.isArray(days) || days.length === 0) {
+    debugLog("ℹ️ Aucun jour à importer depuis Module 1", "info");
+    return;
+  }
 
-  m1Data.days.forEach(d => {
+  let importedDays = 0;
+  let importedHours = 0;
+
+  days.forEach(d => {
     if (!STATE.days.some(day => day.date === d.date)) {
       STATE.days.push({
         id: (typeof crypto.randomUUID === "function"
@@ -1296,16 +1297,23 @@ function importFromModule1(m1Data) {
           : Date.now().toString() + Math.random().toString(36).slice(2)),
         date: d.date,
         hours: d.hours,
-        type: d.type || "normal"
+        type: "normal"
       });
 
       STATE.totalDays++;
-      STATE.totalHours += d.hours || 0;
-      STATE.dayTypesWorked.add(d.type || "normal");
+      STATE.totalHours += d.hours;
+      STATE.dayTypesWorked.add("normal");
+
+      importedDays++;
+      importedHours += d.hours;
     }
   });
 
-  STATE.calculations += m1Data.months?.length || 0;
+  debugLog(
+    `✅ Module 1 importé : ${importedDays} jours • ${importedHours.toFixed(1)}h`,
+    "success"
+  );
+
   save();
 }
 
