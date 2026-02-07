@@ -1176,17 +1176,6 @@ function returnToMainMenu() {
   window.location.href = "../index.html";
 }
 
-  // Cacher l’interface principale
-  document.getElementById("mainInterface")?.classList.add("hidden");
-
-  // Cacher d’éventuelles modales ouvertes
-  document.getElementById("dualModuleModal")?.classList.add("hidden");
-
-  // Afficher le menu principal
-  document.getElementById("profileSetupModal")?.classList.remove("hidden");
-
-  debugLog("⬅️ Retour au menu principal", "info");
-}
 function openDualModuleChoice(detection) {
   const modal = document.getElementById("dualModuleModal");
   
@@ -1309,15 +1298,14 @@ function importFromModule1(m1Data) {
       if (dow === 0) type = "sunday";
       else if (dow === 6) type = "saturday";
 
-if (!STATE.days.some(day => day.date === d.date)) {
-  STATE.days.push({
-    (typeof crypto.randomUUID === "function"
-  ? crypto.randomUUID()
-  : Date.now().toString() + Math.random().toString(36).slice(2))
-    date: d.date,
-    hours: d.hours,
-    type: type
-  });
+STATE.days.push({
+  id: (typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : Date.now().toString() + Math.random().toString(36).slice(2)),
+  date: d.date,
+  hours: d.hours,
+  type: type
+});
 }
     });
   } else {
@@ -1344,15 +1332,14 @@ function importFromModule2(m2Data) {
       if (dow === 0) type = "sunday";
       else if (dow === 6) type = "saturday";
 
-      if (!STATE.days.some(day => day.date === date)) {
-  STATE.days.push({
-    (typeof crypto.randomUUID === "function"
-  ? crypto.randomUUID()
-  : Date.now().toString() + Math.random().toString(36).slice(2))
-    date: date,
-    hours: hours,
-    type: type
-  });
+      STATE.days.push({
+  id: (typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : Date.now().toString() + Math.random().toString(36).slice(2)),
+  date: date,
+  hours: hours,
+  type: type
+});
 }
     }
   });
