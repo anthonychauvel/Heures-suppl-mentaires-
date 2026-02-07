@@ -5434,40 +5434,14 @@ try {
 }, 200);
 });
 window.addEventListener("load", () => {
-  const main = document.getElementById("mainInterface");
-  const setup = document.getElementById("profileSetupModal");
+  debugLog("🚀 Démarrage Module 3", "info");
 
-  if (!main && !setup) {
-    console.error("❌ Aucun écran trouvé");
-    return;
-  }
-
-  // Si le profil n'existe pas encore → menu de setup
-  if (!localStorage.getItem("MODULE3_PROFILE")) {
-    if (setup) setup.classList.remove("hidden");
-  } else {
-    if (main) main.classList.remove("hidden");
-  }
-});
-window.addEventListener("load", () => {
-  debugLog("🚀 Initialisation Module 3", "info");
-
-  
-  const savedState = localStorage.getItem("MODULE3_ULTIMATE_STATE");
-  if (savedState) {
-    STATE = JSON.parse(savedState);
-    STATE.dayTypesWorked = new Set(STATE.dayTypesWorked || []);
-  } else {
-    STATE = getDefaultState();
-  }
-loadProfile();
+  loadProfile();
   loadAnnualThresholds();
   load();
   initCheatCode();
   handleInitialSetup();
 });
-
-  
 </script>
 </body>
 </html>
