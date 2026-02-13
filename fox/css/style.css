@@ -1848,3 +1848,146 @@ letter-spacing: 0.5px;
 .action-cards { display: none !important; }
 .risk-bar-track { background: rgba(255,255,255,0.15); border-radius: 6px; height: 6px; overflow: hidden; }
 .risk-bar-fill  { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #4CAF50, #FF8C42, #E53935); transition: width 0.8s ease; }
+/* =====================================================
+   PATCH OPTIMISATION UI — NON DESTRUCTIF
+   (ajout uniquement — ne modifie rien d'existant)
+===================================================== */
+
+/* ---------- GPU ACCELERATION ---------- */
+#gaming-main,
+#kitsune-center,
+#kitsune-bubble,
+#risk-bar-center,
+#action-dock{
+ will-change: transform;
+ transform: translateZ(0);
+ backface-visibility: hidden;
+ perspective:1000px;
+}
+
+
+/* ---------- FLUID HEIGHT SAFE MOBILE ---------- */
+html,body{
+ height:100%;
+ overscroll-behavior:none;
+ -webkit-overflow-scrolling:touch;
+}
+
+
+/* ---------- SAFE AREA IPHONE / ANDROID ---------- */
+#action-dock{
+ padding-bottom:calc(20px + env(safe-area-inset-bottom));
+}
+
+#gaming-hud{
+ padding-top:env(safe-area-inset-top);
+}
+
+
+/* ---------- RESPONSIVE SMART POSITIONING ---------- */
+@media (max-height:750px){
+
+ #kitsune-center{
+  bottom:clamp(110px,18vh,180px)!important;
+ }
+
+ #kitsune-bubble{
+  bottom:clamp(240px,32vh,340px)!important;
+ }
+
+ #risk-bar-center{
+  bottom:clamp(80px,14vh,150px)!important;
+ }
+}
+
+
+/* ---------- LANDSCAPE AUTO FIX ---------- */
+@media (orientation:landscape){
+
+ #gaming-main{
+  overflow-y:auto!important;
+ }
+
+ #kitsune-center{
+  bottom:18vh!important;
+ }
+
+ #kitsune-bubble{
+  bottom:42vh!important;
+ }
+
+ #risk-bar-center{
+  bottom:10vh!important;
+ }
+
+}
+
+
+/* ---------- PERFORMANCE ANIMATIONS ---------- */
+@media (prefers-reduced-motion:no-preference){
+
+ #kitsune-center{
+  animation-duration:2.8s!important;
+ }
+
+ .dock-btn:active{
+  transition:transform .08s!important;
+ }
+
+}
+
+
+/* ---------- TOUCH IMPROVEMENTS ---------- */
+.dock-btn,
+button{
+ touch-action:manipulation;
+}
+
+
+/* ---------- TAP FEEDBACK MOBILE ---------- */
+.dock-btn:active{
+ filter:brightness(1.25);
+}
+
+
+/* ---------- TEXT RENDERING ---------- */
+body{
+ -webkit-font-smoothing:antialiased;
+ -moz-osx-font-smoothing:grayscale;
+ text-rendering:optimizeLegibility;
+}
+
+
+/* ---------- PREVENT ELEMENT CUT OFF ---------- */
+#gaming-main{
+ padding-bottom:env(safe-area-inset-bottom);
+}
+
+
+/* ---------- ULTRA SMALL SCREENS ---------- */
+@media (max-height:580px){
+
+ #kitsune-bubble{
+  display:none!important;
+ }
+
+ #kitsune-center{
+  bottom:22vh!important;
+ }
+
+}
+
+
+/* ---------- SUPER WIDE SCREENS ---------- */
+@media (min-aspect-ratio:16/9){
+
+ #kitsune-center{
+  transform:translateX(-50%) scale(.9);
+ }
+
+}
+
+
+/* =====================================================
+   FIN PATCH
+===================================================== */
