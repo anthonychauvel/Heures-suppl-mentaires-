@@ -1,374 +1,232 @@
-// ===== AI INTEGRATION SYSTEM =====
-// Système d'IA utilisant l'API Anthropic pour générer du contenu dynamique
+// ═══════════════════════════════════════════════════════════════
+//  KITSUNE — Renard sage 100% LOCAL
+//  Aucune API, aucune clé, fonctionne offline
+//  Utilise : FOX_SCENARIOS (600 scénarios) + legal-engine.js
+//            + module-reader.js (données réelles du joueur)
+// ═══════════════════════════════════════════════════════════════
 
-class AIIntegration {
-    constructor() {
-        this.conversationHistory = [];
-        this.scenarioCache = new Map();
-        this.isProcessing = false;
-        this.maxTokens = 1000;
-    }
+class KitsuneLocal {
 
-    // Générer un scénario personnalisé avec l'IA
-    async generateScenario(type, difficulty, customContext = '') {
-        if (this.isProcessing) {
-            return { error: 'Une génération est déjà en cours...' };
-        }
+constructor() {
+this.history      = [];
+this.isProcessing = false;
+this.playerName   = localStorage.getItem(‘FOX_PLAYER_NAME’) || ‘Joueur’;
 
-        this.isProcessing = true;
-        showAILoading(true);
+```
+this.intentMap = {
+  heures:      ['durée','heure','temps','semaine','journée','quotidien','hebdo'],
+  nuit:        ['nuit','nocturne','minuit','22h','23h'],
+  dimanche:    ['dimanche','jour de repos','repos dominical'],
+  conges:      ['congé','vacances','cp','rtt','récupération'],
+  salaire:     ['salaire','paie','rémunération','majoration','prime','indemnité'],
+  licenciement:['licenciement','rupture','licencié','démission','préavis'],
+  harcelement: ['harcèlement','moral','sexuel','violence','intimidation'],
+  burnout:     ['burn-out','burnout','épuisement','surmenage','stress','fatigue'],
+  contingent:  ['contingent','220','quota','dépassement','accord'],
+  repos:       ['repos compensateur','récupération','compensation','pause'],
+  syndicat:    ['syndicat','délégué','représentant','cse','irp'],
+  sante:       ['santé','médecin','arrêt','accident','maladie','invalidité'],
+};
+```
 
-        try {
-            const prompt = this.buildScenarioPrompt(type, difficulty, customContext);
-            
-            const response = await fetch("https://api.anthropic.com/v1/messages", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    model: "claude-sonnet-4-20250514",
-                    max_tokens: this.maxTokens,
-                    messages: [
-                        {
-                            role: "user",
-                            content: prompt
-                        }
-                    ],
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erreur API: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const scenario = this.parseScenarioResponse(data);
-            
-            // Sauvegarder dans le cache
-            const cacheKey = `${type}_${difficulty}_${Date.now()}`;
-            this.scenarioCache.set(cacheKey, scenario);
-            
-            this.isProcessing = false;
-            showAILoading(false);
-            
-            return scenario;
-
-        } catch (error) {
-            console.error('Erreur génération scénario:', error);
-            this.isProcessing = false;
-            showAILoading(false);
-            
-            return {
-                error: 'Impossible de générer le scénario. Veuillez réessayer.',
-                fallback: this.getFallbackScenario(type, difficulty)
-            };
-        }
-    }
-
-    // Construire le prompt pour générer un scénario
-    buildScenarioPrompt(type, difficulty, customContext) {
-        const typeDescriptions = {
-            'overtime': 'heures supplémentaires',
-            'night': 'travail de nuit',
-            'weekend': 'travail le weekend',
-            'rest': 'repos et congés',
-            'health': 'santé et sécurité au travail',
-            'family': 'conciliation vie familiale et professionnelle',
-            'termination': 'rupture de contrat',
-            'harassment': 'harcèlement au travail',
-            'discrimination': 'discrimination',
-            'custom': customContext || 'situation générale'
-        };
-
-        const difficultyLevels = {
-            'beginner': 'débutant (situation simple et claire)',
-            'intermediate': 'intermédiaire (situation avec quelques nuances)',
-            'advanced': 'avancé (situation complexe)',
-            'expert': 'expert (situation très complexe avec multiples aspects juridiques)'
-        };
-
-        return `Tu es un expert en droit du travail français. Génère un scénario réaliste et pédagogique sur le thème : "${typeDescriptions[type]}".
-
-Niveau de difficulté : ${difficultyLevels[difficulty]}
-
-${customContext ? `Contexte spécifique : ${customContext}` : ''}
-
-Le scénario doit contenir :
-1. Un titre accrocheur (max 50 caractères)
-2. Le nom d'un personnage (prénom)
-3. Sa profession
-4. Une situation concrète (2-3 phrases)
-5. Un conseil juridique NEUTRE et FACTUEL basé sur le Code du travail français
-6. Une référence légale précise (article du Code du travail)
-
-IMPORTANT :
-- Rester NEUTRE : donner des INFORMATIONS, pas des conseils d'action
-- NE PAS être intrusif ou prescriptif
-- NE PAS encourager à faire ou ne pas faire quelque chose
-- SE LIMITER aux FAITS et à la LOI
-- Utiliser des noms français réalistes et variés (pas toujours les mêmes)
-
-Format de réponse (RESPECTE EXACTEMENT ce format JSON) :
-{
-  "title": "titre du scénario",
-  "character": "prénom du personnage",
-  "profession": "profession",
-  "situation": "description de la situation",
-  "advice": "conseil juridique neutre et factuel",
-  "legalReference": "Article précis du Code du travail",
-  "difficulty": "${difficulty}",
-  "category": "${type}"
-}`;
-    }
-
-    // Parser la réponse de l'IA
-    parseScenarioResponse(data) {
-        try {
-            // Extraire le texte de la réponse
-            const content = data.content
-                .map(item => item.type === 'text' ? item.text : '')
-                .join('\n');
-
-            // Nettoyer le JSON (enlever les balises markdown si présentes)
-            const cleanContent = content
-                .replace(/```json\n?/g, '')
-                .replace(/```\n?/g, '')
-                .trim();
-
-            // Parser le JSON
-            const scenario = JSON.parse(cleanContent);
-
-            // Valider les champs requis
-            if (!scenario.title || !scenario.situation || !scenario.advice) {
-                throw new Error('Scénario incomplet');
-            }
-
-            // Ajouter un ID unique
-            scenario.id = `ai_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            scenario.isAIGenerated = true;
-            scenario.generatedAt = new Date().toISOString();
-
-            return scenario;
-
-        } catch (error) {
-            console.error('Erreur parsing réponse:', error);
-            throw new Error('Format de réponse invalide');
-        }
-    }
-
-    // Dialogue interactif avec Kitsune
-    async chatWithKitsune(userMessage) {
-        if (this.isProcessing) {
-            return { error: 'Kitsune est en train de réfléchir...' };
-        }
-
-        this.isProcessing = true;
-        
-        // Ajouter le message de l'utilisateur à l'historique
-        this.conversationHistory.push({
-            role: "user",
-            content: userMessage
-        });
-
-        try {
-            const response = await fetch("https://api.anthropic.com/v1/messages", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    model: "claude-sonnet-4-20250514",
-                    max_tokens: 800,
-                    system: this.getKitsuneSystemPrompt(),
-                    messages: this.conversationHistory.slice(-10) // Garder les 10 derniers messages
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erreur API: ${response.status}`);
-            }
-
-            const data = await response.json();
-            const assistantMessage = data.content
-                .map(item => item.type === 'text' ? item.text : '')
-                .join('\n');
-
-            // Ajouter la réponse à l'historique
-            this.conversationHistory.push({
-                role: "assistant",
-                content: assistantMessage
-            });
-
-            this.isProcessing = false;
-            
-            return {
-                message: assistantMessage,
-                success: true
-            };
-
-        } catch (error) {
-            console.error('Erreur dialogue Kitsune:', error);
-            this.isProcessing = false;
-            
-            return {
-                error: 'Désolé, je ne peux pas répondre pour le moment.',
-                message: this.getFallbackResponse(userMessage)
-            };
-        }
-    }
-
-    // Prompt système pour Kitsune
-    getKitsuneSystemPrompt() {
-        return `Tu es Kitsune, un renard sage et bienveillant qui guide le joueur dans un RPG éducatif sur le droit du travail français.
-
-PERSONNALITÉ :
-- Sage mais accessible
-- Encourageant et positif
-- Pédagogue mais jamais condescendant
-- Utilise occasionnellement des émojis (🦊, ⚖️, 📚, etc.)
-- Ton chaleureux et amical
-
-RÔLE :
-- Expliquer le droit du travail français de manière simple
-- Donner des informations NEUTRES et FACTUELLES
-- Encourager l'apprentissage
-- Féliciter les progrès
-- Répondre aux questions sur le jeu
-
-LIMITES :
-- NE JAMAIS donner de conseil juridique personnalisé
-- NE PAS être prescriptif ("tu dois faire ceci...")
-- NE PAS remplacer un avocat
-- Toujours rappeler de consulter un professionnel pour des cas spécifiques
-- Rester dans le contexte du jeu et du droit du travail français
-
-STYLE :
-- Phrases courtes et claires
-- Exemples concrets quand utile
-- Références aux articles du Code du travail si pertinent
-- Garde un ton RPG/aventure quand approprié
-
-Réponds toujours en français.`;
-    }
-
-    // Réponse de secours si l'API échoue
-    getFallbackResponse(userMessage) {
-        const fallbacks = [
-            "Hmm, ma sagesse de renard me fait défaut pour le moment... Peux-tu reformuler ta question ? 🦊",
-            "Je suis désolé, je dois méditer un instant. Réessaye dans quelques instants ! ✨",
-            "Mon lien avec la sagesse ancienne est perturbé... Peux-tu me reposer ta question ? 📚",
-            "Oups ! Même les renards sages ont parfois besoin d'une pause. Réessayons ! 🌟"
-        ];
-        
-        return fallbacks[Math.floor(Math.random() * fallbacks.length)];
-    }
-
-    // Scénario de secours si la génération échoue
-    getFallbackScenario(type, difficulty) {
-        return {
-            title: "Scénario de secours",
-            character: "Alex",
-            profession: "Employé de bureau",
-            situation: "Une situation standard nécessitant l'analyse du droit du travail.",
-            advice: "Consultez le Code du travail pour plus d'informations sur votre situation spécifique.",
-            legalReference: "Code du travail - Partie législative",
-            difficulty: difficulty,
-            category: type,
-            isFallback: true
-        };
-    }
-
-    // Analyser des heures avec l'IA
-    async analyzeLegalCompliance(hours, weeklyHours, context = {}) {
-        const prompt = `Analyse cette situation au regard du droit du travail français :
-
-Heures cette semaine : ${weeklyHours}h
-Heures supplémentaires déclarées : ${hours}h
-Type : ${context.type || 'normales'}
-${context.additional ? `Contexte : ${context.additional}` : ''}
-
-Réponds au format JSON avec :
-{
-  "isCompliant": true/false,
-  "alerts": ["liste des alertes"],
-  "overtimeBreakdown": {
-    "at25": nombre d'heures à +25%,
-    "at50": nombre d'heures à +50%
-  },
-  "recommendations": ["liste de recommandations NEUTRES"],
-  "legalReferences": ["articles du Code du travail"]
-}`;
-
-        try {
-            const response = await fetch("https://api.anthropic.com/v1/messages", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    model: "claude-sonnet-4-20250514",
-                    max_tokens: 600,
-                    messages: [{ role: "user", content: prompt }]
-                })
-            });
-
-            const data = await response.json();
-            const content = data.content[0].text
-                .replace(/```json\n?/g, '')
-                .replace(/```\n?/g, '')
-                .trim();
-            
-            return JSON.parse(content);
-
-        } catch (error) {
-            console.error('Erreur analyse légale:', error);
-            return this.getFallbackLegalAnalysis(hours, weeklyHours);
-        }
-    }
-
-    // Analyse légale de secours
-    getFallbackLegalAnalysis(hours, weeklyHours) {
-        const isCompliant = weeklyHours <= 48;
-        const overtimeHours = Math.max(0, weeklyHours - 35);
-        
-        return {
-            isCompliant: isCompliant,
-            alerts: isCompliant ? [] : ['Limite hebdomadaire de 48h potentiellement dépassée'],
-            overtimeBreakdown: {
-                at25: Math.min(overtimeHours, 8),
-                at50: Math.max(0, overtimeHours - 8)
-            },
-            recommendations: [
-                'Vérifiez votre convention collective',
-                'Consultez votre service RH si nécessaire'
-            ],
-            legalReferences: ['Article L3121-20 du Code du travail']
-        };
-    }
-
-    // Réinitialiser l'historique de conversation
-    resetConversation() {
-        this.conversationHistory = [];
-    }
-
-    // Obtenir les statistiques d'utilisation de l'IA
-    getAIStats() {
-        return {
-            scenariosGenerated: this.scenarioCache.size,
-            conversationLength: this.conversationHistory.length,
-            cacheSize: this.scenarioCache.size
-        };
-    }
 }
 
-// Fonctions utilitaires UI
+async chat(userMessage) {
+if (this.isProcessing) return;
+this.isProcessing = true;
+this.history.push({ role: ‘user’, text: userMessage });
+const response = this._generateResponse(userMessage);
+await new Promise(r => setTimeout(r, 300 + Math.random() * 400));
+this.history.push({ role: ‘kitsune’, text: response.text });
+this.isProcessing = false;
+return response;
+}
+
+_generateResponse(msg) {
+const lower = msg.toLowerCase();
+
+```
+if (this._match(lower, ['bonjour','salut','coucou','hello','bonsoir']))
+  return this._greet();
+
+if (this._match(lower, ['qui es-tu','c\'est quoi','tu es quoi','qui êtes']))
+  return this._intro();
+
+if (this._match(lower, ['mes heures','mon solde','combien j\'ai','mon compteur','mon cumul','mon total']))
+  return this._playerStats();
+
+if (this._match(lower, ['burn-out','burnout','épuisement','fatigue','score','comment je vais']))
+  return this._burnoutAdvice();
+
+if (this._match(lower, ['badge','niveau','ligue','xp','progression']))
+  return this._playerProgress();
+
+if (this._match(lower, ['limite','légal','loi','code du travail','droit','article']))
+  return this._legalLimits(lower);
+
+if (this._match(lower, ['conseil','aide','quoi faire','que faire','recommande']))
+  return this._advice();
+
+const scenario = this._findScenario(lower, this._detectIntent(lower));
+if (scenario) return this._scenarioResponse(scenario);
+
+return this._defaultResponse();
+```
+
+}
+
+_greet() {
+const h = new Date().getHours();
+const c = h < 12 ? ‘Bonjour’ : h < 18 ? ‘Bon après-midi’ : ‘Bonsoir’;
+const opts = [
+`${c} ! 🦊 Je suis Kitsune, ton guide en droit du travail. Pose-moi n'importe quelle question sur tes heures sup ou tes droits.`,
+`${c} ${this.playerName} ! 🦊 Je connais 600 situations juridiques et tes données personnelles. Qu'est-ce qui te préoccupe ?`,
+`${c} ! ✨ Le renard sage est là. Parle-moi de tes heures, de tes droits, ou de comment tu te sens.`,
+];
+return { text: opts[Math.floor(Math.random() * opts.length)], type: ‘greet’ };
+}
+
+_intro() {
+return { text: `🦊 Je suis Kitsune, le moteur d'intelligence du FOX Engine.\n\nJe connais :\n• 600 scénarios juridiques du droit du travail français\n• Tes heures saisies dans les Modules 1 et 2\n• Les articles du Code du travail (L3121-1 et suivants)\n• Ton score burn-out et ta progression\n\nJe fonctionne entièrement en local — sans internet. Pose-moi une question concrète !`, type: ‘intro’ };
+}
+
+_playerStats() {
+try {
+const cum = moduleReader.getCumulatedSummary();
+const net = (cum.totalNetOvertime || 0).toFixed(1);
+const src = cum.source === ‘fusion’ ? ‘M1+M2 fusionnés’ : `Module ${cum.source.replace('M','')}`;
+const contingent = (cum.totalPlus25 || 0) + (cum.totalPlus50 || 0);
+let msg = `📊 Ton bilan, ${this.playerName} :\n\n• **${net}h** d'heures sup nettes cumulées\n• Données sur **${cum.years.length} année(s)** (${src})\n• **${cum.monthCount || 0}** mois analysés\n`;
+if (cum.totalPlus25 > 0) msg += `• ${cum.totalPlus25.toFixed(1)}h à +25%\n`;
+if (cum.totalPlus50 > 0) msg += `• ${cum.totalPlus50.toFixed(1)}h à +50%\n`;
+if (contingent > 220) msg += `\n🚨 Contingent dépassé (${contingent.toFixed(0)}/220h) — repos compensateurs obligatoires (Art. L3121-30).`;
+else if (contingent > 180) msg += `\n⚠️ Tu approches du contingent (${contingent.toFixed(0)}/220h).`;
+else msg += `\n✅ Dans les limites du contingent (${contingent.toFixed(0)}/220h).`;
+return { text: msg, type: ‘stats’ };
+} catch(e) {
+return { text: `🦊 Ouvre d'abord le Module 1 ou 2 et saisis quelques heures, puis reviens me voir !`, type: ‘nodata’ };
+}
+}
+
+_burnoutAdvice() {
+try {
+const bo = moduleReader.getBurnoutScore();
+const msgs = {
+sain:      `🟢 Score burn-out : **${bo.score}/100** — Tu vas bien ! Continue à surveiller ta charge.`,
+vigilance: `🟡 Score burn-out : **${bo.score}/100** — Vigilance. Vérifie tes droits à repos compensateur et parle à ton médecin du travail (Art. L4624-1).`,
+risque:    `🟠 Score burn-out : **${bo.score}/100** — Zone de risque. Visite médicale prioritaire. Ton employeur a une obligation de prévention (Art. L4121-1).`,
+danger:    `🔴 Score burn-out : **${bo.score}/100** — Danger. Trop d'heures sur trop de semaines. Sollicite les RH et le médecin du travail rapidement.`,
+critique:  `⛔ Score burn-out : **${bo.score}/100** — Critique. Ta santé passe avant tout. Le burn-out est reconnu juridiquement. Contacte ton médecin, syndicat et le CSE.`,
+};
+return { text: msgs[bo.level] || msgs.sain, type: ‘burnout’ };
+} catch(e) {
+return { text: `🦊 Saisis quelques semaines dans le Module 1 ou 2 pour calculer ton score burn-out.`, type: ‘nodata’ };
+}
+}
+
+_playerProgress() {
+try {
+const cum = moduleReader.getCumulatedSummary();
+return { text: `🎮 Ta progression :\n\n• ${cum.years.length} an(s) de données\n• ${cum.monthCount} mois analysés\n• +${cum.xpBonus} XP bonus multi-années\n\nContinue à remplir tes modules pour débloquer plus de badges ! 🏆`, type: ‘progress’ };
+} catch(e) {
+return { text: `🦊 Commence à saisir tes heures pour voir ta progression !`, type: ‘nodata’ };
+}
+}
+
+_legalLimits(lower) {
+const limits = [
+{ keys: [‘48h’,‘quarante-huit’], text: `📖 **Limite de 48h/semaine** (Art. L3121-20)\nMaximum absolu. Sur 12 semaines, la moyenne ne peut dépasser 44h (Art. L3121-22).` },
+{ keys: [‘10h’,‘quotidien’,‘journée’], text: `📖 **Limite journalière de 10h** (Art. L3121-18)\nSauf dérogation conventionnelle ou autorisation de l'inspection du travail.` },
+{ keys: [‘220’,‘contingent’], text: `📖 **Contingent annuel** (Art. L3121-33)\n220h par an. Au-delà → repos compensateur obligatoire (100% pour >20 salariés, 50% sinon).` },
+{ keys: [‘repos’,‘11h’], text: `📖 **Repos quotidien minimal** (Art. L3131-1)\n11 heures consécutives minimum entre deux journées de travail.` },
+{ keys: [‘35h’,‘durée légale’], text: `📖 **Durée légale : 35h/semaine** (Art. L3121-27)\nAu-delà : +25% de la 36e à la 43e heure, +50% à partir de la 44e.` },
+];
+for (const l of limits) {
+if (l.keys.some(k => lower.includes(k))) return { text: l.text, type: ‘legal’ };
+}
+return { text: `📖 **Limites légales principales** :\n\n• Durée légale : **35h/sem** (L3121-27)\n• Maximum journalier : **10h** (L3121-18)\n• Maximum hebdo : **48h** (L3121-20)\n• Moyenne 12 sem : **44h** (L3121-22)\n• Contingent annuel : **220h** (L3121-33)\n• Repos quotidien : **11h min** (L3131-1)\n\nTu veux en savoir plus sur l'une d'elles ?`, type: ‘legal’ };
+}
+
+_advice() {
+try {
+const bo  = moduleReader.getBurnoutScore();
+const cum = moduleReader.getCumulatedSummary();
+const contingent = (cum.totalPlus25 || 0) + (cum.totalPlus50 || 0);
+const advices = [];
+if (bo.score >= 60)   advices.push(`🔴 Consulte le médecin du travail — score burn-out à ${bo.score}/100.`);
+if (contingent > 180) advices.push(`⚠️ ${contingent.toFixed(0)}h sur le contingent — surveille les prochaines semaines.`);
+if ((cum.totalNetOvertime||0) > 100) advices.push(`📊 ${cum.totalNetOvertime.toFixed(0)}h sup nettes — vérifie les majorations sur ta fiche de paie.`);
+if (advices.length === 0) advices.push(`✅ Ta situation semble équilibrée. Exporte tes données régulièrement.`);
+advices.push(`💡 Explore les 600 scénarios pour anticiper des situations spécifiques.`);
+return { text: `🦊 Mes conseils :\n\n` + advices.join(’\n’), type: ‘advice’ };
+} catch(e) {
+return { text: `🦊 Saisis quelques semaines d'heures pour que je puisse te donner des conseils personnalisés.`, type: ‘nodata’ };
+}
+}
+
+_scenarioResponse(scenario) {
+let text = `🦊 Situation correspondante :\n\n**${scenario.title || scenario.situation || 'Scénario'}**\n\n`;
+if (scenario.description) text += `${scenario.description}\n\n`;
+if (scenario.advice || scenario.conseil) text += `💡 **Conseil** : ${scenario.advice || scenario.conseil}\n\n`;
+const refs = scenario.legalRef || scenario.articles || scenario.references;
+if (refs) text += `📖 **Références** : ${Array.isArray(refs) ? refs.join(', ') : refs}\n\n`;
+const risk = scenario.risk || scenario.riskLevel;
+if (risk) {
+const e = risk >= 80 ? ‘🔴’ : risk >= 50 ? ‘🟠’ : risk >= 30 ? ‘🟡’ : ‘🟢’;
+text += `${e} Niveau de risque : ${risk}/100\n\n`;
+}
+text += `Tu veux en savoir plus ?`;
+return { text, type: ‘scenario’, scenario };
+}
+
+_defaultResponse() {
+return { text: `🦊 Je peux t'aider sur :\n\n• **Ton solde** — "quelles sont mes heures sup ?"\n• **Ton bien-être** — "comment je vais ?"\n• **Les limites légales** — "quelle est la limite hebdomadaire ?"\n• **Un droit précis** — ex: "j'ai travaillé un dimanche, quels sont mes droits ?"\n• **Tes conseils** — "qu'est-ce que tu me recommandes ?"`, type: ‘default’ };
+}
+
+_findScenario(lower, intent) {
+if (typeof FOX_SCENARIOS === ‘undefined’) return null;
+let pool = FOX_SCENARIOS;
+if (intent && intent !== ‘general’) {
+const filtered = FOX_SCENARIOS.filter(s => {
+const t = ((s.title||’’) + ’ ’ + (s.description||’’) + ’ ’ + (s.situation||’’)).toLowerCase();
+return this.intentMap[intent]?.some(kw => t.includes(kw));
+});
+if (filtered.length > 0) pool = filtered;
+}
+const words = lower.split(/\s+/).filter(w => w.length > 3);
+const scored = pool.map(s => {
+const t = ((s.title||’’) + ’ ’ + (s.description||’’) + ’ ’ + (s.situation||’’) + ’ ’ + (s.conseil||s.advice||’’)).toLowerCase();
+return { s, score: words.reduce((a, w) => a + (t.includes(w) ? 1 : 0), 0) };
+}).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+return scored.length > 0 ? scored[0].s : null;
+}
+
+_detectIntent(lower) {
+for (const [intent, kws] of Object.entries(this.intentMap)) {
+if (kws.some(kw => lower.includes(kw))) return intent;
+}
+return ‘general’;
+}
+
+_match(str, kws) { return kws.some(k => str.includes(k)); }
+
+reset() { this.history = []; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  INSTANCE GLOBALE + FONCTIONS APPELÉES DEPUIS index.html
+// ═══════════════════════════════════════════════════════════════
+
+const kitsune = new KitsuneLocal();
+
+async function askKitsune(message) {
+const response = await kitsune.chat(message);
+return response?.text || ‘🦊 …’;
+}
+
 function showAILoading(show) {
-    const loader = document.getElementById('ai-loading');
-    if (loader) {
-        loader.style.display = show ? 'block' : 'none';
-    }
+const el = document.getElementById(‘ai-loading’);
+if (el) el.style.display = show ? ‘block’ : ‘none’;
 }
 
-// Export global
-const aiIntegration = new AIIntegration();
+console.log(‘✅ Kitsune LOCAL chargé — 100% offline, 0 API’);
