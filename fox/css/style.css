@@ -3,10 +3,10 @@
 /* === VARIABLES === */
 :root {
 /* Couleurs principales */
-–bg-dark: #0a0e27;
-–bg-darker: #060917;
-–bg-card: #1a1f3a;
-–bg-card-hover: #242947;
+--bg-dark: #0a0e27;
+--bg-darker: #060917;
+--bg-card: #1a1f3a;
+--bg-card-hover: #242947;
 
 ```
 /* Couleurs d'accentuation */
@@ -1991,3 +1991,4 @@ body{
 /* =====================================================
    FIN PATCH
 ===================================================== */
+
