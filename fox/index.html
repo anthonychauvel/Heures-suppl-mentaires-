@@ -734,20 +734,50 @@ function exportHistorique() {
 }
 
 // ── Kitsune ───────────────────────────────
+function kitsuneFormat(text) {
+  // Gras **texte** → <strong>
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#fff;">$1</strong>');
+  // Sauts de ligne
+  text = text.replace(/\n/g, '<br>');
+  // Puces •
+  text = text.replace(/•\s/g, '<span style="color:#FF8C42;">•</span> ');
+  return text;
+}
+
 async function sendToKitsune() {
-  const inp=document.getElementById('ai-input');
-  const msg=inp.value.trim(); if (!msg) return; inp.value='';
-  const conv=document.getElementById('ai-conversation');
-  conv.innerHTML+=`<div style="text-align:right;"><span style="background:rgba(255,140,66,0.15);color:#FF8C42;border-radius:10px;padding:6px 12px;display:inline-block;font-size:0.83rem;">${msg}</span></div>`;
-  document.getElementById('ai-loading').style.display='block';
+  const inp  = document.getElementById('ai-input');
+  const msg  = inp.value.trim();
+  if (!msg) return;
+  inp.value  = '';
+  const conv = document.getElementById('ai-conversation');
+
+  // Message joueur
+  conv.innerHTML += `
+    <div style="text-align:right;margin:6px 0;">
+      <span style="background:rgba(255,140,66,0.18);color:#FF8C42;border-radius:12px 12px 2px 12px;
+                   padding:8px 14px;display:inline-block;font-size:0.83rem;max-width:85%;text-align:left;">
+        ${msg}
+      </span>
+    </div>`;
+
+  document.getElementById('ai-loading').style.display = 'block';
+  conv.scrollTop = conv.scrollHeight;
+
   try {
-    const reply=typeof askKitsune==='function'?await askKitsune(msg):'Module IA non connecté.';
-    conv.innerHTML+=`<div><span style="background:rgba(255,255,255,0.04);color:#ccc;border-radius:10px;padding:6px 12px;display:inline-block;font-size:0.83rem;">${reply}</span></div>`;
+    const reply = typeof askKitsune === 'function' ? await askKitsune(msg) : '🦊 Module non chargé.';
+    conv.innerHTML += `
+      <div style="text-align:left;margin:6px 0;">
+        <span style="background:rgba(255,255,255,0.05);color:#ccc;border-radius:2px 12px 12px 12px;
+                     padding:8px 14px;display:inline-block;font-size:0.83rem;max-width:92%;text-align:left;line-height:1.5;">
+          ${kitsuneFormat(reply)}
+        </span>
+      </div>`;
   } catch(e) {
-    conv.innerHTML+=`<div style="color:#E53935;font-size:0.8rem;">Erreur: ${e.message}</div>`;
+    conv.innerHTML += `<div style="color:#E53935;font-size:0.8rem;margin:4px 0;">Erreur : ${e.message}</div>`;
   }
-  document.getElementById('ai-loading').style.display='none';
-  conv.scrollTop=conv.scrollHeight;
+
+  document.getElementById('ai-loading').style.display = 'none';
+  conv.scrollTop = conv.scrollHeight;
 }
 </script>
 
