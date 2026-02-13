@@ -1984,10 +1984,51 @@ body{
  }
 
 }
+/* ===== STABILITY PATCH ===== */
 
+/* force calcul correct viewport mobile */
+html,body{
+ height:100%;
+ min-height:100%;
+}
+
+/* empêche coupure dock */
+#action-dock{
+ position:fixed!important;
+ bottom:0;
+ left:0;
+ right:0;
+}
+
+/* corrige overflow paysage */
+@media (orientation:landscape){
+
+ #gaming-main{
+  overflow-y:auto!important;
+ }
+
+ #kitsune-center{
+  bottom:18vh!important;
+ }
+
+ #kitsune-bubble{
+  bottom:40vh!important;
+ }
+
+ #risk-bar-center{
+  bottom:12vh!important;
+ }
+
+}
+
+/* fix fonts */
+body{
+ font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+}
 
 /* =====================================================
    FIN PATCH
 ===================================================== */
+
 
 
