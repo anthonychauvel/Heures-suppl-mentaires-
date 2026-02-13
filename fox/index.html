@@ -47,51 +47,60 @@
 <!-- ZONE PRINCIPALE -->
 
 <div id="gaming-main">
-  <div style="text-align:center;padding:20px 0 8px;">
-    <div style="font-size:0.75rem;color:#555;letter-spacing:2px;text-transform:uppercase;">Moteur d'Analyse Juridique RPG</div>
-    <h1 id="main-status-title" style="font-size:1.8rem;font-weight:900;color:#FF8C42;margin:6px 0;text-shadow:0 0 30px rgba(255,140,66,0.4);">Heures Sup' Ultimate</h1>
-    <p id="main-status-sub" style="color:#666;font-size:0.9rem;margin:0;">Chargement…</p>
+
+  <!-- Bulle de dialogue Kitsune -->
+
+  <div id="kitsune-bubble" onclick="openPopup('popup-fox')">
+    <div id="kitsune-bubble-text">Bonjour ! Tape ici pour me parler 🦊</div>
+    <div class="bubble-tail"></div>
   </div>
-  <div style="max-width:500px;margin:16px auto 0;">
-    <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#555;margin-bottom:4px;">
+
+  <!-- Renard central -->
+
+  <div id="kitsune-center" onclick="openPopup('popup-fox')">
+    <img id="kitsune-svg" src="../../images/foxplayer.PNG" alt="Kitsune">
+    <div id="kitsune-tap-hint">Appuie sur moi !</div>
+  </div>
+
+  <!-- Barre de risque centrale -->
+
+  <div id="risk-bar-center">
+    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:rgba(255,255,255,0.7);margin-bottom:4px;letter-spacing:1px;">
       <span>RISQUE GLOBAL</span><span id="risk-label-main">--</span>
     </div>
     <div class="risk-bar-track"><div class="risk-bar-fill" id="risk-bar-main" style="width:0%"></div></div>
   </div>
 
-  <div class="action-cards" style="margin-top:28px;">
-    <div class="action-card" onclick="openPopup('popup-analyse')">
-      <div class="card-badge">⚡ LIVE</div>
-      <div class="card-icon">⚖️</div>
-      <div class="card-title">Analyser ma situation</div>
-      <div class="card-desc">Détection de violations, score de risque, 600 scénarios personnalisés.</div>
-    </div>
-    <div class="action-card" onclick="openPopup('popup-modules')">
-      <div class="card-icon">📊</div>
-      <div class="card-title">Données M1 &amp; M2</div>
-      <div class="card-desc">Heures saisies, heures sup, contingent annuel, tendance multi-années.</div>
-    </div>
-    <div class="action-card" onclick="openPopup('popup-quetes')">
-      <div class="card-icon">⚔️</div>
-      <div class="card-title">Quêtes &amp; Combats</div>
-      <div class="card-desc">Situations juridiques à résoudre, XP, badges à débloquer.</div>
-    </div>
-    <div class="action-card" onclick="openPopup('popup-scenarios')">
-      <div class="card-icon">📚</div>
-      <div class="card-title">Explorer les scénarios</div>
-      <div class="card-desc">600 scénarios réels — recherche, filtre par risque et catégorie.</div>
-    </div>
-    <div class="action-card card-danger" id="card-burnout" onclick="openPopup('popup-burnout')">
-      <div class="card-icon">🔥</div>
-      <div class="card-title">Score Burn-Out</div>
-      <div class="card-desc" id="burnout-card-desc">Analyse sur toutes vos années de données.</div>
-    </div>
-    <div class="action-card" onclick="openPopup('popup-export')">
-      <div class="card-icon">📄</div>
-      <div class="card-title">Exporter</div>
-      <div class="card-desc">RTF, JSON, snapshots et historique complet.</div>
-    </div>
+  <!-- Dock de boutons en bas -->
+
+  <div id="action-dock">
+    <button class="dock-btn" onclick="openPopup('popup-analyse')">
+      <span class="dock-icon">⚖️</span>
+      <span class="dock-label">Analyse</span>
+      <span class="dock-badge live-badge">LIVE</span>
+    </button>
+    <button class="dock-btn" onclick="openPopup('popup-modules')">
+      <span class="dock-icon">📊</span>
+      <span class="dock-label">Données</span>
+    </button>
+    <button class="dock-btn" onclick="openPopup('popup-burnout')">
+      <span class="dock-icon">🔥</span>
+      <span class="dock-label">Burn-Out</span>
+    </button>
+    <button class="dock-btn" onclick="openPopup('popup-quetes')">
+      <span class="dock-icon">⚔️</span>
+      <span class="dock-label">Quêtes</span>
+    </button>
+    <button class="dock-btn" onclick="openPopup('popup-scenarios')">
+      <span class="dock-icon">📚</span>
+      <span class="dock-label">600 Scén.</span>
+    </button>
+    <button class="dock-btn" onclick="openPopup('popup-export')">
+      <span class="dock-icon">📄</span>
+      <span class="dock-label">Export</span>
+    </button>
   </div>
+
 </div>
 
 <!-- POP-UP KITSUNE -->
@@ -103,16 +112,7 @@
       <button class="fox-popup-close" onclick="closePopup('popup-fox')">✕</button>
     </div>
     <div style="text-align:center;margin-bottom:12px;">
-      <svg width="90" height="90" viewBox="0 0 200 200">
-        <defs><linearGradient id="fg2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#FF8C42"/><stop offset="100%" style="stop-color:#FF6B35"/></linearGradient><filter id="glow2"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-        <polygon points="60,50 50,15 75,40" fill="url(#fg2)"/><polygon points="140,50 150,15 125,40" fill="url(#fg2)"/>
-        <circle cx="100" cy="100" r="50" fill="url(#fg2)" filter="url(#glow2)"/>
-        <ellipse cx="70" cy="105" rx="18" ry="22" fill="#FFF3E0"/><ellipse cx="130" cy="105" rx="18" ry="22" fill="#FFF3E0"/><ellipse cx="100" cy="120" rx="25" ry="18" fill="#FFF3E0"/>
-        <ellipse cx="85" cy="90" rx="8" ry="12" fill="#000"/><ellipse cx="115" cy="90" rx="8" ry="12" fill="#000"/>
-        <circle cx="87" cy="87" r="3" fill="#FFF"/><circle cx="117" cy="87" r="3" fill="#FFF"/>
-        <ellipse cx="100" cy="115" rx="5" ry="4" fill="#000"/>
-        <path d="M100 115 Q90 125 85 122" stroke="#000" fill="none" stroke-width="2"/><path d="M100 115 Q110 125 115 122" stroke="#000" fill="none" stroke-width="2"/>
-      </svg>
+      <img src="../../images/foxplayer.PNG" alt="Kitsune" style="width:90px;height:90px;object-fit:contain;">
     </div>
     <div id="fox-text" style="background:rgba(255,140,66,0.08);border:1px solid rgba(255,140,66,0.2);border-radius:12px;padding:14px;color:#ccc;line-height:1.6;font-size:0.9rem;margin-bottom:14px;">
       Bonjour ! Je suis Kitsune. Pose-moi une question sur tes heures sup, tes droits ou ta situation.
@@ -442,9 +442,19 @@ function refreshHUD() {
     document.getElementById('hud-violations').textContent = (rolling.violations?.over48||0)+(rolling.violations?.over35||0);
     // Sous-titre avec cumul toutes années
     const cum = moduleReader.getCumulatedSummary ? moduleReader.getCumulatedSummary() : null;
-    document.getElementById('main-status-sub').textContent =
-      `${years.length} année(s) · ${rolling.weeksAnalyzed} sem. · tendance: ${rolling.trend}` +
-      (cum ? ` · Total cumulé: ${(cum.totalNetOvertime||0).toFixed(0)}h sup (src: ${cum.source})` : '');
+    // Bulle Kitsune dynamique
+    const bubbleEl = document.getElementById('kitsune-bubble-text');
+    if (bubbleEl) {
+      const net = cum ? (cum.totalNetOvertime||0).toFixed(0) : '?';
+      const msgs = {
+        sain:      `✅ Tout va bien ! ${net}h sup cumulées. Tape-moi pour en savoir plus.`,
+        vigilance: `💛 Vigilance : ${net}h sup. Semaines chargées détectées.`,
+        risque:    `🟠 Risque détecté : ${net}h sup. Consulte l'analyse.`,
+        danger:    `🔴 Danger : ${net}h sup. Ta charge est critique !`,
+        critique:  `🚨 CRITIQUE : ${net}h sup. Agis maintenant !`,
+      };
+      bubbleEl.textContent = msgs[bo.level] || msgs.sain;
+    }
     const rColor = bo.score<20?'#4CAF50':bo.score<40?'#FF8C42':bo.score<60?'#FF6B35':bo.score<80?'#E53935':'#B71C1C';
     const rLabel = bo.score<20?'💚 Sain':bo.score<40?'💛 Vigilance':bo.score<60?'🧡 Risque':bo.score<80?'🔴 Danger':'🚨 Critique';
     document.getElementById('risk-label-main').textContent = rLabel;
