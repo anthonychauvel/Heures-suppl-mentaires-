@@ -1648,3 +1648,206 @@ transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
 background: linear-gradient(90deg, #4CAF50, #FF8C42, #E53935);
 background-size: 300% 100%;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+ÉCRAN PRINCIPAL — FOND IMAGE + KITSUNE CENTRÉ
+═══════════════════════════════════════════════════════════════ */
+
+#gaming-main {
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+background-image: url(’../../images/fox-bg.PNG’);
+background-size: cover;
+background-position: center top;
+background-repeat: no-repeat;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;
+padding-bottom: 0;
+z-index: 0;
+overflow: hidden;
+}
+
+/* Légère assombrissement pour lisibilité */
+#gaming-main::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background: linear-gradient(
+to bottom,
+rgba(0,0,0,0.35) 0%,
+rgba(0,0,0,0.05) 30%,
+rgba(0,0,0,0.05) 55%,
+rgba(0,0,0,0.55) 80%,
+rgba(0,0,0,0.8) 100%
+);
+z-index: 1;
+}
+
+/* HUD au-dessus du fond */
+#gaming-hud { z-index: 100; }
+
+/* ── Renard central ──────────────────────────────────────────── */
+#kitsune-center {
+position: absolute;
+bottom: 185px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 10;
+cursor: pointer;
+animation: foxFloat 3s ease-in-out infinite;
+filter: drop-shadow(0 12px 24px rgba(0,0,0,0.6));
+transition: transform 0.2s ease;
+}
+
+#kitsune-center:active {
+transform: translateX(-50%) scale(0.93);
+}
+
+#kitsune-svg {
+width: 170px;
+height: 170px;
+display: block;
+object-fit: contain;
+}
+
+#kitsune-tap-hint {
+text-align: center;
+font-size: 0.7rem;
+color: rgba(255,255,255,0.7);
+margin-top: 4px;
+letter-spacing: 1px;
+text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes foxFloat {
+0%, 100% { bottom: 185px; }
+50%       { bottom: 198px; }
+}
+
+@keyframes pulse {
+0%, 100% { opacity: 0.7; }
+50%       { opacity: 1; }
+}
+
+/* ── Bulle de dialogue ───────────────────────────────────────── */
+#kitsune-bubble {
+position: absolute;
+bottom: 368px;
+left: 50%;
+transform: translateX(-50%);
+z-index: 10;
+background: rgba(255,255,255,0.92);
+border-radius: 18px;
+padding: 10px 16px;
+max-width: 260px;
+width: max-content;
+cursor: pointer;
+box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+text-align: center;
+transition: transform 0.15s ease;
+}
+
+#kitsune-bubble:active { transform: translateX(-50%) scale(0.97); }
+
+#kitsune-bubble-text {
+font-size: 0.82rem;
+color: #1a0a00;
+font-weight: 600;
+line-height: 1.4;
+}
+
+.bubble-tail {
+position: absolute;
+bottom: -10px;
+left: 50%;
+transform: translateX(-50%);
+width: 0; height: 0;
+border-left: 10px solid transparent;
+border-right: 10px solid transparent;
+border-top: 12px solid rgba(255,255,255,0.92);
+}
+
+/* ── Barre de risque centrale ────────────────────────────────── */
+#risk-bar-center {
+position: absolute;
+bottom: 162px;
+left: 50%;
+transform: translateX(-50%);
+width: calc(100% - 40px);
+max-width: 360px;
+z-index: 10;
+}
+
+/* ── Dock de boutons ─────────────────────────────────────────── */
+#action-dock {
+position: absolute;
+bottom: 0;
+left: 0; right: 0;
+z-index: 10;
+display: flex;
+justify-content: space-around;
+align-items: flex-end;
+padding: 10px 8px 20px;
+background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
+gap: 4px;
+}
+
+.dock-btn {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: rgba(255,255,255,0.10);
+border: 1px solid rgba(255,255,255,0.18);
+border-radius: 16px;
+padding: 10px 6px 8px;
+cursor: pointer;
+flex: 1;
+max-width: 65px;
+gap: 3px;
+backdrop-filter: blur(8px);
+-webkit-backdrop-filter: blur(8px);
+transition: background 0.15s ease, transform 0.1s ease;
+position: relative;
+-webkit-tap-highlight-color: transparent;
+}
+
+.dock-btn:active {
+background: rgba(255,140,66,0.25);
+transform: scale(0.93);
+}
+
+.dock-icon {
+font-size: 1.4rem;
+line-height: 1;
+}
+
+.dock-label {
+font-size: 0.58rem;
+color: rgba(255,255,255,0.85);
+font-weight: 600;
+letter-spacing: 0.3px;
+text-align: center;
+white-space: nowrap;
+}
+
+.live-badge {
+position: absolute;
+top: -5px;
+right: -4px;
+background: #FF3B30;
+color: #fff;
+font-size: 0.45rem;
+font-weight: 900;
+border-radius: 6px;
+padding: 2px 4px;
+letter-spacing: 0.5px;
+}
+
+/* ── Masquer les anciens éléments inutiles ───────────────────── */
+.action-cards { display: none !important; }
+.risk-bar-track { background: rgba(255,255,255,0.15); border-radius: 6px; height: 6px; overflow: hidden; }
+.risk-bar-fill  { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #4CAF50, #FF8C42, #E53935); transition: width 0.8s ease; }
