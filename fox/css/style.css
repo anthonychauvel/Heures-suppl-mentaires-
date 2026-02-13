@@ -1550,11 +1550,8 @@ box-shadow: 0 0 12px rgba(255,140,66,0.3);
 }
 
 /* ── Zone centrale gaming ──────────────────────────────── */
-#gaming-main {
-margin-top: 64px;
-padding: 24px 16px;
-max-width: 1200px;
-margin-left: auto; margin-right: auto;
+#gaming-main-old-removed {
+/* ancienne définition supprimée */
 }
 
 /* ── Cartes d’action (remplacent les panels) ─────────────── */
@@ -1686,7 +1683,7 @@ z-index: 1;
 }
 
 /* HUD au-dessus du fond */
-#gaming-hud { z-index: 100; }
+/* HUD z-index géré dans la définition principale ci-dessus */
 
 /* ── Renard central ──────────────────────────────────────────── */
 #kitsune-center {
