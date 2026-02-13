@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -11,7 +12,7 @@
   <link rel="apple-touch-icon" href="/hs/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Compteur Heures & Paie">
-    
+
   <style>
     body {
       margin: 0;
@@ -144,6 +145,7 @@
 
     hr { border: 0; border-top: 1px solid #eee; margin: 15px 0; }
   </style>
+
 </head>
 
 <body>
@@ -151,11 +153,11 @@
   <div id="presentationPopup" style="display:none;">
     <div class="presentation-box" onclick="event.stopPropagation()">
       <h2>📦 Présentation du projet</h2>
-      <p><b>Simulateur d’heures supplémentaires</b><br>Écosystème PWA – Développé par <b>C. Anthony</b></p>
+      <p><b>Simulateur d'heures supplémentaires</b><br>Écosystème PWA – Développé par <b>C. Anthony</b></p>
       <hr>
       <h3>🎯 Objectif général</h3>
       <p>Outil personnel de simulation permettant de visualiser et organiser des heures supplémentaires à titre <b>strictement indicatif</b>.</p>
-      <p>Il ne s’agit ni d’un logiciel de paie, ni d’un document officiel.</p>
+      <p>Il ne s'agit ni d'un logiciel de paie, ni d'un document officiel.</p>
       <hr>
       <h3>💾 Données & fonctionnement</h3>
       <p>Toutes les données sont stockées <b>localement</b> sur votre appareil. Aucun serveur, aucune transmission externe.</p>
@@ -168,7 +170,7 @@
       <h2>⚠️ Avertissement important</h2>
       <p>Cette application enregistre les données <strong>localement sur votre appareil</strong>.</p>
       <p>En cas de nettoyage du navigateur ou changement d'appareil, <strong>les données seront perdues</strong>.</p>
-      <button class="close-btn" onclick="acceptBackupRisk()">J’accepte ces risques</button>
+      <button class="close-btn" onclick="acceptBackupRisk()">J'accepte ces risques</button>
     </div>
   </div>
 
@@ -179,13 +181,15 @@
 
   <div class="btn" onclick="go('paye')">
     <img src="images/renard-mensuel.png.jpg" alt="Paye mensuelle">
-    <div class="title">Simulateur d’heures mensualisées</div>
+    <div class="title">Simulateur d'heures mensualisées</div>
   </div>
-<div class="btn" onclick="go('foxplayer')">
-  <img src="images/renard-central.png.jpg" alt="Module central">
-  <div class="title">Module 3 – Moteur central</div>
-</div>
-  <button class="info-btn" onclick="openPresentation()">📄 Présentation du projet</button>
+
+  <div class="btn" onclick="go('fox')">
+    <img src="images/renard-central.png.jpg" alt="Module central">
+    <div class="title">Module 3 – Moteur central</div>
+  </div>
+
+<button class="info-btn" onclick="openPresentation()">📄 Présentation du projet</button>
 
   <div class="backup-advice">
     💾 <strong>Conseil sauvegarde</strong><br>
