@@ -2,52 +2,54 @@
 
 /* === VARIABLES === */
 :root {
-
 /* Couleurs principales */
---bg-dark:#0a0e27;
---bg-darker:#060917;
---bg-card:#1a1f3a;
---bg-card-hover:#242947;
+–bg-dark: #0a0e27;
+–bg-darker: #060917;
+–bg-card: #1a1f3a;
+–bg-card-hover: #242947;
 
+```
 /* Couleurs d'accentuation */
---primary:#ff6b35;
---primary-glow:rgba(255,107,53,.4);
---secondary:#4ecdc4;
---secondary-glow:rgba(78,205,196,.4);
---accent:#ffe66d;
+--primary: #ff6b35;
+--primary-glow: rgba(255, 107, 53, 0.4);
+--secondary: #4ecdc4;
+--secondary-glow: rgba(78, 205, 196, 0.4);
+--accent: #ffe66d;
 
-/* Status */
---success:#4caf50;
---warning:#ff9800;
---danger:#f44336;
---info:#2196f3;
+/* Couleurs de status */
+--success: #4caf50;
+--warning: #ff9800;
+--danger: #f44336;
+--info: #2196f3;
 
-/* Rareté */
---common:#9e9e9e;
---rare:#2196f3;
---epic:#9c27b0;
---legendary:#ff9800;
+/* Couleurs de rareté */
+--common: #9e9e9e;
+--rare: #2196f3;
+--epic: #9c27b0;
+--legendary: #ff9800;
 
 /* Texte */
---text-primary:#ffffff;
---text-secondary:#b8c5d6;
---text-muted:#6b7c93;
+--text-primary: #ffffff;
+--text-secondary: #b8c5d6;
+--text-muted: #6b7c93;
 
 /* Autres */
---border-radius:12px;
---shadow:0 4px 20px rgba(0,0,0,.5);
---shadow-glow:0 0 20px var(--primary-glow);
---transition:all .3s cubic-bezier(.4,0,.2,1);
+--border-radius: 12px;
+--shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+--shadow-glow: 0 0 20px var(--primary-glow);
+--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+```
 
 }
 
 /* === RESET & BASE === */
 
-*{
- margin:0;
- padding:0;
- box-sizing:border-box;
-}
+- {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
 body {
 font-family: ‘Inter’, ‘Segoe UI’, system-ui, -apple-system, sans-serif;
 background: linear-gradient(135deg, var(–bg-darker) 0%, var(–bg-dark) 100%);
@@ -1651,10 +1653,7 @@ background-size: 300% 100%;
 #gaming-main {
 position: fixed;
 top: 0; left: 0; right: 0; bottom: 0;
-background-image: url(’../../images/fox-bg.PNG’);
-background-size: cover;
-background-position: center top;
-background-repeat: no-repeat;
+background: transparent;
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -1846,189 +1845,5 @@ letter-spacing: 0.5px;
 .action-cards { display: none !important; }
 .risk-bar-track { background: rgba(255,255,255,0.15); border-radius: 6px; height: 6px; overflow: hidden; }
 .risk-bar-fill  { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #4CAF50, #FF8C42, #E53935); transition: width 0.8s ease; }
-/* =====================================================
-   PATCH OPTIMISATION UI — NON DESTRUCTIF
-   (ajout uniquement — ne modifie rien d'existant)
-===================================================== */
 
-/* ---------- GPU ACCELERATION ---------- */
-#gaming-main,
-#kitsune-center,
-#kitsune-bubble,
-#risk-bar-center,
-#action-dock{
- will-change: transform;
- transform: translateZ(0);
- backface-visibility: hidden;
- perspective:1000px;
-}
-
-
-/* ---------- FLUID HEIGHT SAFE MOBILE ---------- */
-html,body{
- height:100%;
- overscroll-behavior:none;
- -webkit-overflow-scrolling:touch;
-}
-
-
-/* ---------- SAFE AREA IPHONE / ANDROID ---------- */
-#action-dock{
- padding-bottom:calc(20px + env(safe-area-inset-bottom));
-}
-
-#gaming-hud{
- padding-top:env(safe-area-inset-top);
-}
-
-
-/* ---------- RESPONSIVE SMART POSITIONING ---------- */
-@media (max-height:750px){
-
- #kitsune-center{
-  bottom:clamp(110px,18vh,180px)!important;
- }
-
- #kitsune-bubble{
-  bottom:clamp(240px,32vh,340px)!important;
- }
-
- #risk-bar-center{
-  bottom:clamp(80px,14vh,150px)!important;
- }
-}
-
-
-/* ---------- LANDSCAPE AUTO FIX ---------- */
-@media (orientation:landscape){
-
- #gaming-main{
-  overflow-y:auto!important;
- }
-
- #kitsune-center{
-  bottom:18vh!important;
- }
-
- #kitsune-bubble{
-  bottom:42vh!important;
- }
-
- #risk-bar-center{
-  bottom:10vh!important;
- }
-
-}
-
-
-/* ---------- PERFORMANCE ANIMATIONS ---------- */
-@media (prefers-reduced-motion:no-preference){
-
- #kitsune-center{
-  animation-duration:2.8s!important;
- }
-
- .dock-btn:active{
-  transition:transform .08s!important;
- }
-
-}
-
-
-/* ---------- TOUCH IMPROVEMENTS ---------- */
-.dock-btn,
-button{
- touch-action:manipulation;
-}
-
-
-/* ---------- TAP FEEDBACK MOBILE ---------- */
-.dock-btn:active{
- filter:brightness(1.25);
-}
-
-
-/* ---------- TEXT RENDERING ---------- */
-body{
- -webkit-font-smoothing:antialiased;
- -moz-osx-font-smoothing:grayscale;
- text-rendering:optimizeLegibility;
-}
-
-
-/* ---------- PREVENT ELEMENT CUT OFF ---------- */
-#gaming-main{
- padding-bottom:env(safe-area-inset-bottom);
-}
-
-
-/* ---------- ULTRA SMALL SCREENS ---------- */
-@media (max-height:580px){
-
- #kitsune-bubble{
-  display:none!important;
- }
-
- #kitsune-center{
-  bottom:22vh!important;
- }
-
-}
-
-
-/* ---------- SUPER WIDE SCREENS ---------- */
-@media (min-aspect-ratio:16/9){
-
- #kitsune-center{
-  transform:translateX(-50%) scale(.9);
- }
-
-}
-/* ===== STABILITY PATCH ===== */
-
-/* force calcul correct viewport mobile */
-html,body{
- height:100%;
- min-height:100%;
-}
-
-/* empêche coupure dock */
-#action-dock{
- position:fixed!important;
- bottom:0;
- left:0;
- right:0;
-}
-
-/* corrige overflow paysage */
-@media (orientation:landscape){
-
- #gaming-main{
-  overflow-y:auto!important;
- }
-
- #kitsune-center{
-  bottom:18vh!important;
- }
-
- #kitsune-bubble{
-  bottom:40vh!important;
- }
-
- #risk-bar-center{
-  bottom:12vh!important;
- }
-
-}
-
-/* fix fonts */
-body{
- font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
-}
-
-/* =====================================================
-   FIN PATCH
-===================================================== */
-
-
-
+/* fond géré via img tag dans le HTML */
