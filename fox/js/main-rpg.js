@@ -1,3 +1,4 @@
+// FOX main-rpg.js — v4-fix-final
 // ===== MAIN RPG CONTROLLER =====
 // Orchestration principale du jeu
 
@@ -25,11 +26,11 @@ let gameState = {
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🦊 Module 3 RPG - Ultimate chargé!');
-    initializeGame();
-    loadGameState();
-    updateAllDisplays();
-    setupEventListeners();
-    showWelcomeMessage();
+    try { initializeGame(); } catch(e) { console.warn('initializeGame:', e); }
+    try { loadGameState(); } catch(e) { console.warn('loadGameState:', e); }
+    try { updateAllDisplays(); } catch(e) { console.warn('updateAllDisplays:', e); }
+    try { setupEventListeners(); } catch(e) { console.warn('setupEventListeners:', e); }
+    try { showWelcomeMessage(); } catch(e) { console.warn('showWelcomeMessage:', e); }
 });
 
 // Initialiser le jeu
@@ -967,11 +968,11 @@ function importSnapshot() {
 // Initialiser les affichages au chargement des panneaux
 document.addEventListener('DOMContentLoaded', function() {
     // Initialiser Module 1 & 2
-    displayModule1();
-    displayModule2();
+    try { displayModule1(); } catch(e) { console.warn('displayModule1:', e); }
+    try { displayModule2(); } catch(e) { console.warn('displayModule2:', e); }
     
     // Initialiser Snapshots
-    loadSnapshotsList();
+    try { loadSnapshotsList(); } catch(e) { console.warn('loadSnapshotsList:', e); }
     
     // Event listener pour créer un snapshot
     const snapBtn = document.getElementById('create-snapshot-btn'); if (snapBtn) snapBtn.addEventListener('click', createSnapshot);
