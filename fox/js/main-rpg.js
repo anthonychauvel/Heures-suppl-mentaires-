@@ -646,10 +646,17 @@ function showTutorial() {
 
 // Système de notifications
 function showNotification(message, type = 'info') {
-    const container = document.getElementById('notification-container');
+    let container = document.getElementById('notification-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notification-container';
+        container.style.cssText = 'position:fixed;top:80px;right:16px;z-index:99999;display:flex;flex-direction:column;gap:8px;';
+        document.body.appendChild(container);
+    }
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.textContent = message;
+    notification.style.cssText = 'background:rgba(30,30,30,0.95);border:1px solid rgba(255,140,66,0.4);color:#fff;padding:10px 16px;border-radius:10px;font-size:0.85rem;box-shadow:0 4px 20px rgba(0,0,0,0.4);';
     
     container.appendChild(notification);
     
@@ -967,10 +974,10 @@ document.addEventListener('DOMContentLoaded', function() {
     loadSnapshotsList();
     
     // Event listener pour créer un snapshot
-    document.getElementById('create-snapshot-btn').addEventListener('click', createSnapshot);
+    const snapBtn = document.getElementById('create-snapshot-btn'); if (snapBtn) snapBtn.addEventListener('click', createSnapshot);
     
     // Event listener pour l'import de fichier
-    document.getElementById('import-file').addEventListener('change', async function(e) {
+    const importFile = document.getElementById('import-file'); if (importFile) importFile.addEventListener('change', async function(e) {
         const file = e.target.files[0];
         if (!file) return;
         
