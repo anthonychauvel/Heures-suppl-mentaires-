@@ -1,40 +1,40 @@
-// ===== ASSETS CONFIG - Gestion des images personnalisées =====
+// ===== ASSETS CONFIG - Gestion des images personnalis\u00E9es =====
 //
-// STRUCTURE DES DOSSIERS À CRÉER SUR GITHUB :
+// STRUCTURE DES DOSSIERS \u00C0 CR\u00C9ER SUR GITHUB :
 //
 //  assets/
-//  ├── badges/
-//  │   ├── badge_first_scenario.png      (ou .jpg / .gif)
-//  │   ├── badge_scenarios_10.png
-//  │   ├── badge_scenarios_25.png
-//  │   ├── … (1 image par badge_ID)
-//  │   └── badge_league_legend.png
-//  │
-//  ├── leagues/
-//  │   ├── league_bronze3.png
-//  │   ├── league_bronze2.png
-//  │   ├── league_bronze1.png
-//  │   ├── league_silver3.png
-//  │   ├── league_silver2.png
-//  │   ├── league_silver1.png
-//  │   ├── league_gold3.png
-//  │   ├── league_gold2.png
-//  │   ├── league_gold1.png
-//  │   └── league_legend.png
-//  │
-//  ├── characters/
-//  │   ├── fox_spring.png    ← Renard Printemps (Mars-Mai)
-//  │   ├── fox_summer.png    ← Renard Été (Juin-Août)
-//  │   ├── fox_autumn.png    ← Renard Automne (Sep-Nov)
-//  │   └── fox_winter.png    ← Renard Hiver (Déc-Fév)
-//  │
-//  └── backgrounds/
-//      ├── bg_spring.jpg     ← Décor Printemps
-//      ├── bg_summer.jpg     ← Décor Été
-//      ├── bg_autumn.jpg     ← Décor Automne
-//      └── bg_winter.jpg     ← Décor Hiver
+//  \u251C\u2500\u2500 badges/
+//  \u2502   \u251C\u2500\u2500 badge_first_scenario.png      (ou .jpg / .gif)
+//  \u2502   \u251C\u2500\u2500 badge_scenarios_10.png
+//  \u2502   \u251C\u2500\u2500 badge_scenarios_25.png
+//  \u2502   \u251C\u2500\u2500 … (1 image par badge_ID)
+//  \u2502   \u2514\u2500\u2500 badge_league_legend.png
+//  \u2502
+//  \u251C\u2500\u2500 leagues/
+//  \u2502   \u251C\u2500\u2500 league_bronze3.png
+//  \u2502   \u251C\u2500\u2500 league_bronze2.png
+//  \u2502   \u251C\u2500\u2500 league_bronze1.png
+//  \u2502   \u251C\u2500\u2500 league_silver3.png
+//  \u2502   \u251C\u2500\u2500 league_silver2.png
+//  \u2502   \u251C\u2500\u2500 league_silver1.png
+//  \u2502   \u251C\u2500\u2500 league_gold3.png
+//  \u2502   \u251C\u2500\u2500 league_gold2.png
+//  \u2502   \u251C\u2500\u2500 league_gold1.png
+//  \u2502   \u2514\u2500\u2500 league_legend.png
+//  \u2502
+//  \u251C\u2500\u2500 characters/
+//  \u2502   \u251C\u2500\u2500 fox_spring.png    \u2190 Renard Printemps (Mars-Mai)
+//  \u2502   \u251C\u2500\u2500 fox_summer.png    \u2190 Renard \u00C9t\u00E9 (Juin-Ao\u00FBt)
+//  \u2502   \u251C\u2500\u2500 fox_autumn.png    \u2190 Renard Automne (Sep-Nov)
+//  \u2502   \u2514\u2500\u2500 fox_winter.png    \u2190 Renard Hiver (D\u00E9c-F\u00E9v)
+//  \u2502
+//  \u2514\u2500\u2500 backgrounds/
+//      \u251C\u2500\u2500 bg_spring.jpg     \u2190 D\u00E9cor Printemps
+//      \u251C\u2500\u2500 bg_summer.jpg     \u2190 D\u00E9cor \u00C9t\u00E9
+//      \u251C\u2500\u2500 bg_autumn.jpg     \u2190 D\u00E9cor Automne
+//      \u2514\u2500\u2500 bg_winter.jpg     \u2190 D\u00E9cor Hiver
 //
-// SI L’IMAGE N’EXISTE PAS → FALLBACK AUTOMATIQUE SUR EMOJI
+// SI L’IMAGE N’EXISTE PAS \u2192 FALLBACK AUTOMATIQUE SUR EMOJI
 // Aucun bug si image manquante !
 //
 // =====================================================
@@ -48,42 +48,42 @@ const ASSETS_CONFIG = {
 basePath: './assets',
 
 // ==========================================
-// EXTENSIONS ACCEPTÉES (ordre de priorité)
+// EXTENSIONS ACCEPT\u00C9ES (ordre de priorit\u00E9)
 // ==========================================
 extensions: ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'],
 
 // ==========================================
-// 🦊 PERSONNAGE RENARD - 4 SAISONS
+// \uD83E\uDD8A PERSONNAGE RENARD - 4 SAISONS
 // ==========================================
 characters: {
     spring: {
         path: './assets/characters/fox_spring.png',
-        fallbackEmoji: '🦊',
+        fallbackEmoji: '\uD83E\uDD8A',
         alt: 'Kitsune Printemps',
         season: 'spring'
     },
     summer: {
         path: './assets/characters/fox_summer.png',
-        fallbackEmoji: '🦊',
-        alt: 'Kitsune Été',
+        fallbackEmoji: '\uD83E\uDD8A',
+        alt: 'Kitsune \u00C9t\u00E9',
         season: 'summer'
     },
     autumn: {
         path: './assets/characters/fox_autumn.png',
-        fallbackEmoji: '🦊',
+        fallbackEmoji: '\uD83E\uDD8A',
         alt: 'Kitsune Automne',
         season: 'autumn'
     },
     winter: {
         path: './assets/characters/fox_winter.png',
-        fallbackEmoji: '🦊',
+        fallbackEmoji: '\uD83E\uDD8A',
         alt: 'Kitsune Hiver',
         season: 'winter'
     }
 },
 
 // ==========================================
-// 🌿 DÉCORS SAISONNIERS - 4 BACKGROUNDS
+// \uD83C\uDF3F D\u00C9CORS SAISONNIERS - 4 BACKGROUNDS
 // ==========================================
 backgrounds: {
     spring: {
@@ -109,76 +109,76 @@ backgrounds: {
 },
 
 // ==========================================
-// ⚔️ LIGUES - 10 IMAGES
+// \u2694\uFE0F LIGUES - 10 IMAGES
 // ==========================================
 leagues: {
-    1: { path: '../images/Bronze.PNG',       fallbackEmoji: '🥉', name: 'Bronze' },
-    2: { path: '../images/Argent.PNG',       fallbackEmoji: '🥈', name: 'Argent' },
-    3: { path: '../images/Or.PNG',           fallbackEmoji: '🥇', name: 'Or' },
-    4: { path: '../images/Platine.PNG',      fallbackEmoji: '💎', name: 'Platine' },
-    5: { path: '../images/Diamant.PNG',      fallbackEmoji: '💠', name: 'Diamant' },
-    6: { path: '../images/Maître.PNG',       fallbackEmoji: '🌟', name: 'Maître' },
-    7: { path: '../images/Grand Maître.PNG', fallbackEmoji: '👑', name: 'Grand Maître' },
-    8: { path: '../images/Champion.PNG',     fallbackEmoji: '🔥', name: 'Champion' },
-    9: { path: '../images/Héros.PNG',        fallbackEmoji: '⚡', name: 'Héros' },
-   10: { path: '../images/Légende.PNG',      fallbackEmoji: '🏆', name: 'Légende' }
+    1: { path: '../images/Bronze.PNG',       fallbackEmoji: '\uD83E\uDD49', name: 'Bronze' },
+    2: { path: '../images/Argent.PNG',       fallbackEmoji: '\uD83E\uDD48', name: 'Argent' },
+    3: { path: '../images/Or.PNG',           fallbackEmoji: '\uD83E\uDD47', name: 'Or' },
+    4: { path: '../images/Platine.PNG',      fallbackEmoji: '\uD83D\uDC8E', name: 'Platine' },
+    5: { path: '../images/Diamant.PNG',      fallbackEmoji: '\uD83D\uDCA0', name: 'Diamant' },
+    6: { path: '../images/Ma%C3%AEtre.PNG',       fallbackEmoji: '\uD83C\uDF1F', name: 'Ma\u00EEtre' },
+    7: { path: '../images/Grand%20Ma%C3%AEtre.PNG', fallbackEmoji: '\uD83D\uDC51', name: 'Grand Ma\u00EEtre' },
+    8: { path: '../images/Champion.PNG',     fallbackEmoji: '\uD83D\uDD25', name: 'Champion' },
+    9: { path: '../images/H%C3%A9ros.PNG',        fallbackEmoji: '\u26A1', name: 'H\u00E9ros' },
+   10: { path: '../images/L%C3%A9gende.PNG',      fallbackEmoji: '\uD83C\uDFC6', name: 'L\u00E9gende' }
 },
 
 // ==========================================
-// 🏆 BADGES - 50 IMAGES
+// \uD83C\uDFC6 BADGES - 50 IMAGES
 // Nom du fichier = badge_[ID].png
 // ==========================================
 badges: {
-     1: { path: '../images/Premier Pas.PNG' },
-     2: { path: '../images/Débutant.PNG' },
-     3: { path: '../images/Régulier.PNG' },
+     1: { path: '../images/Premier%20Pas.PNG' },
+     2: { path: '../images/D%C3%A9butant.PNG' },
+     3: { path: '../images/R%C3%A9gulier.PNG' },
      4: { path: '../images/Assidu.PNG' },
      5: { path: '../images/Travailleur.PNG' },
      6: { path: '../images/Explorateur.PNG' },
      7: { path: '../images/Curieux.PNG' },
-     8: { path: '../images/Niveau 2.PNG' },
-     9: { path: '../images/Niveau 5.PNG' },
+     8: { path: '../images/Niveau%202.PNG' },
+     9: { path: '../images/Niveau%205.PNG' },
     10: { path: '../images/Matinal.PNG' },
     11: { path: '../images/Nocturne.PNG' },
-    12: { path: '../images/Weekend Warrior.PNG' },
+    12: { path: '../images/Weekend%20Warrior.PNG' },
     13: { path: '../images/Mensuel.PNG' },
-    14: { path: '../images/XP Hunter.PNG' },
+    14: { path: '../images/XP%20Hunter.PNG' },
     15: { path: '../images/Sage.PNG' },
-    16: { path: '../images/Organisé.PNG' },
-    17: { path: '../images/Ami du Renard.PNG' },
-    18: { path: '../images/Régularité Bronze.PNG' },
+    16: { path: '../images/Organis%C3%A9.PNG' },
+    17: { path: '../images/Ami%20du%20Renard.PNG' },
+    18: { path: '../images/R%C3%A9gularit%C3%A9%20Bronze.PNG' },
     19: { path: '../images/Marathonien.PNG' },
     20: { path: '../images/Consciencieux.PNG' },
-    21: { path: '../images/Persévérant.PNG' },
-    22: { path: '../images/Acharné.PNG' },
-    23: { path: '../images/Niveau 10.PNG' },
-    24: { path: '../images/Régularité Argent.PNG' },
-    25: { path: '../images/Régularité Or.PNG' },
-    26: { path: '../images/Érudit.PNG' },
+    21: { path: '../images/Pers%C3%A9v%C3%A9rant.PNG' },
+    22: { path: '../images/Acharn%C3%A9.PNG' },
+    23: { path: '../images/Niveau%2010.PNG' },
+    24: { path: '../images/R%C3%A9gularit%C3%A9%20Argent.PNG' },
+    25: { path: '../images/R%C3%A9gularit%C3%A9%20Or.PNG' },
+    26: { path: '../images/%C3%89rudit.PNG' },
     27: { path: '../images/Expert.PNG' },
     28: { path: '../images/Trimestre.PNG' },
-    29: { path: '../images/XP Master.PNG' },
+    29: { path: '../images/XP%20Master.PNG' },
     30: { path: '../images/Centenaire.PNG' },
     31: { path: '../images/Noctambule.PNG' },
-    32: { path: '../images/Lève-tôt.PNG' },
-    33: { path: '../images/Sans Weekend.PNG' },
-    34: { path: '../images/Fidèle.PNG' },
+    32: { path: '../images/L%C3%A8ve-t%C3%B4t.PNG' },
+    33: { path: '../images/Sans%20Weekend.PNG' },
+    34: { path: '../images/Fid%C3%A8le.PNG' },
     35: { path: '../images/Collectionneur.PNG' },
     36: { path: '../images/Infatigable.PNG' },
-    37: { path: '../images/Niveau 20.PNG' },
-    38: { path: '../images/Régularité Platine.PNG' },
-    39: { path: '../images/Régularité Diamant.PNG' },
-    40: { path: '../images/Encyclopédie.PNG' },
+    37: { path: '../images/Niveau%2020.PNG' },
+    38: { path: '../images/R%C3%A9gularit%C3%A9%20Platine.PNG' },
+    39: { path: '../images/R%C3%A9gularit%C3%A9%20Diamant.PNG' },
+    40: { path: '../images/Encyclop%C3%A9die.PNG' },
     41: { path: '../images/Semestre.PNG' },
-    42: { path: '../images/XP Legend.PNG' },
+    42: { path: '../images/XP%20Legend.PNG' },
     43: { path: '../images/Bicentenaire.PNG' },
-    44: { path: '../images/Dévotion.PNG' },
-    45: { path: '../images/Grand Collectionneur.PNG' },
+    44: { path: '../images/D%C3%A9votion.PNG' },
+    45: { path: '../images/Grand%20Collectionneur.PNG' },
     46: { path: '../images/Titan.PNG' },
-    47: { path: '../images/Niveau 50.PNG' },
-    48: { path: '../images/Légende Vivante.PNG' },
-    49: { path: '../images/Année Complète.PNG' },
-    50: { path: '../images/Maître Absolu.PNG' }
+    47: { path: '../images/Niveau%2050.PNG' },
+    48: { path: '../images/L%C3%A9gende%20Vivante.PNG' },
+    49: { path: '../images/Ann%C3%A9e%20Compl%C3%A8te.PNG' },
+    50: { path: '../images/Ma%C3%AEtre%20Absolu.PNG' }
 }
 ```
 
@@ -190,12 +190,12 @@ badges: {
 
 /**
 
-- Renvoie un élément <img> avec fallback automatique sur emoji
+- Renvoie un \u00E9l\u00E9ment <img> avec fallback automatique sur emoji
 - Usage: getAssetImg(‘badges’, ‘first_scenario’, ‘badge-icon’)
   */
   function getAssetImg(type, id, cssClass = ‘’, size = ‘48px’) {
   const config = ASSETS_CONFIG[type]?.[id];
-  if (!config) return `<span style="font-size:${size}">${'❓'}</span>`;
+  if (!config) return `<span style="font-size:${size}">${'\u2753'}</span>`;
   
   return `<img  src="${config.path}"  alt="${config.alt || id}" class="${cssClass}" style="width:${size};height:${size};object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><span class="${cssClass}-fallback" style="font-size:${size};display:none;">${config.fallbackEmoji}</span>`;
   }
@@ -222,9 +222,9 @@ badges: {
   */
   function getFoxAsset(season, size = ‘80px’) {
   const config = ASSETS_CONFIG.characters[season];
-  if (!config) return `<span style="font-size:${size}">🦊</span>`;
+  if (!config) return `<span style="font-size:${size}">\uD83E\uDD8A</span>`;
   
-  return `<img  src="${config.path}"  alt="${config.alt}" class="fox-character-img" style="width:${size};height:auto;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><span class="fox-fallback" style="font-size:${size};display:none;">🦊</span>`;
+  return `<img  src="${config.path}"  alt="${config.alt}" class="fox-character-img" style="width:${size};height:auto;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';" /><span class="fox-fallback" style="font-size:${size};display:none;">\uD83E\uDD8A</span>`;
   }
 
 /**
@@ -259,7 +259,7 @@ badges: {
 
 /**
 
-- Détecte la saison actuelle
+- D\u00E9tecte la saison actuelle
   */
   function getCurrentSeason() {
   const month = new Date().getMonth() + 1;
@@ -269,4 +269,4 @@ badges: {
   return ‘winter’;
   }
 
-console.log(‘🎨 Assets Config chargé - Images + Fallback Emoji activés’);
+console.log(’\uD83C\uDFA8 Assets Config charg\u00E9 - Images + Fallback Emoji activ\u00E9s’);
