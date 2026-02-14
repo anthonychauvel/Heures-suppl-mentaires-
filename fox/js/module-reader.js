@@ -1,7 +1,7 @@
 // ===============================
-//  FOX ENGINE – MODULE READER
+//  FOX ENGINE - MODULE READER
 //  Lecture READ-ONLY de M1 (heures/) et M2 (paye/)
-//  via leurs vraies clés localStorage
+//  via leurs vraies cles localStorage
 // ===============================
 
 class ModuleReader {
@@ -11,10 +11,10 @@ this.module1Data = this.loadModule1Data();
 this.module2Data = this.loadModule2Data();
 }
 
-// ─────────────────────────────────────────
-//  MODULE 1 — heures/
-//  Clés réelles : DATA_REPORT_{year}, ANNUAL_RATE_{year}, etc.
-// ─────────────────────────────────────────
+// —————————————–
+//  MODULE 1 – heures/
+//  Cles reelles : DATA_REPORT_{year}, ANNUAL_RATE_{year}, etc.
+// —————————————–
 
 loadModule1Data() {
 try {
@@ -27,13 +27,13 @@ const exerciseStart = localStorage.getItem(‘EXERCISE_START_’ + this.year) ||
 
 ```
   // Calculer le total des heures sup depuis data[]
-  // Chaque clé = date "YYYY-MM-DD", valeur = { extra, recup, absent }
+  // Chaque cle = date "YYYY-MM-DD", valeur = { extra, recup, absent }
   let totalExtra  = 0;
   let totalRecup  = 0;
   let totalAbsent = 0;
   const monthlyBreakdown = {};
 
-  // ── Regrouper par semaine ISO pour calcul correct ────────────
+  // -- Regrouper par semaine ISO pour calcul correct ------------
   const weeklyAccum = {};
 
   Object.entries(rawData).forEach(([dateKey, val]) => {
@@ -56,7 +56,7 @@ const exerciseStart = localStorage.getItem(‘EXERCISE_START_’ + this.year) ||
     weeklyAccum[wk].absent += absent;
   });
 
-  // ── Calcul HS par semaine : max(0, extra - recup - absent) ───
+  // -- Calcul HS par semaine : max(0, extra - recup - absent) ---
   let netOvertime = 0;
   Object.values(weeklyAccum).forEach(w => {
     const weekHS = Math.max(0, w.extra - w.recup - w.absent);
@@ -93,7 +93,7 @@ const exerciseStart = localStorage.getItem(‘EXERCISE_START_’ + this.year) ||
     hasData:       Object.keys(rawData).length > 0,
   };
 } catch (e) {
-  console.warn('⚠️ Module Reader M1 : erreur lecture', e);
+  console.warn(' Module Reader M1 : erreur lecture', e);
   return this._emptyM1();
 }
 ```
@@ -108,10 +108,10 @@ monthlyHours: 35, monthlyBreakdown: {}, hasData: false,
 };
 }
 
-// ─────────────────────────────────────────
-//  MODULE 2 — paye/
-//  Clés réelles : CA_HS_TRACKER_V1_DATA_{year}, CA_HS_TRACKER_V1_SETTINGS
-// ─────────────────────────────────────────
+// —————————————–
+//  MODULE 2 – paye/
+//  Cles reelles : CA_HS_TRACKER_V1_DATA_{year}, CA_HS_TRACKER_V1_SETTINGS
+// —————————————–
 
 loadModule2Data() {
 try {
@@ -132,7 +132,7 @@ const snapshots = JSON.parse(localStorage.getItem(`${prefix}_SNAPSHOTS`) || ‘[
     if (!/^\d{4}-\d{2}$/.test(key)) return;
     if (typeof month !== 'object') return;
 
-    // Adapter selon les champs présents dans M2
+    // Adapter selon les champs presents dans M2
     const hs25 = Number(month.hsPlus25  || month.hs25  || month.extra25 || 0);
     const hs50 = Number(month.hsPlus50  || month.hs50  || month.extra50 || 0);
     const total = hs25 + hs50;
@@ -162,7 +162,7 @@ const snapshots = JSON.parse(localStorage.getItem(`${prefix}_SNAPSHOTS`) || ‘[
     hasData:           Object.keys(yearData).length > 0,
   };
 } catch (e) {
-  console.warn('⚠️ Module Reader M2 : erreur lecture', e);
+  console.warn(' Module Reader M2 : erreur lecture', e);
   return this._emptyM2();
 }
 ```
@@ -177,9 +177,9 @@ contingentPercent: 0, monthlyBreakdown: {}, hasData: false,
 };
 }
 
-// ─────────────────────────────────────────
+// —————————————–
 //  SYNC avec le gameState RPG
-// ─────────────────────────────────────────
+// —————————————–
 
 syncWithGameState() {
 this.year      = localStorage.getItem(‘ACTIVE_YEAR_SUFFIX’) || new Date().getFullYear().toString();
@@ -187,22 +187,22 @@ this.module1Data = this.loadModule1Data();
 this.module2Data = this.loadModule2Data();
 }
 
-// ─────────────────────────────────────────
-//  RÉSUMÉS (appelés par main-rpg.js)
-// ─────────────────────────────────────────
+// —————————————–
+//  RESUMES (appeles par main-rpg.js)
+// —————————————–
 
 getModule1Summary() {
 const m1 = this.module1Data;
 const alerts = [];
 
 ```
-if (m1.netOvertime > 200) alerts.push({ type: 'danger', msg: `🚨 ${m1.netOvertime}h sup accumulées` });
-else if (m1.netOvertime > 100) alerts.push({ type: 'warning', msg: `⚠️ ${m1.netOvertime}h sup — restez vigilant` });
+if (m1.netOvertime > 200) alerts.push({ type: 'danger', msg: ` ${m1.netOvertime}h sup accumulees` });
+else if (m1.netOvertime > 100) alerts.push({ type: 'warning', msg: ` ${m1.netOvertime}h sup -- restez vigilant` });
 
-if (!m1.hasData) alerts.push({ type: 'info', msg: '📊 Aucune donnée M1 — saisissez vos heures dans le Module 1' });
+if (!m1.hasData) alerts.push({ type: 'info', msg: ' Aucune donnee M1 -- saisissez vos heures dans le Module 1' });
 
 return {
-  label:        'Module 1 — Suivi hebdomadaire',
+  label:        'Module 1 -- Suivi hebdomadaire',
   year:          m1.year,
   baseHebdo:     m1.baseHebdo,
   totalHours:    m1.monthlyHours,
@@ -222,14 +222,14 @@ const alerts = [];
 
 ```
 if (m2.contingentPercent >= 100)
-  alerts.push({ type: 'danger',  msg: `🚨 Contingent annuel atteint (${m2.annualHours}h / ${m2.contingentMax}h)` });
+  alerts.push({ type: 'danger',  msg: ` Contingent annuel atteint (${m2.annualHours}h / ${m2.contingentMax}h)` });
 else if (m2.contingentPercent >= 80)
-  alerts.push({ type: 'warning', msg: `⚠️ ${m2.contingentPercent}% du contingent consommé` });
+  alerts.push({ type: 'warning', msg: ` ${m2.contingentPercent}% du contingent consomme` });
 
-if (!m2.hasData) alerts.push({ type: 'info', msg: '📊 Aucune donnée M2 — consultez le Module 2 Paie' });
+if (!m2.hasData) alerts.push({ type: 'info', msg: ' Aucune donnee M2 -- consultez le Module 2 Paie' });
 
 return {
-  label:              'Module 2 — Paie & contingent',
+  label:              'Module 2 -- Paie & contingent',
   year:                m2.year,
   totalHours:          m2.annualHours,
   contingentUsed:      m2.contingentUsed,
@@ -258,16 +258,16 @@ URL.revokeObjectURL(url);
 }
 }
 
-// Instance legacy (remplacée par ModuleReaderPro ci-dessous)
+// Instance legacy (remplacee par ModuleReaderPro ci-dessous)
 // const _legacyReader = new ModuleReader();
 
-// ═══════════════════════════════════════════════════════════════
-//  EXTENSION MULTI-ANNÉES  (ajout — ne modifie pas ce qui précède)
-// ═══════════════════════════════════════════════════════════════
+// ===============================================================
+//  EXTENSION MULTI-ANNEES  (ajout – ne modifie pas ce qui precede)
+// ===============================================================
 
 class ModuleReaderPro extends ModuleReader {
 
-// ── Détection automatique de toutes les années stockées ────────
+// – Detection automatique de toutes les annees stockees ––––
 detectAllYears() {
 const years = new Set();
 for (let i = 0; i < localStorage.length; i++) {
@@ -282,7 +282,7 @@ if (m2Match) years.add(m2Match[1]);
 return […years].sort();
 }
 
-// ── Chargement M1 pour une année donnée ────────────────────────
+// – Chargement M1 pour une annee donnee ————————
 loadModule1ForYear(year) {
 try {
 const rawData    = JSON.parse(localStorage.getItem(`DATA_REPORT_${year}`)    || ‘{}’);
@@ -292,9 +292,9 @@ const baseHebdo  = Number(localStorage.getItem(`BASE_HEBDO_${year}`))   || 35;
 ```
   let totalExtra = 0, totalRecup = 0, totalAbsent = 0;
   const monthlyBreakdown = {};
-  const weeklyData = {}; // clé = "YYYY-Www"
+  const weeklyData = {}; // cle = "YYYY-Www"
 
-  // ── 1re passe : regrouper par semaine ISO ────────────────────
+  // -- 1re passe : regrouper par semaine ISO --------------------
   Object.entries(rawData).forEach(([dateKey, val]) => {
     if (typeof val !== 'object' || !/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return;
     const extra  = Number(val.extra  || 0);
@@ -312,16 +312,16 @@ const baseHebdo  = Number(localStorage.getItem(`BASE_HEBDO_${year}`))   || 35;
     weeklyData[weekKey].absent += absent;
   });
 
-  // ── 2e passe : calculer les HS RÉELLES semaine par semaine ───
-  // Règle M1 : HS = max(0, 35 + extra - recup - absent - 35)
+  // -- 2e passe : calculer les HS REELLES semaine par semaine ---
+  // Regle M1 : HS = max(0, 35 + extra - recup - absent - 35)
   //          = max(0, extra - recup - absent)
-  // Si absences/récup effacent les extras → semaine à 0 HS
+  // Si absences/recup effacent les extras  semaine a 0 HS
   let netOvertime = 0;
 
   Object.entries(weeklyData).forEach(([wk, w]) => {
-    // Heures travaillées effectives cette semaine
+    // Heures travaillees effectives cette semaine
     const effectiveHours = baseHebdo + w.extra - w.recup - w.absent;
-    // HS = dépassement au-dessus de 35h
+    // HS = depassement au-dessus de 35h
     const weekOvertime = Math.max(0, effectiveHours - baseHebdo);
     w.overtime    = weekOvertime;
     w.totalHours  = Math.max(0, effectiveHours);
@@ -347,7 +347,7 @@ const baseHebdo  = Number(localStorage.getItem(`BASE_HEBDO_${year}`))   || 35;
   return {
     year, baseHebdo, annualRate,
     totalExtra, totalRecup,
-    netOvertime,   // ← HS RÉELLES après déduction absences/récup par semaine
+    netOvertime,   //  HS REELLES apres deduction absences/recup par semaine
     totalAbsent, monthlyBreakdown, weeklyData,
     hasData: Object.keys(rawData).length > 0,
   };
@@ -359,7 +359,7 @@ const baseHebdo  = Number(localStorage.getItem(`BASE_HEBDO_${year}`))   || 35;
 
 }
 
-// ── Chargement M2 pour une année donnée ────────────────────────
+// – Chargement M2 pour une annee donnee ————————
 loadModule2ForYear(year) {
 try {
 const prefix   = ‘CA_HS_TRACKER_V1’;
@@ -391,7 +391,7 @@ const monthlyBreakdown = {};
 
 }
 
-// ── Historique complet toutes années ───────────────────────────
+// – Historique complet toutes annees —————————
 getFullHistory() {
 const years = this.detectAllYears();
 const history = {};
@@ -404,7 +404,7 @@ m2: this.loadModule2ForYear(y),
 return { years, history };
 }
 
-// ── Analyse tendance sur N semaines glissantes ─────────────────
+// – Analyse tendance sur N semaines glissantes —————–
 getRollingAnalysis(weeksBack = 12) {
 const allYears  = this.detectAllYears();
 const allWeeks  = [];
@@ -431,7 +431,7 @@ const violations = {
   over35    : last.filter(w => w.totalHours > 35).length,
 };
 
-// Tendance : compare première moitié vs deuxième moitié
+// Tendance : compare premiere moitie vs deuxieme moitie
 const half   = Math.floor(last.length / 2);
 const avgOld = half > 0 ? last.slice(0, half).reduce((s, w) => s + w.totalHours, 0) / half : avgTotal;
 const avgNew = half > 0 ? last.slice(half).reduce(  (s, w) => s + w.totalHours, 0) / (last.length - half) : avgTotal;
@@ -449,32 +449,32 @@ violations: { over48: 0, over44avg: false, over35: 0 },
 trend: ‘stable’, weeksAnalyzed: 0, weeks: [] };
 }
 
-// ── Score Burn-Out (0-100) ─────────────────────────────────────
+// – Score Burn-Out (0-100) ———————————––
 getBurnoutScore() {
 const rolling  = this.getRollingAnalysis(12);
 const history  = this.getFullHistory();
 let score = 0;
 
 ```
-// Moyenne hebdo > 35 → +2 pts/h au-dessus
+// Moyenne hebdo > 35  +2 pts/h au-dessus
 const overshoot = Math.max(0, rolling.avgTotal - 35);
 score += Math.min(30, overshoot * 2);
 
-// Semaines à 48h (violations absolues) → +8 pts chacune (cap 24)
+// Semaines a 48h (violations absolues)  +8 pts chacune (cap 24)
 score += Math.min(24, rolling.violations.over48 * 8);
 
-// Tendance à la hausse → +10
+// Tendance a la hausse  +10
 if (rolling.trend === 'hausse') score += 10;
 
-// Moyenne > 44h sur la période → +15
+// Moyenne > 44h sur la periode  +15
 if (rolling.violations.over44avg) score += 15;
 
-// Présence sur plusieurs années de dépassements → +5
+// Presence sur plusieurs annees de depassements  +5
 const yearsWithOvertime = Object.values(history.history)
   .filter(y => y.m1.netOvertime > 50).length;
 score += Math.min(10, yearsWithOvertime * 5);
 
-// Absences élevées (signe de fatigue) → +6
+// Absences elevees (signe de fatigue)  +6
 const totalAbsent = Object.values(history.history)
   .reduce((s, y) => s + (y.m1.totalAbsent || 0), 0);
 if (totalAbsent > 20) score += 6;
@@ -491,7 +491,7 @@ return {
 
 }
 
-// ── Utilitaire : numéro de semaine ISO ─────────────────────────
+// – Utilitaire : numero de semaine ISO ———————––
 _getISOWeek(dateStr) {
 const d    = new Date(dateStr);
 const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -502,19 +502,19 @@ const week = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
 return `${date.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  CUMUL MULTI-ANNÉES — FUSION INTELLIGENTE PÉRIODE PAR PÉRIODE
-//  Pour chaque mois de chaque année, on choisit la meilleure
-//  source disponible → préserve le cumul même si on change de
-//  module en cours d’année ou entre les années.
+// ===============================================================
+//  CUMUL MULTI-ANNEES – FUSION INTELLIGENTE PERIODE PAR PERIODE
+//  Pour chaque mois de chaque annee, on choisit la meilleure
+//  source disponible  preserve le cumul meme si on change de
+//  module en cours d’annee ou entre les annees.
 //
-//  Règle anti-doublon par mois :
-//  - M1 seul présent    → on prend M1
-//  - M2 seul présent    → on prend M2
-//  - Les deux présents  → on prend celui du choix manuel,
-//                         sinon celui avec le plus d’entrées
-//  - Aucun              → mois ignoré
-// ═══════════════════════════════════════════════════════════════
+//  Regle anti-doublon par mois :
+//  - M1 seul present     on prend M1
+//  - M2 seul present     on prend M2
+//  - Les deux presents   on prend celui du choix manuel,
+//                         sinon celui avec le plus d’entrees
+//  - Aucun               mois ignore
+// ===============================================================
 
 getCumulatedHours() {
 const years   = this.detectAllYears();
@@ -529,16 +529,16 @@ let totalPlus50 = 0;
 let weekCount   = 0;
 let monthCount  = 0;
 const perYear   = {};
-// Source globale = 'fusion' ou la source forcée
+// Source globale = 'fusion' ou la source forcee
 const globalSource = manual || 'fusion';
 
 years.forEach(y => {
   const m1 = this.loadModule1ForYear(y);
   const m2 = this.loadModule2ForYear(y);
 
-  // Extraire les données M1 brutes par mois
+  // Extraire les donnees M1 brutes par mois
   const m1Raw = this._safeJSON('DATA_REPORT_' + y, {});
-  // Extraire les données M2 brutes par mois
+  // Extraire les donnees M2 brutes par mois
   const m2Raw = this._safeJSON('CA_HS_TRACKER_V1_DATA_' + y, {});
 
   // Construire un index des mois couverts par chaque module
@@ -555,9 +555,9 @@ years.forEach(y => {
     m1Months[m].days   += 1;
   });
 
-  // M2 : chaque entrée est déjà mensuelle
+  // M2 : chaque entree est deja mensuelle
   Object.entries(m2Raw).forEach(([monthKey, data]) => {
-    // monthKey peut être 'YYYY-MM' ou un index numérique
+    // monthKey peut etre 'YYYY-MM' ou un index numerique
     const m = monthKey.length === 7 ? monthKey : `${y}-${String(Object.keys(m2Raw).indexOf(monthKey)+1).padStart(2,'0')}`;
     if (!m2Months[m]) m2Months[m] = { plus25: 0, plus50: 0 };
     m2Months[m].plus25 += parseFloat(data.hs25 || data.heures25 || data.totalPlus25 || 0);
@@ -575,11 +575,11 @@ years.forEach(y => {
 
     let src;
     if (manual) {
-      // Choix forcé : si le module forcé n'a pas de données ce mois, on prend l'autre
+      // Choix force : si le module force n'a pas de donnees ce mois, on prend l'autre
       if (manual === 'M1') src = hasM1 ? 'M1' : (hasM2 ? 'M2' : null);
       else                 src = hasM2 ? 'M2' : (hasM1 ? 'M1' : null);
     } else {
-      // Auto : si un seul présent → on le prend, si les deux → M1 (plus granulaire)
+      // Auto : si un seul present  on le prend, si les deux  M1 (plus granulaire)
       if (hasM1 && hasM2)  src = 'M1';
       else if (hasM1)      src = 'M1';
       else if (hasM2)      src = 'M2';
@@ -605,7 +605,7 @@ years.forEach(y => {
     }
   });
 
-  // Récupération M1 si pas prise en compte via les mois
+  // Recuperation M1 si pas prise en compte via les mois
   if (!Object.keys(m1Months).length && m1.totalRecup) yearRecup += m1.totalRecup;
   weekCount += Object.keys(m1.weeklyData || {}).length;
 
@@ -650,34 +650,34 @@ return {
 
 }
 
-// Utilitaire JSON sécurisé
+// Utilitaire JSON securise
 _safeJSON(key, def) {
 try { return JSON.parse(localStorage.getItem(key) || ‘null’) || def; }
 catch(e) { return def; }
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  SÉLECTION ANTI-TRICHE
-//  Compare la densité de données M1 vs M2 sur TOUTES les années.
-//  Retourne ‘M1’ ou ‘M2’ — celui qui a le plus d’entrées.
-//  Si les deux sont vides → ‘M1’ par défaut (plus granulaire).
-//  Si les deux ont des données → celui avec le plus d’entrées.
-//  Impossible d’utiliser les deux à la fois.
-// ═══════════════════════════════════════════════════════════════
+// ===============================================================
+//  SELECTION ANTI-TRICHE
+//  Compare la densite de donnees M1 vs M2 sur TOUTES les annees.
+//  Retourne ‘M1’ ou ‘M2’ – celui qui a le plus d’entrees.
+//  Si les deux sont vides  ‘M1’ par defaut (plus granulaire).
+//  Si les deux ont des donnees  celui avec le plus d’entrees.
+//  Impossible d’utiliser les deux a la fois.
+// ===============================================================
 
 selectPrimaryModule() {
-// ── Choix manuel (prioritaire sur l’auto) ─────────────────────
+// – Choix manuel (prioritaire sur l’auto) ———————
 const manual = localStorage.getItem(‘FOX_SOURCE_OVERRIDE’);
 if (manual === ‘M1’ || manual === ‘M2’) {
 if (!this._primaryLogged) {
-console.log(`🦊 Source forcée manuellement : ${manual}`);
+console.log(` Source forcee manuellement : ${manual}`);
 this._primaryLogged = true;
 }
 return manual;
 }
 
 ```
-// ── Sélection automatique par densité de données ──────────────
+// -- Selection automatique par densite de donnees --------------
 const years = this.detectAllYears();
 let m1Entries = 0;
 let m2Entries = 0;
@@ -696,7 +696,7 @@ years.forEach(y => {
 const winner = m2Entries > m1Entries ? 'M2' : 'M1';
 
 if (!this._primaryLogged) {
-  console.log(`🦊 Anti-triche auto — M1: ${m1Entries} · M2: ${m2Entries} (×20) → source: ${winner}`);
+  console.log(` Anti-triche auto -- M1: ${m1Entries}  M2: ${m2Entries} (20)  source: ${winner}`);
   this._primaryLogged = true;
 }
 
@@ -705,14 +705,14 @@ return winner;
 
 }
 
-// ── Forcer manuellement la source ─────────────────────────────
+// – Forcer manuellement la source —————————–
 setSourceOverride(source) {
 if (source === ‘auto’) {
 localStorage.removeItem(‘FOX_SOURCE_OVERRIDE’);
-console.log(‘🦊 Source repassée en automatique’);
+console.log(’ Source repassee en automatique’);
 } else if (source === ‘M1’ || source === ‘M2’) {
 localStorage.setItem(‘FOX_SOURCE_OVERRIDE’, source);
-console.log(`🦊 Source forcée : ${source}`);
+console.log(` Source forcee : ${source}`);
 }
 this._primaryLogged = false;
 }
@@ -722,7 +722,7 @@ const manual = localStorage.getItem(‘FOX_SOURCE_OVERRIDE’);
 return manual ? ‘manuel’ : ‘auto’;
 }
 
-// ── Alias pratique : résumé cumulé pour le HUD / RPG ───────────
+// – Alias pratique : resume cumule pour le HUD / RPG ———–
 getCumulatedSummary() {
 const cum    = this.getCumulatedHours();
 const bo     = this.getBurnoutScore();
@@ -742,43 +742,43 @@ return {
   trend           : rolling.trend,
   avgWeekly       : rolling.avgTotal,
   perYear         : cum.perYear,
-  // XP bonus multi-années : +500 XP par année de données
+  // XP bonus multi-annees : +500 XP par annee de donnees
   xpBonus         : cum.years.length * 500,
 };
 ```
 
 }
 
-// ── Override getBurnoutScore pour utiliser le cumul ─────────────
-// (remplace la version de la classe parente qui ne regardait qu’une année)
+// – Override getBurnoutScore pour utiliser le cumul ———––
+// (remplace la version de la classe parente qui ne regardait qu’une annee)
 getBurnoutScore() {
 const cum    = this.getCumulatedHours();
 const rolling = this.getRollingAnalysis(12);
 let score = 0;
 
 ```
-// Dépassement moyen hebdo
+// Depassement moyen hebdo
 const overshoot = Math.max(0, rolling.avgTotal - 35);
 score += Math.min(30, overshoot * 2);
 
-// Semaines à 48h+
+// Semaines a 48h+
 score += Math.min(24, (rolling.violations.over48 || 0) * 8);
 
-// Tendance haussière
+// Tendance haussiere
 if (rolling.trend === 'hausse') score += 10;
 
 // Moyenne > 44h
 if (rolling.violations.over44avg) score += 15;
 
-// Années avec overtime > 50h NET (signal d'exposition chronique)
+// Annees avec overtime > 50h NET (signal d'exposition chronique)
 const yearsWithOvertime = Object.values(cum.perYear)
   .filter(y => (y.net || 0) > 50).length;
 score += Math.min(15, yearsWithOvertime * 5);
 
-// Absences élevées (fatigue accumulée sur toutes les années)
+// Absences elevees (fatigue accumulee sur toutes les annees)
 if (cum.totalAbsent > 20) score += 6;
 
-// Bonus si beaucoup d'années avec des données (longue exposition)
+// Bonus si beaucoup d'annees avec des donnees (longue exposition)
 if (cum.years.length >= 3) score += 5;
 if (cum.years.length >= 5) score += 5;
 
@@ -801,7 +801,7 @@ return {
 
 }
 
-// ── Export historique complet toutes années ────────────────────
+// – Export historique complet toutes annees ––––––––––
 exportFullHistory() {
 const data    = this.getFullHistory();
 const cumul   = this.getCumulatedHours();
@@ -810,7 +810,7 @@ const rolling = this.getRollingAnalysis();
 const summary = this.getCumulatedSummary();
 const payload = {
 exportDate   : new Date().toISOString(),
-antiCheat    : { primaryModule: cumul.source, reason: ‘module avec le plus d'entrées sélectionné automatiquement’ },
+antiCheat    : { primaryModule: cumul.source, reason: ‘module avec le plus d'entrees selectionne automatiquement’ },
 cumulatedHours: cumul,
 summary,
 burnoutScore : burnout,
@@ -825,16 +825,16 @@ a.click(); URL.revokeObjectURL(url);
 }
 }
 
-// ── Instance globale ──────────────────────────────────────────────
+// – Instance globale –––––––––––––––––––––––
 const moduleReader = new ModuleReaderPro();
 
-// Log de démarrage : années, source anti-triche, score burn-out cumulé
+// Log de demarrage : annees, source anti-triche, score burn-out cumule
 const _foxInitYears   = moduleReader.detectAllYears();
 const _foxInitPrimary = moduleReader.selectPrimaryModule();
 const _foxInitBurnout = moduleReader.getBurnoutScore();
 console.log(
-`✅ Module Reader PRO\n` +
-`   Années détectées : ${_foxInitYears.join(', ') || 'aucune'}\n` +
-`   Source anti-triche : ${_foxInitPrimary} (sélection automatique)\n` +
-`   Score Burn-Out cumulé : ${_foxInitBurnout.score}/100 (${_foxInitBurnout.level})`
+` Module Reader PRO\n` +
+`   Annees detectees : ${_foxInitYears.join(', ') || 'aucune'}\n` +
+`   Source anti-triche : ${_foxInitPrimary} (selection automatique)\n` +
+`   Score Burn-Out cumule : ${_foxInitBurnout.score}/100 (${_foxInitBurnout.level})`
 );
