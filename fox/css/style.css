@@ -1737,7 +1737,7 @@ position: absolute;
 bottom: 368px;
 left: 50%;
 transform: translateX(-50%);
-z-index: 10;
+z-index: 30;
 background: rgba(255,255,255,0.92);
 border-radius: 18px;
 padding: 10px 16px;
@@ -2047,4 +2047,21 @@ font-size: 1.8rem;
 .dock-label {
 font-size: 0.72rem;
 }
+}
+/* Emoji HUD stat */
+.hud-stat-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+  margin-bottom: 1px;
+}
+
+/* Mobile : cacher texte, garder emoji */
+@media (max-width: 600px) {
+  .hud-stat-lbl { display: none; }
+  .hud-stat-icon { display: block; font-size: 1rem; }
+}
+
+/* Paysage PC : recadrer le fond */
+@media (orientation: landscape) and (min-width: 600px) {
+  #bg-decor { object-position: center 30% !important; }
 }
