@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🦊 FOX Engine — Heures Sup' Ultimate</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="gaming-mode">
+
+<img id="bg-decor" src="../images/fox-bg.PNG" style="position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;object-position:center center;z-index:-999;pointer-events:none;">
+
+<div id="burnout-overlay"></div>
+<div id="vignette-overlay"></div>
+
+<div id="burnout-popup">
+  <span class="burnout-icon">🔥</span>
+  <div class="score-display" id="burnout-score-val">--</div>
+  <h2>Signal Burn-Out Détecté</h2>
+  <p id="burnout-popup-msg">Votre situation présente des signaux de risque élevés.</p>
+  <button class="btn-close-burnout" onclick="closeBurnoutPopup()">Voir mes droits →</button>
+</div>
+
+<!-- HUD -->
+<div id="gaming-hud">
+  <div class="hud-logo" id="hud-logo-btn" onclick="demoLogoClick()" style="cursor:pointer;user-select:none;">🦊 FOX</div>
+  <div class="hud-xp-section">
+    <div class="hud-xp-label">
+      <span>NIV <span id="hud-level">1</span> — <span id="hud-league">Bronze</span></span>
+      <span><span id="hud-xp">0</span> / <span id="hud-xp-max">1000</span> XP</span>
+    </div>
+    <div class="hud-xp-bar"><div class="hud-xp-fill" id="hud-xp-fill" style="width:0%"></div></div>
+  </div>
+  <div class="hud-stats">
+    <div class="hud-stat"><div class="hud-stat-icon">⏱️</div><div class="hud-stat-val" id="hud-hours">0</div><div class="hud-stat-lbl">H.Sup</div></div>
+    <div class="hud-stat"><div class="hud-stat-icon">❤️</div><div class="hud-stat-val" id="hud-energy">100</div><div class="hud-stat-lbl">Énergie</div></div>
+    <div class="hud-stat"><div class="hud-stat-icon">🔥</div><div class="hud-stat-val" id="hud-burnout">0</div><div class="hud-stat-lbl">Risque</div></div>
+    <div class="hud-stat"><div class="hud-stat-icon">🏅</div><div class="hud-stat-val" id="hud-badges">0</div><div class="hud-stat-lbl">Badges</div></div>
+  </div>
+  <div id="hud-buttons">
+    <button class="hud-menu-btn" onclick="openPopup('popup-fox')">🦊 Kitsune</button>
+    <button class="hud-menu-btn" onclick="openPopup('popup-settings')">⚙️</button>
+    <a href="../menu.html" class="hud-menu-btn" style="text-decoration:none;">← Menu</a>
+  </div>
+</div>
+
+<!-- ZONE PRINCIPALE -->
+<div id="gaming-main">
+
+  <!-- Bulle de dialogue Kitsune -->
+  <div id="kitsune-bubble" onclick="openPopup('popup-fox')">
+    <div id="kitsune-bubble-text">Bonjour ! Tape ici pour me parler 🦊</div>
+    <div class="bubble-tail"></div>
+  </div>
+
+  <!-- Renard central -->
+  <div id="kitsune-center" onclick="openPopup('popup-fox')">
+    <img id="kitsune-svg" src="../images/foxplayer.PNG" alt="Kitsune">
+    <div id="kitsune-tap-hint">Appuie sur moi !</div>
+  </div>
+
+  <!-- Barre de risque centrale -->
+  <div id="risk-bar-center">
+    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:#fff;margin-bottom:4px;letter-spacing:1px;text-shadow:0 1px 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.8);font-weight:700;">
+      <span>RISQUE GLOBAL</span><span id="risk-label-main">--</span>
+    </div>
+    <div class="risk-bar-track"><div class="risk-bar-fill" id="risk-bar-main" style="width:0%"></div></div>
+  </div>
+
+  <!-- Dock de boutons en bas -->
+  <div id="action-dock">
+    <button class="dock-btn" onclick="openPopup('popup-analyse')">
+      <span class="dock-icon">⚖️</span>
+      <span class="dock-label">Analyse</span>
+      <span class="dock-badge live-badge">LIVE</span>
+    </button>
+    <button class="dock-btn" onclick="openPopup('popup-modules')">
+      <span class="dock-icon">📊</span>
+      <span class="dock-label">Données</span>
+    </button>
+    <button class="dock-btn" onclick="openPopup('popup-burnout')">
+      <span class="dock-icon">🔥</span>
+      <span class="dock-label">Burn-Out</span>
+    </button>
+    <button class="dock-btn" onclick="openPopup('popup-quetes')">
+      <span class="dock-icon">⚔️</span>
+      <span class="dock-label">Quêtes</span>
+    </button>
+
+    <button class="dock-btn" onclick="openPopup('popup-export')">
+      <span class="dock-icon">📄</span>
+      <span class="dock-label">Export</span>
+    </button>
+  </div>
+
+</div>
+
+<!-- POP-UP KITSUNE -->
+<div class="fox-popup-backdrop" id="popup-fox">
+  <div class="fox-popup">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">🦊 Kitsune — Guide Juridique</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-fox')">✕</button>
+    </div>
+    <div style="text-align:center;margin-bottom:12px;">
+      <img src="../images/foxplayer.PNG" alt="Kitsune" style="width:90px;height:90px;object-fit:contain;">
+    </div>
+    <div id="fox-text" style="background:rgba(255,140,66,0.08);border:1px solid rgba(255,140,66,0.2);border-radius:12px;padding:14px;color:#ccc;line-height:1.6;font-size:0.9rem;margin-bottom:14px;">
+      🦊 Kitsune veille sur toi. Je te parlerai automatiquement quand de nouvelles heures sup seront détectées.
+    </div>
+    <div id="kitsune-scenario-box" style="display:none;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-top:10px;color:#bbb;font-size:0.85rem;line-height:1.6;">
+      <div id="kitsune-scenario-title" style="color:#FF8C42;font-weight:700;margin-bottom:8px;"></div>
+      <div id="kitsune-scenario-text"></div>
+      <div id="kitsune-scenario-actions" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- POP-UP ANALYSE -->
+<div class="fox-popup-backdrop" id="popup-analyse">
+  <div class="fox-popup">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">⚖️ Analyse Juridique</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-analyse')">✕</button>
+    </div>
+    <div style="font-size:0.75rem;color:#666;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Saisie semaine courante (heures/jour)</div>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:10px;">
+      <div style="text-align:center;font-size:0.65rem;color:#555;">Lun</div><div style="text-align:center;font-size:0.65rem;color:#555;">Mar</div><div style="text-align:center;font-size:0.65rem;color:#555;">Mer</div><div style="text-align:center;font-size:0.65rem;color:#555;">Jeu</div><div style="text-align:center;font-size:0.65rem;color:#555;">Ven</div><div style="text-align:center;font-size:0.65rem;color:#555;">Sam</div><div style="text-align:center;font-size:0.65rem;color:#555;">Dim</div>
+      <input class="day-input" type="number" min="0" max="24" value="7" id="day0">
+      <input class="day-input" type="number" min="0" max="24" value="7" id="day1">
+      <input class="day-input" type="number" min="0" max="24" value="7" id="day2">
+      <input class="day-input" type="number" min="0" max="24" value="7" id="day3">
+      <input class="day-input" type="number" min="0" max="24" value="7" id="day4">
+      <input class="day-input" type="number" min="0" max="24" value="0" id="day5">
+      <input class="day-input" type="number" min="0" max="24" value="0" id="day6">
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+      <label style="display:flex;align-items:center;gap:5px;font-size:0.82rem;color:#aaa;cursor:pointer;"><input type="checkbox" id="chk-night"> Nuit</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:0.82rem;color:#aaa;cursor:pointer;"><input type="checkbox" id="chk-sunday"> Dimanche</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:0.82rem;color:#aaa;cursor:pointer;"><input type="checkbox" id="chk-saturday"> Samedi</label>
+      <label style="display:flex;align-items:center;gap:5px;font-size:0.82rem;color:#aaa;cursor:pointer;"><input type="checkbox" id="chk-holiday"> Férié</label>
+    </div>
+    <button onclick="runAnalyse()" style="width:100%;background:linear-gradient(135deg,#FF8C42,#FF6B35);border:none;color:#fff;border-radius:12px;padding:13px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(255,140,66,0.3);">⚡ Analyser maintenant</button>
+    <div id="analyse-results" style="display:none;margin-top:16px;">
+      <div id="analyse-summary" style="background:rgba(255,140,66,0.08);border:1px solid rgba(255,140,66,0.2);border-radius:12px;padding:14px;color:#ccc;font-size:0.88rem;line-height:1.6;margin-bottom:10px;"></div>
+      <div id="analyse-violations" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"></div>
+      <div id="analyse-scenarios" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- POP-UP MODULES -->
+<div class="fox-popup-backdrop" id="popup-modules">
+  <div class="fox-popup">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">📊 Données M1 &amp; M2</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-modules')">✕</button>
+    </div>
+    <div id="modules-content" style="color:#ccc;font-size:0.9rem;"></div>
+  </div>
+</div>
+
+<!-- POP-UP BURN-OUT -->
+<div class="fox-popup-backdrop" id="popup-burnout">
+  <div class="fox-popup">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">🔥 Score Burn-Out</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-burnout')">✕</button>
+    </div>
+    <div id="burnout-popup-content" style="color:#ccc;"></div>
+  </div>
+</div>
+
+<!-- POP-UP QUETES -->
+<div class="fox-popup-backdrop" id="popup-quetes">
+  <div class="fox-popup">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">⚔️ Quêtes &amp; Combats</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-quetes')">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <button onclick="openPopup('popup-badges')" style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);color:#FFD700;border-radius:12px;padding:14px;cursor:pointer;font-size:0.88rem;font-weight:700;">🏅 Mes Badges</button>
+      <button onclick="openPopup('popup-skills')" style="background:rgba(100,200,255,0.08);border:1px solid rgba(100,200,255,0.2);color:#64C8FF;border-radius:12px;padding:14px;cursor:pointer;font-size:0.88rem;font-weight:700;">🌟 Compétences</button>
+    </div>
+    <div id="quests-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+</div>
+
+<!-- POP-UP SCENARIOS -->
+<div class="fox-popup-backdrop" id="popup-scenarios">
+  <div class="fox-popup" style="max-width:680px;">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">📚 Scénarios FOX (600)</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-scenarios')">✕</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+      <input id="scenario-search" type="text" placeholder="Rechercher…"
+        style="flex:1;min-width:160px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;padding:8px 12px;font-size:0.85rem;"
+        oninput="filterScenarios()">
+      <select id="scenario-risk" onchange="filterScenarios()"
+        style="background:rgba(20,20,40,0.95);border:1px solid rgba(255,255,255,0.15);color:#fff;border-radius:8px;padding:8px 10px;font-size:0.85rem;">
+        <option value="">Tous risques</option>
+        <option value="aucun">✅ Aucun</option>
+        <option value="faible">💛 Faible</option>
+        <option value="moyen">🧡 Moyen</option>
+        <option value="élevé">🔴 Élevé</option>
+        <option value="critique">🚨 Critique</option>
+      </select>
+    </div>
+    <div id="scenarios-list" style="max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;"></div>
+    <div id="scenarios-count" style="text-align:center;color:#555;font-size:0.75rem;margin-top:8px;"></div>
+  </div>
+</div>
+
+<!-- POP-UP EXPORT -->
+<div class="fox-popup-backdrop" id="popup-export">
+  <div class="fox-popup">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">📄 Exporter</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-export')">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button onclick="exportRTFFull()"    class="export-btn">📝 RTF complet</button>
+      <button onclick="exportJSONFull()"   class="export-btn">📦 JSON tout</button>
+      <button onclick="exportModule1()"    class="export-btn">📊 JSON M1</button>
+      <button onclick="exportModule2()"    class="export-btn">📊 JSON M2</button>
+      <button onclick="exportHistorique()" class="export-btn" style="grid-column:span 2;background:rgba(255,140,66,0.1);color:#FF8C42;">🕰️ Historique multi-années</button>
+    </div>
+  </div>
+</div>
+
+<!-- POP-UP BADGES -->
+<div class="fox-popup-backdrop" id="popup-badges">
+  <div class="fox-popup">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">🏅 Collection Badges</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-badges')">✕</button>
+    </div>
+    <div id="badges-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px;max-height:420px;overflow-y:auto;"></div>
+  </div>
+</div>
+
+<!-- POP-UP SETTINGS -->
+<div class="fox-popup-backdrop" id="popup-settings">
+  <div class="fox-popup">
+    <div class="fox-popup-header">
+      <h2 class="fox-popup-title">⚙️ Options</h2>
+      <button class="fox-popup-close" onclick="closePopup('popup-settings')">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;color:#ccc;font-size:0.9rem;">
+      <div>
+        <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Animations d'alerte</div>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+          <input type="checkbox" id="toggle-burnout-anim" checked onchange="toggleBurnoutAnimations(this.checked)">
+          Effets visuels burn-out actifs
+        </label>
+      </div>
+      <div>
+        <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Années dans localStorage</div>
+        <div id="detected-years" style="color:#FF8C42;font-size:0.88rem;">—</div>
+      </div>
+      <div>
+        <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Reset RPG</div>
+        <button onclick="resetRPGConfirm()" style="background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.25);color:#E53935;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:0.85rem;">🗑️ Réinitialiser progression RPG</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.day-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:6px;padding:7px 2px;text-align:center;font-size:0.9rem;-moz-appearance:textfield;}
+.day-input::-webkit-outer-spin-button,.day-input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.day-input:focus{outline:none;border-color:#FF8C42;}
+.export-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#ddd;border-radius:10px;padding:12px 8px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;}
+.export-btn:hover{background:rgba(255,140,66,0.1);border-color:rgba(255,140,66,0.3);color:#FF8C42;}
+.violation-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(229,57,53,0.12);border:1px solid rgba(229,57,53,0.25);border-radius:8px;padding:5px 10px;font-size:0.78rem;color:#ff8a80;}
+.scenario-card-mini{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:9px;padding:11px 13px;cursor:pointer;transition:all 0.2s;}
+.scenario-card-mini:hover{background:rgba(255,140,66,0.05);border-color:rgba(255,140,66,0.2);}
+.scenario-card-mini .sc-name{font-weight:700;color:#eee;font-size:0.87rem;}
+.scenario-card-mini .sc-legal{font-size:0.76rem;color:#777;margin-top:3px;}
+</style>
+
+<!-- Scripts (ordre inchangé) -->
+<script src="js/safety.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/config.js"></script>
+<script src="js/assets-config.js"></script>
+<script src="js/modes.js"></script>
+<script src="js/xp-system.js"></script>
+<script src="js/leagues.js"></script>
+<script src="js/badges.js"></script>
+<script src="js/milestones.js"></script>
+<script src="js/rpg-system.js"></script>
+<script src="js/module3.js"></script>
+<script src="js/quests.js"></script>
+<script src="js/combat.js"></script>
+<script src="js/skills.js"></script>
+<script src="js/inventory.js"></script>
+<script src="js/module-loader.js"></script>
+<script src="js/scenarios-fox-data.js"></script>
+<script src="js/scenarios-fox.js"></script>
+<script src="js/scenarios-ai.js"></script>
+<script src="js/legal-engine.js"></script>
+<script src="js/data-bridge.js"></script>
+<script src="js/module-reader.js?v=3"></script>
+<script src="js/snapshot-system.js"></script>
+<script src="js/export-rtf.js"></script>
+<script src="js/ai-integration.js"></script>
+<script src="js/main-rpg.js"></script>
+
+<script>
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   ORCHESTRATEUR GAMING UI
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+
+
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  KITSUNE : narration automatique lors de nouvelles HS
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+const _kitsuneMessages = [
+  { min: 0.5, max: 2,  msg: "\uD83E\uDD8A +{h}h sup d\u00E9tect\u00E9es. Une petite heure de plus... rappelle-toi : apr\u00E8s 35h, chaque heure doit \u00EAtre compens\u00E9e ou major\u00E9e (art. L3121-28 CT)." },
+  { min: 2,   max: 5,  msg: "\uD83E\uDD8A {h}h sup suppl\u00E9mentaires. Tu cumules. Pense \u00E0 v\u00E9rifier si ces heures figurent bien sur ton bulletin de paie." },
+  { min: 5,   max: 10, msg: "\uD83E\uDD8A {h}h sup cette semaine ! Au-del\u00E0 de 43h, le taux de majoration passe \u00E0 50% (selon ta convention collective)." },
+  { min: 10,  max: 20, msg: "\uD83E\uDD8A {h}h sup d\u00E9tect\u00E9es ! C'est significatif. V\u00E9rifie ton contingent annuel \u2014 il est g\u00E9n\u00E9ralement fix\u00E9 \u00E0 220h (art. D3121-24 CT)." },
+  { min: 20,  max: 999, msg: "\uD83E\uDD8A {h}h sup d'un coup ! C'est beaucoup. Pense \u00E0 demander une r\u00E9cup\u00E9ration ou un repos compensateur obligatoire (art. L3121-33 CT)." },
+];
+
+const _kitsuneScenarioTips = [
+  { condition: h => h >= 8,   title: "Limite journali\u00E8re", text: "La dur\u00E9e maximale journali\u00E8re est 10h (12h exceptionnellement). Au-del\u00E0, c'est une infraction (art. L3121-18 CT).", actions: ["Demander le registre des heures", "Contacter l'inspection du travail"] },
+  { condition: h => h >= 48,  title: "Limite hebdomadaire", text: "48h est le maximum absolu sur une semaine (60h en d\u00E9rogation exceptionnelle). Au-del\u00E0, ton employeur risque une amende.", actions: ["R\u00E9clamation \u00E9crite \u00E0 l'employeur", "Saisir les Prud'hommes"] },
+  { condition: () => true,    title: "Bon \u00E0 savoir", text: "Les heures suppl\u00E9mentaires doivent \u00EAtre pay\u00E9es dans le mois suivant leur r\u00E9alisation, sauf accord de r\u00E9cup\u00E9ration \u00E9crit sign\u00E9.", actions: ["V\u00E9rifier ton bulletin de paie", "Consulter ta convention collective"] },
+];
+
+function kitsuneNarrateOvertime(deltaH, source) {
+  try {
+    const h = Math.round(deltaH * 10) / 10;
+    // Choisir le message adapt\u00E9 au volume
+    const msg = _kitsuneMessages.find(m => h >= m.min && h < m.max);
+    const text = msg ? msg.msg.replace('{h}', h) : '\uD83E\uDD8A Nouvelles heures sup d\u00E9tect\u00E9es : ' + h + 'h.';
+
+    // Mettre \u00E0 jour la bulle principale
+    const bubbleEl = document.getElementById('kitsune-bubble-text');
+    if (bubbleEl) bubbleEl.textContent = text;
+
+    // Afficher un sc\u00E9nario conseils dans le popup Kitsune
+    const tip = _kitsuneScenarioTips.find(t => t.condition(h));
+    if (tip) {
+      const box = document.getElementById('kitsune-scenario-box');
+      const title = document.getElementById('kitsune-scenario-title');
+      const body  = document.getElementById('kitsune-scenario-text');
+      const acts  = document.getElementById('kitsune-scenario-actions');
+      if (box && title && body) {
+        title.textContent = '\uD83D\uDCCB ' + tip.title;
+        body.textContent  = tip.text;
+        if (acts && tip.actions) {
+          acts.innerHTML = tip.actions.map(a =>
+            '<span style="background:rgba(255,140,66,0.12);border:1px solid rgba(255,140,66,0.25);border-radius:8px;padding:4px 10px;font-size:0.75rem;color:#FF8C42;">' + a + '</span>'
+          ).join('');
+        }
+        box.style.display = 'block';
+        // Mettre \u00E0 jour aussi fox-text
+        const foxText = document.getElementById('fox-text');
+        if (foxText) foxText.innerHTML = '<strong style="color:#FF8C42;">\uD83E\uDD8A ' + h + 'h sup viennent d\'\u00EAtre d\u00E9tect\u00E9es !</strong><br><br>' + tip.text;
+      }
+    }
+  } catch(e) { console.warn('kitsuneNarrateOvertime:', e); }
+}
+
+// \u2500\u2500 Pop-ups \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function openPopup(id) {
+  const bd = document.getElementById(id); if (!bd) return;
+  bd.classList.add('open');
+  requestAnimationFrame(() => {
+    const p = bd.querySelector('.fox-popup'); if (p) p.classList.add('popin');
+  });
+  if (id==='popup-modules')  { syncModulesAndAwardXP('popup'); setTimeout(refreshModulesPopup, 150); }
+  else if (id==='popup-analyse') { syncModulesAndAwardXP('popup'); }
+  if (id==='popup-burnout')  refreshBurnoutPopup();
+  if (id==='popup-quetes')   refreshQuestesPopup();
+  if (id==='popup-scenarios') initScenariosPopup();
+  if (id==='popup-badges')   refreshBadgesPopup();
+  if (id==='popup-settings') refreshSettings();
+}
+function closePopup(id) {
+  const bd = document.getElementById(id); if (!bd) return;
+  const p = bd.querySelector('.fox-popup'); if (p) p.classList.remove('popin');
+  setTimeout(() => bd.classList.remove('open'), 350);
+}
+document.querySelectorAll('.fox-popup-backdrop').forEach(bd => {
+  bd.addEventListener('click', e => { if (e.target===bd) closePopup(bd.id); });
+});
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') {
+    document.querySelectorAll('.fox-popup-backdrop.open').forEach(bd => closePopup(bd.id));
+    document.getElementById('burnout-popup').classList.remove('visible');
+  }
+});
+
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  SYNC M1/M2 \u2192 M3 avec attribution XP automatique
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+// M\u00E9moriser les derniers totaux connus pour calculer le delta XP
+// Cumuls persist\u00E9s en localStorage pour \u00E9viter re-attribution XP au rechargement
+function _loadLastCumul() {
+  try {
+    const s = localStorage.getItem('FOX_LAST_CUMUL');
+    return s ? JSON.parse(s) : { m1: -1, m2: -1 };
+  } catch(e) { return { m1: -1, m2: -1 }; }
+}
+function _saveLastCumul(m1, m2) {
+  try { localStorage.setItem('FOX_LAST_CUMUL', JSON.stringify({ m1, m2 })); } catch(e) {}
+}
+const _initCumul = _loadLastCumul();
+let _lastM1Net = _initCumul.m1;  // M1 : netOvertime cumul\u00E9 toutes ann\u00E9es
+let _lastM2Tot = _initCumul.m2;  // M2 : annualHours cumul\u00E9 toutes ann\u00E9es
+let _lastYear   = '';  // Ann\u00E9e active pour d\u00E9tecter changement
+
+function syncModulesAndAwardXP(source) {
+  try {
+    // D\u00E9tecter changement d'ann\u00E9e
+    const currentYear = localStorage.getItem('ACTIVE_YEAR_SUFFIX') || String(new Date().getFullYear());
+    if (currentYear !== _lastYear && _lastYear !== '') {
+      console.log('\uD83E\uDD8A M3 : changement d\'ann\u00E9e d\u00E9tect\u00E9 \u2192 ' + currentYear);
+      showNotification('\uD83D\uDCC5 Ann\u00E9e ' + currentYear + ' charg\u00E9e dans FOX', 'info');
+    }
+    _lastYear = currentYear;
+
+    // Recharger les donn\u00E9es M1/M2
+    moduleReader.syncWithGameState();
+
+    // Calculer les cumuls toutes ann\u00E9es
+    const history  = moduleReader.getFullHistory();
+    const years    = history.years || [];
+
+    let cumM1Net = 0;  // M1 : heures sup nettes cumul\u00E9es
+    let cumM2Tot = 0;  // M2 : heures sup directes cumul\u00E9es
+
+    years.forEach(y => {
+      const d = history.history[y];
+      if (d.m1 && d.m1.hasData) {
+        // M1 : utilise netOvertime calcule semaine par semaine (absences deduites)
+        cumM1Net += Math.max(0, d.m1.netOvertime || 0);
+      }
+      if (d.m2 && d.m2.hasData) {
+        // M2 : 1h sup = 1h directement
+        cumM2Tot += Math.max(0, d.m2.totalAnnual || d.m2.annualHours || 0);
+      }
+    });
+
+    // Source primaire s\u00E9lectionn\u00E9e automatiquement
+    const primary = moduleReader.selectPrimaryModule ? moduleReader.selectPrimaryModule() : 'M1';
+    const newTotal = primary === 'M2' ? cumM2Tot : (cumM1Net + cumM2Tot > 0 ? Math.max(cumM1Net, cumM2Tot) : 0);
+
+    // === Attribution XP si nouvelles heures d\u00E9tect\u00E9es ===
+    const oldM1 = _lastM1Net;
+    const oldM2 = _lastM2Tot;
+
+    // Calcul delta : premier sync (-1) = on accorde XP sur tout le cumul existant
+    const isFirstSync = (_lastM1Net < 0 && _lastM2Tot < 0);
+    const deltaM1 = isFirstSync
+      ? cumM1Net
+      : Math.max(0, cumM1Net - Math.max(0, _lastM1Net));
+    const deltaM2 = isFirstSync
+      ? cumM2Tot
+      : Math.max(0, cumM2Tot - Math.max(0, _lastM2Tot));
+
+    const totalDelta = primary === 'M2'
+      ? deltaM2
+      : (deltaM1 > 0 ? deltaM1 : deltaM2);
+
+    if (totalDelta > 0.09 && typeof xpSystem !== 'undefined') {
+      // addXP prend des HEURES (xpPerHour=100), pas des points XP
+      const result = xpSystem.addXP(totalDelta); // totalDelta en heures
+      const xpGain = result ? result.xpGained : Math.round(totalDelta * 100);
+
+      // Sync gameState
+      if (typeof gameState !== 'undefined') {
+        if (gameState.player) {
+          gameState.player.xp    = xpSystem.currentXP;
+          gameState.player.level = xpSystem.level;
+        }
+        if (gameState.hours) gameState.hours.total = (gameState.hours.total || 0) + totalDelta;
+        if (typeof saveGameState === 'function') saveGameState();
+      }
+
+      if (!isFirstSync) {
+        showNotification('\u26A1 +' + xpGain + ' XP \u2014 ' + totalDelta.toFixed(1) + 'h sup d\u00E9tect\u00E9es (' + primary + ')', 'success');
+        kitsuneNarrateOvertime(totalDelta, primary);
+      } else {
+        console.log('FOX init : ' + totalDelta.toFixed(1) + 'h cumul\u00E9es \u2192 +' + xpGain + ' XP (source: ' + primary + ')');
+      }
+    }
+
+    _lastM1Net = cumM1Net;
+    _lastM2Tot = cumM2Tot;
+    _saveLastCumul(cumM1Net, cumM2Tot);
+
+    // Rafra\u00EEchir tout l'affichage
+    refreshHUD();
+    if (typeof updateAllDisplays === 'function') {
+      try { updateAllDisplays(); } catch(e) {}
+    }
+
+  } catch(e) {
+    console.warn('syncModulesAndAwardXP:', e);
+    try { refreshHUD(); } catch(ex) {}
+  }
+}
+
+// \u2500\u2500 Polling auto toutes les 20 secondes \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+let _syncInterval = null;
+function startSyncPolling() {
+  if (_syncInterval) clearInterval(_syncInterval);
+  _syncInterval = setInterval(() => syncModulesAndAwardXP('poll'), 20000);
+}
+
+// \u2500\u2500 \u00C9couter les changements localStorage (depuis M1/M2) \u2500\u2500\u2500\u2500\u2500\u2500\u2500
+window.addEventListener('storage', (e) => {
+  // R\u00E9agir si M1, M2 ou l'ann\u00E9e active changent
+  if (e.key && (
+    e.key.startsWith('DATA_REPORT_') ||
+    e.key.startsWith('CA_HS_TRACKER_V1_DATA_') ||
+    e.key === 'ACTIVE_YEAR_SUFFIX'
+  )) {
+    setTimeout(() => syncModulesAndAwardXP('storage-event'), 300);
+  }
+});
+
+// \u2500\u2500 Init \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => syncModulesAndAwardXP('init'), 800);
+  startSyncPolling();
+  setTimeout(checkBurnoutAlert, 1500);
+  // Bonus XP multi-ann\u00E9es : attribu\u00E9 une seule fois par session
+  setTimeout(() => {
+    try {
+      const cum = moduleReader.getCumulatedSummary ? moduleReader.getCumulatedSummary() : null;
+      if (cum && cum.xpBonus > 0 && typeof gainXP === 'function') {
+        const key = 'fox_multiyear_xp_applied';
+        const already = sessionStorage.getItem(key);
+        if (!already) {
+          gainXP(cum.xpBonus, `${cum.years.length} ann\u00E9es de donn\u00E9es d\u00E9tect\u00E9es`);
+          sessionStorage.setItem(key, '1');
+          console.log(`\uD83C\uDFC6 Bonus XP multi-ann\u00E9es : +${cum.xpBonus} XP pour ${cum.years.length} an(s)`);
+        }
+      }
+    } catch(e) {}
+  }, 2000);
+});
+
+// \u2500\u2500 HUD \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function setFoxSource(source) {
+  if (!moduleReader.setSourceOverride) return;
+  moduleReader.setSourceOverride(source);
+  setTimeout(() => { refreshModulesPopup(); refreshHUD(); }, 100);
+  // Exposer BADGES globalement depuis badgeSystem
+  if (typeof badgeSystem !== 'undefined' && badgeSystem.badges) {
+    window.BADGES = badgeSystem.badges;
+  } else if (typeof rpgSystem !== 'undefined' && rpgSystem.badges) {
+    window.BADGES = rpgSystem.badges;
+  }
+}
+
+function refreshHUD() {
+  try {
+    if (typeof xpSystem !== 'undefined') {
+      const lvl = xpSystem.level || 1;
+      const xp  = xpSystem.currentXP || 0;
+      const progress = xpSystem.getCurrentLevelProgress ? xpSystem.getCurrentLevelProgress() : {current:xp,needed:1000,percentage:0};
+      document.getElementById('hud-level').textContent  = lvl;
+      document.getElementById('hud-xp').textContent     = progress.current || xp;
+      document.getElementById('hud-xp-max').textContent = progress.needed  || 1000;
+      document.getElementById('hud-xp-fill').style.width = Math.min(100, progress.percentage || 0)+'%';
+      if (typeof leagueSystem !== 'undefined' && leagueSystem.getCurrentLeague) {
+        const _xpForLeague = xpSystem ? xpSystem.currentXP : 0;
+        const leagueData = leagueSystem.leagues ? leagueSystem.leagues.find(l => l.name === leagueSystem.getCurrentLeague(_xpForLeague)?.name) : null;
+        const lgEl = document.getElementById('hud-league');
+        if (lgEl) {
+          if (leagueData && leagueData.img) {
+            lgEl.innerHTML = '<img src="' + leagueData.img + '" alt="' + (leagueData.name||'') + '" style="height:18px;vertical-align:middle;margin-right:3px;" onerror="this.style.display=\'none\'"> ' + (leagueData.name||'Bronze');
+          } else {
+            lgEl.textContent = leagueSystem.getCurrentLeague(lvl)?.name || 'Bronze';
+          }
+        }
+      }
+      document.getElementById('hud-badges').textContent = gameState.badges?.length||0;
+    }
+    const bo      = moduleReader.getBurnoutScore ? moduleReader.getBurnoutScore() : {score:0,level:'sain'};
+    const rolling = moduleReader.getRollingAnalysis ? moduleReader.getRollingAnalysis(12) : {avgTotal:35,violations:{over48:0,over35:0},trend:'stable',weeksAnalyzed:0};
+    const boEl = document.getElementById('hud-burnout');
+    boEl.textContent = bo.score;
+    if (bo.score>=60) boEl.classList.add('danger-val');
+    const enEl = document.getElementById('hud-energy');
+    const enVal = Math.max(0,100-bo.score);
+    enEl.textContent = enVal;
+    if (enVal<30) enEl.classList.add('danger-val');
+    // violations supprimees du HUD
+    // Cumul heures sup toutes annees (M1 + M2 fusionnes)
+    let cum = null;
+    try {
+      const cumData = moduleReader.getCumulatedHours ? moduleReader.getCumulatedHours() : null;
+      if (cumData) {
+        const hoursEl = document.getElementById('hud-hours');
+        if (hoursEl) hoursEl.textContent = Math.round(cumData.netOvertime || 0);
+        cum = { totalNetOvertime: cumData.netOvertime || 0 };
+      }
+    } catch(e) {}
+    if (!cum) cum = moduleReader.getCumulatedSummary ? moduleReader.getCumulatedSummary() : null;
+    // Bulle Kitsune dynamique
+    const bubbleEl = document.getElementById('kitsune-bubble-text');
+    if (bubbleEl) {
+      const net = cum ? (cum.totalNetOvertime||0).toFixed(0) : '?';
+      // D\u00E9tail du score burnout pour expliquer d'o\u00F9 vient la valeur
+      const rolling2 = moduleReader.getRollingAnalysis ? moduleReader.getRollingAnalysis(12) : null;
+      const avgH = rolling2 ? rolling2.avgTotal.toFixed(1) : '35';
+      const ov48 = rolling2 ? (rolling2.violations?.over48 || 0) : 0;
+      const trend2 = rolling2 ? rolling2.trend : 'stable';
+      const expl = bo.score > 0
+        ? `Moy ${avgH}h/sem${ov48>0?' \u00B7 '+ov48+'\u00D7 +48h':''}${trend2==='hausse'?' \u00B7 tendance \u2197':''}. `
+        : '';
+      const msgs = {
+        sain:      `\u2705 Tout va bien ! ${net}h sup cumul\u00E9es. ${expl}Tape-moi pour en savoir plus.`,
+        vigilance: `\uD83D\uDC9B Vigilance (score ${bo.score}/100) : ${net}h sup. ${expl}Semaines charg\u00E9es d\u00E9tect\u00E9es.`,
+        risque:    `\uD83D\uDFE0 Risque (score ${bo.score}/100) : ${net}h sup. ${expl}Consulte l'analyse.`,
+        danger:    `\uD83D\uDD34 Danger (score ${bo.score}/100) : ${net}h sup. ${expl}Ta charge est critique !`,
+        critique:  `\uD83D\uDEA8 CRITIQUE (score ${bo.score}/100) : ${net}h sup. ${expl}Agis maintenant !`,
+      };
+      bubbleEl.textContent = msgs[bo.level] || msgs.sain;
+    }
+    const rColor = bo.score<20?'#4CAF50':bo.score<40?'#FF8C42':bo.score<60?'#FF6B35':bo.score<80?'#E53935':'#B71C1C';
+    const rLabel = bo.score<20?'\uD83D\uDC9A Sain':bo.score<40?'\uD83D\uDC9B Vigilance':bo.score<60?'\uD83E\uDDE1 Risque':bo.score<80?'\uD83D\uDD34 Danger':'\uD83D\uDEA8 Critique';
+    document.getElementById('risk-label-main').textContent = rLabel;
+    document.getElementById('risk-bar-main').style.cssText =
+      `width:${bo.score}%;background:${rColor};box-shadow:0 0 8px ${rColor}88;`;
+  } catch(e) { console.warn('HUD:', e); }
+}
+
+// \u2500\u2500 Burn-out \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function checkBurnoutAlert() {
+  try {
+    const bo = moduleReader.getBurnoutScore ? moduleReader.getBurnoutScore() : {score:0};
+    if (!document.getElementById('toggle-burnout-anim')?.checked) return;
+    const vig = document.getElementById('vignette-overlay');
+    const ov  = document.getElementById('burnout-overlay');
+    if (bo.score>=80) {
+      ov.classList.add('active'); vig.className='critique';
+      document.getElementById('card-burnout').style.cssText='border-color:#E53935;box-shadow:0 0 30px rgba(229,57,53,0.3);';
+      document.getElementById('burnout-card-desc').textContent=`\uD83D\uDEA8 Score ${bo.score}/100 \u2014 Situation critique`;
+      document.getElementById('burnout-card-desc').classList.add('burnout-text-bleed');
+      document.body.classList.remove('burnout-shake');
+      void document.body.offsetWidth;
+      document.body.classList.add('burnout-shake');
+      setTimeout(()=>document.body.classList.remove('burnout-shake'),700);
+      spawnFatigueParticles(10);
+      document.getElementById('burnout-score-val').textContent = bo.score+'/100';
+      document.getElementById('burnout-popup-msg').textContent =
+        `Niveau ${bo.level?.toUpperCase()}. ${bo.details?.violations?.over48||0} semaine(s) \u00E0 +48h. `+
+        `Consultez votre m\u00E9decin du travail et exercez votre droit \u00E0 la d\u00E9connexion (art. L2242-17).`;
+      document.getElementById('burnout-popup').classList.add('visible');
+    } else if (bo.score>=60) {
+      vig.className='danger';
+      document.getElementById('burnout-card-desc').textContent=`\u26A0\uFE0F Score ${bo.score}/100 \u2014 Vigilance`;
+    } else if (bo.score>=40) {
+      document.getElementById('burnout-card-desc').textContent=`\uD83D\uDC9B Score ${bo.score}/100 \u2014 Surveillez`;
+    }
+  } catch(e){}
+}
+
+function closeBurnoutPopup() {
+  document.getElementById('burnout-popup').classList.remove('visible');
+  openPopup('popup-burnout');
+}
+function toggleBurnoutAnimations(on) {
+  if (!on) { document.getElementById('vignette-overlay').className=''; document.getElementById('burnout-overlay').classList.remove('active'); }
+  else checkBurnoutAlert();
+}
+function spawnFatigueParticles(n) {
+  for (let i=0;i<n;i++) {
+    const p=document.createElement('div'); p.className='fatigue-particle';
+    p.style.left=Math.random()*100+'vw'; p.style.top='-10px';
+    const sz=(6+Math.random()*8)+'px'; p.style.width=sz; p.style.height=sz;
+    p.style.animationDuration=(3+Math.random()*4)+'s';
+    p.style.animationDelay=(Math.random()*2)+'s';
+    document.body.appendChild(p); setTimeout(()=>p.remove(),7000);
+  }
+}
+
+// \u2500\u2500 Analyse \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function runAnalyse() {
+  const dh = [0,1,2,3,4,5,6].map(i=>Number(document.getElementById('day'+i).value)||0);
+  const gs = {
+    weeklyHours:dh.reduce((s,h)=>s+h,0), dailyHours:dh,
+    hasNightWork:document.getElementById('chk-night').checked,
+    hasSundayWork:document.getElementById('chk-sunday').checked||dh[6]>0,
+    hasSaturdayWork:document.getElementById('chk-saturday').checked||dh[5]>0,
+    hasHolidayWork:document.getElementById('chk-holiday').checked,
+  };
+  const result = (typeof foxScenarioEngineExpert!=='undefined')
+    ? foxScenarioEngineExpert(gs) : foxScenarioEngine(gs);
+  const box = document.getElementById('analyse-results');
+  box.style.display='block';
+  document.getElementById('analyse-summary').innerHTML =
+    `<strong>${result.riskLevel?.emoji||''} ${result.riskLevel?.label||''}</strong> \u2014 Score ${result.riskScore||0}/100<br><span style="font-size:0.85rem;">${result.summary||''}</span>`;
+  document.getElementById('analyse-violations').innerHTML =
+    !(result.violations?.length)
+      ? '<span style="color:#4CAF50;font-size:0.82rem;">\u2705 Aucune violation</span>'
+      : result.violations.map(v=>`<span class="violation-tag">\u26A0\uFE0F ${v.label} <small style="opacity:0.5">art.${v.article}</small></span>`).join('');
+  const sc = result.matchedScenarios||result.triggered||[];
+  document.getElementById('analyse-scenarios').innerHTML = sc.slice(0,5).filter(Boolean).map(s=>
+    `<div class="scenario-card-mini">
+       <div class="sc-name">${s.name}</div>
+       <div class="sc-legal">${s.legal||''} \u00B7 ${s.risk||'\u2014'}</div>
+       <div style="font-size:0.78rem;color:#777;margin-top:4px;">${s.conseil?.message||''}</div>
+     </div>`).join('');
+  if (result.violations?.length>0 && typeof gainXP==='function') gainXP(50,'Violation d\u00E9tect\u00E9e');
+  document.getElementById('hud-violations').textContent = result.violations?.length||0;
+  refreshHUD();
+}
+
+// \u2500\u2500 Modules popup \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function refreshModulesPopup() {
+  const cum   = moduleReader.getCumulatedSummary ? moduleReader.getCumulatedSummary() : null;
+  const years = moduleReader.detectAllYears ? moduleReader.detectAllYears() : [moduleReader.year];
+  const src   = cum?.source || 'fusion';
+  const manual = localStorage.getItem('FOX_SOURCE_OVERRIDE');
+
+  const srcLabel = src === 'fusion' ? '\uD83D\uDD00 Fusion auto' : src === 'M1' ? '\uD83D\uDCC5 M1 forc\u00E9' : '\uD83D\uDCB0 M2 forc\u00E9';
+  const srcColor = src === 'M1' ? '#64C8FF' : src === 'M2' ? '#FFD700' : '#4CAF50';
+
+  let html = `
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <strong style="color:#FF8C42;">\uD83D\uDCCA Cumul toutes ann\u00E9es</strong>
+        <span style="background:rgba(255,255,255,0.08);color:${srcColor};border-radius:20px;padding:3px 10px;font-size:0.72rem;font-weight:700;">
+          ${srcLabel}
+        </span>
+      </div>
+      <div style="font-size:0.72rem;color:#666;margin-bottom:10px;">
+        ${src === 'fusion'
+          ? 'Fusion intelligente \u2014 M1 et M2 combin\u00E9s mois par mois, z\u00E9ro doublon. Le cumul est pr\u00E9serv\u00E9 m\u00EAme si vous changez de module.'
+          : `Source forc\u00E9e manuellement sur ${src}. Les mois sans donn\u00E9es dans ${src} sont compl\u00E9t\u00E9s par l'autre module.`
+        }
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:0.72rem;color:#888;margin-bottom:6px;">\uD83C\uDF9B\uFE0F Mode de lecture :</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="setFoxSource('auto')"
+            style="flex:1;padding:7px;border-radius:8px;border:1px solid ${!manual?'#4CAF50':'rgba(255,255,255,0.1)'};
+                   background:${!manual?'rgba(76,175,80,0.15)':'rgba(255,255,255,0.04)'};
+                   color:${!manual?'#4CAF50':'#888'};font-size:0.73rem;cursor:pointer;font-weight:${!manual?'900':'400'}">
+            \uD83D\uDD00 Fusion auto
+          </button>
+          <button onclick="setFoxSource('M1')"
+            style="flex:1;padding:7px;border-radius:8px;border:1px solid ${manual==='M1'?'#64C8FF':'rgba(255,255,255,0.1)'};
+                   background:${manual==='M1'?'rgba(100,200,255,0.15)':'rgba(255,255,255,0.04)'};
+                   color:${manual==='M1'?'#64C8FF':'#888'};font-size:0.73rem;cursor:pointer;font-weight:${manual==='M1'?'900':'400'}">
+            \uD83D\uDCC5 Forcer M1
+          </button>
+          <button onclick="setFoxSource('M2')"
+            style="flex:1;padding:7px;border-radius:8px;border:1px solid ${manual==='M2'?'#FFD700':'rgba(255,255,255,0.1)'};
+                   background:${manual==='M2'?'rgba(255,215,0,0.15)':'rgba(255,255,255,0.04)'};
+                   color:${manual==='M2'?'#FFD700':'#888'};font-size:0.73rem;cursor:pointer;font-weight:${manual==='M2'?'900':'400'}">
+            \uD83D\uDCB0 Forcer M2
+          </button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:0.83rem;">
+        <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;text-align:center;">
+          <div style="color:#555;font-size:0.7rem;">HS nettes totales</div>
+          <div style="font-weight:900;font-size:1.3rem;color:#FF8C42;">${(cum?.totalNetOvertime||0).toFixed(0)}h</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;text-align:center;">
+          <div style="color:#555;font-size:0.7rem;">Ann\u00E9es suivies</div>
+          <div style="font-weight:900;font-size:1.3rem;color:#FF8C42;">${years.length}</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;text-align:center;">
+          <div style="color:#555;font-size:0.7rem;">Mois analys\u00E9s</div>
+          <div style="font-weight:900;font-size:1.3rem;color:#FF8C42;">${cum?.monthCount||0}</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;text-align:center;">
+          <div style="color:#555;font-size:0.7rem;">HS +25%</div>
+          <div style="font-weight:700;color:#eee;">${(cum?.totalPlus25||0).toFixed(1)}h</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;text-align:center;">
+          <div style="color:#555;font-size:0.7rem;">HS +50%</div>
+          <div style="font-weight:700;color:#eee;">${(cum?.totalPlus50||0).toFixed(1)}h</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;text-align:center;">
+          <div style="color:#555;font-size:0.7rem;">XP bonus</div>
+          <div style="font-weight:700;color:#FFD700;">+${cum?.xpBonus||0} XP</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:0.72rem;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">D\u00E9tail par ann\u00E9e</div>`;
+
+  years.forEach(y => {
+    const py = cum?.perYear?.[y];
+    const net = py?.net || 0;
+    const netColor = net > 100 ? '#E53935' : net > 50 ? '#FF8C42' : '#4CAF50';
+    const m1cov = py?.m1Coverage || 0;
+    const m2cov = py?.m2Coverage || 0;
+
+    html += `
+      <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-weight:700;color:#FF8C42;">\uD83D\uDCC5 ${y}</div>
+          <div style="display:flex;gap:4px;font-size:0.68rem;">
+            ${m1cov ? `<span style="color:#64C8FF;background:rgba(100,200,255,0.1);border-radius:8px;padding:2px 7px;">M1: ${m1cov} mois</span>` : ''}
+            ${m2cov ? `<span style="color:#FFD700;background:rgba(255,215,0,0.1);border-radius:8px;padding:2px 7px;">M2: ${m2cov} mois</span>` : ''}
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:0.82rem;">
+          <div><div style="color:#555;font-size:0.7rem;">HS nettes</div><strong style="color:${netColor};">${net.toFixed(1)}h</strong></div>
+          <div><div style="color:#555;font-size:0.7rem;">HS +25%</div><strong>${(py?.hs25||0).toFixed(1)}h</strong></div>
+          <div><div style="color:#555;font-size:0.7rem;">HS +50%</div><strong>${(py?.hs50||0).toFixed(1)}h</strong></div>
+        </div>
+      </div>`;
+  });
+
+  if (!years.length) html += '<p style="color:#555;text-align:center;">Aucune donn\u00E9e \u2014 ouvrez le Module 1 ou 2.</p>';
+  document.getElementById('modules-content').innerHTML = html;
+}
+
+
+// \u2500\u2500 Burn-out popup \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function refreshBurnoutPopup() {
+  const bo=moduleReader.getBurnoutScore?moduleReader.getBurnoutScore():{score:0,level:'sain',details:{}};
+  const r=moduleReader.getRollingAnalysis?moduleReader.getRollingAnalysis(12):{avgTotal:35,trend:'stable',violations:{over48:0},weeksAnalyzed:0};
+  const c=bo.score<20?'#4CAF50':bo.score<40?'#FF8C42':bo.score<60?'#FF6B35':bo.score<80?'#E53935':'#B71C1C';
+  document.getElementById('burnout-popup-content').innerHTML=`
+    <div style="text-align:center;margin-bottom:18px;">
+      <div style="font-size:3rem;font-weight:900;color:${c};text-shadow:0 0 20px ${c}55;">${bo.score}<span style="font-size:1.4rem;">/100</span></div>
+      <div style="font-weight:700;color:${c};text-transform:uppercase;letter-spacing:2px;font-size:0.95rem;">${bo.level}</div>
+    </div>
+    <div class="risk-bar-track" style="margin-bottom:16px;"><div class="risk-bar-fill" style="width:${bo.score}%;background:${c};"></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;font-size:0.83rem;">
+      <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;"><div style="color:#555;">Moy. hebdo</div><strong>${r.avgTotal?.toFixed(1)||'\u2014'}h</strong></div>
+      <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;"><div style="color:#555;">Tendance</div><strong>${r.trend==='hausse'?'\uD83D\uDCC8 Hausse':r.trend==='baisse'?'\uD83D\uDCC9 Baisse':'\u27A1\uFE0F Stable'}</strong></div>
+      <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;"><div style="color:#555;">Sem. +48h</div><strong style="color:${(r.violations?.over48||0)>0?'#E53935':'#4CAF50'}">${r.violations?.over48||0}</strong></div>
+      <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px;"><div style="color:#555;">Sem. analys\u00E9es</div><strong>${r.weeksAnalyzed||0}</strong></div>
+    </div>
+    ${bo.score>=40?`<div style="background:rgba(229,57,53,0.08);border:1px solid rgba(229,57,53,0.18);border-radius:10px;padding:13px;font-size:0.82rem;color:#ffcdd2;line-height:1.6;">
+      \u2695\uFE0F Consultez votre m\u00E9decin du travail. Droit \u00E0 la d\u00E9connexion (art. L2242-17). Visite \u00E0 la demande (art. L4624-1).
+    </div>`:'<div style="color:#4CAF50;text-align:center;padding:10px;">\u2705 Situation saine !</div>'}`;
+}
+
+// \u2500\u2500 Qu\u00EAtes popup \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function refreshQuestesPopup() {
+  const list=document.getElementById('quests-list'); if (!list) return;
+  const q=typeof quests!=='undefined'&&Array.isArray(quests)?quests:[];
+  list.innerHTML=q.slice(0,6).map(qt=>
+    `<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px;">
+      <div style="font-weight:700;color:#eee;font-size:0.87rem;">${qt.icon||'\u2694\uFE0F'} ${qt.name||qt.title||'Qu\u00EAte'}</div>
+      <div style="color:#666;font-size:0.77rem;margin-top:3px;">${qt.description||qt.desc||''}</div>
+      <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:4px;margin-top:7px;">
+        <div style="height:100%;background:#FF8C42;border-radius:4px;width:${((qt.progress||0)/(qt.goal||1))*100}%;"></div>
+      </div></div>`).join('')||'<p style="color:#555;text-align:center;font-size:0.85rem;">Aucune qu\u00EAte active.</p>';
+}
+
+// \u2500\u2500 Sc\u00E9narios popup \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function initScenariosPopup() {
+  const all=typeof FOX_SCENARIOS!=='undefined'?FOX_SCENARIOS:[];
+  renderScenarios(all.slice(0,30));
+  document.getElementById('scenarios-count').textContent=`${all.length} sc\u00E9narios disponibles`;
+}
+function filterScenarios() {
+  const q=document.getElementById('scenario-search').value.toLowerCase();
+  const risk=document.getElementById('scenario-risk').value;
+  let f=typeof FOX_SCENARIOS!=='undefined'?FOX_SCENARIOS:[];
+  if (q)    f=f.filter(s=>s.name.toLowerCase().includes(q)||(s.desc||'').toLowerCase().includes(q));
+  if (risk) f=f.filter(s=>s.risk===risk);
+  renderScenarios(f.slice(0,50));
+  document.getElementById('scenarios-count').textContent=`${f.length} sc\u00E9nario(s) trouv\u00E9(s)`;
+}
+function renderScenarios(list) {
+  document.getElementById('scenarios-list').innerHTML=list.map(s=>
+    `<div class="scenario-card-mini" onclick="var d=this.nextElementSibling;d.style.display=d.style.display==='none'?'block':'none'">
+      <div class="sc-name">#${s.id} ${s.name}</div>
+      <div class="sc-legal">${s.legal||''} \u00B7 ${s.risk||'\u2014'}</div>
+    </div>
+    <div style="display:none;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:11px;font-size:0.8rem;color:#aaa;line-height:1.5;margin-bottom:2px;">
+      ${s.conseil?.message||s.desc||''}
+      ${s.conseil?.actions?'<ul style="margin:7px 0 0;padding-left:14px;">'+s.conseil.actions.map(a=>`<li style="margin:3px 0;">${a}</li>`).join('')+'</ul>':''}
+    </div>`).join('')||'<p style="color:#555;text-align:center;">Aucun r\u00E9sultat</p>';
+}
+
+// \u2500\u2500 Badges popup \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function refreshBadgesPopup() {
+  const grid=document.getElementById('badges-grid'); if (!grid) return;
+  const all=typeof BADGES!=='undefined'?BADGES:[];
+  const done=(typeof gameState!=='undefined'&&gameState.badges)?gameState.badges:[];
+
+  // DEBUG temporaire
+  console.log('[DEBUG refreshBadgesPopup] BADGES:', all.length, '| unlocked:', done.length);
+  const sample = all.slice(0,3).map(b=>({id:b.id, img:b.img, icon:b.icon}));
+  console.log('[DEBUG refreshBadgesPopup] Sample:', JSON.stringify(sample));
+
+  grid.innerHTML=all.map(b=>{
+    const ok=done.includes(b.id);
+    const rarityColors = {common:'rgba(180,180,180,0.12)',rare:'rgba(80,140,255,0.12)',epic:'rgba(160,80,255,0.14)',legendary:'rgba(255,180,30,0.16)'};
+    const rarityBorders = {common:'rgba(180,180,180,0.2)',rare:'rgba(80,140,255,0.3)',epic:'rgba(160,80,255,0.35)',legendary:'rgba(255,180,30,0.4)'};
+    const bg = rarityColors[b.rarity]||'rgba(255,255,255,0.04)';
+    const bd = rarityBorders[b.rarity]||'rgba(255,255,255,0.08)';
+    const imgHtml = b.img
+      ? `<img src="${b.img}" alt="${b.name}" style="width:44px;height:44px;object-fit:contain;" onerror="this.style.display='none';this.nextSibling.style.display='block'"><span style="display:none;font-size:1.5rem;">${b.icon||'\uD83C\uDFC5'}</span>`
+      : `<span style="font-size:1.5rem;">${b.icon||'\uD83C\uDFC5'}</span>`;
+    return `<div title="${b.name}: ${b.description||b.desc||''}" style="background:${ok?bg:'rgba(255,255,255,0.02)'};border:1px solid ${ok?bd:'rgba(255,255,255,0.05)'};border-radius:10px;padding:8px;text-align:center;opacity:${ok?1:0.3};transition:opacity 0.2s;">
+      <div style="height:48px;display:flex;align-items:center;justify-content:center;">${imgHtml}</div>
+      <div style="font-size:0.56rem;color:${ok?'#bbb':'#555'};margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:58px;">${b.name||''}</div>
+    </div>`;}).join('')||'<p style="color:#555;">Aucun badge d\u00E9fini.</p>';
+}
+
+// \u2500\u2500 Settings \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function refreshSettings() {
+  const y=moduleReader.detectAllYears?moduleReader.detectAllYears():[];
+  document.getElementById('detected-years').textContent=y.length?y.join(' \u00B7 '):'Aucune donn\u00E9e';
+}
+function resetRPGConfirm() {
+  if (confirm('R\u00E9initialiser XP, badges et qu\u00EAtes ? Les donn\u00E9es M1/M2 restent intactes.')) {
+    if (typeof gameState!=='undefined') {
+      gameState.xp=0;gameState.level=1;gameState.badges=[];
+      if (typeof saveGameState==='function') saveGameState();
+      refreshHUD(); closePopup('popup-settings');
+    }
+  }
+}
+function exportHistorique() {
+  if (typeof moduleReader.exportFullHistory==='function') moduleReader.exportFullHistory();
+}
+
+// \u2500\u2500 Kitsune \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+function kitsuneFormat(text) {
+  // Gras **texte** \u2192 <strong>
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#fff;">$1</strong>');
+  // Sauts de ligne
+  text = text.replace(/\n/g, '<br>');
+  // Puces \u2022
+  text = text.replace(/\u2022\s/g, '<span style="color:#FF8C42;">\u2022</span> ');
+  return text;
+}
+
+async function sendToKitsune() {
+  const inp  = document.getElementById('ai-input');
+  const msg  = inp.value.trim();
+  if (!msg) return;
+  inp.value  = '';
+  const conv = document.getElementById('ai-conversation');
+
+  // Message joueur
+  conv.innerHTML += `
+    <div style="text-align:right;margin:6px 0;">
+      <span style="background:rgba(255,140,66,0.18);color:#FF8C42;border-radius:12px 12px 2px 12px;
+                   padding:8px 14px;display:inline-block;font-size:0.83rem;max-width:85%;text-align:left;">
+        ${msg}
+      </span>
+    </div>`;
+
+  document.getElementById('ai-loading').style.display = 'block';
+  conv.scrollTop = conv.scrollHeight;
+
+  try {
+    const reply = typeof askKitsune === 'function' ? await askKitsune(msg) : '\uD83E\uDD8A Module non charg\u00E9.';
+    conv.innerHTML += `
+      <div style="text-align:left;margin:6px 0;">
+        <span style="background:rgba(255,255,255,0.05);color:#ccc;border-radius:2px 12px 12px 12px;
+                     padding:8px 14px;display:inline-block;font-size:0.83rem;max-width:92%;text-align:left;line-height:1.5;">
+          ${kitsuneFormat(reply)}
+        </span>
+      </div>`;
+  } catch(e) {
+    conv.innerHTML += `<div style="color:#E53935;font-size:0.8rem;margin:4px 0;">Erreur : ${e.message}</div>`;
+  }
+
+  document.getElementById('ai-loading').style.display = 'none';
+  conv.scrollTop = conv.scrollHeight;
+}
+</script>
+
+<!-- ══ POP-UP DÉMO CACHÉ (5 clics + code) ══ -->
+<div id="popup-demo-code" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:none;align-items:center;justify-content:center;">
+  <div style="background:#0d0d1a;border:2px solid #FF8C42;border-radius:20px;padding:28px;max-width:320px;width:90%;text-align:center;">
+    <div style="font-size:2rem;margin-bottom:8px;">🔐</div>
+    <div style="color:#FF8C42;font-weight:900;font-size:1.1rem;letter-spacing:2px;margin-bottom:6px;">MODE DÉMO</div>
+    <div style="color:#555;font-size:0.75rem;margin-bottom:18px;">Accès restreint — code requis</div>
+    <input id="demo-code-input" type="password" maxlength="8" placeholder="Code secret"
+      style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,140,66,0.3);color:#fff;border-radius:10px;padding:12px;text-align:center;font-size:1.2rem;letter-spacing:6px;margin-bottom:12px;box-sizing:border-box;"
+      onkeypress="if(event.key==='Enter')checkDemoCode()">
+    <button onclick="checkDemoCode()" style="width:100%;background:linear-gradient(135deg,#FF8C42,#FF6B35);border:none;color:#fff;border-radius:10px;padding:12px;font-weight:900;font-size:1rem;cursor:pointer;margin-bottom:8px;">Valider</button>
+    <button onclick="document.getElementById('popup-demo-code').style.display='none'" style="background:none;border:none;color:#444;font-size:0.8rem;cursor:pointer;">Annuler</button>
+    <div id="demo-code-error" style="color:#E53935;font-size:0.78rem;margin-top:8px;display:none;">❌ Code incorrect</div>
+  </div>
+</div>
+
+<!-- ══ POP-UP DÉMO ACTIF ══ -->
+<div id="popup-demo-panel" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.95);overflow-y:auto;">
+  <div style="max-width:480px;margin:0 auto;padding:24px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div style="color:#FF8C42;font-weight:900;font-size:1.2rem;">🎬 MODE DÉMO</div>
+      <button onclick="exitDemoMode()" style="background:rgba(229,57,53,0.15);border:1px solid #E53935;color:#E53935;border-radius:8px;padding:6px 14px;cursor:pointer;font-weight:700;">✕ Quitter</button>
+    </div>
+
+    <div style="color:#666;font-size:0.72rem;letter-spacing:1px;margin-bottom:12px;">ÉTAPE ACTIVE</div>
+    <div id="demo-step-label" style="background:rgba(255,140,66,0.1);border:1px solid rgba(255,140,66,0.3);border-radius:12px;padding:12px 16px;color:#FF8C42;font-weight:700;font-size:0.95rem;margin-bottom:20px;">—</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+      <button class="demo-btn" onclick="demoStep('reset')">🔄 Reset tout</button>
+      <button class="demo-btn" onclick="demoStep('start')">🌱 Départ (0h)</button>
+      <button class="demo-btn" onclick="demoStep('light')">💛 Légères HS (15h)</button>
+      <button class="demo-btn" onclick="demoStep('medium')">🧡 HS modérées (60h)</button>
+      <button class="demo-btn" onclick="demoStep('heavy')">🔴 HS élevées (150h)</button>
+      <button class="demo-btn" onclick="demoStep('critical')">🚨 Situation critique (220h+)</button>
+      <button class="demo-btn" onclick="demoStep('multiyear')">🕰️ Multi-années (3 ans)</button>
+      <button class="demo-btn" onclick="demoStep('burnout')">🔥 Score max burnout</button>
+    </div>
+
+    <div style="color:#666;font-size:0.72rem;letter-spacing:1px;margin-bottom:10px;">SCÉNARIOS KITSUNE</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;" id="demo-scenario-list"></div>
+
+    <div style="color:#666;font-size:0.72rem;letter-spacing:1px;margin-bottom:10px;">BADGES</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;" id="demo-badges-preview"></div>
+
+    <div style="color:#666;font-size:0.72rem;letter-spacing:1px;margin-bottom:10px;">XP & NIVEAU</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;">
+      <button class="demo-btn" onclick="demoXP(100)">+100 XP</button>
+      <button class="demo-btn" onclick="demoXP(500)">+500 XP</button>
+      <button class="demo-btn" onclick="demoXP(1000)">+1000 XP</button>
+      <button class="demo-btn" onclick="demoXP(5000)">+5000 XP</button>
+    </div>
+
+    <div style="color:#666;font-size:0.72rem;letter-spacing:1px;margin-bottom:10px;">KITSUNE NARRATION</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button class="demo-btn" onclick="demoNarrate(1)">🦊 +1h sup</button>
+      <button class="demo-btn" onclick="demoNarrate(5)">🦊 +5h sup</button>
+      <button class="demo-btn" onclick="demoNarrate(10)">🦊 +10h sup</button>
+      <button class="demo-btn" onclick="demoNarrate(48)">🦊 +48h semaine</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.demo-btn {
+  background: rgba(255,140,66,0.08);
+  border: 1px solid rgba(255,140,66,0.2);
+  color: #FF8C42;
+  border-radius: 10px;
+  padding: 10px 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.demo-btn:hover {
+  background: rgba(255,140,66,0.18);
+  border-color: #FF8C42;
+}
+</style>
+<script>
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+//  MODE DEMO CACHE \u2014 5 clics sur FOX + code 19871502
+// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+let _demoClickCount = 0;
+let _demoClickTimer = null;
+let _demoActive = false;
+
+function demoLogoClick() {
+  _demoClickCount++;
+  clearTimeout(_demoClickTimer);
+  const logo = document.getElementById('hud-logo-btn');
+  if (logo) { logo.style.transform = 'scale(1.3)'; setTimeout(() => logo.style.transform = '', 200); }
+  if (_demoClickCount >= 5) {
+    _demoClickCount = 0;
+    const p = document.getElementById('popup-demo-code');
+    if (p) { p.style.display = 'flex'; }
+    const inp = document.getElementById('demo-code-input');
+    if (inp) { inp.value = ''; inp.focus(); }
+    document.getElementById('demo-code-error').style.display = 'none';
+  } else {
+    _demoClickTimer = setTimeout(() => { _demoClickCount = 0; }, 3000);
+    if (logo) {
+      const r = 5 - _demoClickCount;
+      logo.textContent = r > 0 ? ('\u{1F98A} ' + r) : '\u{1F98A} FOX';
+      setTimeout(() => { logo.textContent = '\u{1F98A} FOX'; }, 800);
+    }
+  }
+}
+
+function checkDemoCode() {
+  const inp = document.getElementById('demo-code-input');
+  const err = document.getElementById('demo-code-error');
+  const code = inp ? inp.value.trim() : '';
+  if (code === '19871502') {
+    document.getElementById('popup-demo-code').style.display = 'none';
+    openDemoPanel();
+  } else {
+    err.style.display = 'block';
+    if (inp) { inp.value = ''; inp.focus(); }
+  }
+}
+
+function openDemoPanel() {
+  _demoActive = true;
+  document.getElementById('popup-demo-panel').style.display = 'block';
+  _demoFillScenarios();
+  _demoFillBadges();
+  _demoBanner(true);
+}
+
+function exitDemoMode() {
+  _demoActive = false;
+  document.getElementById('popup-demo-panel').style.display = 'none';
+  _demoBanner(false);
+  demoStep('reset');
+}
+
+function _demoBanner(on) {
+  let b = document.getElementById('demo-active-banner');
+  if (on && !b) {
+    b = document.createElement('div');
+    b.id = 'demo-active-banner';
+    b.style.cssText = 'position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:9990;background:linear-gradient(90deg,#FF8C42,#FF6B35);color:#fff;font-size:0.68rem;font-weight:900;padding:2px 16px;border-radius:0 0 8px 8px;letter-spacing:2px;pointer-events:none;';
+    b.textContent = 'MODE DEMO';
+    document.body.appendChild(b);
+  } else if (!on && b) { b.remove(); }
+}
+
+function _demoInjectM1(year, weeks) {
+  const data = {};
+  weeks.forEach(w => { data[w.date] = { extra: w.extra||0, recup: w.recup||0, absent: w.absent||0 }; });
+  localStorage.setItem('DATA_REPORT_' + year, JSON.stringify(data));
+  localStorage.setItem('BASE_HEBDO_' + year, '35');
+  localStorage.setItem('ANNUAL_RATE_' + year, '10');
+}
+
+function _demoInjectM2(year, months) {
+  localStorage.setItem('CA_HS_TRACKER_V1_DATA_' + year, JSON.stringify(months));
+}
+
+function _demoSetXP(xp, level) {
+  if (typeof gameState !== 'undefined') {
+    gameState.xp = xp; gameState.level = level;
+    if (gameState.player) { gameState.player.xp = xp; gameState.player.level = level; }
+    if (typeof xpSystem !== 'undefined') xpSystem.currentXP = xp;
+    if (typeof saveGameState === 'function') saveGameState();
+  }
+}
+
+function _demoSetBadges(ids) {
+  if (typeof gameState !== 'undefined') {
+    gameState.badges = ids;
+    if (typeof saveGameState === 'function') saveGameState();
+  }
+}
+
+function _demoLabel(txt) {
+  const el = document.getElementById('demo-step-label');
+  if (el) el.textContent = txt;
+}
+
+function demoStep(step) {
+  const y  = new Date().getFullYear().toString();
+  const yp = (parseInt(y) - 1).toString();
+  const y2 = (parseInt(y) - 2).toString();
+
+  if (step === 'reset') {
+    _demoLabel('Reset - donnees effacees');
+    ['DATA_REPORT_','CA_HS_TRACKER_V1_DATA_','BASE_HEBDO_','ANNUAL_RATE_'].forEach(k => {
+      [y, yp, y2].forEach(yr => localStorage.removeItem(k + yr));
+    });
+    _demoSetXP(0, 1); _demoSetBadges([]);
+    syncModulesAndAwardXP('demo'); refreshHUD();
+
+  } else if (step === 'start') {
+    _demoLabel('Depart - 0h sup, niveau 1');
+    _demoInjectM1(y, []);
+    _demoSetXP(50, 1); _demoSetBadges([]);
+    syncModulesAndAwardXP('demo'); refreshHUD();
+
+  } else if (step === 'light') {
+    _demoLabel('Legeres HS - ~15h sur annee');
+    _demoInjectM1(y, [
+      {date:y+'-01-15',extra:3},{date:y+'-02-10',extra:2},
+      {date:y+'-03-05',extra:4,recup:1},{date:y+'-04-12',extra:3},
+      {date:y+'-05-08',extra:2},{date:y+'-06-15',extra:3,recup:1},
+    ]);
+    _demoSetXP(350, 2); _demoSetBadges(['first_overtime','vigilant']);
+    syncModulesAndAwardXP('demo'); setTimeout(refreshHUD, 300);
+
+  } else if (step === 'medium') {
+    _demoLabel('HS moderees - 60h / an');
+    const wks = [];
+    for (let m=1;m<=10;m++) {
+      const mm=String(m).padStart(2,'0');
+      wks.push({date:y+'-'+mm+'-07',extra:4});
+      wks.push({date:y+'-'+mm+'-21',extra:3,recup:1});
+    }
+    _demoInjectM1(y, wks);
+    _demoSetXP(1200, 4); _demoSetBadges(['first_overtime','vigilant','overtime_100','weekend_worker']);
+    syncModulesAndAwardXP('demo'); setTimeout(refreshHUD, 300);
+
+  } else if (step === 'heavy') {
+    _demoLabel('HS elevees - 150h, risque serieux');
+    const wks = [];
+    for (let m=1;m<=12;m++) {
+      const mm=String(m).padStart(2,'0');
+      wks.push({date:y+'-'+mm+'-07',extra:8});
+      wks.push({date:y+'-'+mm+'-14',extra:7,recup:1});
+      wks.push({date:y+'-'+mm+'-21',extra:9});
+    }
+    _demoInjectM1(y, wks);
+    _demoSetXP(4500, 7); _demoSetBadges(['first_overtime','vigilant','overtime_100','overtime_150','weekend_worker','night_owl','iron_worker']);
+    syncModulesAndAwardXP('demo'); setTimeout(refreshHUD, 300);
+
+  } else if (step === 'critical') {
+    _demoLabel('CRITIQUE - 220h+, contingent depasse');
+    const wks = [];
+    for (let m=1;m<=12;m++) {
+      const mm=String(m).padStart(2,'0');
+      wks.push({date:y+'-'+mm+'-06',extra:12});
+      wks.push({date:y+'-'+mm+'-13',extra:11});
+      wks.push({date:y+'-'+mm+'-20',extra:10,recup:1});
+    }
+    _demoInjectM1(y, wks);
+    _demoInjectM2(y, {
+      [y+'-01']:{hsPlus25:8,hsPlus50:6},[y+'-02']:{hsPlus25:10,hsPlus50:8},
+      [y+'-03']:{hsPlus25:12,hsPlus50:5},[y+'-04']:{hsPlus25:9,hsPlus50:7},
+      [y+'-05']:{hsPlus25:15,hsPlus50:10},[y+'-06']:{hsPlus25:11,hsPlus50:9},
+    });
+    _demoSetXP(9800, 10);
+    const all = typeof BADGES !== 'undefined' ? BADGES.map(b=>b.id).slice(0,20) : [];
+    _demoSetBadges(all);
+    syncModulesAndAwardXP('demo'); setTimeout(refreshHUD, 300);
+
+  } else if (step === 'multiyear') {
+    _demoLabel('Multi-annees - 3 ans cumules');
+    [y, yp, y2].forEach((yr, i) => {
+      const mult = [1, 1.5, 2][i];
+      const wks = [];
+      for (let m=1;m<=12;m++) {
+        const mm=String(m).padStart(2,'0');
+        wks.push({date:yr+'-'+mm+'-10',extra:Math.round(5*mult)});
+        wks.push({date:yr+'-'+mm+'-20',extra:Math.round(4*mult),recup:1});
+      }
+      _demoInjectM1(yr, wks);
+    });
+    _demoSetXP(7500, 9); _demoSetBadges(['first_overtime','overtime_100','overtime_150','multiyear','veteran']);
+    syncModulesAndAwardXP('demo'); setTimeout(refreshHUD, 300);
+
+  } else if (step === 'burnout') {
+    _demoLabel('BURNOUT MAX - score critique');
+    const wks = [];
+    for (let m=1;m<=12;m++) {
+      const mm=String(m).padStart(2,'0');
+      wks.push({date:y+'-'+mm+'-06',extra:14});
+      wks.push({date:y+'-'+mm+'-13',extra:13});
+      wks.push({date:y+'-'+mm+'-20',extra:12});
+    }
+    _demoInjectM1(y, wks);
+    [yp, y2].forEach(yr => {
+      const wks2 = [];
+      for (let m=1;m<=12;m++) {
+        wks2.push({date:yr+'-'+String(m).padStart(2,'0')+'-10',extra:10});
+      }
+      _demoInjectM1(yr, wks2);
+    });
+    _demoSetXP(15000, 12);
+    const allB = typeof BADGES !== 'undefined' ? BADGES.map(b=>b.id) : [];
+    _demoSetBadges(allB);
+    syncModulesAndAwardXP('demo');
+    setTimeout(() => { refreshHUD(); checkBurnoutAlert(); }, 300);
+  }
+}
+
+function demoXP(amount) {
+  if (typeof gameState !== 'undefined') {
+    const nx = (gameState.xp||0) + amount;
+    const nl = Math.max(1, Math.floor(nx/1000)+1);
+    _demoSetXP(nx, nl); refreshHUD();
+    showNotification('+' + amount + ' XP (demo)', 'success');
+  }
+}
+
+function demoNarrate(hours) {
+  kitsuneNarrateOvertime(hours, 'DEMO');
+  showNotification('Kitsune +' + hours + 'h (demo)', 'info');
+}
+
+function _demoFillScenarios() {
+  const list = document.getElementById('demo-scenario-list');
+  if (!list) return;
+  const all = typeof FOX_SCENARIOS !== 'undefined' ? FOX_SCENARIOS : [];
+  const risks = ['aucun','faible','moyen','\u00E9lev\u00E9','critique'];
+  const picks = risks.map(r => all.find(s => s.risk === r)).filter(Boolean);
+  list.innerHTML = picks.map(s =>
+    '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:9px 11px;cursor:pointer;" onclick="demoShowScenario(' + s.id + ')">' +
+    '<div style="font-size:0.77rem;font-weight:700;color:#eee;">#' + s.id + ' ' + s.name + '</div>' +
+    '<div style="font-size:0.68rem;color:#666;margin-top:2px;">' + s.risk + '</div>' +
+    '</div>'
+  ).join('') || '<div style="color:#555;font-size:0.8rem;">Aucun scenario</div>';
+}
+
+function demoShowScenario(id) {
+  const all = typeof FOX_SCENARIOS !== 'undefined' ? FOX_SCENARIOS : [];
+  const s = all.find(sc => sc.id === id);
+  if (!s) return;
+  document.getElementById('popup-demo-panel').style.display = 'none';
+  const ft = document.getElementById('fox-text');
+  if (ft) ft.innerHTML = '<strong style="color:#FF8C42;">Scenario #' + s.id + ' - ' + s.name + '</strong><br><br>' + (s.conseil && s.conseil.message ? s.conseil.message : (s.desc || ''));
+  const box = document.getElementById('kitsune-scenario-box');
+  if (box) {
+    document.getElementById('kitsune-scenario-title').textContent = s.name;
+    document.getElementById('kitsune-scenario-text').textContent = s.conseil && s.conseil.message ? s.conseil.message : '';
+    const acts = document.getElementById('kitsune-scenario-actions');
+    if (acts && s.conseil && s.conseil.actions) {
+      acts.innerHTML = s.conseil.actions.map(a =>
+        '<span style="background:rgba(255,140,66,0.12);border:1px solid rgba(255,140,66,0.25);border-radius:8px;padding:4px 10px;font-size:0.75rem;color:#FF8C42;">' + a + '</span>'
+      ).join('');
+    }
+    box.style.display = 'block';
+  }
+  openPopup('popup-fox');
+  setTimeout(() => { document.getElementById('popup-demo-panel').style.display = 'block'; }, 150);
+}
+
+function _demoFillBadges() {
+  const el = document.getElementById('demo-badges-preview');
+  if (!el) return;
+  const all = typeof BADGES !== 'undefined' ? BADGES : [];
+
+  // DEBUG temporaire
+  console.log('[DEBUG badges] BADGES disponibles:', all.length);
+  if (all.length > 0) {
+    console.log('[DEBUG badges] Premier badge:', {
+      id: all[0].id,
+      name: all[0].name,
+      img: all[0].img,
+      icon: all[0].icon
+    });
+  }
+
+  const rows = all.slice(0, 15).map(function(b) {
+    // Utiliser l'image si disponible, sinon emoji fallback
+    const imgHtml = b.img
+      ? '<img src="' + b.img + '" alt="' + (b.name||'') + '" style="width:36px;height:36px;object-fit:contain;"'
+        + ' onerror="console.warn(\'[DEBUG badges] Image manquante:\',this.src);this.style.display=\'none\';this.nextSibling.style.display=\'block\'">'
+        + '<span style="display:none;font-size:1.3rem;">' + (b.icon || '&#127941;') + '</span>'
+      : '<span style="font-size:1.3rem;">' + (b.icon || '&#127941;') + '</span>';
+
+    return '<div data-bid="' + b.id + '" title="' + (b.name||'') + '" style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);border-radius:8px;padding:7px;text-align:center;cursor:pointer;">'
+      + '<div style="height:40px;display:flex;align-items:center;justify-content:center;">' + imgHtml + '</div>'
+      + '</div>';
+  });
+  el.innerHTML = rows.length ? rows.join('') : '<div style="color:#555;font-size:0.8rem;">Aucun badge</div>';
+  setTimeout(function() {
+    el.querySelectorAll('[data-bid]').forEach(function(d) {
+      d.addEventListener('click', function() { demoUnlockBadge(d.getAttribute('data-bid')); });
+    });
+  }, 50);
+}
+
+function demoUnlockBadge(id) {
+  if (typeof gameState !== 'undefined') {
+    if (!gameState.badges) gameState.badges = [];
+    if (!gameState.badges.includes(id)) {
+      gameState.badges.push(id);
+      if (typeof saveGameState === 'function') saveGameState();
+      refreshHUD(); _demoFillBadges();
+      showNotification('Badge: ' + id, 'success');
+    }
+  }
+}
+</script>
+</body>
+</html>
