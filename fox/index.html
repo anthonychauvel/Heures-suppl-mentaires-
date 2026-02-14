@@ -34,10 +34,11 @@
     <div class="hud-xp-bar"><div class="hud-xp-fill" id="hud-xp-fill" style="width:0%"></div></div>
   </div>
   <div class="hud-stats">
-    <div class="hud-stat"><div class="hud-stat-val" id="hud-energy">100</div><div class="hud-stat-lbl">❤️ Énergie</div></div>
-    <div class="hud-stat"><div class="hud-stat-val" id="hud-burnout">0</div><div class="hud-stat-lbl">🔥 Risque</div></div>
-    <div class="hud-stat"><div class="hud-stat-val" id="hud-badges">0</div><div class="hud-stat-lbl">🏅 Badges</div></div>
-    <div class="hud-stat"><div class="hud-stat-val" id="hud-violations">0</div><div class="hud-stat-lbl">⚠️ Violations</div></div>
+   <div class="hud-stat"><div class="hud-stat-icon">❤️</div><div class="hud-stat-val" id="hud-energy">100</div><div class="hud-stat-lbl">Énergie</div></div>
+<div class="hud-stat"><div class="hud-stat-icon">🔥</div><div class="hud-stat-val" id="hud-burnout">0</div><div class="hud-stat-lbl">Risque</div></div>
+<div class="hud-stat"><div class="hud-stat-icon">🏅</div><div class="hud-stat-val" id="hud-badges">0</div><div class="hud-stat-lbl">Badges</div></div>
+<div class="hud-stat"><div class="hud-stat-icon">⚠️</div><div class="hud-stat-val" id="hud-violations">0</div><div class="hud-stat-lbl">Violations</div></div>
+
   </div>
   <div id="hud-buttons">
     <button class="hud-menu-btn" onclick="openPopup('popup-fox')">🦊 Kitsune</button>
@@ -67,7 +68,8 @@
   <!-- Barre de risque centrale -->
 
   <div id="risk-bar-center">
-    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:rgba(255,255,255,0.7);margin-bottom:4px;letter-spacing:1px;">
+    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:#fff;margin-bottom:4px;letter-spacing:1px;text-shadow:0 1px 6px rgba(0,0,0,0.9);font-weight:700;">
+
       <span>RISQUE GLOBAL</span><span id="risk-label-main">--</span>
     </div>
     <div class="risk-bar-track"><div class="risk-bar-fill" id="risk-bar-main" style="width:0%"></div></div>
