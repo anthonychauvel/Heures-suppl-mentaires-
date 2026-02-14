@@ -199,7 +199,7 @@ const FOX_SCENARIOS = [
     alerte: null
   }
 },
-  {
+{
     "id": 104,
     "name": "Aménagement poste santé",
     "category": "sante",
@@ -1823,8 +1823,7 @@ const FOX_SCENARIOS = [
       "alerte": null
     }
   }
-]
-[
+,
   {
     "id": 201,
     "name": "Succession CDD",
@@ -1969,7 +1968,7 @@ const FOX_SCENARIOS = [
       "alerte": null
     }
   },
-  {
+{
     "id": 210,
     "name": "Accord transactionnel",
     "category": "juridique",
@@ -3169,7 +3168,7 @@ const FOX_SCENARIOS = [
       "alerte": null
     }
   },
-  {
+{
     "id": 285,
     "name": "Conditions météo difficiles",
     "category": "crise",
@@ -3425,8 +3424,7 @@ const FOX_SCENARIOS = [
       "alerte": null
     }
   }
-]
-[
+,
   {
     "id": 301,
     "name": "Révision salariale",
@@ -5011,7 +5009,7 @@ const FOX_SCENARIOS = [
       "alerte": null
     }
   },
-  {
+{
     "id": 400,
     "name": "Proche aidant aménagements",
     "category": "familial",
@@ -5169,7 +5167,7 @@ const FOX_SCENARIOS = [
       "alerte": { "niveau": "warning", "texte": "🪑 Ergonomie : prévenir TMS" } 
     }
   },
-  {
+{
     "id": 503,
     "name": "Bruit ambiant excessif",
     "category": "environnement",
