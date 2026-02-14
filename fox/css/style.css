@@ -1985,19 +1985,26 @@ filter: brightness(0.85);
 }
 
 /* Repositionner le renard pour le paysage */
-#kitsune-center {
-bottom: 150px;
-left: 50%;
-}
+  #kitsune-center {
+    bottom: 110px;
+    left: 30%;           /* renard à gauche */
+    transform: translateX(-50%);
+  }
+  #kitsune-svg {
+    width: 120px;
+    height: 120px;
+  }
+  /* Bulle à droite du renard */
+  #kitsune-bubble {
+    bottom: 160px;
+    left: 62%;
+    transform: translateX(-50%);
+    max-width: 280px;
+  }
+  #kitsune-bubble .bubble-tail {
+    display: none;
+  }
 
-#kitsune-svg {
-width: 140px;
-height: 140px;
-}
-
-#kitsune-bubble {
-bottom: 310px;
-}
 
 #risk-bar-center {
 bottom: 128px;
