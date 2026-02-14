@@ -61,57 +61,66 @@ function saveGameState() {
     localStorage.setItem('rpg_game_state', JSON.stringify(gameState));
 }
 
+// Helper sécurisé — évite les erreurs si l'élément n'existe pas dans le DOM
+function _set(id, val, prop) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (prop === 'width') el.style.width = val;
+    else if (prop === 'html') el.innerHTML = val;
+    else el.textContent = val;
+}
+
 // Mettre à jour tous les affichages
 function updateAllDisplays() {
-    updatePlayerStats();
-    updateLeague();
-    updateXPBar();
-    updateVitalStats();
-    updateQuickStats();
+    try { updatePlayerStats(); } catch(e) {}
+    try { updateLeague(); } catch(e) {}
+    try { updateXPBar(); } catch(e) {}
+    try { updateVitalStats(); } catch(e) {}
+    try { updateQuickStats(); } catch(e) {}
 }
 
 // Mettre à jour les stats du joueur
 function updatePlayerStats() {
-    document.getElementById('level-display').textContent = gameState.player.level;
-    document.getElementById('current-xp').textContent = xpSystem.currentXP;
-    document.getElementById('next-level-xp').textContent = xpSystem.getXPForNextLevel(gameState.player.level);
-    
+    _set('level-display', gameState.player.level);
+    _set('current-xp', xpSystem.currentXP);
+    _set('next-level-xp', xpSystem.getXPForNextLevel(gameState.player.level));
     const progress = xpSystem.getCurrentLevelProgress();
-    document.getElementById('xp-progress').style.width = progress.percentage + '%';
+    _set('xp-progress', progress.percentage + '%', 'width');
 }
 
 // Mettre à jour la ligue
 function updateLeague() {
     const league = leagueSystem.getCurrentLeague(xpSystem.currentXP);
-    document.getElementById('league-display').textContent = league.name;
+    _set('league-display', league.name);
 }
 
 // Mettre à jour la barre XP
 function updateXPBar() {
     const progress = xpSystem.getCurrentLevelProgress();
-    document.getElementById('xp-progress').style.width = progress.percentage + '%';
+    _set('xp-progress', progress.percentage + '%', 'width');
 }
 
 // Mettre à jour les stats vitales
 function updateVitalStats() {
-    document.getElementById('energy-current').textContent = gameState.player.energy;
-    document.getElementById('energy-bar').style.width = gameState.player.energy + '%';
-    
-    document.getElementById('wisdom-current').textContent = gameState.player.wisdom;
-    document.getElementById('wisdom-bar').style.width = (gameState.player.wisdom / 100) * 100 + '%';
+    _set('energy-current', gameState.player.energy);
+    _set('energy-bar', gameState.player.energy + '%', 'width');
+    _set('wisdom-current', gameState.player.wisdom);
+    _set('wisdom-bar', (gameState.player.wisdom / 100) * 100 + '%', 'width');
 }
 
 // Mettre à jour les stats rapides
 function updateQuickStats() {
-    document.getElementById('total-hours').textContent = gameState.hours.total.toFixed(1) + 'h';
-    
-    const scenariosStats = scenarioSystemAI.getStats();
-    document.getElementById('scenarios-count').textContent = `${scenariosStats.read}/600`;
-    document.getElementById('scenarios-read-count').textContent = scenariosStats.read;
-    document.getElementById('scenarios-favorites').textContent = scenariosStats.favorites;
-    
-    const badgesStats = badgeSystem.getBadgeStats();
-    document.getElementById('badges-count').textContent = `${badgesStats.unlocked}/50`;
+    _set('total-hours', gameState.hours.total.toFixed(1) + 'h');
+    try {
+        const scenariosStats = scenarioSystemAI.getStats();
+        _set('scenarios-count', scenariosStats.read + '/600');
+        _set('scenarios-read-count', scenariosStats.read);
+        _set('scenarios-favorites', scenariosStats.favorites);
+    } catch(e) {}
+    try {
+        const badgesStats = badgeSystem.getBadgeStats();
+        _set('badges-count', badgesStats.unlocked + '/50');
+    } catch(e) {}
     
     const questsStats = questSystem.getStats();
     document.getElementById('quests-active').textContent = questsStats.active;
@@ -130,17 +139,17 @@ function setupEventListeners() {
     document.getElementById('generate-scenario-btn').addEventListener('click', generateScenarioWithAI);
 
     // Bouton parler à Kitsune
-    document.getElementById('talk-to-fox').addEventListener('click', openKitsuneDialogue);
+    const foxBtn = document.getElementById('talk-to-fox'); if (foxBtn) foxBtn.addEventListener('click', openKitsuneDialogue);
 
     // Bouton d'ajout d'heures
-    document.getElementById('add-hours-btn').addEventListener('click', addHoursAndAnalyze);
+    const addBtn = document.getElementById('add-hours-btn'); if (addBtn) addBtn.addEventListener('click', addHoursAndAnalyze);
 
     // Fermeture du modal
     document.querySelector('.close').addEventListener('click', closeModal);
 
     // Input IA
-    document.getElementById('send-ai-message').addEventListener('click', sendMessageToKitsune);
-    document.getElementById('ai-input').addEventListener('keypress', function(e) {
+    const sendBtn = document.getElementById('send-ai-message'); if (sendBtn) sendBtn.addEventListener('click', sendMessageToKitsune);
+    const aiInp = document.getElementById('ai-input'); if (aiInp) aiInp.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') sendMessageToKitsune();
     });
 }
@@ -684,7 +693,7 @@ function refreshModule2() {
 function displayModule1() {
     const m1 = moduleReader.getModule1Summary();
     const container = document.getElementById('module1-display');
-    
+    if (!container) return;
     container.innerHTML = `
         <div class="module-summary">
             <h4>${m1.monthName} ${m1.year}</h4>
@@ -715,7 +724,7 @@ function displayModule1() {
 function displayModule2() {
     const m2 = moduleReader.getModule2Summary();
     const container = document.getElementById('module2-display');
-    
+    if (!container) return;
     container.innerHTML = `
         <div class="module-summary">
             <h4>Année ${m2.year}</h4>
