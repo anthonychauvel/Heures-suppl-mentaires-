@@ -240,9 +240,8 @@ URL.revokeObjectURL(url);
 }
 }
 
-// Instance globale
-const moduleReader = new ModuleReader();
-console.log(‘✅ Module Reader connecté — M1:’, moduleReader.module1Data.hasData ? ‘données OK’ : ‘vide’, ‘| M2:’, moduleReader.module2Data.hasData ? ‘données OK’ : ‘vide’);
+// Instance legacy (remplacée par ModuleReaderPro ci-dessous)
+// const _legacyReader = new ModuleReader();
 
 // ═══════════════════════════════════════════════════════════════
 //  EXTENSION MULTI-ANNÉES  (ajout — ne modifie pas ce qui précède)
