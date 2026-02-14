@@ -1548,6 +1548,11 @@ transition: all 0.2s; white-space: nowrap;
 background: rgba(255,140,66,0.25);
 box-shadow: 0 0 12px rgba(255,140,66,0.3);
 }
+#hud-buttons {
+display: flex;
+gap: 6px;
+flex-shrink: 0;
+}
 
 /* ── Zone centrale gaming ──────────────────────────────── */
 #gaming-main-old-removed {
@@ -1847,3 +1852,199 @@ letter-spacing: 0.5px;
 .risk-bar-fill  { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #4CAF50, #FF8C42, #E53935); transition: width 0.8s ease; }
 
 /* fond géré via img tag dans le HTML */
+
+/* ═══════════════════════════════════════════════════════════════
+RESPONSIVE — PORTRAIT MOBILE + PAYSAGE PC
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Portrait mobile (< 600px) : HUD sur 2 lignes ─────────── */
+@media screen and (max-width: 600px) {
+
+#gaming-hud {
+height: auto;
+flex-wrap: wrap;
+padding: 6px 10px;
+gap: 4px;
+row-gap: 4px;
+}
+
+/* Ligne 1 : Logo | Stats | Boutons */
+.hud-logo {
+font-size: 1.1rem;
+flex-shrink: 0;
+order: 1;
+}
+
+.hud-stats {
+flex: 1;
+gap: 8px;
+order: 2;
+justify-content: center;
+}
+
+.hud-stat {
+min-width: 36px;
+}
+
+.hud-stat-val {
+font-size: 0.95rem;
+}
+
+.hud-stat-lbl {
+font-size: 0.5rem;
+display: none; /* cacher les labels sur mobile pour gagner de la place */
+}
+
+/* Boutons Kitsune / Params / Menu — icônes compactes */
+#hud-buttons {
+order: 3;
+flex-shrink: 0;
+gap: 4px;
+display: flex;
+}
+
+.hud-menu-btn {
+padding: 6px 8px;
+font-size: 0.72rem;
+}
+
+/* Ligne 2 : XP bar pleine largeur */
+.hud-xp-section {
+order: 4;
+width: 100%;
+max-width: 100%;
+flex: none;
+}
+
+.hud-xp-label {
+font-size: 0.58rem;
+}
+
+/* Décaler le contenu principal sous le HUD double ligne */
+#gaming-main {
+top: 0;
+}
+
+#kitsune-bubble {
+bottom: 390px;
+max-width: 220px;
+font-size: 0.75rem;
+}
+
+#kitsune-center {
+bottom: 195px;
+}
+
+#kitsune-svg {
+width: 145px;
+height: 145px;
+}
+
+#risk-bar-center {
+bottom: 172px;
+}
+
+.dock-btn {
+padding: 8px 4px 7px;
+}
+
+.dock-icon {
+font-size: 1.2rem;
+}
+
+.dock-label {
+font-size: 0.52rem;
+}
+}
+
+/* ── Très petit écran (< 380px, iPhone SE) ─────────────────── */
+@media screen and (max-width: 380px) {
+.hud-menu-btn:not(:first-child) {
+padding: 6px 6px;
+font-size: 0.65rem;
+}
+/* Cacher le texte “← Menu” et “⚙️”, garder seulement l’emoji */
+a.hud-menu-btn { font-size: 0; }
+a.hud-menu-btn::before { content: ‘←’; font-size: 0.8rem; }
+}
+
+/* ── Paysage (PC & tablette landscape) ──────────────────────── */
+@media screen and (orientation: landscape) and (min-width: 600px) {
+
+#gaming-hud {
+height: 54px;
+padding: 0 20px;
+}
+
+/* Fond adapté au paysage : cadré sur le centre */
+#bg-decor {
+background-position: center center !important;
+background-size: cover !important;
+/* Assombrir un peu plus pour la lisibilité */
+filter: brightness(0.85);
+}
+
+/* Repositionner le renard pour le paysage */
+#kitsune-center {
+bottom: 150px;
+left: 50%;
+}
+
+#kitsune-svg {
+width: 140px;
+height: 140px;
+}
+
+#kitsune-bubble {
+bottom: 310px;
+}
+
+#risk-bar-center {
+bottom: 128px;
+max-width: 500px;
+}
+
+#action-dock {
+padding: 8px 40px 14px;
+}
+
+.dock-btn {
+max-width: 90px;
+padding: 10px 12px 8px;
+}
+
+.dock-icon {
+font-size: 1.6rem;
+}
+
+.dock-label {
+font-size: 0.65rem;
+}
+}
+
+/* ── PC large (> 1024px) ────────────────────────────────────── */
+@media screen and (min-width: 1024px) {
+#kitsune-svg {
+width: 180px;
+height: 180px;
+}
+
+#action-dock {
+padding: 10px 80px 20px;
+gap: 16px;
+}
+
+.dock-btn {
+max-width: 110px;
+padding: 14px 16px 12px;
+border-radius: 20px;
+}
+
+.dock-icon {
+font-size: 1.8rem;
+}
+
+.dock-label {
+font-size: 0.72rem;
+}
+}
