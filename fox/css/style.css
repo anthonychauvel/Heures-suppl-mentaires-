@@ -1994,7 +1994,7 @@ filter: brightness(0.85);
     height: 120px;
   }
   #kitsune-bubble {
-    bottom: 250px;
+    bottom: 380px;
     left: 50%;
     transform: translateX(-50%);
     max-width: 320px;
