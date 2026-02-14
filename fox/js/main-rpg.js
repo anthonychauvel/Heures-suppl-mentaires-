@@ -136,7 +136,7 @@ function setupEventListeners() {
     });
 
     // Bouton de génération de scénario
-    document.getElementById('generate-scenario-btn').addEventListener('click', generateScenarioWithAI);
+    const genBtn = document.getElementById('generate-scenario-btn'); if (genBtn) genBtn.addEventListener('click', generateScenarioWithAI);
 
     // Bouton parler à Kitsune
     const foxBtn = document.getElementById('talk-to-fox'); if (foxBtn) foxBtn.addEventListener('click', openKitsuneDialogue);
@@ -145,7 +145,7 @@ function setupEventListeners() {
     const addBtn = document.getElementById('add-hours-btn'); if (addBtn) addBtn.addEventListener('click', addHoursAndAnalyze);
 
     // Fermeture du modal
-    document.querySelector('.close').addEventListener('click', closeModal);
+    const closeBtn = document.querySelector('.close'); if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
     // Input IA
     const sendBtn = document.getElementById('send-ai-message'); if (sendBtn) sendBtn.addEventListener('click', sendMessageToKitsune);
@@ -789,14 +789,16 @@ function createSnapshot() {
 }
 
 function loadSnapshotsList() {
+    if (typeof snapshotSystem === 'undefined') return;
     const snapshots = snapshotSystem.getAllSnapshots();
     const container = document.getElementById('snapshots-list');
+    if (!container) return;
     const stats = snapshotSystem.getStats();
     
     // Mettre à jour les stats
-    document.getElementById('snapshot-total').textContent = stats.total;
-    document.getElementById('snapshot-manual').textContent = stats.manual;
-    document.getElementById('snapshot-auto').textContent = stats.automatic;
+    _set('snapshot-total', stats.total);
+    _set('snapshot-manual', stats.manual);
+    _set('snapshot-auto', stats.automatic);
     
     if (snapshots.length === 0) {
         container.innerHTML = '<p class="placeholder">Aucun snapshot créé</p>';
