@@ -1,90 +1,79 @@
-const CACHE_NAME = “compteur-heures-v1.4.1”;
+const CACHE_NAME = "compteur-heures-v1.4.1";
 
 const FILES_TO_CACHE = [
-“./index.html”,
-“./menu.html”,
-“./manifest.json”,
-
-“./images/renard-annuel.png.jpg”,
-“./images/renard-mensuel.png.jpg”,
-“./images/renard-central.png.jpg”,
-
-“./icon-192.png”,
-“./icon-512.png”,
-“./apple-touch-icon.png”,
-
-“./heures/index.html”,
-“./paye/index.html”,
-
-“./fox/index.html”,
-“./fox/css/style.css”,
-“./fox/js/safety.js”,
-“./fox/js/storage.js”,
-“./fox/js/config.js”,
-“./fox/js/assets-config.js”,
-“./fox/js/modes.js”,
-“./fox/js/xp-system.js”,
-“./fox/js/leagues.js”,
-“./fox/js/badges.js”,
-“./fox/js/milestones.js”,
-“./fox/js/rpg-system.js”,
-“./fox/js/module3.js”,
-“./fox/js/quests.js”,
-“./fox/js/combat.js”,
-“./fox/js/skills.js”,
-“./fox/js/inventory.js”,
-“./fox/js/module-loader.js”,
-“./fox/js/scenarios-fox-data.js”,
-“./fox/js/scenarios-fox.js”,
-“./fox/js/scenarios-ai.js”,
-“./fox/js/legal-engine.js”,
-“./fox/js/data-bridge.js”,
-“./fox/js/module-reader.js”,
-“./fox/js/snapshot-system.js”,
-“./fox/js/export-rtf.js”,
-“./fox/js/ai-integration.js”,
-“./fox/js/main-rpg.js”
+  "./index.html",
+  "./menu.html",
+  "./manifest.json",
+  "./images/renard-annuel.png.jpg",
+  "./images/renard-mensuel.png.jpg",
+  "./images/renard-central.png.jpg",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./apple-touch-icon.png",
+  "./heures/index.html",
+  "./paye/index.html",
+  "./fox/index.html",
+  "./fox/css/style.css",
+  "./fox/js/safety.js",
+  "./fox/js/storage.js",
+  "./fox/js/config.js",
+  "./fox/js/assets-config.js",
+  "./fox/js/modes.js",
+  "./fox/js/xp-system.js",
+  "./fox/js/leagues.js",
+  "./fox/js/badges.js",
+  "./fox/js/milestones.js",
+  "./fox/js/rpg-system.js",
+  "./fox/js/module3.js",
+  "./fox/js/quests.js",
+  "./fox/js/combat.js",
+  "./fox/js/skills.js",
+  "./fox/js/inventory.js",
+  "./fox/js/module-loader.js",
+  "./fox/js/scenarios-fox-data.js",
+  "./fox/js/scenarios-fox.js",
+  "./fox/js/scenarios-ai.js",
+  "./fox/js/legal-engine.js",
+  "./fox/js/data-bridge.js",
+  "./fox/js/module-reader.js",
+  "./fox/js/snapshot-system.js",
+  "./fox/js/export-rtf.js",
+  "./fox/js/ai-integration.js",
+  "./fox/js/main-rpg.js"
 ];
 
-self.addEventListener(“install”, (event) => {
-event.waitUntil(
-caches.open(CACHE_NAME).then(async (cache) => {
-for (const file of FILES_TO_CACHE) {
-try {
-await cache.add(file);
-} catch (e) {
-console.warn(“⚠️ Cache fail:”, file);
-}
-}
-})
-);
-self.skipWaiting();
-});
-
-self.addEventListener(“activate”, (event) => {
-event.waitUntil(
-caches.keys().then((keys) =>
-Promise.all(
-keys
-.filter((k) => k !== CACHE_NAME)
-.map((k) => caches.delete(k))
-)
-)
-);
-self.clients.claim();
-});
-
-self.addEventListener(“fetch”, (event) => {
-event.respondWith(
-caches.match(event.request).then((cached) => {
-if (cached) return cached;
-
-```
-  return fetch(event.request).catch(() =>
-    caches.match("./menu.html")
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      for (const file of FILES_TO_CACHE) {
+        try {
+          await cache.add(file);
+        } catch (e) {
+          console.warn("⚠️ Cache fail:", file);
+        }
+      }
+    })
   );
-})
-```
+  self.skipWaiting();
+});
 
-);
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys
+          .filter((k) => k !== CACHE_NAME)
+          .map((k) => caches.delete(k))
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      return cached || fetch(event.request).catch(() => caches.match("./menu.html"));
+    })
+  );
 });
