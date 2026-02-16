@@ -13,10 +13,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* Bouton Kitsune → M3 (même taille que .menu-btn) */
+/* Bouton Kitsune → M3 */
 .kitsune-btn {
-  margin-top: 8px;
-  margin-bottom: 20px;
+  flex: 1;
   padding: 8px 16px;
   border-radius: 20px;
   border: none;
@@ -25,15 +24,26 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  margin-left: 8px;
   box-shadow: 0 2px 8px rgba(255,140,66,0.35);
   transition: transform 0.15s, box-shadow 0.15s;
 }
 .kitsune-btn:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
   box-shadow: 0 4px 16px rgba(255,140,66,0.55);
 }
 .kitsune-btn:active { transform: scale(0.97); }
+
+/* Wrapper des deux boutons */
+.top-nav-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+.top-nav-bar .menu-btn {
+  flex: 1;
+  margin: 0;
+}
 .menu-btn {
   margin-top: 8px;
   margin-bottom: 20px;
