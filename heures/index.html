@@ -12,6 +12,26 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+/* Bouton Kitsune → M3 */
+.kitsune-btn {
+  background: linear-gradient(135deg, #FF8C42, #e06a1a);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 8px;
+  box-shadow: 0 2px 8px rgba(255,140,66,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+  vertical-align: middle;
+}
+.kitsune-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(255,140,66,0.6);
+}
+.kitsune-btn:active { transform: scale(0.97); }
 .menu-btn {
   margin-top: 8px;
   margin-bottom: 20px;
@@ -164,7 +184,8 @@ textarea{
 </head>
 
 <body>
-  <button class="menu-btn" onclick="goMenu()">⬅ Retour au menu</button>
+<button class="menu-btn" onclick="goMenu()">⬅ Retour au menu</button>
+<button class="kitsune-btn" onclick="window.location.href='../fox/index.html'" title="Ouvrir le tableau de bord FOX Engine">🦊 Kitsune</button>
   <div id="exerciseAlert" style="
   display:none;
   max-width:900px;
