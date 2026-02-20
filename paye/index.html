@@ -495,7 +495,7 @@ input[type="number"] {
 </div>
 
 <!-- Radar animation -->
-<div class="geo-radar" id="geoRadar">📡 Surveillance en cours…</div>
+<div class="geo-radar" id="geoRadar">Surveillance en cours…</div>
 
 <!-- Bouton pointage manuel -->
 <button class="punch-btn start" id="punchBtn" onclick="manualPunch()">
@@ -1820,7 +1820,7 @@ function updateDistanceBadge(dist, isNear){
   if(!block||!badge) return;
   block.style.display = "block";
   const d = dist < 1000 ? Math.round(dist)+"m" : (dist/1000).toFixed(1)+"km";
-  badge.textContent = isNear ? `📍 Sur place – ${d}` : `📡 À ${d} du lieu`;
+  badge.textContent = isNear ? `Sur place – ${d}` : `A ${d} du lieu`;
   badge.className   = "geo-distance-badge " + (isNear ? "near" : "far");
 }
 
