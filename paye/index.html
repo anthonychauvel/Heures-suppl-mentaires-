@@ -33,6 +33,7 @@
   gap: 8px;
   margin-top: 8px;
   margin-bottom: 20px;
+  padding-top: env(safe-area-inset-top);
 }
 .top-nav-bar .menu-btn { flex: 1; margin: 0; }
 .menu-btn {
@@ -326,9 +327,9 @@ input[type="number"] {
 /* Toast notification */
 .geo-toast {
   position: fixed;
-  top: 20px;
+  top: calc(env(safe-area-inset-top) + 80px);
   left: 50%;
-  transform: translateX(-50%) translateY(-80px);
+  transform: translateX(-50%) translateY(-200px);
   background: #1c1f26;
   border: 1px solid var(--geo-active);
   color: var(--text);
@@ -505,22 +506,8 @@ input[type="number"] {
     <span style="font-size:12px;color:var(--muted);white-space:nowrap">m</span>
   </div>
 
-  <!-- Horaire de prise de poste -->
-  <div class="geo-config-row">
-    <label>Heure de prise de poste</label>
-    <input type="time" id="geoShiftStart" value="08:00">
-  </div>
-
-  <!-- Tolérance avant alerte -->
-  <div class="geo-config-row">
-    <label>Alerte à partir de</label>
-    <input type="number" id="geoTolerance" value="30" min="0" max="120" step="5">
-    <span style="font-size:12px;color:var(--muted);white-space:nowrap">min avant</span>
-  </div>
   <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4">
-    ℹ️ Avec ces réglages, l'alerte se déclenchera uniquement
-    dans la fenêtre définie avant ton heure de prise de poste.
-    Tu restes libre de valider ou ignorer.
+    ℹ️ Dès que tu entres dans cette zone, une notification te propose de pointer — quelle que soit l'heure. Tu restes libre de valider ou ignorer.
   </div>
 
   <hr style="border-color:#2a3040;margin:12px 0">
@@ -714,7 +701,7 @@ let currentKey = "", currentDay = null, unlocked = false;
    GÉOLOCALISATION – ÉTAT
 ======================= */
 let GEO_CONFIG = JSON.parse(localStorage.getItem(GEO_KEY) || "{}");
-// GEO_CONFIG : { lat, lng, radius, shiftStart, tolerance, watchEnabled }
+// GEO_CONFIG : { lat, lng, radius, watchEnabled }
 
 let GEO_PUNCHES_DATA = JSON.parse(localStorage.getItem(GEO_PUNCHES) || "{}");
 // GEO_PUNCHES_DATA : { "2025-02-20": [ {type:"in"|"out", ts: ISO}, ... ] }
@@ -1175,27 +1162,7 @@ function todayKey(){
   return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
 }
 
-/**
- * Vérifie si l'heure actuelle est dans la fenêtre d'alerte autorisée.
- * Ex : shift=11:00, tolerance=30 → alerte entre 10:30 et 11:00+2h (marge large sortie).
- */
-function isInAlertWindow(type="in"){
-  const shiftStart = GEO_CONFIG.shiftStart || "08:00";
-  const tolerance  = Number(GEO_CONFIG.tolerance) || 30;
-  const [sh, sm]   = shiftStart.split(":").map(Number);
-
-  const now        = new Date();
-  const nowMin     = now.getHours()*60 + now.getMinutes();
-  const shiftMin   = sh*60 + sm;
-
-  if(type === "in"){
-    // Fenêtre : de (shiftStart - tolerance) jusqu'à (shiftStart + 2h)
-    return nowMin >= (shiftMin - tolerance) && nowMin <= (shiftMin + 120);
-  } else {
-    // Sortie : pas de restriction horaire strict, mais pas avant l'heure de début
-    return nowMin >= shiftMin;
-  }
-}
+// Pas de fenêtre horaire : la notification se déclenche à toute heure
 
 /**
  * Charge la config géo depuis localStorage et met à jour l'UI.
@@ -1205,8 +1172,6 @@ function loadGeoConfig(){
 
   // Remplir les inputs
   if(GEO_CONFIG.radius)     document.getElementById("geoRadius").value     = GEO_CONFIG.radius;
-  if(GEO_CONFIG.shiftStart) document.getElementById("geoShiftStart").value = GEO_CONFIG.shiftStart;
-  if(GEO_CONFIG.tolerance !== undefined) document.getElementById("geoTolerance").value = GEO_CONFIG.tolerance;
   if(GEO_CONFIG.watchEnabled) document.getElementById("geoWatchToggle").checked = true;
 
   updateGeoLocationLabel();
@@ -1278,8 +1243,6 @@ function clearWorkLocation(){
  */
 function saveGeoConfig(){
   GEO_CONFIG.radius       = Number(document.getElementById("geoRadius").value)||200;
-  GEO_CONFIG.shiftStart   = document.getElementById("geoShiftStart").value||"08:00";
-  GEO_CONFIG.tolerance    = Number(document.getElementById("geoTolerance").value)||30;
   GEO_CONFIG.watchEnabled = document.getElementById("geoWatchToggle").checked;
   localStorage.setItem(GEO_KEY, JSON.stringify(GEO_CONFIG));
 
@@ -1365,7 +1328,7 @@ function onGeoPosition(pos){
   updateDistanceBadge(dist, isNear);
 
   // Déterminer l'action à proposer
-  if(isNear && !geoIsPunchedIn && isInAlertWindow("in")){
+  if(isNear && !geoIsPunchedIn){
     // Arrivée dans la zone
     proposeGeoAction("in", dist);
   } else if(!isNear && geoIsPunchedIn){
@@ -1480,7 +1443,10 @@ function computeAndApplyGeoHours(key){
   });
 
   // Paire en cours non fermée : on ne compte pas encore
-  const totalH = Math.round(totalMin / 15) * 0.25; // arrondi au quart d'heure
+  const MIN_MINUTES = 15; // seuil minimum – en dessous ça ne compte pas
+  const totalH = totalMin >= MIN_MINUTES
+    ? Math.floor(totalMin / 15) * 0.25  // arrondi au quart d'heure INFÉRIEUR
+    : 0;
 
   // Extraire le mois et le jour
   const [y, m, d] = key.split("-").map(Number);
@@ -1499,6 +1465,11 @@ function computeAndApplyGeoHours(key){
     if(totalH > 0){
       hoursEl.textContent     = totalH.toFixed(2)+" h";
       summaryEl.style.display = "block";
+      summaryEl.style.color   = "var(--muted)";
+    } else if(totalMin > 0 && totalMin < 15){
+      hoursEl.textContent     = "< 15 min — non comptabilisé";
+      summaryEl.style.display = "block";
+      summaryEl.style.color   = "#ff9500";
     } else {
       summaryEl.style.display = "none";
     }
@@ -1523,7 +1494,12 @@ function applyGeoHoursToCalendar(){
     else if(p.type==="out" && lastIn){ totalMin += (new Date(p.ts)-lastIn)/60000; lastIn=null; }
   });
 
-  const totalH = Math.round(totalMin/15)*0.25;
+  const MIN_MINUTES = 15;
+  if(totalMin > 0 && totalMin < MIN_MINUTES){
+    alert("⚠️ Session trop courte ("+Math.round(totalMin)+" min)\nLe minimum est 15 minutes pour être comptabilisé.");
+    return;
+  }
+  const totalH = Math.floor(totalMin/15)*0.25;
   if(totalH<=0){ alert("⚠️ Aucune heure complète à reporter (pointage de sortie manquant ?)"); return; }
 
   ALL_DATA[String(y)][mk].days[d] = totalH;
@@ -1567,8 +1543,11 @@ function renderGeoTimeline(){
   if(totalMin > 0){
     const h = Math.floor(totalMin/60);
     const m = Math.round(totalMin%60);
-    html += `<div style="font-size:12px;color:var(--geo-active);margin-top:6px;padding:4px 0">
-      ⏱ Total validé : <b>${h}h${m>0?m+"min":""}</b>
+    const valid = totalMin >= 15;
+    html += `<div style="font-size:12px;color:${valid?"var(--geo-active)":"#ff9500"};margin-top:6px;padding:4px 0">
+      ${valid
+        ? "⏱ Total validé : <b>"+h+"h"+(m>0?m+"min":"")+"</b>"
+        : "⚠️ "+Math.round(totalMin)+" min – minimum 15 min requis"}
     </div>`;
   }
 
