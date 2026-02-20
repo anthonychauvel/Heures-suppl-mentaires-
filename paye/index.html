@@ -18,7 +18,7 @@
 </script>
 <style>
 /* =======================
-   THÈME – VARIABLES
+   THÈME – VARIABLES (dark par défaut)
 ======================= */
 :root {
   --bg: #0f1115;
@@ -30,9 +30,11 @@
   --success: #2ecc71;
   --border: #333;
   --input-bg: #262a33;
+  --day-bg: #1e2128;
+  --today-bg: #2e2a1f;
 }
 body.light {
-  --bg: #f4f6f9;
+  --bg: #f0f2f5;
   --card: #ffffff;
   --text: #1a1a2e;
   --muted: #555;
@@ -40,74 +42,17 @@ body.light {
   --danger: #c0392b;
   --success: #1a8a4a;
   --border: #ddd;
-  --input-bg: #eef0f4;
+  --input-bg: #e8eaf0;
+  --day-bg: #e8eaf0;
+  --today-bg: #fff8ec;
 }
-html, body {
-  min-height: 100%;
-}
-body.light, body.light .main, body.light footer {
-  background: var(--bg);
-  color: var(--text);
-}
-body.light h1, body.light h2, body.light h3,
-body.light p, body.light label {
-  color: var(--text);
-}
-body.light .modal-content {
-  background: var(--card);
-  color: var(--text);
-}
-body.light input:not([type="checkbox"]),
-body.light select {
-  background: var(--input-bg);
-  color: var(--text);
-  border-color: var(--border);
-}
-body.light button {
-  background: var(--accent);
-  color: white;
-}
-body.light button.secondary {
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-body.light button.danger {
-  background: var(--danger);
-  color: white;
-}
-body.light .menu-btn {
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-body.light .theme-toggle {
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-body.light .top-nav-bar,
-body.light .topbar {
-  background: var(--bg);
-}
-body.light #versionBadge { color: var(--muted); }
 
 /* =======================
 BASE
 ======================= */
-html {
+html, body {
+min-height: 100%;
 background: var(–bg);
-}
-html.light-theme {
-–bg: #f4f6f9;
-–card: #ffffff;
-–text: #1a1a2e;
-–muted: #555;
-–accent: #2255cc;
-–danger: #c0392b;
-–success: #1a8a4a;
-–border: #ddd;
-–input-bg: #eef0f4;
 }
 body {
 margin: 0;
@@ -116,8 +61,12 @@ color: var(–text);
 font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
 transition: background 0.3s, color 0.3s;
 }
-.main { padding: 15px; }
-h1, h2, h3 { text-align: center; color: var(–text); }
+
+- { box-sizing: border-box; }
+  h1, h2, h3 { text-align: center; color: var(–text); }
+  p, label { color: var(–text); }
+  .main { padding: 15px; background: var(–bg); }
+  footer { background: var(–bg); color: var(–muted); }
 
 /* =======================
 BOUTONS
@@ -135,7 +84,11 @@ cursor: pointer;
 transition: opacity 0.15s, transform 0.1s;
 }
 button:active { transform: scale(0.98); opacity: 0.85; }
-button.secondary { background: var(–card); color: var(–text); border: 1px solid var(–border); }
+button.secondary {
+background: var(–card);
+color: var(–text);
+border: 1px solid var(–border);
+}
 button.danger { background: var(–danger); color: white; border: none; }
 
 /* =======================
@@ -149,7 +102,6 @@ background: var(–input-bg);
 color: var(–text);
 border: 1px solid var(–border);
 border-radius: 6px;
-box-sizing: border-box;
 height: 46px;
 line-height: 1.2;
 -webkit-appearance: none;
@@ -157,20 +109,12 @@ appearance: none;
 transition: background 0.3s, color 0.3s, border 0.3s;
 }
 input[type=“checkbox”] {
-width: 22px;
-height: 22px;
-min-width: 22px;
-margin: 0;
-cursor: pointer;
+width: 22px; height: 22px; min-width: 22px;
+margin: 0; cursor: pointer;
 accent-color: var(–accent);
 }
-input[type=“month”], input[type=“date”] {
-text-align: center;
-}
-input[type=“number”] {
-text-align: center;
--moz-appearance: textfield;
-}
+input[type=“number”] { text-align: center; -moz-appearance: textfield; }
+input[type=“month”], input[type=“date”] { text-align: center; }
 
 /* =======================
 CARDS
@@ -180,12 +124,8 @@ background: var(–card);
 padding: 15px;
 border-radius: 12px;
 margin-top: 15px;
-border: 1px solid transparent;
+border: 1px solid var(–border);
 transition: background 0.3s;
-}
-body.light .card {
-border-color: var(–border);
-box-shadow: 0 1px 4px rgba(0,0,0,0.07);
 }
 
 /* =======================
@@ -202,28 +142,16 @@ z-index: 2000;
 transition: background 0.3s;
 }
 .menu-btn {
-flex: 1;
-margin: 0;
-padding: 8px 16px;
-border-radius: 20px;
-border: 1px solid var(–border);
-background: var(–card);
-color: var(–text);
-font-size: 14px;
-font-weight: 500;
-cursor: pointer;
+flex: 1; margin: 0; padding: 8px 16px;
+border-radius: 20px; border: 1px solid var(–border);
+background: var(–card); color: var(–text);
+font-size: 14px; font-weight: 500; cursor: pointer;
 }
 .kitsune-btn {
-flex: 1;
-padding: 8px 16px;
-border-radius: 20px;
-border: none;
-background: linear-gradient(135deg, #FF8C42, #e06a1a);
-color: #fff;
-font-size: 14px;
-font-weight: 500;
-cursor: pointer;
-box-shadow: 0 2px 8px rgba(255,140,66,0.35);
+flex: 1; padding: 8px 16px; border-radius: 20px;
+border: none; background: linear-gradient(135deg,#FF8C42,#e06a1a);
+color: #fff; font-size: 14px; font-weight: 500;
+cursor: pointer; box-shadow: 0 2px 8px rgba(255,140,66,.35);
 }
 
 /* =======================
@@ -232,29 +160,15 @@ TOPBAR
 .topbar {
 background: var(–bg);
 padding: 0 15px 10px;
-display: flex;
-gap: 8px;
+display: flex; gap: 8px;
 transition: background 0.3s;
 }
-.topbar button {
-flex: 1;
-margin-top: 0;
-}
-
-/* =======================
-TOGGLE THÈME
-======================= */
+.topbar button { flex: 1; margin-top: 0; }
 .theme-toggle {
-flex: 0 0 auto;
-width: auto;
-padding: 8px 14px;
-border-radius: 20px;
-border: 1px solid var(–border);
-background: var(–card);
-color: var(–text);
-font-size: 14px;
-margin-top: 0;
-cursor: pointer;
+flex: 0 0 auto; width: auto; padding: 8px 14px;
+border-radius: 20px; border: 1px solid var(–border);
+background: var(–card); color: var(–text);
+font-size: 14px; margin-top: 0; cursor: pointer;
 white-space: nowrap;
 }
 
@@ -264,46 +178,32 @@ CALENDRIER
 .calendar {
 display: grid;
 grid-template-columns: repeat(7, 1fr);
-gap: 4px;
-width: 100%;
-box-sizing: border-box;
+gap: 4px; width: 100%;
 }
 .weekday {
-text-align: center;
-font-weight: bold;
-font-size: 10px;
-padding: 4px 0;
-color: var(–muted);
-min-width: 0;
+text-align: center; font-weight: bold;
+font-size: 10px; padding: 4px 0;
+color: var(–muted); min-width: 0;
 }
 .day {
-background: var(–input-bg);
-border-radius: 8px;
-padding: 6px 4px;
-text-align: center;
-cursor: pointer;
-min-height: 62px;
-box-sizing: border-box;
-overflow: hidden;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: flex-start;
-font-size: 12px;
-min-width: 0;
+background: var(–day-bg);
+border-radius: 8px; padding: 6px 4px;
+text-align: center; cursor: pointer;
+min-height: 62px; overflow: hidden;
+display: flex; flex-direction: column;
+align-items: center; justify-content: flex-start;
+font-size: 12px; min-width: 0;
+color: var(–text);
 transition: border 0.2s, opacity 0.2s, transform 0.1s, background 0.3s;
 }
 .day b { font-size: 13px; line-height: 1.5; display: block; }
 .day span { font-size: 10px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; display: block; }
 .day.today {
 border: 2px solid #ff9500 !important;
-background: #2e2a1f;
+background: var(–today-bg);
 box-shadow: 0 0 0 2px rgba(255,149,0,0.3);
-transform: scale(1.03);
-z-index: 2;
-opacity: 1 !important;
+transform: scale(1.03); z-index: 2; opacity: 1 !important;
 }
-body.light .day.today { background: #fff8ec; }
 .day.locked { opacity: .4; cursor: not-allowed; }
 .day.after-closing { border: 1px dashed var(–accent); opacity: 0.7; }
 .day.after-closing.today { opacity: 1 !important; border-style: solid; }
@@ -312,27 +212,19 @@ body.light .day.today { background: #fff8ec; }
 MODALES
 ======================= */
 .modal {
-position: fixed;
-inset: 0;
+position: fixed; inset: 0;
 background: rgba(0,0,0,.65);
-display: flex;
-align-items: center;
-justify-content: center;
-z-index: 4000;
-opacity: 0;
-pointer-events: none;
+display: flex; align-items: center; justify-content: center;
+z-index: 4000; opacity: 0; pointer-events: none;
 transform: translateY(10px);
 transition: opacity .2s ease, transform .2s ease;
 }
 .modal.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
 .modal-content {
-background: var(–card);
-border-radius: 16px;
-padding: 20px;
-width: 90%;
-max-width: 420px;
-max-height: 85vh;
-overflow-y: auto;
+background: var(–card); border-radius: 16px;
+padding: 20px; width: 90%; max-width: 420px;
+max-height: 85vh; overflow-y: auto;
+color: var(–text);
 transition: background 0.3s;
 }
 
@@ -345,15 +237,12 @@ BLUR €
 BADGES
 ======================= */
 .badge {
-display: inline-block;
-padding: 4px 8px;
-border-radius: 12px;
-font-size: 12px;
-margin-bottom: 4px;
+display: inline-block; padding: 4px 8px;
+border-radius: 12px; font-size: 12px; margin-bottom: 4px;
 }
 .badge.ok { background: #1b5e20; color: #fff; }
-body.light .badge.ok { background: #d4edda; color: #155724; }
 .badge.file { background: #283593; color: #fff; }
+body.light .badge.ok { background: #d4edda; color: #155724; }
 body.light .badge.file { background: #d0e4ff; color: #1a3a6e; }
 
 /* =======================
@@ -363,12 +252,8 @@ VERSION
 position: fixed;
 bottom: calc(env(safe-area-inset-bottom) + 14px);
 right: calc(env(safe-area-inset-right) + 14px);
-font-size: 11px;
-opacity: 0.45;
-color: var(–muted);
-z-index: 99999;
-user-select: none;
-pointer-events: none;
+font-size: 11px; opacity: 0.45; color: var(–muted);
+z-index: 99999; user-select: none; pointer-events: none;
 }
 </style>
 
