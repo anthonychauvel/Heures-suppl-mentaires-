@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
  <link rel="manifest" href="/manifest.json">
@@ -8,12 +9,10 @@
 <meta name="apple-mobile-web-app-title" content="Compteur Heures & Paie">
 <meta name="theme-color" content="#4FB3C2">
 <meta charset="UTF-8">
-<title>Simulateur d’heures mensualisé</title>
-
+<title>Simulateur d'heures mensualisé</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-/* Bouton Kitsune → M3 */
 .kitsune-btn {
   flex: 1;
   padding: 8px 16px;
@@ -27,23 +26,15 @@
   box-shadow: 0 2px 8px rgba(255,140,66,0.35);
   transition: transform 0.15s, box-shadow 0.15s;
 }
-.kitsune-btn:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 16px rgba(255,140,66,0.55);
-}
+.kitsune-btn:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(255,140,66,0.55); }
 .kitsune-btn:active { transform: scale(0.97); }
-
-/* Wrapper des deux boutons */
 .top-nav-bar {
   display: flex;
   gap: 8px;
   margin-top: 8px;
   margin-bottom: 20px;
 }
-.top-nav-bar .menu-btn {
-  flex: 1;
-  margin: 0;
-}
+.top-nav-bar .menu-btn { flex: 1; margin: 0; }
 .menu-btn {
   margin-top: 8px;
   margin-bottom: 20px;
@@ -55,30 +46,25 @@
   font-weight: 500;
   cursor: pointer;
 }
-/* =======================
-   TOP BAR
-======================= */
-.topbar{
+.topbar {
   position: sticky;
   top: 0;
   z-index: 2000;
   background: var(--bg);
   padding: calc(env(safe-area-inset-top) + 10px) 15px 10px;
 }
-
-/* =======================
-   MODE SOMBRE – GLOBAL
-======================= */
-:root{
-  --bg:#0f1115;
-  --card:#1c1f26;
-  --text:#e6e6e6;
-  --muted:#9aa0a6;
-  --accent:#4f8cff;
-  --danger:#c0392b;
-  --success:#2ecc71;
+:root {
+  --bg: #0f1115;
+  --card: #1c1f26;
+  --text: #e6e6e6;
+  --muted: #9aa0a6;
+  --accent: #4f8cff;
+  --danger: #c0392b;
+  --success: #2ecc71;
+  --geo-active: #00c896;
+  --geo-inactive: #555;
 }
-#versionBadge{
+#versionBadge {
   position: fixed;
   bottom: calc(env(safe-area-inset-bottom) + 14px);
   right: calc(env(safe-area-inset-right) + 14px);
@@ -89,128 +75,107 @@
   user-select: none;
   pointer-events: none;
 }
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
 }
-
-.main{
-  padding:15px;
+.main { padding: 15px; }
+h1, h2, h3 { text-align: center; }
+button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 15px;
+  margin-top: 6px;
 }
-h1,h2,h3{text-align:center}
-button{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  background:var(--accent);
-  color:white;
-  font-size:15px;
-  margin-top:6px;
+button.secondary { background: #2a2f3a; }
+button.danger { background: var(--danger); }
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  background: #262a33;
+  color: var(--text);
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-sizing: border-box;
 }
-button.secondary{background:#2a2f3a}
-button.danger{background:var(--danger)}
-input,select{
-  width:100%;
-  padding:8px;
-  margin-top:6px;
-  background:#262a33;
-  color:var(--text);
-  border:1px solid #333;
-  border-radius:6px;
+.card {
+  background: var(--card);
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 15px;
 }
-
-/* =======================
-   CARTES
-======================= */
-.card{
-  background:var(--card);
-  padding:15px;
-  border-radius:12px;
-  margin-top:15px;
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
 }
-
-/* =======================
-   CALENDRIER
-======================= */
-.calendar{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
+.weekday { text-align: center; font-weight: bold; font-size: 12px; }
+.day {
+  background: #262a33;
+  border-radius: 8px;
+  padding: 6px;
+  text-align: center;
+  cursor: pointer;
+  min-height: 60px;
+  transition: border 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
 }
-.weekday{
-  text-align:center;
-  font-weight:bold;
-  font-size:12px;
+.day.today {
+  border: 2px solid #ff9500 !important;
+  opacity: 1 !important;
+  background: #2e2a1f;
+  box-shadow: 0 0 0 2px rgba(255,149,0,0.4);
+  transform: scale(1.03);
+  z-index: 2;
 }
-.day{
-  background:#262a33;
-  border-radius:8px;
-  padding:6px;
-  text-align:center;
-  cursor:pointer;
-  min-height:60px;
-}
-.day.today{
-  border:2px solid #ff9500;
-}
-.day.locked{
-  opacity:.4;
-  cursor:not-allowed;
-}
-
-/* =======================
-   MODALES
-======================= */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:4000;
-
-  opacity:0;
-  pointer-events:none;
+.day.locked { opacity: .4; cursor: not-allowed; }
+.day.after-closing { border: 1px dashed #4f8cff; opacity: 0.75; }
+.day.after-closing.today { opacity: 1 !important; border-style: solid; }
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+  opacity: 0;
+  pointer-events: none;
   transform: translateY(10px);
   transition: opacity .2s ease, transform .2s ease;
 }
-
-.modal.open{
-  opacity:1;
-  pointer-events:auto;
-  transform: translateY(0);
+.modal.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.modal-content {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  width: 90%;
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
 }
-
-
-/* =======================
-   FLOU €
-======================= */
-.blur{
-  filter:blur(8px);
+.blur { filter: blur(8px); }
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
 }
-
-/* =======================
-   BADGES
-======================= */
-.badge{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:12px;
-  font-size:12px;
-}
-.badge.ok{background:#1b5e20}
-.badge.file{background:#283593}
-input[type="month"]{
+.badge.ok { background: #1b5e20; }
+.badge.file { background: #283593; }
+input[type="month"] {
   text-align: center;
   padding-right: 0;
   appearance: none;
   -webkit-appearance: none;
 }
-input[type="number"]{
+input[type="number"] {
   text-align: center;
   appearance: none;
   -webkit-appearance: none;
@@ -218,82 +183,241 @@ input[type="number"]{
   padding-left: 0;
   padding-right: 0;
 }
-.day.after-closing{
-  border: 1px dashed #4f8cff;
-  opacity: 0.75;
+
+/* =========================================
+   GÉOLOCALISATION – STYLES SPÉCIFIQUES
+========================================= */
+
+/* Pastille de statut géo */
+.geo-status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--geo-inactive);
+  margin-right: 6px;
+  vertical-align: middle;
+  transition: background 0.4s;
 }
-.day{
-  transition: 
-    border 0.2s ease,
-    opacity 0.2s ease,
-    transform 0.1s ease;
+.geo-status-dot.active {
+  background: var(--geo-active);
+  box-shadow: 0 0 6px var(--geo-active);
+  animation: geo-pulse 1.8s ease-in-out infinite;
 }
-.day.today{
-  border:2px solid #ff9500 !important;
-  opacity: 1 !important;
-  background: #2e2a1f;
-  box-shadow: 0 0 0 2px rgba(255,149,0,0.4);
-  transform: scale(1.03);
-  z-index: 2;
+@keyframes geo-pulse {
+  0%, 100% { box-shadow: 0 0 4px var(--geo-active); }
+  50% { box-shadow: 0 0 14px var(--geo-active); }
 }
-.day.after-closing.today{
-  opacity: 1 !important;
-  border-style: solid;
+
+/* Carte de statut pointage */
+.geo-card {
+  background: #12161e;
+  border: 1px solid #2a3040;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 15px;
+}
+.geo-card.pointed-in {
+  border-color: var(--geo-active);
+  background: #0a1f18;
+}
+
+/* Timeline des pointages du jour */
+.punch-timeline {
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 2px solid #333;
+}
+.punch-entry {
+  position: relative;
+  padding: 6px 0 6px 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.punch-entry::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4f8cff;
+}
+.punch-entry.in::before { background: var(--geo-active); }
+.punch-entry.out::before { background: #ff6b6b; }
+.punch-entry .punch-hours {
+  font-weight: bold;
+  color: var(--text);
+  margin-left: 6px;
+}
+
+/* Bouton pointage principal */
+.punch-btn {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  width: 100%;
+  margin-top: 10px;
+}
+.punch-btn.start {
+  background: linear-gradient(135deg, #00c896, #009966);
+  color: white;
+  box-shadow: 0 4px 16px rgba(0, 200, 150, 0.3);
+}
+.punch-btn.stop {
+  background: linear-gradient(135deg, #ff6b6b, #cc2200);
+  color: white;
+  box-shadow: 0 4px 16px rgba(255, 80, 80, 0.3);
+}
+.punch-btn:active { transform: scale(0.97); }
+
+/* Zone configuration géo */
+.geo-config-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+.geo-config-row label {
+  font-size: 13px;
+  color: var(--muted);
+  min-width: 130px;
+}
+.geo-config-row input {
+  flex: 1;
+  margin-top: 0;
+}
+
+/* Radar animé quand surveillance active */
+.geo-radar {
+  display: none;
+  text-align: center;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--geo-active);
+  animation: radar-blink 2s ease-in-out infinite;
+}
+.geo-radar.visible { display: block; }
+@keyframes radar-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Badge distance */
+.geo-distance-badge {
+  display: inline-block;
+  background: #1c2535;
+  border: 1px solid #2a3a55;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.geo-distance-badge.near { border-color: var(--geo-active); color: var(--geo-active); }
+.geo-distance-badge.far { border-color: #ff6b6b; color: #ff9999; }
+
+/* Toast notification */
+.geo-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-80px);
+  background: #1c1f26;
+  border: 1px solid var(--geo-active);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 14px 20px;
+  max-width: 340px;
+  width: 90%;
+  z-index: 9999;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  font-size: 14px;
+}
+.geo-toast.show { transform: translateX(-50%) translateY(0); }
+.geo-toast .geo-toast-title {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+.geo-toast .geo-toast-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.geo-toast .geo-toast-actions button {
+  flex: 1;
+  padding: 8px;
+  font-size: 13px;
+  margin: 0;
+  border-radius: 8px;
+}
+.geo-toast .btn-confirm {
+  background: var(--geo-active);
+  color: #000;
+  font-weight: bold;
+}
+.geo-toast .btn-dismiss {
+  background: #2a2f3a;
+  color: var(--muted);
 }
 
 </style>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-</head>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
 <body>
 <div class="top-nav-bar">
   <button class="menu-btn" onclick="goMenu()">⬅ Retour au menu</button>
   <button class="kitsune-btn" onclick="window.location.href='../fox/index.html'" title="Ouvrir FOX Engine">🦊 Kitsune</button>
 </div>
 
-  <div class="modal" id="debugGate">
+<!-- ==================== MODALES SYSTÈME ==================== -->
+
+<div class="modal" id="debugGate">
   <div class="modal-content">
     <h3>🧪 Accès debug sécurisé</h3>
-
-    <p style="font-size:14px">
-      Avant toute intervention, un <b>test de crash</b> est obligatoire.
-    </p>
-
-    <input
-      type="password"
-      id="debugCode"
-      placeholder="Code requis (1234)"
-    >
-
-    <button class="danger" onclick="validateDebugAccess()">
-      💥 Tester le crash maintenant
-    </button>
-
-    <button class="secondary" onclick="closeDebugGate()">
-      Annuler
-    </button>
+    <p style="font-size:14px">Avant toute intervention, un <b>test de crash</b> est obligatoire.</p>
+    <input type="password" id="debugCode" placeholder="Code requis (1234)">
+    <button class="danger" onclick="validateDebugAccess()">💥 Tester le crash maintenant</button>
+    <button class="secondary" onclick="closeDebugGate()">Annuler</button>
   </div>
 </div>
+
 <div class="modal" id="recoveryModal">
   <div class="modal-content">
     <h2>🛠️ Mode récupération</h2>
-        <h3>📸 Snapshots disponibles</h3>
+    <h3>📸 Snapshots disponibles</h3>
     <div id="snapshotList"></div>
-    <p style="font-size:14px">
-      L’application a détecté un problème lors du dernier démarrage.
-    </p>
-
+    <p style="font-size:14px">L'application a détecté un problème lors du dernier démarrage.</p>
     <button onclick="recoverAuto()">🔄 Réparation automatique</button>
-    <button class="secondary" onclick="recoverSoftReset()">♻️ Réinitialiser l’interface</button>
+    <button class="secondary" onclick="recoverSoftReset()">♻️ Réinitialiser l'interface</button>
     <button class="danger" onclick="recoverFactory()">🧨 Réinitialisation complète</button>
-
-    <p style="font-size:12px;color:#aaa;margin-top:10px">
-      ⚠️ La réinitialisation complète supprime les données locales.
-    </p>
+    <p style="font-size:12px;color:#aaa;margin-top:10px">⚠️ La réinitialisation complète supprime les données locales.</p>
   </div>
 </div>
 
-<!-- le reste de ton compteur ici -->
+<!-- ==================== TOAST GÉOLOCALISATION ==================== -->
+
+<div class="geo-toast" id="geoToast">
+  <div class="geo-toast-title" id="geoToastTitle">📍 Tu arrives au travail</div>
+  <div id="geoToastMsg" style="color:var(--muted);font-size:13px"></div>
+  <div class="geo-toast-actions">
+    <button class="btn-confirm" id="geoToastConfirm" onclick="confirmGeoAction()">✅ Démarrer</button>
+    <button class="btn-dismiss" onclick="dismissGeoToast()">Plus tard</button>
+  </div>
+</div>
+
+<!-- ==================== TOPBAR ==================== -->
+
 <div class="topbar">
   <button onclick="openTutorial()">❓ Tutoriel</button>
 </div>
@@ -301,1588 +425,1584 @@ input[type="number"]{
 <div class="main">
 
   <h1>⏱️ Heures supplémentaires</h1>
-<p style="
-  text-align:center;
-  font-size:14px;
-  color:#9aa0a6;
-  margin-top:-10px;
-">
-  Suivi précis des heures supplémentaires basé sur la
-  <b>logique réelle de paie mensuelle</b>
-  (clôture mensuelle + report automatique)
-</p>
+  <p style="text-align:center;font-size:14px;color:#9aa0a6;margin-top:-10px;">
+    Suivi précis des heures supplémentaires basé sur la
+    <b>logique réelle de paie mensuelle</b>
+    (clôture mensuelle + report automatique)
+  </p>
+
   <div class="card">
     <label>Mois suivi</label>
     <input type="month" id="monthPicker">
     <label>Jour de clôture mensuelle</label>
- <input type="date" id="closingDate">
+    <input type="date" id="closingDate">
   </div>
 
   <div class="calendar card" id="calendar"></div>
-  
-<div class="card">
-  <h3>Récapitulatif</h3>
-  <p>Report précédent : <b id="prevCarry">0.00</b> h</p>
-<p>Total période : <b id="totalMonth">0.00</b> h</p>
-<p>Heures à 25 % : <b id="hours25">0.00</b> h</p>
-<p>Heures à 50 % : <b id="hours50">0.00</b> h</p>
-<p style="font-size:12px;color:#aaa;margin-top:8px">
-  ℹ️ Calcul basé sur une hypothèse standard :
-  25% jusqu’à 8h hebdomadaires, puis 50%.
-  Peut varier selon la convention collective.
-</p>
-  <p>Heures payées : <input type="number" id="paidHours" step="0.25"></p>
-  <p>Reliquat reporté : <b id="carryOver">0.00</b> h</p>
+
+  <!-- ==================== CARTE POINTAGE GÉOLOCALISÉ ==================== -->
+
+  <div class="geo-card" id="geoCard">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div>
+        <span class="geo-status-dot" id="geoDot"></span>
+        <b style="font-size:15px">Pointage géolocalisé</b>
+      </div>
+      <span id="geoStatusLabel" style="font-size:12px;color:var(--muted)">Inactif</span>
+    </div>
+
+```
+<!-- Statut distance temps réel -->
+<div id="geoDistanceBlock" style="margin-top:8px;display:none">
+  <span class="geo-distance-badge" id="geoDistanceBadge">📡 Calcul…</span>
 </div>
 
-<div class="card">
-  <h3>💰 Valeur €</h3>
-  <div id="euroBox" class="blur">
-    <label>Taux horaire (€)</label>
-    <input type="number" id="rate">
-    <label>Coef 25 %</label>
-    <input type="number" id="coef25">
-    <label>Coef 50 %</label>
-    <input type="number" id="coef50">
-    <label>Coef brut → net</label>
-    <input type="number" id="coefNet">
-    <p><b id="euroResult">0.00 €</b></p>
-    <p id="euroDetail" style="font-size:12px;color:#aaa;margin-top:8px"></p>
-    <p style="
-  font-size:12px;
-  color:#9aa0a6;
-  margin-top:10px;
-  line-height:1.4;
-">
-⚠️ Les <b>taux</b> et <b>coefficients</b> utilisés sont fournis
-à titre <b>strictement indicatif</b>.<br>
-La somme affichée peut <b>ne pas correspondre à la réalité</b>
-(selon la convention collective, les accords d’entreprise
-ou le mode de calcul de l’employeur).<br>
-<b>Seul le bulletin de paie fait foi.</b>
-</p>
-  </div>
-  <input type="password" id="unlockCode" placeholder="Code (1234)">
-  <button onclick="unlockEuro()">Déverrouiller</button>
+<!-- Radar animation -->
+<div class="geo-radar" id="geoRadar">📡 Surveillance en cours…</div>
+
+<!-- Bouton pointage manuel -->
+<button class="punch-btn start" id="punchBtn" onclick="manualPunch()">
+  ▶ Pointer l'arrivée
+</button>
+
+<!-- Timeline du jour -->
+<div class="punch-timeline" id="punchTimeline"></div>
+
+<!-- Résumé heures du jour -->
+<div id="geoTodaySummary" style="font-size:13px;color:var(--muted);margin-top:8px;display:none">
+  ⏱ Aujourd'hui : <b id="geoTodayHours">0.00 h</b>
 </div>
+
+<!-- Bouton config -->
+<button class="secondary" style="margin-top:12px;font-size:13px" onclick="toggleGeoConfig()">
+  ⚙️ Configuration du pointage
+</button>
+
+<!-- Zone de configuration dépliable -->
+<div id="geoConfigPanel" style="display:none;margin-top:12px">
+  <hr style="border-color:#2a3040;margin-bottom:12px">
+
+  <!-- Lieu de travail -->
+  <div style="font-size:13px;color:var(--muted);margin-bottom:8px">
+    <b style="color:var(--text)">📍 Lieu de travail</b>
+  </div>
+  <div id="geoSavedLocation" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
+
+  <button onclick="captureWorkLocation()" style="background:#1b3a2a;color:var(--geo-active);border:1px solid var(--geo-active);font-size:13px">
+    📌 Enregistrer ma position actuelle comme lieu de travail
+  </button>
+
+  <button class="secondary" style="font-size:13px;margin-top:6px" onclick="clearWorkLocation()">
+    🗑️ Supprimer le lieu enregistré
+  </button>
+
+  <hr style="border-color:#2a3040;margin:12px 0">
+
+  <!-- Rayon de détection -->
+  <div class="geo-config-row">
+    <label>Rayon de détection</label>
+    <input type="number" id="geoRadius" value="200" min="50" max="2000" step="50">
+    <span style="font-size:12px;color:var(--muted);white-space:nowrap">m</span>
+  </div>
+
+  <!-- Horaire de prise de poste -->
+  <div class="geo-config-row">
+    <label>Heure de prise de poste</label>
+    <input type="time" id="geoShiftStart" value="08:00">
+  </div>
+
+  <!-- Tolérance avant alerte -->
+  <div class="geo-config-row">
+    <label>Alerte à partir de</label>
+    <input type="number" id="geoTolerance" value="30" min="0" max="120" step="5">
+    <span style="font-size:12px;color:var(--muted);white-space:nowrap">min avant</span>
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4">
+    ℹ️ Avec ces réglages, l'alerte se déclenchera uniquement
+    dans la fenêtre définie avant ton heure de prise de poste.
+    Tu restes libre de valider ou ignorer.
+  </div>
+
+  <hr style="border-color:#2a3040;margin:12px 0">
+
+  <!-- Activation de la surveillance -->
+  <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px">
+    <input type="checkbox" id="geoWatchToggle" style="width:auto;margin:0">
+    Activer la surveillance automatique
+  </label>
+  <div style="font-size:11px;color:var(--muted);margin-top:4px">
+    Nécessite que l'application reste ouverte. Aucune donnée n'est envoyée à l'extérieur.
+  </div>
+
+  <button onclick="saveGeoConfig()" style="margin-top:12px;background:#1a2a3a;border:1px solid var(--accent);font-size:13px">
+    💾 Enregistrer la configuration
+  </button>
+</div>
+```
+
+  </div>
+
+  <!-- ==================== RECAP ==================== -->
+
+  <div class="card">
+    <h3>Récapitulatif</h3>
+    <p>Report précédent : <b id="prevCarry">0.00</b> h</p>
+    <p>Total période : <b id="totalMonth">0.00</b> h</p>
+    <p>Heures à 25 % : <b id="hours25">0.00</b> h</p>
+    <p>Heures à 50 % : <b id="hours50">0.00</b> h</p>
+    <p style="font-size:12px;color:#aaa;margin-top:8px">
+      ℹ️ Calcul basé sur une hypothèse standard : 25% jusqu'à 8h hebdomadaires, puis 50%.
+      Peut varier selon la convention collective.
+    </p>
+    <p>Heures payées : <input type="number" id="paidHours" step="0.25"></p>
+    <p>Reliquat reporté : <b id="carryOver">0.00</b> h</p>
+  </div>
+
+  <div class="card">
+    <h3>💰 Valeur €</h3>
+    <div id="euroBox" class="blur">
+      <label>Taux horaire (€)</label>
+      <input type="number" id="rate">
+      <label>Coef 25 %</label>
+      <input type="number" id="coef25">
+      <label>Coef 50 %</label>
+      <input type="number" id="coef50">
+      <label>Coef brut → net</label>
+      <input type="number" id="coefNet">
+      <p><b id="euroResult">0.00 €</b></p>
+      <p id="euroDetail" style="font-size:12px;color:#aaa;margin-top:8px"></p>
+      <p style="font-size:12px;color:#9aa0a6;margin-top:10px;line-height:1.4">
+        ⚠️ Les <b>taux</b> et <b>coefficients</b> utilisés sont fournis à titre <b>strictement indicatif</b>.<br>
+        <b>Seul le bulletin de paie fait foi.</b>
+      </p>
+    </div>
+    <input type="password" id="unlockCode" placeholder="Code (1234)">
+    <button onclick="unlockEuro()">Déverrouiller</button>
+  </div>
+
 <button class="secondary" onclick="toggleChangeCode()">🔁 Changer le code</button>
 
-<div id="changeCodeBox" style="display:none;margin-top:10px">
-  <input type="password" id="oldCode" placeholder="Ancien code">
-  <input type="password" id="newCode" placeholder="Nouveau code (4 chiffres min)">
-  <input type="password" id="confirmCode" placeholder="Confirmer le code">
-  <button class="danger" onclick="changeCode()">Valider le nouveau code</button>
-</div>
-
-<div class="card">
-  
-  <span class="badge ok">🟢 Sauvegarde locale auto</span>
-  <span class="badge file">
-  👤 Usage personnel – outil indicatif
-</span>
-  <span class="badge file">💾 Dernier fichier : <span id="fileDate">—</span></span>
-  <button onclick="exportJSON()">💾 Sauvegarde dans un fichier</button>
-  <input type="file" id="importFile" accept=".json" style="display:none">
-<button class="secondary" onclick="document.getElementById('importFile').click()">
-📥 Importer une sauvegarde
-</button>
-   <button onclick="exportMonthlyPDF()">📄 PDF mensuel détaillé</button>
-<button onclick="exportAnnualPDF()">📕 PDF annuel récapitulatif</button>
-</div>
-
-
-
-
-
-
-<!-- =======================
-     POPUP HEURES
-======================= -->
-<div class="modal" id="hoursModal">
-  <div class="modal-content">
-    <h3>⏱️ Ajouter des heures</h3>
-    <div id="hoursChoices"></div>
-    <label>Saisie manuelle</label>
-    <input type="number" id="manualHours" step="0.25">
-    <button onclick="confirmManual()">Valider</button>
-    <button class="danger" onclick="deleteDayHours()">🗑️ Supprimer les heures du jour</button>
-    <button class="secondary" onclick="closeHours()">Annuler</button>
+  <div id="changeCodeBox" style="display:none;margin-top:10px">
+    <input type="password" id="oldCode" placeholder="Ancien code">
+    <input type="password" id="newCode" placeholder="Nouveau code (4 chiffres min)">
+    <input type="password" id="confirmCode" placeholder="Confirmer le code">
+    <button class="danger" onclick="changeCode()">Valider le nouveau code</button>
   </div>
-</div>
-<div class="modal" id="tutorialModal">
-  <div class="modal-content" style="max-width:700px;max-height:80vh;overflow:auto;">
-    <h2>📘 Tutoriel – Suivi des heures supplémentaires</h2>
 
-    <h3>1️⃣ Principe général</h3>
-    <p>
-      Cet outil permet de suivre les heures supplémentaires dans le cadre
-      d’une <b>paie mensuelle</b>, avec report automatique des reliquats.
-    </p>
+  <div class="card">
+    <span class="badge ok">🟢 Sauvegarde locale auto</span>
+    <span class="badge file">👤 Usage personnel – outil indicatif</span>
+    <span class="badge file">💾 Dernier fichier : <span id="fileDate">—</span></span>
+    <button onclick="exportJSON()">💾 Sauvegarde dans un fichier</button>
+    <input type="file" id="importFile" accept=".json" style="display:none">
+    <button class="secondary" onclick="document.getElementById('importFile').click()">📥 Importer une sauvegarde</button>
+    <button onclick="exportMonthlyPDF()">📄 PDF mensuel détaillé</button>
+    <button onclick="exportAnnualPDF()">📕 PDF annuel récapitulatif</button>
+  </div>
 
-    <h3>2️⃣ Saisie des heures</h3>
+  <!-- ==================== MODALES ==================== -->
+
+  <div class="modal" id="hoursModal">
+    <div class="modal-content">
+      <h3>⏱️ Ajouter des heures</h3>
+      <div id="hoursChoices"></div>
+      <label>Saisie manuelle</label>
+      <input type="number" id="manualHours" step="0.25">
+      <button onclick="confirmManual()">Valider</button>
+      <button class="danger" onclick="deleteDayHours()">🗑️ Supprimer les heures du jour</button>
+      <button class="secondary" onclick="closeHours()">Annuler</button>
+    </div>
+  </div>
+
+  <div class="modal" id="tutorialModal">
+    <div class="modal-content" style="max-width:700px;max-height:80vh;overflow:auto;">
+      <h2>📘 Tutoriel – Suivi des heures supplémentaires</h2>
+      <h3>1️⃣ Principe général</h3>
+      <p>Cet outil permet de suivre les heures supplémentaires dans le cadre d'une <b>paie mensuelle</b>, avec report automatique des reliquats.</p>
+      <h3>2️⃣ Saisie des heures</h3>
+      <p>Clique sur un jour pour saisir manuellement tes heures, ou utilise le <b>pointage géolocalisé</b> pour une saisie automatique depuis le terrain.</p>
+      <h3>3️⃣ Pointage géolocalisé</h3>
+      <p>Configure une fois ton lieu de travail et tes horaires. L'app te propose de pointer dès que tu arrives dans la zone — <b>tu valides toujours manuellement</b>. Aucune donnée ne sort de ton appareil.</p>
+      <h3>4️⃣ Clôture mensuelle</h3>
+      <p>Le jour de clôture définit la fin de la période de paie. Les heures après cette date sont automatiquement reportées.</p>
+      <h3>5️⃣ Zone €</h3>
+      <p>Les montants sont floutés par défaut et protégés par code.</p>
+      <button class="secondary" onclick="closeTutorial()">Fermer</button>
+    </div>
+  </div>
+
+  <div class="modal" id="legalModal">
+    <div class="modal-content">
+      <h2>⚠️ Avertissement important</h2>
+      <p style="font-size:14px">
+        Cet outil est un <b>simulateur personnel</b>.<br><br>
+        Les calculs sont indicatifs et peuvent différer de votre bulletin de paie réel.<br><br>
+        <b>Seuls les documents de l'employeur font foi.</b>
+      </p>
+      <button onclick="acceptLegal()">J'ai compris</button>
+    </div>
+  </div>
+
+  <div class="modal" id="onboardingModal">
+    <div class="modal-content">
+      <h2>👋 Bienvenue</h2>
+      <ol style="font-size:14px">
+        <li>Sélectionne le mois suivi</li>
+        <li>Définis le dimanche de clôture</li>
+        <li>Clique sur un jour pour ajouter des heures</li>
+        <li>Configure le pointage géolocalisé (optionnel)</li>
+      </ol>
+      <button onclick="closeOnboarding()">Commencer</button>
+    </div>
+  </div>
+
+  <!-- ==================== NOTICE ==================== -->
+
+  <div class="card" style="font-size:13px;color:#aaa">
+    <h3>📘 Notice utilisateur</h3>
+    <p>Cet outil est destiné au suivi personnel des heures supplémentaires dans le cadre d'une rémunération mensuelle.</p>
+    <p>Les calculs sont indicatifs et reposent sur les principes généraux :</p>
     <ul>
-      <li>Clique sur un jour</li>
-      <li>Choisis +15 min, +30 min, +1h… ou saisis manuellement</li>
-      <li>Les heures sont enregistrées automatiquement</li>
+      <li>Code du travail</li>
+      <li>Convention collective du commerce de gros (IDCC 573)</li>
     </ul>
-
-    <h3>3️⃣ Clôture mensuelle</h3>
-    <p>
-      Le jour de clôture définit la fin de la période de paie.
-      Les heures après cette date sont automatiquement reportées.
-    </p>
-
-    <h3>4️⃣ Zone €</h3>
-    <p>
-      Les montants sont floutés par défaut et protégés par code.
-    </p>
-
-    <button class="secondary" onclick="closeTutorial()">Fermer</button>
+    <p>⚠️ En cas de litige, seuls les bulletins de paie et documents officiels de l'employeur font foi.</p>
   </div>
-</div>
-<div class="modal" id="legalModal">
-  <div class="modal-content">
-    <h2>⚠️ Avertissement important</h2>
-    <p style="font-size:14px">
-      Cet outil est un <b>simulateur personnel</b>.<br><br>
-      Les calculs sont indicatifs et peuvent différer
-      de votre bulletin de paie réel.<br><br>
-      <b>Seuls les documents de l’employeur font foi.</b>
-    </p>
-    <button onclick="acceptLegal()">J’ai compris</button>
+  <div class="card" style="font-size:12px;color:#9aa0a6;line-height:1.5">
+    <b>⚠️ Responsabilité et limites</b><br><br>
+    Les données saisies dans ce simulateur sont renseignées <b>sous la seule responsabilité de l'utilisateur</b>.<br><br>
+    Les résultats affichés sont fournis à titre indicatif. <b>Seuls les documents établis par l'employeur et le droit applicable font foi.</b>
   </div>
-</div>
-<div class="modal" id="onboardingModal">
-  <div class="modal-content">
-    <h2>👋 Bienvenue</h2>
-    <ol style="font-size:14px">
-      <li>Sélectionne le mois suivi</li>
-      <li>Définis le dimanche de clôture</li>
-      <li>Clique sur un jour pour ajouter des heures</li>
-      <li>Renseigne les heures payées</li>
-    </ol>
-    <button onclick="closeOnboarding()">Commencer</button>
-  </div>
-</div>
+
+</div><!-- /main -->
+
+<footer id="debugTrigger" style="margin-top:30px;text-align:center;font-size:12px;color:#777;cursor:pointer">
+  © C. Anthony<br>
+  Outil indicatif – ne constitue pas un bulletin de paie
+</footer>
+<div id="versionBadge"></div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
 
 <script>
 /* =======================
-   🔄 MODE RÉCUPÉRATION
-======================= */
-
-const RECOVERY_ACTIVE =
-  localStorage.getItem("CA_HS_RECOVERY_MODE") === "1";
-
-if(RECOVERY_ACTIVE){
-  console.warn("🛠️ MODE RÉCUPÉRATION ACTIVÉ");
-}
-window.addEventListener("load", ()=>{
-
-  /* 🔢 Version */
-  const v = document.getElementById("versionBadge");
-  if(v){
-    v.textContent = "v" + APP_VERSION;
-  }
-
-  /* 🛠️ Recovery prioritaire */
-  if(RECOVERY_ACTIVE){
-    openRecovery();
-    return;
-  }
-
-  /* ⚠️ Avertissement légal */
-  if(!localStorage.getItem("LEGAL_OK")){
-    document.getElementById("legalModal").classList.add("open");
-    return;
-  }
-
-
-
-  if(!localStorage.getItem("ONBOARDING_DONE")){
-  document.getElementById("onboardingModal").classList.add("open");
-}
-});
-
-
-/* =======================
-   DONNÉES
+   CONSTANTES GLOBALES
 ======================= */
 const STORAGE_PREFIX = "CA_HS_TRACKER_V1";
-const APP_VERSION = "1.3.1";
+const APP_VERSION    = "1.4.0"; // +géolocalisation
+const SNAP_KEY       = `${STORAGE_PREFIX}_SNAPSHOTS`;
+const SNAP_LIMIT     = 5;
+const DATA_VERSION   = "1.0";
+const GEO_KEY        = `${STORAGE_PREFIX}_GEO_CONFIG`;
+const GEO_PUNCHES    = `${STORAGE_PREFIX}_GEO_PUNCHES`;
 
-const SNAP_KEY = `${STORAGE_PREFIX}_SNAPSHOTS`;
-const SNAP_LIMIT = 5;
-const DATA_VERSION = "1.0";
+/* =======================
+   MODE RÉCUPÉRATION
+======================= */
+const RECOVERY_ACTIVE = localStorage.getItem("CA_HS_RECOVERY_MODE") === "1";
+if(RECOVERY_ACTIVE) console.warn("🛠️ MODE RÉCUPÉRATION ACTIVÉ");
 
-function kData(year){
-  return `${STORAGE_PREFIX}_DATA_${year}`;
-}
+/* =======================
+   DONNÉES PRINCIPALES
+======================= */
+let DATA = {};
+let SETTINGS = JSON.parse(localStorage.getItem(kSettings()) || "{}");
+let ALL_DATA = {};
+let currentKey = "", currentDay = null, unlocked = false;
+
+/* =======================
+   GÉOLOCALISATION – ÉTAT
+======================= */
+let GEO_CONFIG = JSON.parse(localStorage.getItem(GEO_KEY) || "{}");
+// GEO_CONFIG : { lat, lng, radius, shiftStart, tolerance, watchEnabled }
+
+let GEO_PUNCHES_DATA = JSON.parse(localStorage.getItem(GEO_PUNCHES) || "{}");
+// GEO_PUNCHES_DATA : { "2025-02-20": [ {type:"in"|"out", ts: ISO}, ... ] }
+
+let geoWatchId        = null;   // ID watchPosition
+let geoCheckInterval  = null;   // Polling fallback
+let geoIsPunchedIn    = false;  // état actuel de la journée
+let geoLastDistance   = null;   // dernière distance calculée (m)
+let geoToastPending   = null;   // "in" | "out" | null – action proposée
+let geoToastTimer     = null;   // setTimeout pour auto-dismiss
+
+/* =======================
+   HELPERS CLÉ STOCKAGE
+======================= */
+function kData(year)    { return `${STORAGE_PREFIX}_DATA_${year}`; }
+function kSettings()    { return `${STORAGE_PREFIX}_SETTINGS`; }
+function kCode()        { return `${STORAGE_PREFIX}_CODE_HASH`; }
+function kIndex()       { return `${STORAGE_PREFIX}_INDEX`; }
+function getYearFromMonth(key) { return key.split("-")[0]; }
+
+/* =======================
+   PRÉCHARGEMENT ANNÉES
+======================= */
+(function preloadAllYears(){
+  const index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
+  index.forEach(year => {
+    try { ALL_DATA[year] = loadYearData(year); }
+    catch(e) { console.warn("⚠️ Impossible de charger", year); ALL_DATA[year] = {}; }
+  });
+})();
+
+/* =======================
+   AUTO-REFRESH PWA
+======================= */
 (function autoRefreshPWA(){
-  const key = "CA_APP_VERSION";
+  const key  = "CA_APP_VERSION";
   const last = localStorage.getItem(key);
-
   if(last !== APP_VERSION){
-    console.warn("🔄 Nouvelle version détectée :", APP_VERSION);
-
     localStorage.setItem(key, APP_VERSION);
-
-    // évite boucle infinie
     if(!sessionStorage.getItem("CA_REFRESHED")){
-      sessionStorage.setItem("CA_REFRESHED", "1");
+      sessionStorage.setItem("CA_REFRESHED","1");
       location.reload();
     }
   }
 })();
-function acceptLegal(){
-  localStorage.setItem("LEGAL_OK","1");
-  document.getElementById("legalModal").classList.remove("open");
-}
-function simulateCrash(){
-  console.warn("💥 CRASH SIMULÉ");
-  handleFatalError({
-    type: "SIMULATED_CRASH",
-    message: "Crash interne simulé",
-    stack: null
-  });
-}
-function openRecovery(){
-  document.getElementById("recoveryModal").classList.add("open");
-  renderSnapshots();
-}
-function createSnapshot(reason="auto", force=false){
-  try{
-    if(!force){
-      const last = Number(localStorage.getItem("SNAP_LAST") || 0);
-      if(Date.now() - last < 60_000) return;
-    }
 
-    localStorage.setItem("SNAP_LAST", Date.now());
-
-    const snaps = JSON.parse(
-      localStorage.getItem(SNAP_KEY) || "[]"
-    );
-
-    snaps.unshift({
-      date: new Date().toISOString(),
-      reason,
-      currentKey,
-      DATA: JSON.parse(JSON.stringify(ALL_DATA)),
-      SETTINGS
+/* =======================
+   MIGRATION DONNÉES
+======================= */
+(function migrateLocalDataIfNeeded(){
+  const stored = localStorage.getItem("CA_DATA_VERSION");
+  if(stored === DATA_VERSION) return;
+  Object.entries(ALL_DATA).forEach(([year, yearData]) => {
+    Object.values(yearData).forEach(month => {
+      if(typeof month.closing !== "number") month.closing = null;
+      if(typeof month.locked !== "boolean") month.locked = false;
     });
+    saveYearData(year, yearData);
+  });
+  localStorage.setItem("CA_DATA_VERSION", DATA_VERSION);
+})();
 
-    snaps.splice(SNAP_LIMIT);
+/* =======================
+   INIT PAGE
+======================= */
+window.addEventListener("load", () => {
+  const v = document.getElementById("versionBadge");
+  if(v) v.textContent = "v" + APP_VERSION;
 
-    localStorage.setItem(SNAP_KEY, JSON.stringify(snaps));
-  }catch(e){
-    console.warn("⚠️ Snapshot échoué", e);
-  }
-}
-function recoverAuto(){
-  const fixed = attemptAutoRecovery();
-  localStorage.removeItem("CA_HS_RECOVERY_MODE");
-
-  alert(
-    fixed
-    ? "✅ Réparation effectuée. L’application va redémarrer."
-    : "ℹ️ Aucun problème détecté."
-  );
-
-  location.reload();
-}
-
-function recoverSoftReset(){
-  localStorage.removeItem("CA_HS_RECOVERY_MODE");
-  location.reload();
-}
-function restoreSnapshot(index){
-  const snaps = JSON.parse(
-    localStorage.getItem(SNAP_KEY) || "[]"
-  );
-
-  if(!snaps[index]){
-    alert("❌ Snapshot introuvable");
+  if(RECOVERY_ACTIVE){ openRecovery(); return; }
+  if(!localStorage.getItem("LEGAL_OK")){
+    document.getElementById("legalModal").classList.add("open");
     return;
   }
+  if(!localStorage.getItem("ONBOARDING_DONE")){
+    document.getElementById("onboardingModal").classList.add("open");
+  }
 
-  const snap = snaps[index];
-
-  if(!confirm(
-    `Restaurer l’état du ${new Date(snap.date).toLocaleString()} ?`
-  )) return;
-
-  ALL_DATA = snap.DATA;
-  SETTINGS = snap.SETTINGS || {};
-
-  // réécriture propre
-  Object.entries(ALL_DATA).forEach(([year,data])=>{
-    saveYearData(year, data);
-  });
-
-  localStorage.setItem(
-    kSettings(),
-    JSON.stringify(SETTINGS)
-  );
-
-  localStorage.removeItem("CA_HS_RECOVERY_MODE");
-
-  location.reload();
-}
-function recoverFactory(){
-  createSnapshot("factory_reset", true);
-  if(!confirm("⚠️ Supprimer TOUTES les données locales ?")) return;
-
-  Object.keys(localStorage)
-    .filter(k => k.startsWith(STORAGE_PREFIX))
-    .forEach(k => localStorage.removeItem(k));
-
-  location.reload();
-}
-function kSettings(){
-  return `${STORAGE_PREFIX}_SETTINGS`;
-}
-function kCode(){
-  return `${STORAGE_PREFIX}_CODE_HASH`;
-}
-function kIndex(){
-  return `${STORAGE_PREFIX}_INDEX`;
-}
-function kBackup(year, date){
-  return `${STORAGE_PREFIX}_BACKUP_${year}_${date}`;
-}
-function getYearFromMonth(key){
-  return key.split("-")[0];
-}
-let DATA = {};
-let SETTINGS = JSON.parse(
-  localStorage.getItem(kSettings()) || "{}"
-);
-let ALL_DATA = {}; // 🔑 cache de toutes les années
-/* =======================
-   🔄 PRÉCHARGEMENT ANNÉES
-======================= */
-(function preloadAllYears(){
-  const index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
-
-  index.forEach(year=>{
-    try{
-      ALL_DATA[year] = loadYearData(year);
-    }catch(e){
-      console.warn("⚠️ Impossible de charger l’année", year);
-      ALL_DATA[year] = {};
-    }
-  });
-})();
-let currentKey="", currentDay=null, unlocked=false;
-const closingDate = document.getElementById("closingDate");
+  // Restaurer état géo depuis config sauvegardée
+  loadGeoConfig();
+});
 
 /* =======================
-   INIT
+   CALENDRIER / MOIS
 ======================= */
-const monthPicker = document.getElementById("monthPicker");
-monthPicker.value = new Date().toISOString().slice(0,7);
-const paidInput = document.getElementById("paidHours");
-paidInput.oninput = () => {
+const monthPicker  = document.getElementById("monthPicker");
+const closingDate  = document.getElementById("closingDate");
+const paidInput    = document.getElementById("paidHours");
+
+monthPicker.value  = new Date().toISOString().slice(0,7);
+monthPicker.onchange = loadMonth;
+paidInput.oninput  = () => {
   if(!DATA || !DATA[currentKey]) return;
-
   DATA[currentKey].paid = parseFloat(paidInput.value) || 0;
   save();
   recalc();
 };
-monthPicker.onchange = loadMonth;
-/* =======================
-   CALENDRIER
-======================= */
+
 function getLastSunday(year, monthIndex){
-  const lastDay = new Date(year, monthIndex + 1, 0); // dernier jour du mois
-  const day = lastDay.getDay(); // 0 = dimanche
+  const lastDay = new Date(year, monthIndex + 1, 0);
+  const day = lastDay.getDay();
   const diff = day === 0 ? 0 : day;
   lastDay.setDate(lastDay.getDate() - diff);
   return lastDay.getDate();
-}
-(function migrateLocalDataIfNeeded(){
-  const stored = localStorage.getItem("CA_DATA_VERSION");
-
-  if(stored === DATA_VERSION) return;
-
-  console.warn("🔁 Migration locale des données :", stored, "→", DATA_VERSION);
-
-  Object.entries(ALL_DATA).forEach(([year, yearData])=>{
-    Object.values(yearData).forEach(month=>{
-      if(typeof month.closing !== "number"){
-        month.closing = null;
-      }
-      if(typeof month.locked !== "boolean"){
-        month.locked = false;
-      }
-    });
-
-    saveYearData(year, yearData);
-  });
-
-  localStorage.setItem("CA_DATA_VERSION", DATA_VERSION);
-})();
-function closeOnboarding(){
-  localStorage.setItem("ONBOARDING_DONE","1");
-  document.getElementById("onboardingModal").classList.remove("open");
 }
 
 function getPeriodBounds(monthKey){
   if(!monthKey || typeof monthKey !== "string"){
     const now = new Date();
-    return {
-      start: new Date(now.getFullYear(), now.getMonth(), 1),
-      end: new Date(now.getFullYear(), now.getMonth() + 1, 0)
-    };
+    return { start: new Date(now.getFullYear(), now.getMonth(), 1),
+             end:   new Date(now.getFullYear(), now.getMonth()+1, 0) };
   }
-
   const [y, m] = monthKey.split("-").map(Number);
-  if(!y || !m){
-    return {
-      start: new Date(y || 1970, (m || 1) - 1, 1),
-      end: new Date(y || 1970, m || 1, 0)
-    };
-  }
+  if(!y || !m) return { start: new Date(y||1970,(m||1)-1,1), end: new Date(y||1970,m||1,0) };
 
-  const year = String(y);
-  const yearData = ALL_DATA[year];
-  const currentMonth = yearData?.[monthKey];
+  const year      = String(y);
+  const yearData  = ALL_DATA[year];
+  const currentM  = yearData?.[monthKey];
+  if(!currentM) return { start: new Date(y,m-1,1), end: new Date(y,m,0) };
 
-  if(!currentMonth){
-    return {
-      start: new Date(y, m - 1, 1),
-      end: new Date(y, m, 0)
-    };
-  }
-
-  // 🔙 mois précédent
-  const prevMonthDate = new Date(y, m - 2, 1);
-  const prevKey =
-    prevMonthDate.getFullYear() + "-" +
-    String(prevMonthDate.getMonth() + 1).padStart(2,"0");
-
-  const prevYearData = ALL_DATA[String(prevMonthDate.getFullYear())] || {};
-  const prevMonth = prevYearData[prevKey];
+  const prevDate  = new Date(y, m-2, 1);
+  const prevKey   = prevDate.getFullYear() + "-" + String(prevDate.getMonth()+1).padStart(2,"0");
+  const prevYData = ALL_DATA[String(prevDate.getFullYear())] || {};
+  const prevMonth = prevYData[prevKey];
 
   let start;
   if(prevMonth && typeof prevMonth.closing === "number"){
-    start = new Date(
-      prevMonthDate.getFullYear(),
-      prevMonthDate.getMonth(),
-      prevMonth.closing + 1
-    );
-  }else{
-    start = new Date(y, m - 1, 1);
+    start = new Date(prevDate.getFullYear(), prevDate.getMonth(), prevMonth.closing+1);
+  } else {
+    start = new Date(y, m-1, 1);
   }
 
-  let closing = currentMonth.closing;
-  if(
-    typeof closing !== "number" ||
-    new Date(y, m - 1, closing).getDay() !== 0
-  ){
-    closing = getLastSunday(y, m - 1);
+  let closing = currentM.closing;
+  if(typeof closing !== "number" || new Date(y,m-1,closing).getDay() !== 0){
+    closing = getLastSunday(y, m-1);
   }
-
-  const end = new Date(y, m - 1, closing);
-
-  return { start, end };
+  return { start, end: new Date(y, m-1, closing) };
 }
-function goMenu() {
-    localStorage.removeItem("lastApp");
-    window.location.href = "../menu.html";
-    }
+
 function loadMonth(){
   currentKey = monthPicker.value;
   const year = getYearFromMonth(currentKey);
-
   registerYear(year);
-
-  // 🔒 Chargement UNIQUE et sûr de l’année
-  if(!ALL_DATA[year]){
-    ALL_DATA[year] = loadYearData(year);
-  }
-
+  if(!ALL_DATA[year]) ALL_DATA[year] = loadYearData(year);
   DATA = ALL_DATA[year];
-
   const [y, m] = currentKey.split("-").map(Number);
   let needSave = false;
-
-  // 🆕 Création du mois s’il n’existe pas
   if(!DATA[currentKey]){
-    DATA[currentKey] = {
-      days: {},
-      paid: 0,
-      carry: 0,
-      closing: getLastSunday(y, m - 1),
-      locked: false
-    };
+    DATA[currentKey] = { days:{}, paid:0, carry:0, closing:getLastSunday(y,m-1), locked:false };
     needSave = true;
   }
-
-  // 🧹 Correction clôture invalide
   {
-    const lastDay = new Date(y, m, 0).getDate();
+    const lastDay = new Date(y,m,0).getDate();
     const closing = DATA[currentKey].closing;
-
-    const isInvalid =
-      !closing ||
-      closing > lastDay ||
-      new Date(y, m - 1, closing).getDay() !== 0;
-
-    if(isInvalid){
-      DATA[currentKey].closing = getLastSunday(y, m - 1);
+    if(!closing || closing>lastDay || new Date(y,m-1,closing).getDay()!==0){
+      DATA[currentKey].closing = getLastSunday(y,m-1);
       needSave = true;
     }
   }
-
-  // 🔄 Sync UI
   paidInput.value = DATA[currentKey].paid || 0;
   setClosingLimits();
   syncClosingDate();
-
   renderCalendar();
   recalcCascade();
   recalc();
   scrollToToday();
-
-  if(needSave){
-    save();
-  }
-}
-function attemptAutoRecovery(){
-  let repaired = false;
-
-  try{
-    const index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
-
-    index.forEach(year=>{
-      let data;
-
-      try{
-        data = loadYearData(year);
-      }catch(e){
-        console.warn("⚠️ Données corrompues pour", year);
-        localStorage.removeItem(kData(year));
-        repaired = true;
-        return;
-      }
-
-      Object.entries(data).forEach(([monthKey, month])=>{
-        // structure minimale
-        if(!month.days) month.days = {};
-        if(typeof month.paid !== "number") month.paid = 0;
-        if(typeof month.carry !== "number") month.carry = 0;
-
-        // clôture invalide → dernier dimanche
-        const [y,m] = monthKey.split("-").map(Number);
-        const lastSunday = getLastSunday(y, m-1);
-
-        if(
-          !month.closing ||
-          new Date(y, m-1, month.closing).getDay() !== 0
-        ){
-          month.closing = lastSunday;
-          repaired = true;
-        }
-      });
-
-      saveYearData(year, data);
-    });
-
-  }catch(e){
-    return false; // échec total
-  }
-
-  return repaired;
-}
-
-
-
-function syncClosingDate(){
-  if(!DATA[currentKey]) return;
-
-  const [y, m] = currentKey.split("-").map(Number);
-  const day = DATA[currentKey].closing || 31;
-
-  closingDate.value =
-    `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  renderGeoTimeline();
+  if(needSave) save();
 }
 
 function setClosingLimits(){
-  const [y, m] = currentKey.split("-").map(Number);
-  const lastDay = new Date(y, m, 0).getDate();
-
+  const [y,m] = currentKey.split("-").map(Number);
+  const lastDay = new Date(y,m,0).getDate();
   closingDate.min = `${y}-${String(m).padStart(2,"0")}-01`;
   closingDate.max = `${y}-${String(m).padStart(2,"0")}-${lastDay}`;
 }
 
+function syncClosingDate(){
+  if(!DATA[currentKey]) return;
+  const [y,m] = currentKey.split("-").map(Number);
+  const day = DATA[currentKey].closing || 31;
+  closingDate.value = `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+}
+
 closingDate.oninput = () => {
   if(!closingDate.value) return;
-
   const selected = new Date(closingDate.value);
-  const [y, m] = currentKey.split("-").map(Number);
-
-  if(
-    selected.getFullYear() !== y ||
-    selected.getMonth() + 1 !== m
-  ){
+  const [y,m]    = currentKey.split("-").map(Number);
+  if(selected.getFullYear()!==y || selected.getMonth()+1!==m){
     alert("⛔ La date doit être dans le mois sélectionné");
-    syncClosingDate();
-    return;
+    syncClosingDate(); return;
   }
-if(selected.getDay() !== 0){
-  alert("⛔ La clôture doit obligatoirement être un dimanche");
-  syncClosingDate();
-  return;
-}
+  if(selected.getDay()!==0){
+    alert("⛔ La clôture doit obligatoirement être un dimanche");
+    syncClosingDate(); return;
+  }
   DATA[currentKey].closing = selected.getDate();
-  save();
-  renderCalendar();
-  recalc();
-}
+  save(); renderCalendar(); recalc();
+};
+
 closingDate.addEventListener("blur", () => {
   const cal = document.getElementById("calendar");
   if(!cal) return;
-
-  // Forcer repaint Safari iOS
   cal.style.display = "none";
-  cal.offsetHeight; // reflow
+  cal.offsetHeight;
   cal.style.display = "grid";
 });
+
 function scrollToToday(){
   const today = new Date().toISOString().slice(0,7);
   if(currentKey !== today) return;
-
-  const todayEl = document.getElementById("todayCell");
-  if(todayEl){
-    todayEl.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
-  }
+  const el = document.getElementById("todayCell");
+  if(el) el.scrollIntoView({ behavior:"smooth", block:"center" });
 }
-function renderCalendar(){
-  const cal = document.getElementById("calendar");
-  cal.innerHTML = "";
 
-  // 🗓️ Jours de la semaine
+/* =======================
+   RENDU CALENDRIER
+======================= */
+function renderCalendar(){
+  const cal   = document.getElementById("calendar");
+  cal.innerHTML = "";
   const weekDays = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-  weekDays.forEach(d=>{
+  weekDays.forEach(d => {
     const w = document.createElement("div");
     w.className = "weekday";
     w.textContent = d;
     cal.appendChild(w);
   });
-
-  const [y, m] = currentKey.split("-").map(Number);
-  const today = new Date();
-const isCurrentMonth = currentKey === today.toISOString().slice(0,7);
-  const firstDay = new Date(y, m-1, 1).getDay() || 7; // lundi = 1
-  const daysInMonth = new Date(y, m, 0).getDate();
-  const closing = DATA[currentKey].closing;
+  const [y,m]       = currentKey.split("-").map(Number);
+  const today       = new Date();
+  const isCurrentM  = currentKey === today.toISOString().slice(0,7);
+  const firstDay    = new Date(y,m-1,1).getDay() || 7;
+  const daysInMonth = new Date(y,m,0).getDate();
   const { start, end } = getPeriodBounds(currentKey);
-  const isMonthLocked = DATA[currentKey].locked;
-  
+  const isLocked    = DATA[currentKey].locked;
 
-  // ⬅️ Décalage du 1er jour du mois
-  for(let i=1;i<firstDay;i++){
-    cal.appendChild(document.createElement("div"));
-  }
+  for(let i=1;i<firstDay;i++) cal.appendChild(document.createElement("div"));
 
-  for(let d = 1; d <= daysInMonth; d++){
-    const div = document.createElement("div");
+  // Récupérer les jours pointés
+  const todayKey  = today.toISOString().slice(0,10);
+  const punches   = GEO_PUNCHES_DATA;
+
+  for(let d=1; d<=daysInMonth; d++){
+    const dateKey = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const div     = document.createElement("div");
     div.className = "day";
-
-    const date = new Date(y, m - 1, d);
-const isInPeriod = date >= start && date <= end;
-const isAfterClosing = date > end;
-
-    /* ====== État visuel ====== */
-
-    if(date > end){
-  div.classList.add("after-closing");
-}
-
-    if(isMonthLocked){
-      div.classList.add("locked"); // verrouillage total
-    }
-
-    if(
-      isCurrentMonth &&
-      d === today.getDate()
-    ){
+    const date    = new Date(y,m-1,d);
+    if(date > end) div.classList.add("after-closing");
+    if(isLocked)   div.classList.add("locked");
+    if(isCurrentM && d===today.getDate()){
       div.classList.add("today");
+      div.id = "todayCell";
     }
-if(isCurrentMonth && d === today.getDate()){
-  div.id = "todayCell";
-}
-    /* ====== Contenu ====== */
-
-    const val = DATA[currentKey].days[d];
+    const val      = DATA[currentKey].days[d];
+    const hasPunch = punches[dateKey]?.length > 0;
     div.innerHTML = `
       <b>${d}</b><br>
-      ${val ? val.toFixed(2) + " h" : ""}
+      ${val ? val.toFixed(2)+" h" : ""}
+      ${hasPunch ? '<span style="font-size:10px;color:var(--geo-active)">📍</span>' : ""}
     `;
-
-    /* ====== Interaction ====== */
-
     div.onclick = () => {
-  if(isMonthLocked){
-    alert("🔒 Mois verrouillé (paie validée)");
-    return;
-  }
-  openHours(d);
-};
-
+      if(isLocked){ alert("🔒 Mois verrouillé (paie validée)"); return; }
+      openHours(d);
+    };
     cal.appendChild(div);
   }
 }
+
 /* =======================
-   POPUP HEURES
+   POPUP HEURES MANUELLES
 ======================= */
-function deleteDayHours(){
-  if(DATA[currentKey].locked){
-    alert("🔒 Mois verrouillé");
-    return;
-  }
-
-  if(!currentDay || !DATA[currentKey].days[currentDay]){
-    alert("ℹ️ Aucune heure à supprimer");
-    return;
-  }
-
-  if(!confirm(`Supprimer toutes les heures du ${currentDay} ?`)) return;
-
-  // 🗑️ suppression réelle
-  delete DATA[currentKey].days[currentDay];
-
-  currentDay = null; // ✅ reset état
-
-  save();            // recalcul cascade + sauvegarde
-  renderCalendar();  // ✅ MAJEUR : refresh UI
-  recalc();          // ✅ recalcul live
-  closeHours();
-}
 function openHours(d){
-  currentDay=d;
-  const c=document.getElementById("hoursChoices");
-  c.innerHTML="";
-  [0.25,0.5,0.75,1,1.25,1.5,2].forEach(v=>{
-    const b=document.createElement("button");
-    b.textContent="+"+v+" h";
-    b.onclick=()=>applyHours(v);
+  currentDay = d;
+  const c = document.getElementById("hoursChoices");
+  c.innerHTML = "";
+  [0.25,0.5,0.75,1,1.25,1.5,2].forEach(v => {
+    const b = document.createElement("button");
+    b.textContent = "+"+v+" h";
+    b.onclick = () => applyHours(v);
     c.appendChild(b);
   });
   document.getElementById("hoursModal").classList.add("open");
 }
-function closeHours(){
-  document.getElementById("hoursModal").classList.remove("open");
-}
+function closeHours(){ document.getElementById("hoursModal").classList.remove("open"); }
+
 function applyHours(h){
-  if(h <= 0) return;
-
-  DATA[currentKey].days[currentDay] =
-    (DATA[currentKey].days[currentDay] || 0) + h;
-// 🔴 AJOUTE CETTE 
-  save();
-  renderCalendar(); // ✅ AJOUT
-  recalc();
-  closeHours();
-  
-
-
-
+  if(h<=0) return;
+  DATA[currentKey].days[currentDay] = (DATA[currentKey].days[currentDay]||0)+h;
+  save(); renderCalendar(); recalc(); closeHours();
 }
 
 function confirmManual(){
   const input = document.getElementById("manualHours");
   const h = parseFloat(input.value);
- if(isNaN(h) || h <= 0){
-  alert("⛔ Valeur invalide");
-  return;
-}
-
+  if(isNaN(h)||h<=0){ alert("⛔ Valeur invalide"); return; }
   applyHours(h);
-  input.value = ""; // ✅ reset
+  input.value = "";
 }
-function getPreviousCarry(monthKey){
-  // 🔗 récupérer TOUS les mois de TOUTES les années
-  const allMonths = [];
 
-  Object.values(ALL_DATA).forEach(yearData=>{
-  if(!yearData || typeof yearData !== "object") return;
-
-  Object.keys(yearData).forEach(key=>{
-      if(/^\d{4}-\d{2}$/.test(key)){
-        allMonths.push({ key, month: yearData[key] });
-      }
-    });
-  });
-
-  // tri chronologique
-  allMonths.sort((a,b)=> a.key.localeCompare(b.key));
-
-  let prevCarry = 0;
-
-  for(const item of allMonths){
-    if(item.key === monthKey) break;
-    if(item.month.carry != null){
-      prevCarry = item.month.carry;
-    }
-  }
-
-  return prevCarry;
+function deleteDayHours(){
+  if(DATA[currentKey].locked){ alert("🔒 Mois verrouillé"); return; }
+  if(!currentDay||!DATA[currentKey].days[currentDay]){ alert("ℹ️ Aucune heure à supprimer"); return; }
+  if(!confirm(`Supprimer toutes les heures du ${currentDay} ?`)) return;
+  delete DATA[currentKey].days[currentDay];
+  currentDay = null;
+  save(); renderCalendar(); recalc(); closeHours();
 }
+
 /* =======================
    CALCUL
 ======================= */
-function recalc(){
-  const { start, end } = getPeriodBounds(currentKey);
-
-  // 🔢 Heures par semaine ISO (lundi → dimanche)
-  const weeks = {};
-
-  Object.entries(DATA).forEach(([monthKey, month])=>{
-    Object.entries(month.days || {}).forEach(([d,h])=>{
-      const date = new Date(
-        monthKey.split("-")[0],
-        monthKey.split("-")[1] - 1,
-        d
-      );
-
-      if(date < start || date > end) return;
-
-      const monday = new Date(date);
-      const day = monday.getDay() || 7;
-      monday.setDate(monday.getDate() - day + 1);
-
-      const weekKey =
-        monday.getFullYear() + "-" +
-        String(monday.getMonth()+1).padStart(2,"0") + "-" +
-        String(monday.getDate()).padStart(2,"0");
-
-      weeks[weekKey] = (weeks[weekKey] || 0) + h;
+function getPreviousCarry(monthKey){
+  const allMonths = [];
+  Object.values(ALL_DATA).forEach(yd => {
+    if(!yd||typeof yd!=="object") return;
+    Object.keys(yd).forEach(key => {
+      if(/^\d{4}-\d{2}$/.test(key)) allMonths.push({ key, month:yd[key] });
     });
   });
+  allMonths.sort((a,b)=>a.key.localeCompare(b.key));
+  let prev = 0;
+  for(const item of allMonths){
+    if(item.key===monthKey) break;
+    if(item.month.carry!=null) prev = item.month.carry;
+  }
+  return prev;
+}
 
-  // 🧮 Totaux période
-  let total25 = 0;
-  let total50 = 0;
-  let periodHours = 0;
-
-  Object.values(weeks).forEach(weekHours=>{
-    periodHours += weekHours;
-    total25 += Math.min(8, weekHours);
-    total50 += Math.max(0, weekHours - 8);
+function recalc(){
+  const { start, end } = getPeriodBounds(currentKey);
+  const weeks = {};
+  Object.entries(DATA).forEach(([monthKey, month]) => {
+    Object.entries(month.days||{}).forEach(([d,h]) => {
+      const date = new Date(monthKey.split("-")[0], monthKey.split("-")[1]-1, d);
+      if(date<start||date>end) return;
+      const monday = new Date(date);
+      const day = monday.getDay()||7;
+      monday.setDate(monday.getDate()-day+1);
+      const wk = monday.getFullYear()+"-"+String(monday.getMonth()+1).padStart(2,"0")+"-"+String(monday.getDate()).padStart(2,"0");
+      weeks[wk] = (weeks[wk]||0)+h;
+    });
   });
-
-  document.getElementById("hours25").textContent = total25.toFixed(2);
-  document.getElementById("hours50").textContent = total50.toFixed(2);
-
-  // 🔁 Report précédent
+  let total25=0, total50=0, periodHours=0;
+  Object.values(weeks).forEach(wh => {
+    periodHours += wh;
+    total25     += Math.min(8,wh);
+    total50     += Math.max(0,wh-8);
+  });
+  document.getElementById("hours25").textContent    = total25.toFixed(2);
+  document.getElementById("hours50").textContent    = total50.toFixed(2);
+  document.getElementById("totalMonth").textContent = periodHours.toFixed(2);
   const prevCarry = getPreviousCarry(currentKey);
-  document.getElementById("carryOver").textContent =
-  DATA[currentKey].carry.toFixed(2);
-  // 🔵 Total période
-  document.getElementById("totalMonth").textContent =
-    periodHours.toFixed(2);
-    document.getElementById("prevCarry").textContent =
-  prevCarry.toFixed(2);
-
-  
-
+  document.getElementById("prevCarry").textContent  = prevCarry.toFixed(2);
+  document.getElementById("carryOver").textContent  = (DATA[currentKey]?.carry||0).toFixed(2);
   if(unlocked) calcEuro();
 }
+
+function recalcCascade(){
+  const allMonths = [];
+  Object.values(ALL_DATA).forEach(yd => {
+    if(!yd||typeof yd!=="object") return;
+    Object.entries(yd).forEach(([key,month]) => {
+      if(/^\d{4}-\d{2}$/.test(key)) allMonths.push({ key,month });
+    });
+  });
+  allMonths.sort((a,b)=>a.key.localeCompare(b.key));
+  let runningCarry = 0;
+  allMonths.forEach(({key}) => {
+    const { start,end } = getPeriodBounds(key);
+    let periodHours = 0;
+    Object.entries(ALL_DATA).forEach(([year,yd]) => {
+      Object.entries(yd||{}).forEach(([mk,month]) => {
+        Object.entries(month.days||{}).forEach(([d,h]) => {
+          const [y,m] = mk.split("-").map(Number);
+          const date  = new Date(y,m-1,d);
+          if(date>=start&&date<=end) periodHours+=h;
+        });
+      });
+    });
+    const month = ALL_DATA[key.slice(0,4)][key];
+    const paid  = Number(month.paid)||0;
+    runningCarry += periodHours - paid;
+    if(runningCarry<0) runningCarry=0;
+    month.carry = runningCarry;
+  });
+}
+
 function calcEuro(){
   if(!unlocked) return;
-
-  const rate = Number(document.getElementById("rate").value) || 0;
-  const coef25 = Number(document.getElementById("coef25").value) || 1.25;
-  const coef50 = Number(document.getElementById("coef50").value) || 1.50;
-  const netCoef = Number(document.getElementById("coefNet").value) || 1;
-
-  const h25 = Number(document.getElementById("hours25").textContent) || 0;
-  const h50 = Number(document.getElementById("hours50").textContent) || 0;
-
-  const weighted25 = h25 * coef25;
-  const weighted50 = h50 * coef50;
-  const weightedTotal = weighted25 + weighted50;
-
-  const brut = weightedTotal * rate;
-  const net = brut * netCoef;
-
-  document.getElementById("euroResult").textContent =
-    net.toFixed(2) + " €";
-
-  document.getElementById("euroDetail").innerHTML = `
-    ${h25.toFixed(2)} h × ${coef25} = ${weighted25.toFixed(2)} h<br>
-    ${h50.toFixed(2)} h × ${coef50} = ${weighted50.toFixed(2)} h<br>
-    <b>Total pondéré : ${weightedTotal.toFixed(2)} h</b><br>
-    ${weightedTotal.toFixed(2)} × ${rate} € × ${netCoef}
+  const rate    = Number(document.getElementById("rate").value)||0;
+  const coef25  = Number(document.getElementById("coef25").value)||1.25;
+  const coef50  = Number(document.getElementById("coef50").value)||1.50;
+  const netCoef = Number(document.getElementById("coefNet").value)||1;
+  const h25 = Number(document.getElementById("hours25").textContent)||0;
+  const h50 = Number(document.getElementById("hours50").textContent)||0;
+  const w25 = h25*coef25, w50 = h50*coef50;
+  const net = (w25+w50)*rate*netCoef;
+  document.getElementById("euroResult").textContent  = net.toFixed(2)+" €";
+  document.getElementById("euroDetail").innerHTML    = `
+    ${h25.toFixed(2)} h × ${coef25} = ${w25.toFixed(2)} h<br>
+    ${h50.toFixed(2)} h × ${coef50} = ${w50.toFixed(2)} h<br>
+    <b>Total pondéré : ${(w25+w50).toFixed(2)} h</b><br>
+    × ${rate} € × ${netCoef}
   `;
 }
-async function sha256(str){
-  const buf = new TextEncoder().encode(str);
-  const hash = await crypto.subtle.digest("SHA-256", buf);
-  return Array.from(new Uint8Array(hash))
-    .map(b => b.toString(16).padStart(2,"0"))
-    .join("");
+
+/* =======================
+   SAUVEGARDE
+======================= */
+function save(){
+  localStorage.setItem(`${STORAGE_PREFIX}_AUTO_SAVE_DATE`, Date.now());
+  recalcCascade();
+  Object.entries(ALL_DATA).forEach(([year,yd]) => saveYearData(year,yd));
+  updateSaveBadge();
 }
 
+function updateSaveBadge(){
+  const el  = document.querySelector(".badge.ok");
+  if(!el) return;
+  const raw = localStorage.getItem(`${STORAGE_PREFIX}_AUTO_SAVE_DATE`);
+  const stamp = Number(raw);
+  el.textContent = (!stamp||isNaN(stamp))
+    ? "🟢 Sauvegarde locale auto"
+    : "🟢 Sauvegarde locale : "+new Date(stamp).toLocaleString();
+}
+
+function registerYear(year){
+  let index = JSON.parse(localStorage.getItem(kIndex())||"[]");
+  if(!index.includes(year)){ index.push(year); index.sort(); localStorage.setItem(kIndex(),JSON.stringify(index)); }
+}
+function loadYearData(year){ return JSON.parse(localStorage.getItem(kData(year))||"{}"); }
+function saveYearData(year,data){ localStorage.setItem(kData(year),JSON.stringify(data)); }
+
+/* =======================
+   ==========================================
+   GÉOLOCALISATION – LOGIQUE COMPLÈTE
+   ==========================================
+======================= */
+
+/**
+ * Calcule la distance en mètres entre deux coordonnées GPS (formule Haversine).
+ */
+function haversine(lat1, lon1, lat2, lon2){
+  const R  = 6371000; // rayon Terre en mètres
+  const φ1 = lat1 * Math.PI/180;
+  const φ2 = lat2 * Math.PI/180;
+  const Δφ = (lat2-lat1) * Math.PI/180;
+  const Δλ = (lon2-lon1) * Math.PI/180;
+  const a  = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+/**
+ * Retourne la clé date locale (YYYY-MM-DD) du jour.
+ */
+function todayKey(){
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+}
+
+/**
+ * Vérifie si l'heure actuelle est dans la fenêtre d'alerte autorisée.
+ * Ex : shift=11:00, tolerance=30 → alerte entre 10:30 et 11:00+2h (marge large sortie).
+ */
+function isInAlertWindow(type="in"){
+  const shiftStart = GEO_CONFIG.shiftStart || "08:00";
+  const tolerance  = Number(GEO_CONFIG.tolerance) || 30;
+  const [sh, sm]   = shiftStart.split(":").map(Number);
+
+  const now        = new Date();
+  const nowMin     = now.getHours()*60 + now.getMinutes();
+  const shiftMin   = sh*60 + sm;
+
+  if(type === "in"){
+    // Fenêtre : de (shiftStart - tolerance) jusqu'à (shiftStart + 2h)
+    return nowMin >= (shiftMin - tolerance) && nowMin <= (shiftMin + 120);
+  } else {
+    // Sortie : pas de restriction horaire strict, mais pas avant l'heure de début
+    return nowMin >= shiftMin;
+  }
+}
+
+/**
+ * Charge la config géo depuis localStorage et met à jour l'UI.
+ */
+function loadGeoConfig(){
+  GEO_CONFIG = JSON.parse(localStorage.getItem(GEO_KEY)||"{}");
+
+  // Remplir les inputs
+  if(GEO_CONFIG.radius)     document.getElementById("geoRadius").value     = GEO_CONFIG.radius;
+  if(GEO_CONFIG.shiftStart) document.getElementById("geoShiftStart").value = GEO_CONFIG.shiftStart;
+  if(GEO_CONFIG.tolerance !== undefined) document.getElementById("geoTolerance").value = GEO_CONFIG.tolerance;
+  if(GEO_CONFIG.watchEnabled) document.getElementById("geoWatchToggle").checked = true;
+
+  updateGeoLocationLabel();
+  updatePunchBtn();
+  renderGeoTimeline();
+
+  // Reprendre la surveillance si elle était active
+  if(GEO_CONFIG.watchEnabled && GEO_CONFIG.lat){
+    startGeoWatch();
+  }
+}
+
+/**
+ * Met à jour le libellé du lieu enregistré.
+ */
+function updateGeoLocationLabel(){
+  const el = document.getElementById("geoSavedLocation");
+  if(!el) return;
+  if(GEO_CONFIG.lat && GEO_CONFIG.lng){
+    el.textContent = `📍 ${GEO_CONFIG.lat.toFixed(5)}, ${GEO_CONFIG.lng.toFixed(5)} (enregistré le ${GEO_CONFIG.savedAt||"—"})`;
+    el.style.color = "var(--geo-active)";
+  } else {
+    el.textContent = "Aucun lieu enregistré";
+    el.style.color = "var(--muted)";
+  }
+}
+
+/**
+ * Capture la position actuelle comme lieu de travail.
+ */
+function captureWorkLocation(){
+  if(!navigator.geolocation){
+    alert("❌ La géolocalisation n'est pas disponible sur cet appareil");
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      GEO_CONFIG.lat     = pos.coords.latitude;
+      GEO_CONFIG.lng     = pos.coords.longitude;
+      GEO_CONFIG.savedAt = new Date().toLocaleString();
+      saveGeoConfig();
+      updateGeoLocationLabel();
+      alert(`✅ Lieu de travail enregistré !\n${GEO_CONFIG.lat.toFixed(5)}, ${GEO_CONFIG.lng.toFixed(5)}`);
+    },
+    err => {
+      alert("❌ Impossible de récupérer ta position :\n"+geoErrorMsg(err));
+    },
+    { enableHighAccuracy:true, timeout:10000 }
+  );
+}
+
+/**
+ * Supprime le lieu de travail.
+ */
+function clearWorkLocation(){
+  if(!confirm("Supprimer le lieu de travail enregistré ?")) return;
+  delete GEO_CONFIG.lat;
+  delete GEO_CONFIG.lng;
+  delete GEO_CONFIG.savedAt;
+  stopGeoWatch();
+  saveGeoConfig();
+  updateGeoLocationLabel();
+  setGeoStatusUI(false);
+  document.getElementById("geoDistanceBlock").style.display = "none";
+}
+
+/**
+ * Enregistre la config et redémarre la surveillance si nécessaire.
+ */
+function saveGeoConfig(){
+  GEO_CONFIG.radius       = Number(document.getElementById("geoRadius").value)||200;
+  GEO_CONFIG.shiftStart   = document.getElementById("geoShiftStart").value||"08:00";
+  GEO_CONFIG.tolerance    = Number(document.getElementById("geoTolerance").value)||30;
+  GEO_CONFIG.watchEnabled = document.getElementById("geoWatchToggle").checked;
+  localStorage.setItem(GEO_KEY, JSON.stringify(GEO_CONFIG));
+
+  if(GEO_CONFIG.watchEnabled && GEO_CONFIG.lat){
+    startGeoWatch();
+    showGeoFeedback("✅ Surveillance activée");
+  } else {
+    stopGeoWatch();
+    showGeoFeedback("ℹ️ Surveillance désactivée");
+  }
+}
+
+/**
+ * Démarre la surveillance de position.
+ */
+function startGeoWatch(){
+  if(!navigator.geolocation || !GEO_CONFIG.lat) return;
+  stopGeoWatch(); // évite les doublons
+
+  setGeoStatusUI(true);
+
+  // watchPosition natif (le plus précis)
+  geoWatchId = navigator.geolocation.watchPosition(
+    onGeoPosition,
+    err => {
+      console.warn("⚠️ Géo erreur:", err.message);
+      // Fallback polling si watchPosition échoue
+      if(!geoCheckInterval){
+        geoCheckInterval = setInterval(pollGeoPosition, 30000);
+      }
+    },
+    { enableHighAccuracy:true, maximumAge:15000, timeout:20000 }
+  );
+
+  // Polling de sécurité toutes les 30s
+  if(!geoCheckInterval){
+    geoCheckInterval = setInterval(pollGeoPosition, 30000);
+  }
+}
+
+/**
+ * Arrête la surveillance.
+ */
+function stopGeoWatch(){
+  if(geoWatchId !== null){
+    navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = null;
+  }
+  if(geoCheckInterval){
+    clearInterval(geoCheckInterval);
+    geoCheckInterval = null;
+  }
+  setGeoStatusUI(false);
+}
+
+/**
+ * Récupère la position en mode polling (fallback).
+ */
+function pollGeoPosition(){
+  if(!navigator.geolocation||!GEO_CONFIG.lat) return;
+  navigator.geolocation.getCurrentPosition(
+    onGeoPosition,
+    err => console.warn("📡 Géo poll erreur:", err.message),
+    { enableHighAccuracy:false, timeout:8000 }
+  );
+}
+
+/**
+ * Callback principal : traite une position reçue.
+ */
+function onGeoPosition(pos){
+  if(!GEO_CONFIG.lat) return;
+
+  const dist = haversine(
+    pos.coords.latitude, pos.coords.longitude,
+    GEO_CONFIG.lat, GEO_CONFIG.lng
+  );
+
+  geoLastDistance = dist;
+  const radius    = GEO_CONFIG.radius || 200;
+  const isNear    = dist <= radius;
+
+  updateDistanceBadge(dist, isNear);
+
+  // Déterminer l'action à proposer
+  if(isNear && !geoIsPunchedIn && isInAlertWindow("in")){
+    // Arrivée dans la zone
+    proposeGeoAction("in", dist);
+  } else if(!isNear && geoIsPunchedIn){
+    // Sortie de la zone
+    proposeGeoAction("out", dist);
+  }
+}
+
+/**
+ * Propose une action via le toast (non bloquant).
+ */
+let geoActionCooldown = false; // évite de spammer le toast
+
+function proposeGeoAction(type, dist){
+  if(geoToastPending || geoActionCooldown) return;
+
+  geoToastPending  = type;
+  geoActionCooldown = true;
+
+  // Cooldown 3 minutes
+  setTimeout(() => { geoActionCooldown = false; }, 3*60*1000);
+
+  const toast = document.getElementById("geoToast");
+  const title = document.getElementById("geoToastTitle");
+  const msg   = document.getElementById("geoToastMsg");
+  const btn   = document.getElementById("geoToastConfirm");
+
+  if(type === "in"){
+    title.textContent     = "📍 Tu arrives au travail";
+    msg.textContent       = `À ${Math.round(dist)} m du lieu de travail – Démarrer le pointage ?`;
+    btn.textContent       = "▶ Pointer l'arrivée";
+    btn.style.background  = "var(--geo-active)";
+  } else {
+    title.textContent     = "🏁 Tu quittes le travail";
+    msg.textContent       = `Tu t'éloignes (${Math.round(dist)} m) – Enregistrer la sortie ?`;
+    btn.textContent       = "⏹ Pointer la sortie";
+    btn.style.background  = "#ff6b6b";
+  }
+
+  toast.classList.add("show");
+
+  // Auto-dismiss après 20 secondes
+  if(geoToastTimer) clearTimeout(geoToastTimer);
+  geoToastTimer = setTimeout(dismissGeoToast, 20000);
+}
+
+/**
+ * L'utilisateur confirme l'action proposée.
+ */
+function confirmGeoAction(){
+  if(!geoToastPending) return;
+  recordPunch(geoToastPending);
+  dismissGeoToast();
+}
+
+/**
+ * Ferme le toast sans action.
+ */
+function dismissGeoToast(){
+  geoToastPending = null;
+  if(geoToastTimer){ clearTimeout(geoToastTimer); geoToastTimer=null; }
+  document.getElementById("geoToast").classList.remove("show");
+}
+
+/**
+ * Enregistre un pointage (arrivée ou départ) avec timestamp.
+ */
+function recordPunch(type){
+  const key   = todayKey();
+  const ts    = new Date().toISOString();
+  const punches = GEO_PUNCHES_DATA[key] || [];
+
+  punches.push({ type, ts });
+  GEO_PUNCHES_DATA[key] = punches;
+  localStorage.setItem(GEO_PUNCHES, JSON.stringify(GEO_PUNCHES_DATA));
+
+  geoIsPunchedIn = (type === "in");
+  updatePunchBtn();
+  renderGeoTimeline();
+  computeAndApplyGeoHours(key);
+  renderCalendar(); // rafraîchit les indicateurs 📍
+  showGeoFeedback(type==="in" ? "✅ Arrivée pointée" : "✅ Sortie pointée");
+}
+
+/**
+ * Pointage manuel depuis le bouton principal.
+ */
+function manualPunch(){
+  const type = geoIsPunchedIn ? "out" : "in";
+  if(!confirm(type==="in" ? "▶ Pointer l'arrivée maintenant ?" : "⏹ Pointer la sortie maintenant ?")){
+    return;
+  }
+  recordPunch(type);
+}
+
+/**
+ * Calcule les heures travaillées depuis les paires in/out du jour
+ * et les applique dans le jour courant.
+ */
+function computeAndApplyGeoHours(key){
+  const punches = GEO_PUNCHES_DATA[key] || [];
+  let totalMin  = 0;
+  let lastIn    = null;
+
+  punches.forEach(p => {
+    if(p.type==="in"){
+      lastIn = new Date(p.ts);
+    } else if(p.type==="out" && lastIn){
+      totalMin += (new Date(p.ts) - lastIn) / 60000;
+      lastIn = null;
+    }
+  });
+
+  // Paire en cours non fermée : on ne compte pas encore
+  const totalH = Math.round(totalMin / 15) * 0.25; // arrondi au quart d'heure
+
+  // Extraire le mois et le jour
+  const [y, m, d] = key.split("-").map(Number);
+  const mk = `${y}-${String(m).padStart(2,"0")}`;
+
+  // S'assurer que la structure existe
+  if(!ALL_DATA[String(y)]) ALL_DATA[String(y)] = {};
+  if(!ALL_DATA[String(y)][mk]) ALL_DATA[String(y)][mk] = { days:{}, paid:0, carry:0, closing:getLastSunday(y,m-1), locked:false };
+
+  // On NE pose pas les heures automatiquement dans le calendrier :
+  // l'utilisateur voit la timeline et valide lui-même via le bouton dédié.
+  // On affiche simplement le total calculé dans la géo-card.
+  const summaryEl = document.getElementById("geoTodaySummary");
+  const hoursEl   = document.getElementById("geoTodayHours");
+  if(summaryEl && hoursEl){
+    if(totalH > 0){
+      hoursEl.textContent     = totalH.toFixed(2)+" h";
+      summaryEl.style.display = "block";
+    } else {
+      summaryEl.style.display = "none";
+    }
+  }
+}
+
+/**
+ * Applique les heures géo du jour dans le calendrier (action volontaire).
+ */
+function applyGeoHoursToCalendar(){
+  const key = todayKey();
+  const [y, m, d] = key.split("-").map(Number);
+  const mk = `${y}-${String(m).padStart(2,"0")}`;
+
+  if(!ALL_DATA[String(y)]?.[mk]) return;
+
+  const punches = GEO_PUNCHES_DATA[key] || [];
+  let totalMin  = 0, lastIn = null;
+
+  punches.forEach(p => {
+    if(p.type==="in") lastIn = new Date(p.ts);
+    else if(p.type==="out" && lastIn){ totalMin += (new Date(p.ts)-lastIn)/60000; lastIn=null; }
+  });
+
+  const totalH = Math.round(totalMin/15)*0.25;
+  if(totalH<=0){ alert("⚠️ Aucune heure complète à reporter (pointage de sortie manquant ?)"); return; }
+
+  ALL_DATA[String(y)][mk].days[d] = totalH;
+  DATA = ALL_DATA[String(y)];
+  save(); renderCalendar(); recalc();
+  showGeoFeedback(`✅ ${totalH.toFixed(2)} h reportées dans le calendrier`);
+}
+
+/**
+ * Affiche la timeline des pointages du jour dans la carte géo.
+ */
+function renderGeoTimeline(){
+  const timeline = document.getElementById("punchTimeline");
+  if(!timeline) return;
+
+  const key     = todayKey();
+  const punches = GEO_PUNCHES_DATA[key] || [];
+
+  if(punches.length === 0){
+    timeline.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:8px 0">Aucun pointage aujourd'hui</div>`;
+    updatePunchBtn();
+    return;
+  }
+
+  let lastIn = null, html = "";
+  let totalMin = 0;
+
+  punches.forEach(p => {
+    const t = new Date(p.ts);
+    const fmt = t.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+    if(p.type==="in"){
+      lastIn = t;
+      html += `<div class="punch-entry in">▶ Arrivée <span class="punch-hours">${fmt}</span></div>`;
+    } else {
+      if(lastIn) totalMin += (t-lastIn)/60000;
+      lastIn = null;
+      html += `<div class="punch-entry out">⏹ Départ  <span class="punch-hours">${fmt}</span></div>`;
+    }
+  });
+
+  if(totalMin > 0){
+    const h = Math.floor(totalMin/60);
+    const m = Math.round(totalMin%60);
+    html += `<div style="font-size:12px;color:var(--geo-active);margin-top:6px;padding:4px 0">
+      ⏱ Total validé : <b>${h}h${m>0?m+"min":""}</b>
+    </div>`;
+  }
+
+  // Bouton "Reporter dans le calendrier"
+  if(punches.some(p=>p.type==="out")){
+    html += `<button onclick="applyGeoHoursToCalendar()" style="
+      background:#1b3a2a;
+      color:var(--geo-active);
+      border:1px solid var(--geo-active);
+      font-size:13px;
+      margin-top:8px
+    ">📥 Reporter les heures dans le calendrier</button>`;
+  }
+
+  // Bouton réinitialiser pointages du jour
+  html += `<button class="secondary" onclick="clearTodayPunches()" style="font-size:12px;margin-top:6px">
+    🗑️ Réinitialiser les pointages du jour
+  </button>`;
+
+  timeline.innerHTML = html;
+
+  // Mettre à jour état punchedIn
+  const lastPunch = punches[punches.length-1];
+  geoIsPunchedIn  = lastPunch?.type === "in";
+  updatePunchBtn();
+  computeAndApplyGeoHours(key);
+}
+
+/**
+ * Réinitialise les pointages du jour en cours.
+ */
+function clearTodayPunches(){
+  if(!confirm("Supprimer tous les pointages d'aujourd'hui ?")) return;
+  delete GEO_PUNCHES_DATA[todayKey()];
+  localStorage.setItem(GEO_PUNCHES, JSON.stringify(GEO_PUNCHES_DATA));
+  geoIsPunchedIn = false;
+  renderGeoTimeline();
+  renderCalendar();
+  document.getElementById("geoTodaySummary").style.display = "none";
+  showGeoFeedback("🗑️ Pointages supprimés");
+}
+
+/**
+ * Met à jour le bouton pointage principal selon l'état.
+ */
+function updatePunchBtn(){
+  const btn = document.getElementById("punchBtn");
+  if(!btn) return;
+  if(geoIsPunchedIn){
+    btn.textContent = "⏹ Pointer la sortie";
+    btn.className   = "punch-btn stop";
+  } else {
+    btn.textContent = "▶ Pointer l'arrivée";
+    btn.className   = "punch-btn start";
+  }
+}
+
+/**
+ * Met à jour le badge de distance en temps réel.
+ */
+function updateDistanceBadge(dist, isNear){
+  const block = document.getElementById("geoDistanceBlock");
+  const badge = document.getElementById("geoDistanceBadge");
+  if(!block||!badge) return;
+  block.style.display = "block";
+  const d = dist < 1000 ? Math.round(dist)+"m" : (dist/1000).toFixed(1)+"km";
+  badge.textContent = isNear ? `📍 Sur place – ${d}` : `📡 À ${d} du lieu`;
+  badge.className   = "geo-distance-badge " + (isNear ? "near" : "far");
+}
+
+/**
+ * Met à jour l'UI de statut géo (point lumineux, labels).
+ */
+function setGeoStatusUI(active){
+  const dot    = document.getElementById("geoDot");
+  const label  = document.getElementById("geoStatusLabel");
+  const radar  = document.getElementById("geoRadar");
+  const card   = document.getElementById("geoCard");
+  if(!dot) return;
+  dot.className    = "geo-status-dot" + (active?" active":"");
+  label.textContent = active ? "🟢 Surveillance active" : "Inactif";
+  if(radar) radar.className = "geo-radar" + (active?" visible":"");
+  if(card)  card.classList.toggle("pointed-in", geoIsPunchedIn);
+}
+
+/**
+ * Affiche un message de feedback court (toast léger).
+ */
+function showGeoFeedback(msg){
+  const el = document.createElement("div");
+  el.style.cssText = `
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:#1c1f26;border:1px solid #2a3040;color:var(--text);
+    padding:10px 18px;border-radius:20px;font-size:13px;z-index:9998;
+    transition:opacity .4s;pointer-events:none;
+  `;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>{ el.style.opacity="0"; setTimeout(()=>el.remove(),400); },2000);
+}
+
+/**
+ * Message d'erreur géolocalisation.
+ */
+function geoErrorMsg(err){
+  if(err.code===1) return "Permission refusée. Autorise la localisation dans les réglages.";
+  if(err.code===2) return "Position indisponible. Vérifie le GPS.";
+  if(err.code===3) return "Délai dépassé. Réessaie dans un endroit dégagé.";
+  return err.message;
+}
+
+/**
+ * Bascule l'affichage du panneau de config.
+ */
+function toggleGeoConfig(){
+  const p = document.getElementById("geoConfigPanel");
+  p.style.display = p.style.display==="none" ? "block" : "none";
+}
+
+/* =======================
+   SÉCURITÉ – CODE EURO
+======================= */
+async function sha256(str){
+  const buf  = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-256",buf);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
 async function getSecureCode(){
   let h = localStorage.getItem(kCode());
-  if(!h){
-    h = await sha256("1234");
-    localStorage.setItem(kCode(), h);
-  }
+  if(!h){ h = await sha256("1234"); localStorage.setItem(kCode(),h); }
   return h;
 }
 async function unlockEuro(){
   const input = document.getElementById("unlockCode").value;
-  const inputHash = await sha256(input);
-
-  if(inputHash === await getSecureCode()){
+  const ih    = await sha256(input);
+  if(ih === await getSecureCode()){
     unlocked = true;
     document.getElementById("euroBox").classList.remove("blur");
     document.getElementById("unlockCode").value = "";
     recalc();
-
-    if(input === "1234"){
-      alert("⚠️ Pense à changer le code par défaut");
-    }
-
+    if(input==="1234") alert("⚠️ Pense à changer le code par défaut");
   } else {
     alert("❌ Code incorrect");
   }
 }
 function toggleChangeCode(){
-  if(!unlocked){
-    alert("🔒 Déverrouille d’abord la zone €");
-    return;
-  }
+  if(!unlocked){ alert("🔒 Déverrouille d'abord la zone €"); return; }
   const box = document.getElementById("changeCodeBox");
-  box.style.display = box.style.display === "none" ? "block" : "none";
+  box.style.display = box.style.display==="none" ? "block" : "none";
 }
-
-
+async function changeCode(){
+  const old  = document.getElementById("oldCode").value;
+  const nw   = document.getElementById("newCode").value;
+  const conf = document.getElementById("confirmCode").value;
+  if(await sha256(old) !== await getSecureCode()){ alert("❌ Ancien code incorrect"); return; }
+  if(nw.length<4){ alert("⛔ Code trop court (4 chiffres min)"); return; }
+  if(nw!==conf){ alert("❌ Les deux nouveaux codes ne correspondent pas"); return; }
+  localStorage.setItem(kCode(), await sha256(nw));
+  alert("✅ Code modifié");
+  document.getElementById("changeCodeBox").style.display="none";
+}
 
 /* =======================
-   SAUVEGARDE
+   EXPORT / IMPORT
 ======================= */
-
-function save(){
-  localStorage.setItem(
-    `${STORAGE_PREFIX}_AUTO_SAVE_DATE`,
-    Date.now()
-  );
-
-  recalcCascade();
-
-  Object.entries(ALL_DATA).forEach(([year, yearData])=>{
-    saveYearData(year, yearData);
-  });
-
-  updateSaveBadge();
-}
-function updateSaveBadge(){
-  const el = document.querySelector(".badge.ok");
-  if(!el) return;
-
-  const raw = localStorage.getItem(
-    `${STORAGE_PREFIX}_AUTO_SAVE_DATE`
-  );
-
-  const stamp = Number(raw);
-
-  if(!stamp || isNaN(stamp)){
-    el.textContent = "🟢 Sauvegarde locale auto";
-    return;
-  }
-
-  el.textContent =
-    "🟢 Sauvegarde locale : " +
-    new Date(stamp).toLocaleString();
-}
-(function enableDebugIfNeeded(){
-  if(localStorage.getItem("CA_DEBUG") === "1"){
-    document
-      .querySelectorAll(".debug-only")
-      .forEach(el => el.style.display = "block");
-
-    console.warn("🧪 MODE DEBUG DÉVERROUILLÉ");
-  }
-})();
 function prepareExport(){
-  createSnapshot("before_export", true); // 🔥 FORCÉ
+  createSnapshot("before_export",true);
   recalcCascade();
-  saveYearData(
-    getYearFromMonth(currentKey),
-    ALL_DATA[getYearFromMonth(currentKey)]
-  );
+  saveYearData(getYearFromMonth(currentKey), ALL_DATA[getYearFromMonth(currentKey)]);
 }
+
 function exportJSON(){
-  prepareExport(); // ✅ AJOUT CRITIQUE
-
-  const year = getYearFromMonth(currentKey);
-
-const payload = {
-  exportedAt: new Date().toISOString(),
-  year,
-  appVersion: APP_VERSION,
-  dataVersion: DATA_VERSION,
-  DATA,
-  SETTINGS
-};
-
-  const blob = new Blob(
-    [JSON.stringify(payload,null,2)],
-    {type:"application/json"}
-  );
-
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
+  prepareExport();
+  const year    = getYearFromMonth(currentKey);
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    year, appVersion:APP_VERSION, dataVersion:DATA_VERSION,
+    DATA, SETTINGS,
+    GEO_PUNCHES: GEO_PUNCHES_DATA // ✅ export des pointages aussi
+  };
+  const blob = new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a    = document.createElement("a");
+  a.href     = URL.createObjectURL(blob);
   a.download = "heures_sup_backup_"+Date.now()+".json";
   a.click();
-
-  document.getElementById("fileDate").textContent =
-    new Date().toLocaleDateString();
-}
-/* =======================
-   PARAMS €
-======================= */
-["rate","coef25","coef50","coefNet"].forEach(id=>{
-  let def;
-  if(id === "rate") def = 10;
-  else if(id === "coef25") def = 1.25;
-  else if(id === "coef50") def = 1.50;
-  else if(id === "coefNet") def = 0.93;
-
-  const input = document.getElementById(id);
-  input.value = SETTINGS[id] ?? def;
-
-  input.oninput = () => {
-    SETTINGS[id] = parseFloat(input.value) || 0;
-    localStorage.setItem(
-      kSettings(),
-      JSON.stringify(SETTINGS)
-    );
-    recalc();
-  };
-});
-   function openTutorial(){
-  document.getElementById("tutorialModal").classList.add("open");
-}
-function closeTutorial(){
-  document.getElementById("tutorialModal").classList.remove("open");
-}
-function getPeriodData(monthKey){
-  const { start, end } = getPeriodBounds(monthKey);
-
-  let totalHours = 0;
-  const rows = [];
-
-  Object.entries(ALL_DATA).forEach(([year, yearData])=>{
-    Object.entries(yearData || {}).forEach(([key, month])=>{
-      Object.entries(month.days || {}).forEach(([d, h])=>{
-        const [y, m] = key.split("-").map(Number);
-        const date = new Date(y, m - 1, d);
-
-        if(date >= start && date <= end){
-          totalHours += h;
-          rows.push({ date, h });
-        }
-      });
-    });
-  });
-
-  rows.sort((a,b)=>a.date-b.date);
-
-  return { start, end, rows, totalHours };
-}
-function getPeriodHoursForMonth(monthKey){
-  const { start, end } = getPeriodBounds(monthKey);
-  let total = 0;
-
-  Object.entries(ALL_DATA).forEach(([year, yearData])=>{
-    Object.entries(yearData || {}).forEach(([key, month])=>{
-      Object.entries(month.days || {}).forEach(([d, h])=>{
-        const [y, m] = key.split("-").map(Number);
-        const date = new Date(y, m - 1, d);
-
-        if(date >= start && date <= end){
-          total += h;
-        }
-      });
-    });
-  });
-
-  return total;
-}
-function exportMonthlyPDF(){
-  prepareExport();
-
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-
-  const month = DATA[currentKey];
-  const { start, end } = getPeriodBounds(currentKey);
-  const paid = month.paid || 0;
-  const prevCarry = getPreviousCarry(currentKey);
-
-  let yPos = 15;
-
-  pdf.setFontSize(14);
-  pdf.text("Récapitulatif mensuel – Heures supplémentaires", 10, yPos);
-  yPos += 8;
-
-  pdf.setFontSize(11);
-  pdf.text(
-    `Période comptable : ${formatDate(start)} → ${formatDate(end)}`,
-    10,
-    yPos
-  );
-  yPos += 10;
-
-  pdf.setFontSize(11);
-  pdf.text(`Report précédent : ${prevCarry.toFixed(2)} h`, 10, yPos); yPos += 6;
-  pdf.text(`Heures période : ${document.getElementById("totalMonth").textContent} h`, 10, yPos); yPos += 6;
-  pdf.text(`Heures payées : ${paid.toFixed(2)} h`, 10, yPos); yPos += 6;
-  pdf.text(`Reliquat final : ${month.carry.toFixed(2)} h`, 10, yPos);
-
-  yPos += 12;
-  pdf.setFontSize(9);
-  pdf.text(
-    "Document personnel – valeurs indicatives – ne constitue pas un bulletin de paie",
-    10,
-    yPos
-  );
-
-  pdf.save(`heures_mensuelles_${currentKey}.pdf`);
-}
-function formatDate(d){
-  return d.toLocaleDateString("fr-FR");
-}
-function exportAnnualPDF(){
-  prepareExport();
-
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-
-  const months = Object.keys(DATA)
-    .filter(k => /^\d{4}-\d{2}$/.test(k))
-    .sort();
-
-  let yPos = 15;
-
-  pdf.setFontSize(14);
-  pdf.text("Bilan annuel – Heures supplémentaires", 10, yPos);
-  yPos += 10;
-
-  pdf.setFontSize(10);
-  pdf.text("Mois", 10, yPos);
-  pdf.text("Carry fin", 80, yPos);
-  yPos += 6;
-
-  months.forEach(key=>{
-    const m = DATA[key];
-    pdf.text(key, 10, yPos);
-    pdf.text((m.carry || 0).toFixed(2) + " h", 80, yPos);
-    yPos += 6;
-  });
-
-  pdf.save(`bilan_annuel_heures_sup_${months[0].slice(0,4)}.pdf`);
-}
-loadMonth();
-
-
-function registerYear(year){
-  let index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
-  if(!index.includes(year)){
-    index.push(year);
-    index.sort();
-    localStorage.setItem(kIndex(), JSON.stringify(index));
-  }
+  document.getElementById("fileDate").textContent = new Date().toLocaleDateString();
 }
 
-function loadYearData(year){
-  return JSON.parse(
-    localStorage.getItem(kData(year)) || "{}"
-  );
-}
-
-function saveYearData(year, data){
-  localStorage.setItem(
-    kData(year),
-    JSON.stringify(data)
-  );
-}
-function recalcCascade(){
-  const allMonths = [];
-
-  Object.values(ALL_DATA).forEach(yearData => {
-    if(!yearData || typeof yearData !== "object") return;
-
-    Object.entries(yearData).forEach(([key, month]) => {
-      if(/^\d{4}-\d{2}$/.test(key)){
-        allMonths.push({ key, month });
-      }
-    });
-  });
-
-  allMonths.sort((a, b) => a.key.localeCompare(b.key));
-
-  let runningCarry = 0;
-
-  allMonths.forEach(({ key }) => {
-    const { start, end } = getPeriodBounds(key);
-
-    let periodHours = 0;
-
-    // 🔥 PARCOURT TOUTES LES HEURES, TOUS LES MOIS
-    Object.entries(ALL_DATA).forEach(([year, yearData]) => {
-      Object.entries(yearData || {}).forEach(([monthKey, month]) => {
-        Object.entries(month.days || {}).forEach(([d, h]) => {
-          const [y, m] = monthKey.split("-").map(Number);
-          const date = new Date(y, m - 1, d);
-
-          if(date >= start && date <= end){
-            periodHours += h;
-          }
-        });
-      });
-    });
-
-    const month = ALL_DATA[key.slice(0,4)][key];
-    const paid = Number(month.paid) || 0;
-
-    runningCarry += periodHours;
-    runningCarry -= paid;
-
-    if(runningCarry < 0) runningCarry = 0;
-
-    month.carry = runningCarry;
-  });
-}
 function importJSONFile(e){
   const file = e.target.files[0];
   if(!file) return;
-
   const reader = new FileReader();
-
   reader.onload = () => {
     createSnapshot("before_import");
-  let payload;
-  let dataVersion = "1.0";
+    let payload;
+    try{ payload=JSON.parse(reader.result); }
+    catch{ alert("❌ Fichier JSON invalide"); return; }
+    if(typeof payload!=="object"||typeof payload.DATA!=="object"||!payload.year){
+      alert("❌ Structure du fichier invalide"); return;
+    }
+    const year = String(payload.year);
+    if(!/^\d{4}$/.test(year)){ alert("❌ Année invalide"); return; }
+    registerYear(year);
+    const existing = loadYearData(year);
+    let imported=0, repaired=0;
+    Object.entries(payload.DATA).forEach(([mk,month])=>{
+      if(!/^\d{4}-\d{2}$/.test(mk)) return;
+      if(!month.days||typeof month.days!=="object"){ month.days={}; repaired++; }
+      if(typeof month.paid!=="number") month.paid=0;
+      if(typeof month.carry!=="number") month.carry=0;
+      if(typeof month.closing!=="number") month.closing=null;
+      if(typeof month.locked!=="boolean") month.locked=false;
+      existing[mk]=month; imported++;
+    });
+    saveYearData(year,existing);
+    ALL_DATA[year]=existing;
+    // Import pointages géo si présents
+    if(payload.GEO_PUNCHES && typeof payload.GEO_PUNCHES==="object"){
+      Object.assign(GEO_PUNCHES_DATA, payload.GEO_PUNCHES);
+      localStorage.setItem(GEO_PUNCHES, JSON.stringify(GEO_PUNCHES_DATA));
+    }
+    recalcCascade();
+    DATA=ALL_DATA[getYearFromMonth(currentKey)];
+    loadMonth();
+    alert(`✅ Import terminé\nAnnée : ${year}\nMois importés : ${imported}${repaired?"\nMois réparés : "+repaired:""}`);
+  };
+  reader.readAsText(file);
+  e.target.value="";
+}
+document.getElementById("importFile").addEventListener("change",importJSONFile);
 
-  try{
-    payload = JSON.parse(reader.result);
-    dataVersion = payload.dataVersion || "1.0";
-  }catch{
-    alert("❌ Fichier JSON invalide");
-    return;
+function exportMonthlyPDF(){
+  prepareExport();
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+  const month = DATA[currentKey];
+  const { start,end } = getPeriodBounds(currentKey);
+  const paid = month.paid||0;
+  const prevCarry = getPreviousCarry(currentKey);
+  let yPos=15;
+  pdf.setFontSize(14);
+  pdf.text("Récapitulatif mensuel – Heures supplémentaires",10,yPos); yPos+=8;
+  pdf.setFontSize(11);
+  pdf.text(`Période comptable : ${formatDate(start)} → ${formatDate(end)}`,10,yPos); yPos+=10;
+  pdf.text(`Report précédent : ${prevCarry.toFixed(2)} h`,10,yPos); yPos+=6;
+  pdf.text(`Heures période : ${document.getElementById("totalMonth").textContent} h`,10,yPos); yPos+=6;
+  pdf.text(`Heures payées : ${paid.toFixed(2)} h`,10,yPos); yPos+=6;
+  pdf.text(`Reliquat final : ${(month.carry||0).toFixed(2)} h`,10,yPos); yPos+=12;
+
+  // Pointages géo du mois
+  const key = todayKey();
+  const punches = GEO_PUNCHES_DATA[key]||[];
+  if(punches.length>0){
+    pdf.setFontSize(11); pdf.text("Pointages géolocalisés du jour :",10,yPos); yPos+=6;
+    pdf.setFontSize(9);
+    punches.forEach(p=>{
+      const t=new Date(p.ts).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+      pdf.text(`${p.type==="in"?"▶":"⏹"} ${t}`,12,yPos); yPos+=5;
+    });
+    yPos+=4;
   }
 
-    /* =====================
-       VALIDATIONS DE BASE
-    ===================== */
-    if(
-      typeof payload !== "object" ||
-      typeof payload.DATA !== "object" ||
-      !payload.year
-    ){
-      alert("❌ Structure du fichier invalide");
-      return;
-    }
-
-    const year = String(payload.year);
-
-    if(!/^\d{4}$/.test(year)){
-      alert("❌ Année invalide dans le fichier");
-      return;
-    }
-/* =====================
-   🔁 MIGRATION VERSION
-===================== */
-if(dataVersion === "1.0"){
-  Object.values(payload.DATA).forEach(month=>{
-    if(typeof month.closing !== "number"){
-      month.closing = null;
-    }
-    if(typeof month.locked !== "boolean"){
-      month.locked = false;
-    }
-  });
+  pdf.setFontSize(9);
+  pdf.text("Document personnel – valeurs indicatives – ne constitue pas un bulletin de paie",10,yPos);
+  pdf.save(`heures_mensuelles_${currentKey}.pdf`);
 }
-if(payload.appVersion && payload.appVersion !== APP_VERSION){
-  console.warn(
-    "⚠️ Import depuis une autre version de l’app :",
-    payload.appVersion,
-    "→",
-    APP_VERSION
-  );
+
+function exportAnnualPDF(){
+  prepareExport();
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+  const mths = Object.keys(DATA).filter(k=>/^\d{4}-\d{2}$/.test(k)).sort();
+  let yPos=15;
+  pdf.setFontSize(14); pdf.text("Bilan annuel – Heures supplémentaires",10,yPos); yPos+=10;
+  pdf.setFontSize(10);
+  pdf.text("Mois",10,yPos); pdf.text("Carry fin",80,yPos); yPos+=6;
+  mths.forEach(key=>{ const m=DATA[key]; pdf.text(key,10,yPos); pdf.text((m.carry||0).toFixed(2)+" h",80,yPos); yPos+=6; });
+  pdf.save(`bilan_annuel_heures_sup_${mths[0]?.slice(0,4)||""}.pdf`);
 }
-    /* =====================
-       CHARGEMENT ANNÉE
-    ===================== */
-    registerYear(year);
 
-    const existing = loadYearData(year);
-    let imported = 0;
-    let repaired = 0;
+function formatDate(d){ return d.toLocaleDateString("fr-FR"); }
 
-    Object.entries(payload.DATA).forEach(([monthKey, month])=>{
-      if(!/^\d{4}-\d{2}$/.test(monthKey)) return;
-
-      // 🔧 réparation minimale
-      if(!month.days || typeof month.days !== "object"){
-        month.days = {};
-        repaired++;
-      }
-      if(typeof month.paid !== "number") month.paid = 0;
-      if(typeof month.carry !== "number") month.carry = 0;
-      if(typeof month.closing !== "number") month.closing = null;
-      if(typeof month.locked !== "boolean") month.locked = false;
-
-      existing[monthKey] = month;
-      imported++;
-    });
-
-    /* =====================
-       ÉCRITURE + CACHE
-    ===================== */
-    saveYearData(year, existing);
-
-    // 🔥 CRITIQUE : mise à jour mémoire
-    ALL_DATA[year] = existing;
-
-    // 🔁 recalcul global
-    recalcCascade();
-
-    // 🔄 reload UI
-    DATA = ALL_DATA[getYearFromMonth(currentKey)];
-    loadMonth();
-
-    alert(
-      `✅ Import terminé\n` +
-      `Année : ${year}\n` +
-      `Mois importés : ${imported}\n` +
-      (repaired ? `Mois réparés : ${repaired}` : "")
-    );
-  };
-
-  reader.readAsText(file);
-  e.target.value = "";
-}
-document.getElementById("importFile").addEventListener("change", importJSONFile);
 /* =======================
-   🛡️ ANTI-CRASH GLOBAL
+   SNAPSHOTS / RÉCUPÉRATION
 ======================= */
-
-// Erreurs JavaScript classiques
-window.onerror = function (message, source, lineno, colno, error) {
-  handleFatalError({
-    type: "JS_ERROR",
-    message,
-    source,
-    lineno,
-    colno,
-    stack: error?.stack || null
-  });
-  return true; // empêche le crash brutal
-};
-
-// Promesses non catchées
-window.addEventListener("unhandledrejection", event => {
-  handleFatalError({
-    type: "PROMISE_REJECTION",
-    message: event.reason?.message || String(event.reason),
-    stack: event.reason?.stack || null
-  });
-});
-function safe(fn){
-  return function(...args){
-    try{
-      return fn.apply(this, args);
-    }catch(e){
-      handleFatalError({
-        type: "SAFE_FN",
-        message: e.message,
-        stack: e.stack
+function createSnapshot(reason="auto",force=false){
+  try{
+    if(!force){
+      const last=Number(localStorage.getItem("SNAP_LAST")||0);
+      if(Date.now()-last<60000) return;
+    }
+    localStorage.setItem("SNAP_LAST",Date.now());
+    const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||"[]");
+    snaps.unshift({ date:new Date().toISOString(),reason,currentKey,DATA:JSON.parse(JSON.stringify(ALL_DATA)),SETTINGS });
+    snaps.splice(SNAP_LIMIT);
+    localStorage.setItem(SNAP_KEY,JSON.stringify(snaps));
+  }catch(e){ console.warn("⚠️ Snapshot échoué",e); }
+}
+function openRecovery(){
+  document.getElementById("recoveryModal").classList.add("open");
+  renderSnapshots();
+}
+function recoverAuto(){
+  attemptAutoRecovery();
+  localStorage.removeItem("CA_HS_RECOVERY_MODE");
+  alert("✅ Réparation effectuée. L'application va redémarrer.");
+  location.reload();
+}
+function recoverSoftReset(){ localStorage.removeItem("CA_HS_RECOVERY_MODE"); location.reload(); }
+function recoverFactory(){
+  createSnapshot("factory_reset",true);
+  if(!confirm("⚠️ Supprimer TOUTES les données locales ?")) return;
+  Object.keys(localStorage).filter(k=>k.startsWith(STORAGE_PREFIX)).forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
+function restoreSnapshot(index){
+  const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||"[]");
+  if(!snaps[index]){ alert("❌ Snapshot introuvable"); return; }
+  const snap=snaps[index];
+  if(!confirm(`Restaurer l'état du ${new Date(snap.date).toLocaleString()} ?`)) return;
+  ALL_DATA=snap.DATA; SETTINGS=snap.SETTINGS||{};
+  Object.entries(ALL_DATA).forEach(([year,data])=>saveYearData(year,data));
+  localStorage.setItem(kSettings(),JSON.stringify(SETTINGS));
+  localStorage.removeItem("CA_HS_RECOVERY_MODE");
+  location.reload();
+}
+function attemptAutoRecovery(){
+  let repaired=false;
+  try{
+    const index=JSON.parse(localStorage.getItem(kIndex())||"[]");
+    index.forEach(year=>{
+      let data;
+      try{ data=loadYearData(year); }
+      catch(e){ localStorage.removeItem(kData(year)); repaired=true; return; }
+      Object.entries(data).forEach(([mk,month])=>{
+        if(!month.days) month.days={};
+        if(typeof month.paid!=="number") month.paid=0;
+        if(typeof month.carry!=="number") month.carry=0;
+        const [y,m]=mk.split("-").map(Number);
+        if(!month.closing||new Date(y,m-1,month.closing).getDay()!==0){
+          month.closing=getLastSunday(y,m-1); repaired=true;
+        }
       });
-    }
-  };
+      saveYearData(year,data);
+    });
+  }catch(e){ return false; }
+  return repaired;
 }
-/* =======================
-   🧯 PROTECTION DES FONCTIONS CRITIQUES
-======================= */
-
-recalc = safe(recalc);
-renderCalendar = safe(renderCalendar);
-loadMonth = safe(loadMonth);
-save = safe(save);
 function renderSnapshots(){
-  const list = document.getElementById("snapshotList");
+  const list=document.getElementById("snapshotList");
   if(!list) return;
-
-  const snaps = JSON.parse(
-    localStorage.getItem(SNAP_KEY) || "[]"
-  );
-
-  list.innerHTML = snaps.length
-    ? snaps.map((s,i)=>`
-      <button onclick="restoreSnapshot(${i})">
-        📸 ${new Date(s.date).toLocaleString()} – ${s.reason}
-      </button>
-    `).join("")
+  const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||"[]");
+  list.innerHTML=snaps.length
+    ? snaps.map((s,i)=>`<button onclick="restoreSnapshot(${i})">📸 ${new Date(s.date).toLocaleString()} – ${s.reason}</button>`).join("")
     : "<p style='font-size:12px;color:#aaa'>Aucun snapshot</p>";
 }
+
 /* =======================
-   🔐 DEBUG CACHÉ SÉCURISÉ
+   MODALES UI
 ======================= */
+function acceptLegal(){ localStorage.setItem("LEGAL_OK","1"); document.getElementById("legalModal").classList.remove("open"); }
+function closeOnboarding(){ localStorage.setItem("ONBOARDING_DONE","1"); document.getElementById("onboardingModal").classList.remove("open"); }
+function openTutorial(){ document.getElementById("tutorialModal").classList.add("open"); }
+function closeTutorial(){ document.getElementById("tutorialModal").classList.remove("open"); }
 
-const DEBUG_CODE = "1234";
-
-window.addEventListener("DOMContentLoaded", ()=>{
-  const dbg = document.getElementById("debugTrigger");
-  if(dbg){
-    dbg.addEventListener("click", ()=>{
-      document.getElementById("debugGate").classList.add("open");
-    });
-  }
+/* =======================
+   PARAMÈTRES €
+======================= */
+["rate","coef25","coef50","coefNet"].forEach(id=>{
+  const defaults={rate:10,coef25:1.25,coef50:1.50,coefNet:0.93};
+  const input=document.getElementById(id);
+  input.value=SETTINGS[id]??defaults[id];
+  input.oninput=()=>{ SETTINGS[id]=parseFloat(input.value)||0; localStorage.setItem(kSettings(),JSON.stringify(SETTINGS)); recalc(); };
 });
 
-function closeDebugGate(){
-  document.getElementById("debugGate").classList.remove("open");
+/* =======================
+   ANTI-CRASH
+======================= */
+function safe(fn){
+  return function(...args){
+    try{ return fn.apply(this,args); }
+    catch(e){ handleFatalError({type:"SAFE_FN",message:e.message,stack:e.stack}); }
+  };
+}
+window.onerror=(msg,src,l,c,err)=>{ handleFatalError({type:"JS_ERROR",message:msg,stack:err?.stack}); return true; };
+window.addEventListener("unhandledrejection",e=>{
+  handleFatalError({type:"PROMISE_REJECTION",message:e.reason?.message||String(e.reason),stack:e.reason?.stack});
+});
+function handleFatalError(err){
+  console.error("💥",err);
+  localStorage.setItem("CA_HS_RECOVERY_MODE","1");
+  if(document.getElementById("crashOverlay")) return;
+  const o=document.createElement("div");
+  o.id="crashOverlay";
+  o.style="position:fixed;inset:0;background:#0f1115;color:#fff;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center";
+  o.innerHTML=`<h2>⚠️ Une erreur est survenue</h2><p style="opacity:.8;font-size:14px">L'application a rencontré un problème inattendu.<br>Aucune donnée n'a été supprimée.</p>
+    <button onclick="location.reload()" style="margin-top:15px;padding:12px 20px;border-radius:8px;border:none;background:#4f8cff;color:white;font-size:15px">🔄 Recharger</button>`;
+  document.body.appendChild(o);
 }
 
+recalc        = safe(recalc);
+renderCalendar= safe(renderCalendar);
+loadMonth     = safe(loadMonth);
+save          = safe(save);
+
+/* =======================
+   DEBUG
+======================= */
+function simulateCrash(){ handleFatalError({type:"SIMULATED_CRASH",message:"Crash simulé"}); }
+function closeDebugGate(){ document.getElementById("debugGate").classList.remove("open"); }
 function validateDebugAccess(){
-  const input = document.getElementById("debugCode").value;
-
-  if(input !== DEBUG_CODE){
-    alert("❌ Code incorrect");
-    return;
-  }
-
-  alert(
-    "🧪 Test de crash requis.\n" +
-    "L’application va volontairement planter."
-  );
-
-  // autorise le debug APRÈS redémarrage
+  const input=document.getElementById("debugCode").value;
+  if(input!=="1234"){ alert("❌ Code incorrect"); return; }
+  alert("🧪 Test de crash requis.");
   localStorage.setItem("CA_DEBUG","1");
-
-  // 🔥 crash volontaire obligatoire
   simulateCrash();
 }
-function handleFatalError(err){
-  console.error("💥 ERREUR CAPTURÉE", err);
-  localStorage.setItem("CA_HS_RECOVERY_MODE", "1");
+window.addEventListener("DOMContentLoaded",()=>{
+  const dbg=document.getElementById("debugTrigger");
+  if(dbg) dbg.addEventListener("click",()=>document.getElementById("debugGate").classList.add("open"));
+});
+(function enableDebugIfNeeded(){
+  if(localStorage.getItem("CA_DEBUG")==="1"){
+    document.querySelectorAll(".debug-only").forEach(el=>el.style.display="block");
+  }
+})();
 
-  // Sauvegarde du log (optionnel)
-  try{
-    localStorage.setItem(
-      "CA_HS_LAST_CRASH",
-      JSON.stringify({
-        date: new Date().toISOString(),
-        error: err,
-        state: {
-          currentKey,
-          unlocked
-        }
-      })
-    );
-  }catch(e){}
+function goMenu(){ localStorage.removeItem("lastApp"); window.location.href="../menu.html"; }
 
-  // UI de secours (une seule fois)
-  if(document.getElementById("crashOverlay")) return;
-
-  const overlay = document.createElement("div");
-  overlay.id = "crashOverlay";
-  overlay.style = `
-    position:fixed;
-    inset:0;
-    background:#0f1115;
-    color:#fff;
-    z-index:99999;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
-    text-align:center;
-  `;
-
-  overlay.innerHTML = `
-    <h2>⚠️ Une erreur est survenue</h2>
-    <p style="opacity:.8;font-size:14px;max-width:500px">
-      L’application a rencontré un problème inattendu.<br>
-      Aucune donnée n’a été supprimée.
-    </p>
-    <button onclick="location.reload()" style="
-      margin-top:15px;
-      padding:12px 20px;
-      border-radius:8px;
-      border:none;
-      background:#4f8cff;
-      color:white;
-      font-size:15px;
-    ">
-      🔄 Recharger l’application
-    </button>
-  `;
-
-  document.body.appendChild(overlay);
-}
-
+/* =======================
+   DÉMARRAGE
+======================= */
+loadMonth();
 </script>
 
-<div class="card" style="font-size:13px;color:#aaa">
-  <h3>📘 Notice utilisateur</h3>
-
-  <p>
-    Cet outil est destiné au suivi personnel des heures supplémentaires
-    dans le cadre d’une rémunération mensuelle.
-  </p>
-
-  <p>
-    Les calculs sont indicatifs et reposent sur les principes généraux :
-  </p>
-
-  <ul>
-    <li>Code du travail</li>
-    <li>Convention collective du commerce de gros (IDCC 573)</li>
-  </ul>
-
-  <p>
-    ⚠️ En cas de litige, seuls les bulletins de paie et documents
-    officiels de l’employeur font foi.
-  </p>
-</div>
-<div class="card" style="font-size:12px;color:#9aa0a6;line-height:1.5">
-  <b>⚠️ Responsabilité et limites</b><br><br>
-
-  Les données saisies dans ce simulateur sont renseignées
-  <b>sous la seule responsabilité de l’utilisateur</b>.<br><br>
-
-  Les résultats affichés sont fournis à titre indicatif et peuvent
-  ne pas refléter exactement la réalité du terrain, notamment en raison
-  d’erreurs de saisie, de paramètres incomplets ou inexacts, de différences
-  liées à la convention collective, aux accords d’entreprise, aux pratiques
-  internes, d’évolutions du droit applicable, ou de
-  <b>dysfonctionnements techniques, bugs ou limites du simulateur</b>.<br><br>
-
-  Malgré le soin apporté à sa conception, le simulateur peut contenir
-  des erreurs et ne saurait se substituer aux documents officiels,
-  outils de l’employeur ou à l’interprétation des textes légaux.<br><br>
-
-  <b>Seuls les documents établis par l’employeur et le droit applicable
-  font foi.</b>
-</div>
-<footer
-  id="debugTrigger"
-  style="margin-top:30px;text-align:center;font-size:12px;color:#777;cursor:pointer">
-  © C. Anthony<br>
-  Outil indicatif – ne constitue pas un bulletin de paie
-</footer>
-<div id="versionBadge"></div>
 </body>
 </html>
