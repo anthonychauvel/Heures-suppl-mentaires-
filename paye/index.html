@@ -189,6 +189,42 @@ input[type="number"] {
    GÉOLOCALISATION – STYLES SPÉCIFIQUES
 ========================================= */
 
+/* Historique */
+.geo-history-day {
+  background: #12161e;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-left: 3px solid #2a3040;
+}
+.geo-history-day.has-hours {
+  border-left-color: var(--geo-active);
+}
+.geo-history-day.short-session {
+  border-left-color: #ff9500;
+}
+.geo-history-date {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.geo-history-total {
+  font-size: 12px;
+  color: var(--geo-active);
+  margin-top: 6px;
+}
+.geo-history-total.too-short {
+  color: #ff9500;
+}
+.geo-history-punch {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 2px 0;
+}
+.geo-history-punch.in  { color: var(--geo-active); }
+.geo-history-punch.out { color: #ff6b6b; }
+
 /* Pastille de statut géo */
 .geo-status-dot {
   display: inline-block;
@@ -474,8 +510,13 @@ input[type="number"] {
   ⏱ Aujourd'hui : <b id="geoTodayHours">0.00 h</b>
 </div>
 
+<!-- Bouton historique -->
+<button class="secondary" style="margin-top:12px;font-size:13px" onclick="openGeoHistory()">
+  📋 Historique des pointages
+</button>
+
 <!-- Bouton config -->
-<button class="secondary" style="margin-top:12px;font-size:13px" onclick="toggleGeoConfig()">
+<button class="secondary" style="margin-top:6px;font-size:13px" onclick="toggleGeoConfig()">
   ⚙️ Configuration du pointage
 </button>
 
@@ -659,6 +700,29 @@ input[type="number"] {
       </ol>
       <button onclick="closeOnboarding()">Commencer</button>
     </div>
+  </div>
+
+  <!-- ==================== MODALE HISTORIQUE GEO ==================== -->
+
+  <div class="modal" id="geoHistoryModal">
+    <div class="modal-content" style="max-width:500px;max-height:85vh;overflow-y:auto">
+      <h3>📋 Historique des pointages</h3>
+
+```
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <select id="geoHistoryMonth" style="flex:1;margin-top:0">
+    </select>
+    <button onclick="renderGeoHistory()" style="width:auto;padding:8px 14px;margin-top:0;font-size:13px">
+      🔍
+    </button>
+  </div>
+
+  <div id="geoHistoryContent"></div>
+
+  <button class="secondary" style="margin-top:12px" onclick="closeGeoHistory()">Fermer</button>
+</div>
+```
+
   </div>
 
   <!-- ==================== NOTICE ==================== -->
@@ -2107,6 +2171,151 @@ window.addEventListener("DOMContentLoaded",()=>{
 })();
 
 function goMenu(){ localStorage.removeItem("lastApp"); window.location.href="../menu.html"; }
+
+/* =======================
+   HISTORIQUE GEO
+======================= */
+function openGeoHistory(){
+  populateGeoHistoryMonths();
+  renderGeoHistory();
+  document.getElementById("geoHistoryModal").classList.add("open");
+}
+
+function closeGeoHistory(){
+  document.getElementById("geoHistoryModal").classList.remove("open");
+}
+
+function populateGeoHistoryMonths(){
+  const sel = document.getElementById("geoHistoryMonth");
+  sel.innerHTML = "";
+
+  // Collecter tous les mois qui ont des pointages
+  const months = new Set();
+  Object.keys(GEO_PUNCHES_DATA).forEach(dateKey => {
+    months.add(dateKey.slice(0,7));
+  });
+
+  // Ajouter le mois courant même sans pointages
+  months.add(new Date().toISOString().slice(0,7));
+
+  Array.from(months).sort().reverse().forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m;
+    const [y, mo] = m.split("-");
+    const label = new Date(y, mo-1, 1).toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+    opt.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+    if(m === currentKey) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function renderGeoHistory(){
+  const sel      = document.getElementById("geoHistoryMonth");
+  const monthKey = sel.value;
+  const [y, m]   = monthKey.split("-").map(Number);
+  const container = document.getElementById("geoHistoryContent");
+
+  // Filtrer les jours du mois sélectionné
+  const days = Object.entries(GEO_PUNCHES_DATA)
+    .filter(([k]) => k.startsWith(monthKey))
+    .sort(([a],[b]) => b.localeCompare(a)); // plus récent en premier
+
+  if(days.length === 0){
+    container.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">
+      Aucun pointage ce mois
+    </div>`;
+    return;
+  }
+
+  // Résumé mensuel
+  let totalMonthMin = 0;
+  let totalSessions = 0;
+
+  let html = "";
+
+  days.forEach(([dateKey, punches]) => {
+    const date = new Date(dateKey);
+    const dateLabel = date.toLocaleDateString("fr-FR",{
+      weekday:"long", day:"numeric", month:"long"
+    });
+
+    // Calcul durée du jour
+    let dayMin = 0, lastIn = null;
+    let pairsCount = 0;
+
+    punches.forEach(p => {
+      if(p.type==="in")  lastIn = new Date(p.ts);
+      else if(p.type==="out" && lastIn){
+        dayMin += (new Date(p.ts) - lastIn) / 60000;
+        lastIn  = null;
+        pairsCount++;
+      }
+    });
+
+    const isValid   = dayMin >= 15;
+    const dayH      = isValid ? Math.floor(dayMin/15)*0.25 : 0;
+    const dayClass  = dayMin === 0 ? "" : isValid ? "has-hours" : "short-session";
+
+    totalMonthMin  += isValid ? dayMin : 0;
+    if(isValid) totalSessions++;
+
+    // Ligne de pointages
+    let punchLines = punches.map(p => {
+      const t   = new Date(p.ts).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+      const cls = p.type === "in" ? "in" : "out";
+      const ico = p.type === "in" ? "▶" : "⏹";
+      return `<div class="geo-history-punch ${cls}">${ico} ${t}</div>`;
+    }).join("");
+
+    // Total du jour
+    let totalLine = "";
+    if(dayMin > 0){
+      if(isValid){
+        const h = Math.floor(dayH), q = Math.round((dayH%1)*60);
+        totalLine = `<div class="geo-history-total">⏱ ${h}h${q>0?q+"min":""} comptabilisé</div>`;
+      } else {
+        totalLine = `<div class="geo-history-total too-short">⚠️ ${Math.round(dayMin)} min — non comptabilisé (< 15 min)</div>`;
+      }
+    }
+
+    // Bouton supprimer le jour
+    const delBtn = `<button onclick="deleteGeoDay('${dateKey}')" style="
+      background:none;border:none;color:#555;font-size:11px;
+      width:auto;padding:2px 6px;margin-top:4px;cursor:pointer
+    ">🗑️ Supprimer</button>`;
+
+    html += `<div class="geo-history-day ${dayClass}">
+      <div class="geo-history-date">${dateLabel.charAt(0).toUpperCase()+dateLabel.slice(1)}</div>
+      ${punchLines}
+      ${totalLine}
+      ${delBtn}
+    </div>`;
+  });
+
+  // Résumé en haut
+  const totalH   = Math.floor(totalMonthMin/15)*0.25;
+  const th       = Math.floor(totalH);
+  const tq       = Math.round((totalH%1)*60);
+  const summaryH = totalH > 0 ? `${th}h${tq>0?tq+"min":""}` : "0h";
+
+  container.innerHTML = `
+    <div style="background:#1a2535;border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px">
+      <div style="color:var(--muted)">Ce mois</div>
+      <div style="font-size:20px;font-weight:bold;color:var(--geo-active);margin:4px 0">${summaryH}</div>
+      <div style="color:var(--muted);font-size:12px">${totalSessions} session${totalSessions>1?"s":""} comptabilisée${totalSessions>1?"s":""}</div>
+    </div>
+    ${html}
+  `;
+}
+
+function deleteGeoDay(dateKey){
+  if(!confirm(`Supprimer tous les pointages du ${new Date(dateKey).toLocaleDateString("fr-FR")} ?`)) return;
+  delete GEO_PUNCHES_DATA[dateKey];
+  localStorage.setItem(GEO_PUNCHES, JSON.stringify(GEO_PUNCHES_DATA));
+  renderGeoHistory();
+  renderCalendar();
+  showGeoFeedback("🗑️ Pointages supprimés");
+}
 
 /* =======================
    DÉMARRAGE
