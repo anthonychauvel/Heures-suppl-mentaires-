@@ -1,1196 +1,1838 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/hs/apple-touch-icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
+ <link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/hs/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Compteur Heures & Paie">
 <meta name="theme-color" content="#4FB3C2">
 <meta charset="UTF-8">
-<title>Simulateur d'heures mensualisé</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>
-(function(){
-  const t = localStorage.getItem("CA_THEME") || "dark";
-  if(t === "light") document.documentElement.classList.add("light-theme");
-})();
-</script>
-<style>
-/* =======================
-   THÈME – VARIABLES (dark par défaut)
-======================= */
-:root {
-  --bg: #0f1115;
-  --card: #1c1f26;
-  --text: #e6e6e6;
-  --muted: #9aa0a6;
-  --accent: #4f8cff;
-  --danger: #c0392b;
-  --success: #2ecc71;
-  --border: #333;
-  --input-bg: #262a33;
-  --day-bg: #1e2128;
-  --today-bg: #2e2a1f;
+<title>Simulateur d’heures mensualisé</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
+/* Bouton Kitsune → M3 */
+.kitsune-btn {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(135deg, #FF8C42, #e06a1a);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255,140,66,0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-body.light {
-  --bg: #f0f2f5;
-  --card: #ffffff;
-  --text: #1a1a2e;
-  --muted: #555;
-  --accent: #2255cc;
-  --danger: #c0392b;
-  --success: #1a8a4a;
-  --border: #ddd;
-  --input-bg: #e8eaf0;
-  --day-bg: #e8eaf0;
-  --today-bg: #fff8ec;
+.kitsune-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(255,140,66,0.55);
 }
+.kitsune-btn:active { transform: scale(0.97); }
 
-/* =======================
-BASE
-======================= */
-html, body {
-min-height: 100%;
-background: var(–bg);
-}
-body {
-margin: 0;
-background: var(–bg);
-color: var(–text);
-font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-transition: background 0.3s, color 0.3s;
-}
-
-- { box-sizing: border-box; }
-  h1, h2, h3 { text-align: center; color: var(–text); }
-  p, label { color: var(–text); }
-  .main { padding: 15px; background: var(–bg); }
-  footer { background: var(–bg); color: var(–muted); }
-
-/* =======================
-BOUTONS
-======================= */
-button {
-width: 100%;
-padding: 12px;
-border-radius: 8px;
-border: none;
-background: var(–accent);
-color: white;
-font-size: 15px;
-margin-top: 6px;
-cursor: pointer;
-transition: opacity 0.15s, transform 0.1s;
-}
-button:active { transform: scale(0.98); opacity: 0.85; }
-button.secondary {
-background: var(–card);
-color: var(–text);
-border: 1px solid var(–border);
-}
-button.danger { background: var(–danger); color: white; border: none; }
-
-/* =======================
-INPUTS
-======================= */
-input:not([type=“checkbox”]), select {
-width: 100%;
-padding: 12px 8px;
-margin-top: 6px;
-background: var(–input-bg);
-color: var(–text);
-border: 1px solid var(–border);
-border-radius: 6px;
-height: 46px;
-line-height: 1.2;
--webkit-appearance: none;
-appearance: none;
-transition: background 0.3s, color 0.3s, border 0.3s;
-}
-input[type=“checkbox”] {
-width: 22px; height: 22px; min-width: 22px;
-margin: 0; cursor: pointer;
-accent-color: var(–accent);
-}
-input[type=“number”] { text-align: center; -moz-appearance: textfield; }
-input[type=“month”], input[type=“date”] { text-align: center; }
-
-/* =======================
-CARDS
-======================= */
-.card {
-background: var(–card);
-padding: 15px;
-border-radius: 12px;
-margin-top: 15px;
-border: 1px solid var(–border);
-transition: background 0.3s;
-}
-
-/* =======================
-TOP NAV
-======================= */
+/* Wrapper des deux boutons */
 .top-nav-bar {
-display: flex;
-gap: 8px;
-padding: calc(env(safe-area-inset-top) + 8px) 15px 8px;
-background: var(–bg);
-position: sticky;
-top: 0;
-z-index: 2000;
-transition: background 0.3s;
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+.top-nav-bar .menu-btn {
+  flex: 1;
+  margin: 0;
 }
 .menu-btn {
-flex: 1; margin: 0; padding: 8px 16px;
-border-radius: 20px; border: 1px solid var(–border);
-background: var(–card); color: var(–text);
-font-size: 14px; font-weight: 500; cursor: pointer;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255,255,255,0.85);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
 }
-.kitsune-btn {
-flex: 1; padding: 8px 16px; border-radius: 20px;
-border: none; background: linear-gradient(135deg,#FF8C42,#e06a1a);
-color: #fff; font-size: 14px; font-weight: 500;
-cursor: pointer; box-shadow: 0 2px 8px rgba(255,140,66,.35);
+/* =======================
+   TOP BAR
+======================= */
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  background: var(--bg);
+  padding: calc(env(safe-area-inset-top) + 10px) 15px 10px;
 }
 
 /* =======================
-TOPBAR
+   MODE SOMBRE – GLOBAL
 ======================= */
-.topbar {
-background: var(–bg);
-padding: 0 15px 10px;
-display: flex; gap: 8px;
-transition: background 0.3s;
+:root{
+  --bg:#0f1115;
+  --card:#1c1f26;
+  --text:#e6e6e6;
+  --muted:#9aa0a6;
+  --accent:#4f8cff;
+  --danger:#c0392b;
+  --success:#2ecc71;
 }
-.topbar button { flex: 1; margin-top: 0; }
-.theme-toggle {
-flex: 0 0 auto; width: auto; padding: 8px 14px;
-border-radius: 20px; border: 1px solid var(–border);
-background: var(–card); color: var(–text);
-font-size: 14px; margin-top: 0; cursor: pointer;
-white-space: nowrap;
+#versionBadge{
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 14px);
+  right: calc(env(safe-area-inset-right) + 14px);
+  font-size: 11px;
+  opacity: 0.55;
+  color: #9aa0a6;
+  z-index: 99999;
+  user-select: none;
+  pointer-events: none;
+}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+}
+
+.main{
+  padding:15px;
+}
+h1,h2,h3{text-align:center}
+button{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background:var(--accent);
+  color:white;
+  font-size:15px;
+  margin-top:6px;
+}
+button.secondary{background:#2a2f3a}
+button.danger{background:var(--danger)}
+input,select{
+  width:100%;
+  padding:8px;
+  margin-top:6px;
+  background:#262a33;
+  color:var(--text);
+  border:1px solid #333;
+  border-radius:6px;
 }
 
 /* =======================
-CALENDRIER
+   CARTES
 ======================= */
-.calendar {
-display: grid;
-grid-template-columns: repeat(7, 1fr);
-gap: 4px; width: 100%;
-}
-.weekday {
-text-align: center; font-weight: bold;
-font-size: 10px; padding: 4px 0;
-color: var(–muted); min-width: 0;
-}
-.day {
-background: var(–day-bg);
-border-radius: 8px; padding: 6px 4px;
-text-align: center; cursor: pointer;
-min-height: 62px; overflow: hidden;
-display: flex; flex-direction: column;
-align-items: center; justify-content: flex-start;
-font-size: 12px; min-width: 0;
-color: var(–text);
-transition: border 0.2s, opacity 0.2s, transform 0.1s, background 0.3s;
-}
-.day b { font-size: 13px; line-height: 1.5; display: block; }
-.day span { font-size: 10px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; display: block; }
-.day.today {
-border: 2px solid #ff9500 !important;
-background: var(–today-bg);
-box-shadow: 0 0 0 2px rgba(255,149,0,0.3);
-transform: scale(1.03); z-index: 2; opacity: 1 !important;
-}
-.day.locked { opacity: .4; cursor: not-allowed; }
-.day.after-closing { border: 1px dashed var(–accent); opacity: 0.7; }
-.day.after-closing.today { opacity: 1 !important; border-style: solid; }
-
-/* =======================
-MODALES
-======================= */
-.modal {
-position: fixed; inset: 0;
-background: rgba(0,0,0,.65);
-display: flex; align-items: center; justify-content: center;
-z-index: 4000; opacity: 0; pointer-events: none;
-transform: translateY(10px);
-transition: opacity .2s ease, transform .2s ease;
-}
-.modal.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
-.modal-content {
-background: var(–card); border-radius: 16px;
-padding: 20px; width: 90%; max-width: 420px;
-max-height: 85vh; overflow-y: auto;
-color: var(–text);
-transition: background 0.3s;
+.card{
+  background:var(--card);
+  padding:15px;
+  border-radius:12px;
+  margin-top:15px;
 }
 
 /* =======================
-BLUR €
+   CALENDRIER
 ======================= */
-.blur { filter: blur(8px); }
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+.weekday{
+  text-align:center;
+  font-weight:bold;
+  font-size:12px;
+}
+.day{
+  background:#262a33;
+  border-radius:8px;
+  padding:6px;
+  text-align:center;
+  cursor:pointer;
+  min-height:60px;
+}
+.day.today{
+  border:2px solid #ff9500;
+}
+.day.locked{
+  opacity:.4;
+  cursor:not-allowed;
+}
 
 /* =======================
-BADGES
+   MODALES
 ======================= */
-.badge {
-display: inline-block; padding: 4px 8px;
-border-radius: 12px; font-size: 12px; margin-bottom: 4px;
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:4000;
+
+  opacity:0;
+  pointer-events:none;
+  transform: translateY(10px);
+  transition: opacity .2s ease, transform .2s ease;
 }
-.badge.ok { background: #1b5e20; color: #fff; }
-.badge.file { background: #283593; color: #fff; }
-body.light .badge.ok { background: #d4edda; color: #155724; }
-body.light .badge.file { background: #d0e4ff; color: #1a3a6e; }
+
+.modal.open{
+  opacity:1;
+  pointer-events:auto;
+  transform: translateY(0);
+}
+
 
 /* =======================
-VERSION
+   FLOU €
 ======================= */
-#versionBadge {
-position: fixed;
-bottom: calc(env(safe-area-inset-bottom) + 14px);
-right: calc(env(safe-area-inset-right) + 14px);
-font-size: 11px; opacity: 0.45; color: var(–muted);
-z-index: 99999; user-select: none; pointer-events: none;
+.blur{
+  filter:blur(8px);
 }
-</style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+/* =======================
+   BADGES
+======================= */
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:12px;
+  font-size:12px;
+}
+.badge.ok{background:#1b5e20}
+.badge.file{background:#283593}
+input[type="month"]{
+  text-align: center;
+  padding-right: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input[type="number"]{
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  padding-left: 0;
+  padding-right: 0;
+}
+.day.after-closing{
+  border: 1px dashed #4f8cff;
+  opacity: 0.75;
+}
+.day{
+  transition: 
+    border 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.1s ease;
+}
+.day.today{
+  border:2px solid #ff9500 !important;
+  opacity: 1 !important;
+  background: #2e2a1f;
+  box-shadow: 0 0 0 2px rgba(255,149,0,0.4);
+  transform: scale(1.03);
+  z-index: 2;
+}
+.day.after-closing.today{
+  opacity: 1 !important;
+  border-style: solid;
+}
 
-</head>
-<body>
-
-<!-- NAV -->
-
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head><body>
 <div class="top-nav-bar">
-  <button class="menu-btn" onclick="goMenu()">← Retour au menu</button>
-  <button class="kitsune-btn" onclick="window.location.href='../fox/index.html'">🦊 Kitsune</button>
-</div>
-
-<!-- MODALES SYSTÈME -->
-
-<div class="modal" id="debugGate">
+  <button class="menu-btn" onclick="goMenu()">⬅ Retour au menu</button>
+  <button class="kitsune-btn" onclick="window.location.href='../fox/index.html'" title="Ouvrir FOX Engine">🦊 Kitsune</button>
+</div><div class="modal" id="debugGate">
   <div class="modal-content">
-    <h3>Acces debug sécurisé</h3>
-    <p style="font-size:14px">Avant toute intervention, un <b>test de crash</b> est obligatoire.</p>
-    <input type="password" id="debugCode" placeholder="Code requis (1234)">
-    <button class="danger" onclick="validateDebugAccess()">Tester le crash</button>
-    <button class="secondary" onclick="closeDebugGate()">Annuler</button>
-  </div>
-</div>
+    <h3>🧪 Accès debug sécurisé</h3>
 
+<p style="font-size:14px">
+  Avant toute intervention, un <b>test de crash</b> est obligatoire.
+</p>
+
+<input
+  type="password"
+  id="debugCode"
+  placeholder="Code requis (1234)"
+>
+
+<button class="danger" onclick="validateDebugAccess()">
+  💥 Tester le crash maintenant
+</button>
+
+<button class="secondary" onclick="closeDebugGate()">
+  Annuler
+</button>
+
+
+</div>
+</div>
 <div class="modal" id="recoveryModal">
   <div class="modal-content">
-    <h2>Mode récupération</h2>
-    <h3>Snapshots disponibles</h3>
+    <h2>🛠️ Mode récupération</h2>
+        <h3>📸 Snapshots disponibles</h3>
     <div id="snapshotList"></div>
-    <p style="font-size:14px">L'application a détecté un problème lors du dernier démarrage.</p>
-    <button onclick="recoverAuto()">Réparation automatique</button>
-    <button class="secondary" onclick="recoverSoftReset()">Réinitialiser l'interface</button>
-    <button class="danger" onclick="recoverFactory()">Réinitialisation complète</button>
-    <p style="font-size:12px;color:var(--muted);margin-top:10px">La réinitialisation complète supprime les données locales.</p>
-  </div>
+    <p style="font-size:14px">
+      L’application a détecté un problème lors du dernier démarrage.
+    </p>
+
+<button onclick="recoverAuto()">🔄 Réparation automatique</button>
+<button class="secondary" onclick="recoverSoftReset()">♻️ Réinitialiser l’interface</button>
+<button class="danger" onclick="recoverFactory()">🧨 Réinitialisation complète</button>
+
+<p style="font-size:12px;color:#aaa;margin-top:10px">
+  ⚠️ La réinitialisation complète supprime les données locales.
+</p>
+
+
 </div>
-
-<!-- TOPBAR -->
-
-<div class="topbar">
-  <button onclick="openTutorial()">? Tutoriel</button>
-  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Mode sombre</button>
-</div>
-
-<div class="main">
-
-  <h1>Heures supplémentaires</h1>
-  <p style="text-align:center;font-size:14px;color:var(--muted);margin-top:-10px">
-    Suivi précis des heures supplémentaires basé sur la
-    <b>logique réelle de paie mensuelle</b>
-    (clôture mensuelle + report automatique)
-  </p>
-
+</div><!-- le reste de ton compteur ici --><div class="topbar">
+  <button onclick="openTutorial()">❓ Tutoriel</button>
+</div><div class="main"><h1>⏱️ Heures supplémentaires</h1>
+<p style="
+  text-align:center;
+  font-size:14px;
+  color:#9aa0a6;
+  margin-top:-10px;
+">
+  Suivi précis des heures supplémentaires basé sur la
+  <b>logique réelle de paie mensuelle</b>
+  (clôture mensuelle + report automatique)
+</p>
   <div class="card">
     <label>Mois suivi</label>
     <input type="month" id="monthPicker">
     <label>Jour de clôture mensuelle</label>
-    <input type="date" id="closingDate">
+ <input type="date" id="closingDate">
+  </div><div class="calendar card" id="calendar"></div><div class="card">
+  <h3>Récapitulatif</h3>
+  <p>Report précédent : <b id="prevCarry">0.00</b> h</p>
+<p>Total période : <b id="totalMonth">0.00</b> h</p>
+<p>Heures à 25 % : <b id="hours25">0.00</b> h</p>
+<p>Heures à 50 % : <b id="hours50">0.00</b> h</p>
+<p style="font-size:12px;color:#aaa;margin-top:8px">
+  ℹ️ Calcul basé sur une hypothèse standard :
+  25% jusqu’à 8h hebdomadaires, puis 50%.
+  Peut varier selon la convention collective.
+</p>
+  <p>Heures payées : <input type="number" id="paidHours" step="0.25"></p>
+  <p>Reliquat reporté : <b id="carryOver">0.00</b> h</p>
+</div><div class="card">
+  <h3>💰 Valeur €</h3>
+  <div id="euroBox" class="blur">
+    <label>Taux horaire (€)</label>
+    <input type="number" id="rate">
+    <label>Coef 25 %</label>
+    <input type="number" id="coef25">
+    <label>Coef 50 %</label>
+    <input type="number" id="coef50">
+    <label>Coef brut → net</label>
+    <input type="number" id="coefNet">
+    <p><b id="euroResult">0.00 €</b></p>
+    <p id="euroDetail" style="font-size:12px;color:#aaa;margin-top:8px"></p>
+    <p style="
+  font-size:12px;
+  color:#9aa0a6;
+  margin-top:10px;
+  line-height:1.4;
+">
+⚠️ Les <b>taux</b> et <b>coefficients</b> utilisés sont fournis
+à titre <b>strictement indicatif</b>.<br>
+La somme affichée peut <b>ne pas correspondre à la réalité</b>
+(selon la convention collective, les accords d’entreprise
+ou le mode de calcul de l’employeur).<br>
+<b>Seul le bulletin de paie fait foi.</b>
+</p>
   </div>
-
-  <div class="card" style="padding:10px;overflow:hidden">
-    <div class="calendar" id="calendar"></div>
+  <input type="password" id="unlockCode" placeholder="Code (1234)">
+  <button onclick="unlockEuro()">Déverrouiller</button>
+</div>
+<button class="secondary" onclick="toggleChangeCode()">🔁 Changer le code</button><div id="changeCodeBox" style="display:none;margin-top:10px">
+  <input type="password" id="oldCode" placeholder="Ancien code">
+  <input type="password" id="newCode" placeholder="Nouveau code (4 chiffres min)">
+  <input type="password" id="confirmCode" placeholder="Confirmer le code">
+  <button class="danger" onclick="changeCode()">Valider le nouveau code</button>
+</div><div class="card"><span class="badge ok">🟢 Sauvegarde locale auto</span>
+<span class="badge file">
+👤 Usage personnel – outil indicatif
+</span>
+<span class="badge file">💾 Dernier fichier : <span id="fileDate">—</span></span>
+<button onclick="exportJSON()">💾 Sauvegarde dans un fichier</button>
+<input type="file" id="importFile" accept=".json" style="display:none">
+<button class="secondary" onclick="document.getElementById('importFile').click()">
+📥 Importer une sauvegarde
+</button>
+<button onclick="exportMonthlyPDF()">📄 PDF mensuel détaillé</button>
+<button onclick="exportAnnualPDF()">📕 PDF annuel récapitulatif</button>
+</div><!-- =======================
+     POPUP HEURES
+======================= --><div class="modal" id="hoursModal">
+  <div class="modal-content">
+    <h3>⏱️ Ajouter des heures</h3>
+    <div id="hoursChoices"></div>
+    <label>Saisie manuelle</label>
+    <input type="number" id="manualHours" step="0.25">
+    <button onclick="confirmManual()">Valider</button>
+    <button class="danger" onclick="deleteDayHours()">🗑️ Supprimer les heures du jour</button>
+    <button class="secondary" onclick="closeHours()">Annuler</button>
   </div>
+</div>
+<div class="modal" id="tutorialModal">
+  <div class="modal-content" style="max-width:700px;max-height:80vh;overflow:auto;">
+    <h2>📘 Tutoriel – Suivi des heures supplémentaires</h2>
 
-  <div class="card">
-    <h3>Récapitulatif</h3>
-    <p>Report précédent : <b id="prevCarry">0.00</b> h</p>
-    <p>Total période : <b id="totalMonth">0.00</b> h</p>
-    <p>Heures à 25 % : <b id="hours25">0.00</b> h</p>
-    <p>Heures à 50 % : <b id="hours50">0.00</b> h</p>
-    <p style="font-size:12px;color:var(--muted);margin-top:8px">
-      Calcul basé sur une hypothèse standard : 25% jusqu'à 8h hebdomadaires, puis 50%.
-      Peut varier selon la convention collective.
-    </p>
-    <p>Heures payées : <input type="number" id="paidHours" step="0.25"></p>
-    <p>Reliquat reporté : <b id="carryOver">0.00</b> h</p>
-  </div>
+<h3>1️⃣ Principe général</h3>
+<p>
+  Cet outil permet de suivre les heures supplémentaires dans le cadre
+  d’une <b>paie mensuelle</b>, avec report automatique des reliquats.
+</p>
 
-  <div class="card">
-    <h3>Valeur €</h3>
-    <div id="euroBox" class="blur">
-      <label>Taux horaire (€)</label>
-      <input type="number" id="rate">
-      <label>Coef 25 %</label>
-      <input type="number" id="coef25">
-      <label>Coef 50 %</label>
-      <input type="number" id="coef50">
-      <label>Coef brut → net</label>
-      <input type="number" id="coefNet">
-      <p><b id="euroResult">0.00 €</b></p>
-      <p id="euroDetail" style="font-size:12px;color:var(--muted);margin-top:8px"></p>
-      <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.4">
-        Les taux et coefficients sont fournis à titre indicatif.<br>
-        <b>Seul le bulletin de paie fait foi.</b>
-      </p>
-    </div>
-    <input type="password" id="unlockCode" placeholder="Code (1234)">
-    <button onclick="unlockEuro()">Déverrouiller</button>
-  </div>
+<h3>2️⃣ Saisie des heures</h3>
+<ul>
+  <li>Clique sur un jour</li>
+  <li>Choisis +15 min, +30 min, +1h… ou saisis manuellement</li>
+  <li>Les heures sont enregistrées automatiquement</li>
+</ul>
 
-<button class="secondary" onclick="toggleChangeCode()">Changer le code</button>
+<h3>3️⃣ Clôture mensuelle</h3>
+<p>
+  Le jour de clôture définit la fin de la période de paie.
+  Les heures après cette date sont automatiquement reportées.
+</p>
 
-  <div id="changeCodeBox" style="display:none;margin-top:10px">
-    <input type="password" id="oldCode" placeholder="Ancien code">
-    <input type="password" id="newCode" placeholder="Nouveau code (4 chiffres min)">
-    <input type="password" id="confirmCode" placeholder="Confirmer le code">
-    <button class="danger" onclick="changeCode()">Valider le nouveau code</button>
-  </div>
+<h3>4️⃣ Zone €</h3>
+<p>
+  Les montants sont floutés par défaut et protégés par code.
+</p>
 
-  <div class="card">
-    <span class="badge ok">Sauvegarde locale auto</span><br>
-    <span class="badge file">Usage personnel – outil indicatif</span><br>
-    <span class="badge file">Dernier fichier : <span id="fileDate">—</span></span>
-    <button onclick="exportJSON()">Sauvegarde dans un fichier</button>
-    <input type="file" id="importFile" accept=".json" style="display:none">
-    <button class="secondary" onclick="document.getElementById('importFile').click()">Importer une sauvegarde</button>
-    <button onclick="exportMonthlyPDF()">PDF mensuel détaillé</button>
-    <button onclick="exportAnnualPDF()">PDF annuel récapitulatif</button>
-  </div>
+<button class="secondary" onclick="closeTutorial()">Fermer</button>
 
-  <!-- MODALE HEURES -->
-
-  <div class="modal" id="hoursModal">
-    <div class="modal-content">
-      <h3>Ajouter des heures</h3>
-      <div id="hoursChoices"></div>
-      <label>Saisie manuelle</label>
-      <input type="number" id="manualHours" step="0.25">
-      <button onclick="confirmManual()">Valider</button>
-      <button class="danger" onclick="deleteDayHours()">Supprimer les heures du jour</button>
-      <button class="secondary" onclick="document.getElementById('hoursModal').classList.remove('open')">Annuler</button>
-    </div>
-  </div>
-
-  <!-- MODALE TUTORIEL -->
-
-  <div class="modal" id="tutorialModal">
-    <div class="modal-content" style="max-width:700px;max-height:80vh;overflow:auto">
-      <h2>Tutoriel – Suivi des heures supplémentaires</h2>
-      <h3>1 - Principe général</h3>
-      <p>Cet outil permet de suivre les heures supplémentaires dans le cadre d'une <b>paie mensuelle</b>, avec report automatique des reliquats.</p>
-      <h3>2 - Saisie des heures</h3>
-      <p>Clique sur un jour, choisis +15 min, +30 min, +1h… ou saisis manuellement. Les heures sont enregistrées automatiquement.</p>
-      <h3>3 - Clôture mensuelle</h3>
-      <p>Le jour de clôture définit la fin de la période de paie. Les heures après cette date sont automatiquement reportées.</p>
-      <h3>4 - Zone €</h3>
-      <p>Les montants sont floutés par défaut et protégés par code.</p>
-      <h3>5 - Mode clair / sombre</h3>
-      <p>Utilise le bouton en haut à droite pour basculer entre le mode sombre et le mode clair.</p>
-      <button class="secondary" onclick="closeTutorial()">Fermer</button>
-    </div>
-  </div>
-
-  <!-- MODALE LÉGALE -->
-
-  <div class="modal" id="legalModal">
-    <div class="modal-content">
-      <h2>Avertissement important</h2>
-      <p style="font-size:14px">
-        Cet outil est un <b>simulateur personnel</b>.<br><br>
-        Les calculs sont indicatifs et peuvent différer de votre bulletin de paie réel.<br><br>
-        <b>Seuls les documents de l'employeur font foi.</b>
-      </p>
-      <button onclick="acceptLegal()">J'ai compris</button>
-    </div>
-  </div>
-
-  <!-- MODALE ONBOARDING -->
-
-  <div class="modal" id="onboardingModal">
-    <div class="modal-content">
-      <h2>Bienvenue</h2>
-      <ol style="font-size:14px;color:var(--text)">
-        <li>Sélectionne le mois suivi</li>
-        <li>Définis le dimanche de clôture</li>
-        <li>Clique sur un jour pour ajouter des heures</li>
-        <li>Renseigne les heures payées</li>
-      </ol>
-      <button onclick="closeOnboarding()">Commencer</button>
-    </div>
-  </div>
-
-  <div class="card" style="font-size:13px;color:var(--muted)">
-    <h3>Notice utilisateur</h3>
-    <p>Cet outil est destiné au suivi personnel des heures supplémentaires dans le cadre d'une rémunération mensuelle.</p>
-    <p>Les calculs sont indicatifs et reposent sur les principes généraux du Code du travail et de la Convention collective du commerce de gros (IDCC 573).</p>
-    <p>En cas de litige, seuls les bulletins de paie et documents officiels de l'employeur font foi.</p>
-  </div>
-
-  <div class="card" style="font-size:12px;color:var(--muted);line-height:1.5">
-    <b>Responsabilité et limites</b><br><br>
-    Les données saisies dans ce simulateur sont renseignées <b>sous la seule responsabilité de l'utilisateur</b>.<br><br>
-    <b>Seuls les documents établis par l'employeur et le droit applicable font foi.</b>
-  </div>
 
 </div>
-
-<footer id="debugTrigger" style="margin-top:30px;text-align:center;font-size:12px;color:var(--muted);cursor:pointer;padding-bottom:30px">
-  © C. Anthony<br>Outil indicatif – ne constitue pas un bulletin de paie
-</footer>
-<div id="versionBadge"></div>
-
-<script>
+</div>
+<div class="modal" id="legalModal">
+  <div class="modal-content">
+    <h2>⚠️ Avertissement important</h2>
+    <p style="font-size:14px">
+      Cet outil est un <b>simulateur personnel</b>.<br><br>
+      Les calculs sont indicatifs et peuvent différer
+      de votre bulletin de paie réel.<br><br>
+      <b>Seuls les documents de l’employeur font foi.</b>
+    </p>
+    <button onclick="acceptLegal()">J’ai compris</button>
+  </div>
+</div>
+<div class="modal" id="onboardingModal">
+  <div class="modal-content">
+    <h2>👋 Bienvenue</h2>
+    <ol style="font-size:14px">
+      <li>Sélectionne le mois suivi</li>
+      <li>Définis le dimanche de clôture</li>
+      <li>Clique sur un jour pour ajouter des heures</li>
+      <li>Renseigne les heures payées</li>
+    </ol>
+    <button onclick="closeOnboarding()">Commencer</button>
+  </div>
+</div><script>
 /* =======================
-   TOAST (remplace alert/confirm bloqués iOS PWA)
+   🔄 MODE RÉCUPÉRATION
 ======================= */
-function toast(msg, duration=3000){
-  let el = document.getElementById("_toast");
-  if(!el){
-    el = document.createElement("div");
-    el.id = "_toast";
-    el.style.cssText = `
-      position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
-      background:#1c1f26;border:1px solid #333;color:#e6e6e6;
-      padding:12px 20px;border-radius:20px;font-size:14px;
-      z-index:99998;transition:opacity .3s,transform .3s;
-      opacity:0;pointer-events:none;text-align:center;max-width:85%;
-      box-shadow:0 4px 20px rgba(0,0,0,0.4);
-    `;
-    document.body.appendChild(el);
-  }
-  el.textContent = msg;
-  el.style.opacity = "1";
-  el.style.transform = "translateX(-50%) translateY(0)";
-  clearTimeout(el._timer);
-  el._timer = setTimeout(()=>{
-    el.style.opacity = "0";
-    el.style.transform = "translateX(-50%) translateY(20px)";
-  }, duration);
+
+const RECOVERY_ACTIVE =
+  localStorage.getItem("CA_HS_RECOVERY_MODE") === "1";
+
+if(RECOVERY_ACTIVE){
+  console.warn("🛠️ MODE RÉCUPÉRATION ACTIVÉ");
 }
+window.addEventListener("load", ()=>{
+
+  /* 🔢 Version */
+  const v = document.getElementById("versionBadge");
+  if(v){
+    v.textContent = "v" + APP_VERSION;
+  }
+
+  /* 🛠️ Recovery prioritaire */
+  if(RECOVERY_ACTIVE){
+    openRecovery();
+    return;
+  }
+
+  /* ⚠️ Avertissement légal */
+  if(!localStorage.getItem("LEGAL_OK")){
+    document.getElementById("legalModal").classList.add("open");
+    return;
+  }
+
+
+
+  if(!localStorage.getItem("ONBOARDING_DONE")){
+  document.getElementById("onboardingModal").classList.add("open");
+}
+});
+
 
 /* =======================
-   CONSTANTES
+   DONNÉES
 ======================= */
 const STORAGE_PREFIX = "CA_HS_TRACKER_V1";
-const APP_VERSION    = "1.5.0";
-const SNAP_KEY       = `${STORAGE_PREFIX}_SNAPSHOTS`;
-const SNAP_LIMIT     = 5;
-const DATA_VERSION   = "1.0";
+const APP_VERSION = "1.3.1";
 
-function kData(y)    { return `${STORAGE_PREFIX}_DATA_${y}`; }
-function kSettings() { return `${STORAGE_PREFIX}_SETTINGS`; }
-function kCode()     { return `${STORAGE_PREFIX}_CODE_HASH`; }
-function kIndex()    { return `${STORAGE_PREFIX}_INDEX`; }
-function getYearFromMonth(k) { return k.split("-")[0]; }
+const SNAP_KEY = `${STORAGE_PREFIX}_SNAPSHOTS`;
+const SNAP_LIMIT = 5;
+const DATA_VERSION = "1.0";
 
-/* =======================
-   ÉTAT GLOBAL
-======================= */
-let DATA     = {};
-let SETTINGS = JSON.parse(localStorage.getItem(kSettings()) || "{}");
-let ALL_DATA = {};
-let currentKey = "", currentDay = null, unlocked = false;
-
-/* =======================
-   THÈME CLAIR / SOMBRE
-======================= */
-function initTheme(){
-  const saved = localStorage.getItem("CA_THEME") || "dark";
-  applyTheme(saved, false);
+function kData(year){
+  return `${STORAGE\_PREFIX}\_DATA\_${year}`;
 }
-function applyTheme(theme, save=true){
-  if(theme === "light"){
-    document.body.classList.add("light");
-    document.documentElement.classList.add("light-theme");
-    document.getElementById("themeBtn").textContent = "☀️ Mode clair";
-  } else {
-    document.body.classList.remove("light");
-    document.documentElement.classList.remove("light-theme");
-    document.getElementById("themeBtn").textContent = "🌙 Mode sombre";
-  }
-  if(save) localStorage.setItem("CA_THEME", theme);
-}
-function toggleTheme(){
-  const isLight = document.body.classList.contains("light");
-  applyTheme(isLight ? "dark" : "light");
-}
-
-/* =======================
-   MODE RÉCUPÉRATION
-======================= */
-const RECOVERY_ACTIVE = localStorage.getItem("CA_HS_RECOVERY_MODE") === "1";
-
-/* =======================
-   PRÉCHARGEMENT
-======================= */
-(function preloadAllYears(){
-  const index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
-  index.forEach(year => {
-    try { ALL_DATA[year] = loadYearData(year); }
-    catch(e) { console.warn("Impossible de charger", year); ALL_DATA[year] = {}; }
-  });
-})();
-
-/* =======================
-   AUTO-REFRESH PWA
-======================= */
 (function autoRefreshPWA(){
-  const key  = "CA_APP_VERSION";
+  const key = "CA_APP_VERSION";
   const last = localStorage.getItem(key);
+
   if(last !== APP_VERSION){
+    console.warn("🔄 Nouvelle version détectée :", APP_VERSION);
+
     localStorage.setItem(key, APP_VERSION);
+
+    // évite boucle infinie
     if(!sessionStorage.getItem("CA_REFRESHED")){
       sessionStorage.setItem("CA_REFRESHED", "1");
       location.reload();
     }
   }
 })();
-
-/* =======================
-   MIGRATION
-======================= */
-(function migrateLocalDataIfNeeded(){
-  const stored = localStorage.getItem("CA_DATA_VERSION");
-  if(stored === DATA_VERSION) return;
-  Object.entries(ALL_DATA).forEach(([year, yearData]) => {
-    Object.values(yearData).forEach(month => {
-      if(typeof month.closing !== "number") month.closing = null;
-      if(typeof month.locked  !== "boolean") month.locked  = false;
-    });
-    saveYearData(year, yearData);
+function acceptLegal(){
+  localStorage.setItem("LEGAL_OK","1");
+  document.getElementById("legalModal").classList.remove("open");
+}
+function simulateCrash(){
+  console.warn("💥 CRASH SIMULÉ");
+  handleFatalError({
+    type: "SIMULATED_CRASH",
+    message: "Crash interne simulé",
+    stack: null
   });
-  localStorage.setItem("CA_DATA_VERSION", DATA_VERSION);
+}
+function openRecovery(){
+  document.getElementById("recoveryModal").classList.add("open");
+  renderSnapshots();
+}
+function createSnapshot(reason="auto", force=false){
+  try{
+    if(!force){
+      const last = Number(localStorage.getItem("SNAP_LAST") || 0);
+      if(Date.now() - last < 60_000) return;
+    }
+
+    localStorage.setItem("SNAP_LAST", Date.now());
+
+    const snaps = JSON.parse(
+      localStorage.getItem(SNAP_KEY) || "[]"
+    );
+
+    snaps.unshift({
+      date: new Date().toISOString(),
+      reason,
+      currentKey,
+      DATA: JSON.parse(JSON.stringify(ALL_DATA)),
+      SETTINGS
+    });
+
+    snaps.splice(SNAP_LIMIT);
+
+    localStorage.setItem(SNAP_KEY, JSON.stringify(snaps));
+  }catch(e){
+    console.warn("⚠️ Snapshot échoué", e);
+  }
+}
+function recoverAuto(){
+  const fixed = attemptAutoRecovery();
+  localStorage.removeItem("CA_HS_RECOVERY_MODE");
+
+  alert(
+    fixed
+    ? "✅ Réparation effectuée. L’application va redémarrer."
+    : "ℹ️ Aucun problème détecté."
+  );
+
+  location.reload();
+}
+
+function recoverSoftReset(){
+  localStorage.removeItem("CA_HS_RECOVERY_MODE");
+  location.reload();
+}
+function restoreSnapshot(index){
+  const snaps = JSON.parse(
+    localStorage.getItem(SNAP_KEY) || "[]"
+  );
+
+  if(!snaps[index]){
+    alert("❌ Snapshot introuvable");
+    return;
+  }
+
+  const snap = snaps[index];
+
+  if(!confirm(
+    `Restaurer l’état du ${new Date(snap.date).toLocaleString()} ?`
+  )) return;
+
+  ALL_DATA = snap.DATA;
+  SETTINGS = snap.SETTINGS || {};
+
+  // réécriture propre
+  Object.entries(ALL_DATA).forEach(([year,data])=>{
+    saveYearData(year, data);
+  });
+
+  localStorage.setItem(
+    kSettings(),
+    JSON.stringify(SETTINGS)
+  );
+
+  localStorage.removeItem("CA_HS_RECOVERY_MODE");
+
+  location.reload();
+}
+function recoverFactory(){
+  createSnapshot("factory_reset", true);
+  if(!confirm("⚠️ Supprimer TOUTES les données locales ?")) return;
+
+  Object.keys(localStorage)
+    .filter(k => k.startsWith(STORAGE_PREFIX))
+    .forEach(k => localStorage.removeItem(k));
+
+  location.reload();
+}
+function kSettings(){
+  return `${STORAGE_PREFIX}_SETTINGS`;
+}
+function kCode(){
+  return `${STORAGE_PREFIX}_CODE_HASH`;
+}
+function kIndex(){
+  return `${STORAGE_PREFIX}_INDEX`;
+}
+function kBackup(year, date){
+  return `${STORAGE\_PREFIX}\_BACKUP\_${year}_${date}`;
+}
+function getYearFromMonth(key){
+  return key.split("-")[0];
+}
+let DATA = {};
+let SETTINGS = JSON.parse(
+  localStorage.getItem(kSettings()) || "{}"
+);
+let ALL_DATA = {}; // 🔑 cache de toutes les années
+/* =======================
+   🔄 PRÉCHARGEMENT ANNÉES
+======================= */
+(function preloadAllYears(){
+  const index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
+
+  index.forEach(year=>{
+    try{
+      ALL_DATA[year] = loadYearData(year);
+    }catch(e){
+      console.warn("⚠️ Impossible de charger l’année", year);
+      ALL_DATA[year] = {};
+    }
+  });
 })();
+let currentKey="", currentDay=null, unlocked=false;
+const closingDate = document.getElementById("closingDate");
 
 /* =======================
    INIT
 ======================= */
-window.addEventListener("load", () => {
-  const v = document.getElementById("versionBadge");
-  if(v) v.textContent = "v" + APP_VERSION;
+const monthPicker = document.getElementById("monthPicker");
+monthPicker.value = new Date().toISOString().slice(0,7);
+const paidInput = document.getElementById("paidHours");
+paidInput.oninput = () => {
+  if(!DATA || !DATA[currentKey]) return;
 
-  initTheme();
-
-  if(RECOVERY_ACTIVE){ openRecovery(); return; }
-  if(!localStorage.getItem("LEGAL_OK")){
-    document.getElementById("legalModal").classList.add("open");
-    return;
-  }
-  if(!localStorage.getItem("ONBOARDING_DONE")){
-    document.getElementById("onboardingModal").classList.add("open");
-  }
-});
-
+  DATA[currentKey].paid = parseFloat(paidInput.value) || 0;
+  save();
+  recalc();
+};
+monthPicker.onchange = loadMonth;
 /* =======================
    CALENDRIER
 ======================= */
-const monthPicker = document.getElementById("monthPicker");
-const closingDate = document.getElementById("closingDate");
-const paidInput   = document.getElementById("paidHours");
-
-monthPicker.value    = new Date().toISOString().slice(0,7);
-monthPicker.onchange = loadMonth;
-paidInput.oninput    = () => {
-  if(!DATA || !DATA[currentKey]) return;
-  DATA[currentKey].paid = parseFloat(paidInput.value) || 0;
-  save(); recalc();
-};
-
 function getLastSunday(year, monthIndex){
-  const lastDay = new Date(year, monthIndex+1, 0);
-  const day = lastDay.getDay();
-  lastDay.setDate(lastDay.getDate() - (day === 0 ? 0 : day));
+  const lastDay = new Date(year, monthIndex + 1, 0); // dernier jour du mois
+  const day = lastDay.getDay(); // 0 = dimanche
+  const diff = day === 0 ? 0 : day;
+  lastDay.setDate(lastDay.getDate() - diff);
   return lastDay.getDate();
+}
+(function migrateLocalDataIfNeeded(){
+  const stored = localStorage.getItem("CA_DATA_VERSION");
+
+  if(stored === DATA_VERSION) return;
+
+  console.warn("🔁 Migration locale des données :", stored, "→", DATA_VERSION);
+
+  Object.entries(ALL_DATA).forEach(([year, yearData])=>{
+    Object.values(yearData).forEach(month=>{
+      if(typeof month.closing !== "number"){
+        month.closing = null;
+      }
+      if(typeof month.locked !== "boolean"){
+        month.locked = false;
+      }
+    });
+
+    saveYearData(year, yearData);
+  });
+
+  localStorage.setItem("CA_DATA_VERSION", DATA_VERSION);
+})();
+function closeOnboarding(){
+  localStorage.setItem("ONBOARDING_DONE","1");
+  document.getElementById("onboardingModal").classList.remove("open");
 }
 
 function getPeriodBounds(monthKey){
   if(!monthKey || typeof monthKey !== "string"){
     const now = new Date();
-    return { start: new Date(now.getFullYear(), now.getMonth(), 1),
-             end:   new Date(now.getFullYear(), now.getMonth()+1, 0) };
+    return {
+      start: new Date(now.getFullYear(), now.getMonth(), 1),
+      end: new Date(now.getFullYear(), now.getMonth() + 1, 0)
+    };
   }
-  const [y, m] = monthKey.split("-").map(Number);
-  const yearData  = ALL_DATA[String(y)];
-  const currentM  = yearData?.[monthKey];
-  if(!currentM) return { start: new Date(y,m-1,1), end: new Date(y,m,0) };
 
-  const prevDate  = new Date(y, m-2, 1);
-  const prevKey   = prevDate.getFullYear() + "-" + String(prevDate.getMonth()+1).padStart(2,"0");
-  const prevYData = ALL_DATA[String(prevDate.getFullYear())] || {};
-  const prevMonth = prevYData[prevKey];
+  const [y, m] = monthKey.split("-").map(Number);
+  if(!y || !m){
+    return {
+      start: new Date(y || 1970, (m || 1) - 1, 1),
+      end: new Date(y || 1970, m || 1, 0)
+    };
+  }
+
+  const year = String(y);
+  const yearData = ALL_DATA[year];
+  const currentMonth = yearData?.[monthKey];
+
+  if(!currentMonth){
+    return {
+      start: new Date(y, m - 1, 1),
+      end: new Date(y, m, 0)
+    };
+  }
+
+  // 🔙 mois précédent
+  const prevMonthDate = new Date(y, m - 2, 1);
+  const prevKey =
+    prevMonthDate.getFullYear() + "-" +
+    String(prevMonthDate.getMonth() + 1).padStart(2,"0");
+
+  const prevYearData = ALL_DATA[String(prevMonthDate.getFullYear())] || {};
+  const prevMonth = prevYearData[prevKey];
 
   let start;
   if(prevMonth && typeof prevMonth.closing === "number"){
-    start = new Date(prevDate.getFullYear(), prevDate.getMonth(), prevMonth.closing+1);
-  } else {
-    start = new Date(y, m-1, 1);
+    start = new Date(
+      prevMonthDate.getFullYear(),
+      prevMonthDate.getMonth(),
+      prevMonth.closing + 1
+    );
+  }else{
+    start = new Date(y, m - 1, 1);
   }
 
-  let closing = currentM.closing;
-  if(typeof closing !== "number" || new Date(y,m-1,closing).getDay() !== 0){
-    closing = getLastSunday(y, m-1);
+  let closing = currentMonth.closing;
+  if(
+    typeof closing !== "number" ||
+    new Date(y, m - 1, closing).getDay() !== 0
+  ){
+    closing = getLastSunday(y, m - 1);
   }
-  return { start, end: new Date(y, m-1, closing) };
+
+  const end = new Date(y, m - 1, closing);
+
+  return { start, end };
 }
-
+function goMenu() {
+    localStorage.removeItem("lastApp");
+    window.location.href = "../menu.html";
+    }
 function loadMonth(){
   currentKey = monthPicker.value;
   const year = getYearFromMonth(currentKey);
+
   registerYear(year);
-  if(!ALL_DATA[year]) ALL_DATA[year] = loadYearData(year);
+
+  // 🔒 Chargement UNIQUE et sûr de l’année
+  if(!ALL_DATA[year]){
+    ALL_DATA[year] = loadYearData(year);
+  }
+
   DATA = ALL_DATA[year];
+
   const [y, m] = currentKey.split("-").map(Number);
   let needSave = false;
+
+  // 🆕 Création du mois s’il n’existe pas
   if(!DATA[currentKey]){
-    DATA[currentKey] = { days:{}, paid:0, carry:0, closing:getLastSunday(y,m-1), locked:false };
+    DATA[currentKey] = {
+      days: {},
+      paid: 0,
+      carry: 0,
+      closing: getLastSunday(y, m - 1),
+      locked: false
+    };
     needSave = true;
   }
+
+  // 🧹 Correction clôture invalide
   {
-    const lastDay = new Date(y,m,0).getDate();
+    const lastDay = new Date(y, m, 0).getDate();
     const closing = DATA[currentKey].closing;
-    if(!closing || closing>lastDay || new Date(y,m-1,closing).getDay()!==0){
-      DATA[currentKey].closing = getLastSunday(y,m-1);
+
+    const isInvalid =
+      !closing ||
+      closing > lastDay ||
+      new Date(y, m - 1, closing).getDay() !== 0;
+
+    if(isInvalid){
+      DATA[currentKey].closing = getLastSunday(y, m - 1);
       needSave = true;
     }
   }
+
+  // 🔄 Sync UI
   paidInput.value = DATA[currentKey].paid || 0;
   setClosingLimits();
   syncClosingDate();
+
   renderCalendar();
   recalcCascade();
   recalc();
   scrollToToday();
-  if(needSave) save();
+
+  if(needSave){
+    save();
+  }
+}
+function attemptAutoRecovery(){
+  let repaired = false;
+
+  try{
+    const index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
+
+    index.forEach(year=>{
+      let data;
+
+      try{
+        data = loadYearData(year);
+      }catch(e){
+        console.warn("⚠️ Données corrompues pour", year);
+        localStorage.removeItem(kData(year));
+        repaired = true;
+        return;
+      }
+
+      Object.entries(data).forEach(([monthKey, month])=>{
+        // structure minimale
+        if(!month.days) month.days = {};
+        if(typeof month.paid !== "number") month.paid = 0;
+        if(typeof month.carry !== "number") month.carry = 0;
+
+        // clôture invalide → dernier dimanche
+        const [y,m] = monthKey.split("-").map(Number);
+        const lastSunday = getLastSunday(y, m-1);
+
+        if(
+          !month.closing ||
+          new Date(y, m-1, month.closing).getDay() !== 0
+        ){
+          month.closing = lastSunday;
+          repaired = true;
+        }
+      });
+
+      saveYearData(year, data);
+    });
+
+  }catch(e){
+    return false; // échec total
+  }
+
+  return repaired;
+}
+
+
+
+function syncClosingDate(){
+  if(!DATA[currentKey]) return;
+
+  const [y, m] = currentKey.split("-").map(Number);
+  const day = DATA[currentKey].closing || 31;
+
+  closingDate.value =
+    `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
 }
 
 function setClosingLimits(){
-  const [y,m] = currentKey.split("-").map(Number);
-  const lastDay = new Date(y,m,0).getDate();
+  const [y, m] = currentKey.split("-").map(Number);
+  const lastDay = new Date(y, m, 0).getDate();
+
   closingDate.min = `${y}-${String(m).padStart(2,"0")}-01`;
   closingDate.max = `${y}-${String(m).padStart(2,"0")}-${lastDay}`;
-}
-function syncClosingDate(){
-  if(!DATA[currentKey]) return;
-  const [y,m] = currentKey.split("-").map(Number);
-  const day = DATA[currentKey].closing || 31;
-  closingDate.value = `${y}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
 }
 
 closingDate.oninput = () => {
   if(!closingDate.value) return;
-  const selected = new Date(closingDate.value);
-  const [y,m] = currentKey.split("-").map(Number);
-  if(selected.getFullYear()!==y || selected.getMonth()+1!==m){
-    toast("La date doit être dans le mois sélectionné"); 
-    syncClosingDate(); return;
-  }
-  if(selected.getDay()!==0){
-    toast("La clôture doit être un dimanche"); 
-    syncClosingDate(); return;
-  }
-  DATA[currentKey].closing = selected.getDate();
-  save(); renderCalendar(); recalc();
-};
 
+  const selected = new Date(closingDate.value);
+  const [y, m] = currentKey.split("-").map(Number);
+
+  if(
+    selected.getFullYear() !== y ||
+    selected.getMonth() + 1 !== m
+  ){
+    alert("⛔ La date doit être dans le mois sélectionné");
+    syncClosingDate();
+    return;
+  }
+if(selected.getDay() !== 0){
+  alert("⛔ La clôture doit obligatoirement être un dimanche");
+  syncClosingDate();
+  return;
+}
+  DATA[currentKey].closing = selected.getDate();
+  save();
+  renderCalendar();
+  recalc();
+}
 closingDate.addEventListener("blur", () => {
   const cal = document.getElementById("calendar");
   if(!cal) return;
-  cal.style.display = "none"; cal.offsetHeight; cal.style.display = "grid";
-});
 
+  // Forcer repaint Safari iOS
+  cal.style.display = "none";
+  cal.offsetHeight; // reflow
+  cal.style.display = "grid";
+});
 function scrollToToday(){
   const today = new Date().toISOString().slice(0,7);
   if(currentKey !== today) return;
-  const el = document.getElementById("todayCell");
-  if(el) el.scrollIntoView({ behavior:"smooth", block:"center" });
-}
 
+  const todayEl = document.getElementById("todayCell");
+  if(todayEl){
+    todayEl.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+}
 function renderCalendar(){
   const cal = document.getElementById("calendar");
   cal.innerHTML = "";
+
+  // 🗓️ Jours de la semaine
   const weekDays = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-  weekDays.forEach(d => {
+  weekDays.forEach(d=>{
     const w = document.createElement("div");
-    w.className = "weekday"; w.textContent = d;
+    w.className = "weekday";
+    w.textContent = d;
     cal.appendChild(w);
   });
-  const [y,m]   = currentKey.split("-").map(Number);
-  const today   = new Date();
-  const isCurrentM = currentKey === today.toISOString().slice(0,7);
-  const firstDay   = new Date(y,m-1,1).getDay() || 7;
-  const daysInMonth= new Date(y,m,0).getDate();
+
+  const [y, m] = currentKey.split("-").map(Number);
+  const today = new Date();
+const isCurrentMonth = currentKey === today.toISOString().slice(0,7);
+  const firstDay = new Date(y, m-1, 1).getDay() || 7; // lundi = 1
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const closing = DATA[currentKey].closing;
   const { start, end } = getPeriodBounds(currentKey);
-  const isLocked = DATA[currentKey].locked;
+  const isMonthLocked = DATA[currentKey].locked;
+  
 
-  for(let i=1;i<firstDay;i++) cal.appendChild(document.createElement("div"));
+  // ⬅️ Décalage du 1er jour du mois
+  for(let i=1;i<firstDay;i++){
+    cal.appendChild(document.createElement("div"));
+  }
 
-  for(let d=1; d<=daysInMonth; d++){
-    const div  = document.createElement("div");
+  for(let d = 1; d <= daysInMonth; d++){
+    const div = document.createElement("div");
     div.className = "day";
-    const date = new Date(y,m-1,d);
-    if(date > end) div.classList.add("after-closing");
-    if(isLocked)   div.classList.add("locked");
-    if(isCurrentM && d===today.getDate()){
-      div.classList.add("today");
-      div.id = "todayCell";
+
+    const date = new Date(y, m - 1, d);
+const isInPeriod = date >= start && date <= end;
+const isAfterClosing = date > end;
+
+    /* ====== État visuel ====== */
+
+    if(date > end){
+  div.classList.add("after-closing");
+}
+
+    if(isMonthLocked){
+      div.classList.add("locked"); // verrouillage total
     }
+
+    if(
+      isCurrentMonth &&
+      d === today.getDate()
+    ){
+      div.classList.add("today");
+    }
+if(isCurrentMonth && d === today.getDate()){
+  div.id = "todayCell";
+}
+    /* ====== Contenu ====== */
+
     const val = DATA[currentKey].days[d];
-    div.innerHTML = `<b>${d}</b>${val ? `<span style="color:var(--accent)">${val.toFixed(2)}h</span>` : ""}`;
+    div.innerHTML = `
+      <b>${d}</b><br>
+      ${val ? val.toFixed(2) + " h" : ""}
+    `;
+
+    /* ====== Interaction ====== */
+
     div.onclick = () => {
-      if(isLocked){ toast("Mois verrouillé");  return; }
-      openHours(d);
-    };
+  if(isMonthLocked){
+    alert("🔒 Mois verrouillé (paie validée)");
+    return;
+  }
+  openHours(d);
+};
+
     cal.appendChild(div);
   }
 }
-
 /* =======================
    POPUP HEURES
 ======================= */
+function deleteDayHours(){
+  if(DATA[currentKey].locked){
+    alert("🔒 Mois verrouillé");
+    return;
+  }
+
+  if(!currentDay || !DATA[currentKey].days[currentDay]){
+    alert("ℹ️ Aucune heure à supprimer");
+    return;
+  }
+
+  if(!confirm(`Supprimer toutes les heures du ${currentDay} ?`)) return;
+
+  // 🗑️ suppression réelle
+  delete DATA[currentKey].days[currentDay];
+
+  currentDay = null; // ✅ reset état
+
+  save();            // recalcul cascade + sauvegarde
+  renderCalendar();  // ✅ MAJEUR : refresh UI
+  recalc();          // ✅ recalcul live
+  closeHours();
+}
 function openHours(d){
-  currentDay = d;
-  const c = document.getElementById("hoursChoices");
-  c.innerHTML = "";
-  [0.25,0.5,0.75,1,1.25,1.5,2].forEach(v => {
-    const b = document.createElement("button");
-    b.textContent = "+"+v+" h";
-    b.onclick = () => applyHours(v);
+  currentDay=d;
+  const c=document.getElementById("hoursChoices");
+  c.innerHTML="";
+  [0.25,0.5,0.75,1,1.25,1.5,2].forEach(v=>{
+    const b=document.createElement("button");
+    b.textContent="+"+v+" h";
+    b.onclick=()=>applyHours(v);
     c.appendChild(b);
   });
   document.getElementById("hoursModal").classList.add("open");
 }
-function closeHours(){ document.getElementById("hoursModal").classList.remove("open"); }
-function applyHours(h){
-  if(h<=0) return;
-  DATA[currentKey].days[currentDay] = (DATA[currentKey].days[currentDay]||0)+h;
-  save(); renderCalendar(); recalc(); closeHours();
+function closeHours(){
+  document.getElementById("hoursModal").classList.remove("open");
 }
+function applyHours(h){
+  if(h <= 0) return;
+
+  DATA[currentKey].days[currentDay] =
+    (DATA[currentKey].days[currentDay] || 0) + h;
+// 🔴 AJOUTE CETTE 
+  save();
+  renderCalendar(); // ✅ AJOUT
+  recalc();
+  closeHours();
+  
+
+
+
+}
+
 function confirmManual(){
   const input = document.getElementById("manualHours");
   const h = parseFloat(input.value);
-  if(isNaN(h)||h<=0){ toast("Valeur invalide");  return; }
-  applyHours(h); input.value = "";
-}
-function deleteDayHours(){
-  if(DATA[currentKey].locked){ toast("Mois verrouillé");  return; }
-  if(!currentDay||!DATA[currentKey].days[currentDay]){ toast("Aucune heure à supprimer");  return; }
-  delete DATA[currentKey].days[currentDay];
-  currentDay = null;
-  save(); renderCalendar(); recalc(); closeHours();
+ if(isNaN(h) || h <= 0){
+  alert("⛔ Valeur invalide");
+  return;
 }
 
+  applyHours(h);
+  input.value = ""; // ✅ reset
+}
+function getPreviousCarry(monthKey){
+  // 🔗 récupérer TOUS les mois de TOUTES les années
+  const allMonths = [];
+
+  Object.values(ALL_DATA).forEach(yearData=>{
+  if(!yearData || typeof yearData !== "object") return;
+
+  Object.keys(yearData).forEach(key=>{
+      if(/^\d{4}-\d{2}$/.test(key)){
+        allMonths.push({ key, month: yearData[key] });
+      }
+    });
+  });
+
+  // tri chronologique
+  allMonths.sort((a,b)=> a.key.localeCompare(b.key));
+
+  let prevCarry = 0;
+
+  for(const item of allMonths){
+    if(item.key === monthKey) break;
+    if(item.month.carry != null){
+      prevCarry = item.month.carry;
+    }
+  }
+
+  return prevCarry;
+}
 /* =======================
    CALCUL
 ======================= */
-function getPreviousCarry(monthKey){
-  const allMonths = [];
-  Object.values(ALL_DATA).forEach(yd => {
-    if(!yd||typeof yd!=="object") return;
-    Object.keys(yd).forEach(key => {
-      if(/^\d{4}-\d{2}$/.test(key)) allMonths.push({ key, month:yd[key] });
-    });
-  });
-  allMonths.sort((a,b)=>a.key.localeCompare(b.key));
-  let prev = 0;
-  for(const item of allMonths){
-    if(item.key===monthKey) break;
-    if(item.month.carry!=null) prev = item.month.carry;
-  }
-  return prev;
-}
-
 function recalc(){
   const { start, end } = getPeriodBounds(currentKey);
+
+  // 🔢 Heures par semaine ISO (lundi → dimanche)
   const weeks = {};
-  Object.entries(DATA).forEach(([monthKey, month]) => {
-    Object.entries(month.days||{}).forEach(([d,h]) => {
-      const [y,m] = monthKey.split("-").map(Number);
-      const date  = new Date(y,m-1,d);
-      if(date<start||date>end) return;
+
+  Object.entries(DATA).forEach(([monthKey, month])=>{
+    Object.entries(month.days || {}).forEach(([d,h])=>{
+      const date = new Date(
+        monthKey.split("-")[0],
+        monthKey.split("-")[1] - 1,
+        d
+      );
+
+      if(date < start || date > end) return;
+
       const monday = new Date(date);
-      const day = monday.getDay()||7;
-      monday.setDate(monday.getDate()-day+1);
-      const wk = monday.getFullYear()+"-"+String(monday.getMonth()+1).padStart(2,"0")+"-"+String(monday.getDate()).padStart(2,"0");
-      weeks[wk] = (weeks[wk]||0)+h;
+      const day = monday.getDay() || 7;
+      monday.setDate(monday.getDate() - day + 1);
+
+      const weekKey =
+        monday.getFullYear() + "-" +
+        String(monday.getMonth()+1).padStart(2,"0") + "-" +
+        String(monday.getDate()).padStart(2,"0");
+
+      weeks[weekKey] = (weeks[weekKey] || 0) + h;
     });
   });
-  let total25=0, total50=0, periodHours=0;
-  Object.values(weeks).forEach(wh => {
-    periodHours += wh;
-    total25     += Math.min(8,wh);
-    total50     += Math.max(0,wh-8);
+
+  // 🧮 Totaux période
+  let total25 = 0;
+  let total50 = 0;
+  let periodHours = 0;
+
+  Object.values(weeks).forEach(weekHours=>{
+    periodHours += weekHours;
+    total25 += Math.min(8, weekHours);
+    total50 += Math.max(0, weekHours - 8);
   });
-  document.getElementById("hours25").textContent    = total25.toFixed(2);
-  document.getElementById("hours50").textContent    = total50.toFixed(2);
-  document.getElementById("totalMonth").textContent = periodHours.toFixed(2);
+
+  document.getElementById("hours25").textContent = total25.toFixed(2);
+  document.getElementById("hours50").textContent = total50.toFixed(2);
+
+  // 🔁 Report précédent
   const prevCarry = getPreviousCarry(currentKey);
-  document.getElementById("prevCarry").textContent  = prevCarry.toFixed(2);
-  document.getElementById("carryOver").textContent  = (DATA[currentKey]?.carry||0).toFixed(2);
+  document.getElementById("carryOver").textContent =
+  DATA[currentKey].carry.toFixed(2);
+  // 🔵 Total période
+  document.getElementById("totalMonth").textContent =
+    periodHours.toFixed(2);
+    document.getElementById("prevCarry").textContent =
+  prevCarry.toFixed(2);
+
+  
+
   if(unlocked) calcEuro();
 }
-
-function recalcCascade(){
-  const allMonths = [];
-  Object.values(ALL_DATA).forEach(yd => {
-    if(!yd||typeof yd!=="object") return;
-    Object.entries(yd).forEach(([key,month]) => {
-      if(/^\d{4}-\d{2}$/.test(key)) allMonths.push({ key,month });
-    });
-  });
-  allMonths.sort((a,b)=>a.key.localeCompare(b.key));
-  let runningCarry = 0;
-  allMonths.forEach(({key}) => {
-    const { start,end } = getPeriodBounds(key);
-    let periodHours = 0;
-    Object.entries(ALL_DATA).forEach(([year,yd]) => {
-      Object.entries(yd||{}).forEach(([mk,month]) => {
-        Object.entries(month.days||{}).forEach(([d,h]) => {
-          const [y,m] = mk.split("-").map(Number);
-          const date  = new Date(y,m-1,d);
-          if(date>=start&&date<=end) periodHours+=h;
-        });
-      });
-    });
-    const month = ALL_DATA[key.slice(0,4)][key];
-    const paid  = Number(month.paid)||0;
-    runningCarry += periodHours - paid;
-    if(runningCarry<0) runningCarry=0;
-    month.carry = runningCarry;
-  });
-}
-
 function calcEuro(){
   if(!unlocked) return;
-  const rate    = Number(document.getElementById("rate").value)||0;
-  const coef25  = Number(document.getElementById("coef25").value)||1.25;
-  const coef50  = Number(document.getElementById("coef50").value)||1.50;
-  const netCoef = Number(document.getElementById("coefNet").value)||1;
-  const h25 = Number(document.getElementById("hours25").textContent)||0;
-  const h50 = Number(document.getElementById("hours50").textContent)||0;
-  const w25 = h25*coef25, w50 = h50*coef50;
-  const net = (w25+w50)*rate*netCoef;
-  document.getElementById("euroResult").textContent = net.toFixed(2)+" €";
-  document.getElementById("euroDetail").innerHTML   = `
-    ${h25.toFixed(2)} h × ${coef25} = ${w25.toFixed(2)} h<br>
-    ${h50.toFixed(2)} h × ${coef50} = ${w50.toFixed(2)} h<br>
-    <b>Total pondéré : ${(w25+w50).toFixed(2)} h</b><br>
-    × ${rate} € × ${netCoef}
+
+  const rate = Number(document.getElementById("rate").value) || 0;
+  const coef25 = Number(document.getElementById("coef25").value) || 1.25;
+  const coef50 = Number(document.getElementById("coef50").value) || 1.50;
+  const netCoef = Number(document.getElementById("coefNet").value) || 1;
+
+  const h25 = Number(document.getElementById("hours25").textContent) || 0;
+  const h50 = Number(document.getElementById("hours50").textContent) || 0;
+
+  const weighted25 = h25 * coef25;
+  const weighted50 = h50 * coef50;
+  const weightedTotal = weighted25 + weighted50;
+
+  const brut = weightedTotal * rate;
+  const net = brut * netCoef;
+
+  document.getElementById("euroResult").textContent =
+    net.toFixed(2) + " €";
+
+  document.getElementById("euroDetail").innerHTML = `
+    ${h25.toFixed(2)} h × ${coef25} = ${weighted25.toFixed(2)} h<br>
+    ${h50.toFixed(2)} h × ${coef50} = ${weighted50.toFixed(2)} h<br>
+    <b>Total pondéré : ${weightedTotal.toFixed(2)} h</b><br>
+    ${weightedTotal.toFixed(2)} × ${rate} € × ${netCoef}
   `;
 }
-
-/* =======================
-   SAUVEGARDE
-======================= */
-function save(){
-  localStorage.setItem(`${STORAGE_PREFIX}_AUTO_SAVE_DATE`, Date.now());
-  recalcCascade();
-  Object.entries(ALL_DATA).forEach(([year,yd]) => saveYearData(year,yd));
-  updateSaveBadge();
-}
-function updateSaveBadge(){
-  const el  = document.querySelector(".badge.ok");
-  if(!el) return;
-  const raw = localStorage.getItem(`${STORAGE_PREFIX}_AUTO_SAVE_DATE`);
-  const stamp = Number(raw);
-  el.textContent = (!stamp||isNaN(stamp))
-    ? "Sauvegarde locale auto"
-    : "Sauvegarde : "+new Date(stamp).toLocaleString();
-}
-function registerYear(year){
-  let index = JSON.parse(localStorage.getItem(kIndex())||"[]");
-  if(!index.includes(year)){ index.push(year); index.sort(); localStorage.setItem(kIndex(),JSON.stringify(index)); }
-}
-function loadYearData(year){ return JSON.parse(localStorage.getItem(kData(year))||"{}"); }
-function saveYearData(year,data){ localStorage.setItem(kData(year),JSON.stringify(data)); }
-
-/* =======================
-   CODE EURO
-======================= */
 async function sha256(str){
-  const buf  = new TextEncoder().encode(str);
-  const hash = await crypto.subtle.digest("SHA-256",buf);
-  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2,"0"))
+    .join("");
 }
+
 async function getSecureCode(){
   let h = localStorage.getItem(kCode());
-  if(!h){ h = await sha256("1234"); localStorage.setItem(kCode(),h); }
+  if(!h){
+    h = await sha256("1234");
+    localStorage.setItem(kCode(), h);
+  }
   return h;
 }
 async function unlockEuro(){
   const input = document.getElementById("unlockCode").value;
-  const ih    = await sha256(input);
-  if(ih === await getSecureCode()){
+  const inputHash = await sha256(input);
+
+  if(inputHash === await getSecureCode()){
     unlocked = true;
     document.getElementById("euroBox").classList.remove("blur");
     document.getElementById("unlockCode").value = "";
     recalc();
-    if(input==="1234") toast("Pense à changer le code par défaut");
+
+    if(input === "1234"){
+      alert("⚠️ Pense à changer le code par défaut");
+    }
+
   } else {
-    toast("Code incorrect"); 
+    alert("❌ Code incorrect");
   }
 }
 function toggleChangeCode(){
-  if(!unlocked){ toast("Déverrouille d'abord la zone €");  return; }
+  if(!unlocked){
+    alert("🔒 Déverrouille d’abord la zone €");
+    return;
+  }
   const box = document.getElementById("changeCodeBox");
-  box.style.display = box.style.display==="none" ? "block" : "none";
-}
-async function changeCode(){
-  const old  = document.getElementById("oldCode").value;
-  const nw   = document.getElementById("newCode").value;
-  const conf = document.getElementById("confirmCode").value;
-  if(await sha256(old) !== await getSecureCode()){ toast("Ancien code incorrect");  return; }
-  if(nw.length<4){ toast("Code trop court (4 chiffres min)");  return; }
-  if(nw!==conf){ toast("Codes ne correspondent pas");  return; }
-  localStorage.setItem(kCode(), await sha256(nw));
-  toast("Code modifié avec succès"); 
-  document.getElementById("changeCodeBox").style.display="none";
+  box.style.display = box.style.display === "none" ? "block" : "none";
 }
 
-/* =======================
-   PARAMÈTRES €
-======================= */
-["rate","coef25","coef50","coefNet"].forEach(id=>{
-  const defaults={rate:10,coef25:1.25,coef50:1.50,coefNet:0.93};
-  const input=document.getElementById(id);
-  input.value=SETTINGS[id]??defaults[id];
-  input.oninput=()=>{ SETTINGS[id]=parseFloat(input.value)||0; localStorage.setItem(kSettings(),JSON.stringify(SETTINGS)); recalc(); };
-});
+
 
 /* =======================
-   EXPORT / IMPORT
+   SAUVEGARDE
 ======================= */
-function prepareExport(){
-  createSnapshot("before_export",true);
+
+function save(){
+  localStorage.setItem(
+    `${STORAGE_PREFIX}_AUTO_SAVE_DATE`,
+    Date.now()
+  );
+
   recalcCascade();
-  saveYearData(getYearFromMonth(currentKey), ALL_DATA[getYearFromMonth(currentKey)]);
+
+  Object.entries(ALL_DATA).forEach(([year, yearData])=>{
+    saveYearData(year, yearData);
+  });
+
+  updateSaveBadge();
+}
+function updateSaveBadge(){
+  const el = document.querySelector(".badge.ok");
+  if(!el) return;
+
+  const raw = localStorage.getItem(
+    `${STORAGE_PREFIX}_AUTO_SAVE_DATE`
+  );
+
+  const stamp = Number(raw);
+
+  if(!stamp || isNaN(stamp)){
+    el.textContent = "🟢 Sauvegarde locale auto";
+    return;
+  }
+
+  el.textContent =
+    "🟢 Sauvegarde locale : " +
+    new Date(stamp).toLocaleString();
+}
+(function enableDebugIfNeeded(){
+  if(localStorage.getItem("CA_DEBUG") === "1"){
+    document
+      .querySelectorAll(".debug-only")
+      .forEach(el => el.style.display = "block");
+
+    console.warn("🧪 MODE DEBUG DÉVERROUILLÉ");
+  }
+})();
+function prepareExport(){
+  createSnapshot("before_export", true); // 🔥 FORCÉ
+  recalcCascade();
+  saveYearData(
+    getYearFromMonth(currentKey),
+    ALL_DATA[getYearFromMonth(currentKey)]
+  );
 }
 function exportJSON(){
-  prepareExport();
+  prepareExport(); // ✅ AJOUT CRITIQUE
+
   const year = getYearFromMonth(currentKey);
-  const payload = {
-    exportedAt:new Date().toISOString(), year,
-    appVersion:APP_VERSION, dataVersion:DATA_VERSION,
-    DATA, SETTINGS
-  };
-  const blob = new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+
+const payload = {
+  exportedAt: new Date().toISOString(),
+  year,
+  appVersion: APP_VERSION,
+  dataVersion: DATA_VERSION,
+  DATA,
+  SETTINGS
+};
+
+  const blob = new Blob(
+    [JSON.stringify(payload,null,2)],
+    {type:"application/json"}
+  );
+
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "heures_sup_backup_"+Date.now()+".json";
   a.click();
-  document.getElementById("fileDate").textContent = new Date().toLocaleDateString();
+
+  document.getElementById("fileDate").textContent =
+    new Date().toLocaleDateString();
+}
+/* =======================
+   PARAMS €
+======================= */
+["rate","coef25","coef50","coefNet"].forEach(id=>{
+  let def;
+  if(id === "rate") def = 10;
+  else if(id === "coef25") def = 1.25;
+  else if(id === "coef50") def = 1.50;
+  else if(id === "coefNet") def = 0.93;
+
+  const input = document.getElementById(id);
+  input.value = SETTINGS[id] ?? def;
+
+  input.oninput = () => {
+    SETTINGS[id] = parseFloat(input.value) || 0;
+    localStorage.setItem(
+      kSettings(),
+      JSON.stringify(SETTINGS)
+    );
+    recalc();
+  };
+});
+   function openTutorial(){
+  document.getElementById("tutorialModal").classList.add("open");
+}
+function closeTutorial(){
+  document.getElementById("tutorialModal").classList.remove("open");
+}
+function getPeriodData(monthKey){
+  const { start, end } = getPeriodBounds(monthKey);
+
+  let totalHours = 0;
+  const rows = [];
+
+  Object.entries(ALL_DATA).forEach(([year, yearData])=>{
+    Object.entries(yearData || {}).forEach(([key, month])=>{
+      Object.entries(month.days || {}).forEach(([d, h])=>{
+        const [y, m] = key.split("-").map(Number);
+        const date = new Date(y, m - 1, d);
+
+        if(date >= start && date <= end){
+          totalHours += h;
+          rows.push({ date, h });
+        }
+      });
+    });
+  });
+
+  rows.sort((a,b)=>a.date-b.date);
+
+  return { start, end, rows, totalHours };
+}
+function getPeriodHoursForMonth(monthKey){
+  const { start, end } = getPeriodBounds(monthKey);
+  let total = 0;
+
+  Object.entries(ALL_DATA).forEach(([year, yearData])=>{
+    Object.entries(yearData || {}).forEach(([key, month])=>{
+      Object.entries(month.days || {}).forEach(([d, h])=>{
+        const [y, m] = key.split("-").map(Number);
+        const date = new Date(y, m - 1, d);
+
+        if(date >= start && date <= end){
+          total += h;
+        }
+      });
+    });
+  });
+
+  return total;
+}
+function exportMonthlyPDF(){
+  prepareExport();
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  const month = DATA[currentKey];
+  const { start, end } = getPeriodBounds(currentKey);
+  const paid = month.paid || 0;
+  const prevCarry = getPreviousCarry(currentKey);
+
+  let yPos = 15;
+
+  pdf.setFontSize(14);
+  pdf.text("Récapitulatif mensuel – Heures supplémentaires", 10, yPos);
+  yPos += 8;
+
+  pdf.setFontSize(11);
+  pdf.text(
+    `Période comptable : ${formatDate(start)} → ${formatDate(end)}`,
+    10,
+    yPos
+  );
+  yPos += 10;
+
+  pdf.setFontSize(11);
+  pdf.text(`Report précédent : ${prevCarry.toFixed(2)} h`, 10, yPos); yPos += 6;
+  pdf.text(`Heures période : ${document.getElementById("totalMonth").textContent} h`, 10, yPos); yPos += 6;
+  pdf.text(`Heures payées : ${paid.toFixed(2)} h`, 10, yPos); yPos += 6;
+  pdf.text(`Reliquat final : ${month.carry.toFixed(2)} h`, 10, yPos);
+
+  yPos += 12;
+  pdf.setFontSize(9);
+  pdf.text(
+    "Document personnel – valeurs indicatives – ne constitue pas un bulletin de paie",
+    10,
+    yPos
+  );
+
+  pdf.save(`heures_mensuelles_${currentKey}.pdf`);
+}
+function formatDate(d){
+  return d.toLocaleDateString("fr-FR");
+}
+function exportAnnualPDF(){
+  prepareExport();
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF();
+
+  const months = Object.keys(DATA)
+    .filter(k => /^\d{4}-\d{2}$/.test(k))
+    .sort();
+
+  let yPos = 15;
+
+  pdf.setFontSize(14);
+  pdf.text("Bilan annuel – Heures supplémentaires", 10, yPos);
+  yPos += 10;
+
+  pdf.setFontSize(10);
+  pdf.text("Mois", 10, yPos);
+  pdf.text("Carry fin", 80, yPos);
+  yPos += 6;
+
+  months.forEach(key=>{
+    const m = DATA[key];
+    pdf.text(key, 10, yPos);
+    pdf.text((m.carry || 0).toFixed(2) + " h", 80, yPos);
+    yPos += 6;
+  });
+
+  pdf.save(`bilan_annuel_heures_sup_${months[0].slice(0,4)}.pdf`);
+}
+loadMonth();
+
+
+function registerYear(year){
+  let index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
+  if(!index.includes(year)){
+    index.push(year);
+    index.sort();
+    localStorage.setItem(kIndex(), JSON.stringify(index));
+  }
+}
+
+function loadYearData(year){
+  return JSON.parse(
+    localStorage.getItem(kData(year)) || "{}"
+  );
+}
+
+function saveYearData(year, data){
+  localStorage.setItem(
+    kData(year),
+    JSON.stringify(data)
+  );
+}
+function recalcCascade(){
+  const allMonths = [];
+
+  Object.values(ALL_DATA).forEach(yearData => {
+    if(!yearData || typeof yearData !== "object") return;
+
+    Object.entries(yearData).forEach(([key, month]) => {
+      if(/^\d{4}-\d{2}$/.test(key)){
+        allMonths.push({ key, month });
+      }
+    });
+  });
+
+  allMonths.sort((a, b) => a.key.localeCompare(b.key));
+
+  let runningCarry = 0;
+
+  allMonths.forEach(({ key }) => {
+    const { start, end } = getPeriodBounds(key);
+
+    let periodHours = 0;
+
+    // 🔥 PARCOURT TOUTES LES HEURES, TOUS LES MOIS
+    Object.entries(ALL_DATA).forEach(([year, yearData]) => {
+      Object.entries(yearData || {}).forEach(([monthKey, month]) => {
+        Object.entries(month.days || {}).forEach(([d, h]) => {
+          const [y, m] = monthKey.split("-").map(Number);
+          const date = new Date(y, m - 1, d);
+
+          if(date >= start && date <= end){
+            periodHours += h;
+          }
+        });
+      });
+    });
+
+    const month = ALL_DATA[key.slice(0,4)][key];
+    const paid = Number(month.paid) || 0;
+
+    runningCarry += periodHours;
+    runningCarry -= paid;
+
+    if(runningCarry < 0) runningCarry = 0;
+
+    month.carry = runningCarry;
+  });
 }
 function importJSONFile(e){
   const file = e.target.files[0];
   if(!file) return;
+
   const reader = new FileReader();
+
   reader.onload = () => {
     createSnapshot("before_import");
-    let payload;
-    try{ payload=JSON.parse(reader.result); }
-    catch{ toast("Fichier JSON invalide"); return; }
-    if(typeof payload!=="object"||typeof payload.DATA!=="object"||!payload.year){
-      toast("Structure du fichier invalide"); return;
+  let payload;
+  let dataVersion = "1.0";
+
+  try{
+    payload = JSON.parse(reader.result);
+    dataVersion = payload.dataVersion || "1.0";
+  }catch{
+    alert("❌ Fichier JSON invalide");
+    return;
+  }
+
+    /* =====================
+       VALIDATIONS DE BASE
+    ===================== */
+    if(
+      typeof payload !== "object" ||
+      typeof payload.DATA !== "object" ||
+      !payload.year
+    ){
+      alert("❌ Structure du fichier invalide");
+      return;
     }
+
     const year = String(payload.year);
-    if(!/^\d{4}$/.test(year)){ toast("Année invalide"); return; }
-    registerYear(year);
-    const existing = loadYearData(year);
-    let imported=0, repaired=0;
-    Object.entries(payload.DATA).forEach(([mk,month])=>{
-      if(!/^\d{4}-\d{2}$/.test(mk)) return;
-      if(!month.days||typeof month.days!=="object"){ month.days={}; repaired++; }
-      if(typeof month.paid!=="number") month.paid=0;
-      if(typeof month.carry!=="number") month.carry=0;
-      if(typeof month.closing!=="number") month.closing=null;
-      if(typeof month.locked!=="boolean") month.locked=false;
-      existing[mk]=month; imported++;
-    });
-    saveYearData(year,existing);
-    ALL_DATA[year]=existing;
-    recalcCascade();
-    DATA=ALL_DATA[getYearFromMonth(currentKey)];
-    loadMonth();
-    toast(`Import OK — ${imported} mois importés`);
-  };
-  reader.readAsText(file);
-  e.target.value="";
-}
-document.getElementById("importFile").addEventListener("change",importJSONFile);
 
-function exportMonthlyPDF(){
-  prepareExport();
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-  const month = DATA[currentKey];
-  const { start,end } = getPeriodBounds(currentKey);
-  const paid = month.paid||0;
-  const prevCarry = getPreviousCarry(currentKey);
-  let y=15;
-  pdf.setFontSize(14); pdf.text("Récapitulatif mensuel – Heures supplémentaires",10,y); y+=8;
-  pdf.setFontSize(11); pdf.text(`Période : ${formatDate(start)} → ${formatDate(end)}`,10,y); y+=10;
-  pdf.text(`Report précédent : ${prevCarry.toFixed(2)} h`,10,y); y+=6;
-  pdf.text(`Heures période : ${document.getElementById("totalMonth").textContent} h`,10,y); y+=6;
-  pdf.text(`Heures payées : ${paid.toFixed(2)} h`,10,y); y+=6;
-  pdf.text(`Reliquat final : ${(month.carry||0).toFixed(2)} h`,10,y); y+=12;
-  pdf.setFontSize(9); pdf.text("Document personnel – valeurs indicatives",10,y);
-  pdf.save(`heures_mensuelles_${currentKey}.pdf`);
-}
-function exportAnnualPDF(){
-  prepareExport();
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-  const mths = Object.keys(DATA).filter(k=>/^\d{4}-\d{2}$/.test(k)).sort();
-  let y=15;
-  pdf.setFontSize(14); pdf.text("Bilan annuel – Heures supplémentaires",10,y); y+=10;
-  pdf.setFontSize(10); pdf.text("Mois",10,y); pdf.text("Carry fin",80,y); y+=6;
-  mths.forEach(key=>{ const m=DATA[key]; pdf.text(key,10,y); pdf.text((m.carry||0).toFixed(2)+" h",80,y); y+=6; });
-  pdf.save(`bilan_annuel_${mths[0]?.slice(0,4)||""}.pdf`);
-}
-function formatDate(d){ return d.toLocaleDateString("fr-FR"); }
-
-/* =======================
-   SNAPSHOTS / RÉCUPÉRATION
-======================= */
-function createSnapshot(reason="auto",force=false){
-  try{
-    if(!force){
-      const last=Number(localStorage.getItem("SNAP_LAST")||0);
-      if(Date.now()-last<60000) return;
+    if(!/^\d{4}$/.test(year)){
+      alert("❌ Année invalide dans le fichier");
+      return;
     }
-    localStorage.setItem("SNAP_LAST",Date.now());
-    const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||"[]");
-    snaps.unshift({ date:new Date().toISOString(),reason,currentKey,DATA:JSON.parse(JSON.stringify(ALL_DATA)),SETTINGS });
-    snaps.splice(SNAP_LIMIT);
-    localStorage.setItem(SNAP_KEY,JSON.stringify(snaps));
-  }catch(e){ console.warn("Snapshot échoué",e); }
+/* =====================
+   🔁 MIGRATION VERSION
+===================== */
+if(dataVersion === "1.0"){
+  Object.values(payload.DATA).forEach(month=>{
+    if(typeof month.closing !== "number"){
+      month.closing = null;
+    }
+    if(typeof month.locked !== "boolean"){
+      month.locked = false;
+    }
+  });
 }
-function openRecovery(){ document.getElementById("recoveryModal").classList.add("open"); renderSnapshots(); }
-function recoverAuto(){ attemptAutoRecovery(); localStorage.removeItem("CA_HS_RECOVERY_MODE"); toast("Réparation effectuée"); location.reload(); }
-function recoverSoftReset(){ localStorage.removeItem("CA_HS_RECOVERY_MODE"); location.reload(); }
-function recoverFactory(){
-  createSnapshot("factory_reset",true);
-  // confirm() non supporté iOS PWA — action directe
-  Object.keys(localStorage).filter(k=>k.startsWith(STORAGE_PREFIX)).forEach(k=>localStorage.removeItem(k));
-  location.reload();
+if(payload.appVersion && payload.appVersion !== APP_VERSION){
+  console.warn(
+    "⚠️ Import depuis une autre version de l’app :",
+    payload.appVersion,
+    "→",
+    APP_VERSION
+  );
 }
-function restoreSnapshot(index){
-  const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||"[]");
-  if(!snaps[index]){ toast("Snapshot introuvable");  return; }
-  const snap=snaps[index];
-  // pas de confirm iOS PWA
-  ALL_DATA=snap.DATA; SETTINGS=snap.SETTINGS||{};
-  Object.entries(ALL_DATA).forEach(([year,data])=>saveYearData(year,data));
-  localStorage.setItem(kSettings(),JSON.stringify(SETTINGS));
-  localStorage.removeItem("CA_HS_RECOVERY_MODE");
-  location.reload();
-}
-function attemptAutoRecovery(){
-  try{
-    const index=JSON.parse(localStorage.getItem(kIndex())||"[]");
-    index.forEach(year=>{
-      let data;
-      try{ data=loadYearData(year); }
-      catch(e){ localStorage.removeItem(kData(year)); return; }
-      Object.entries(data).forEach(([mk,month])=>{
-        if(!month.days) month.days={};
-        if(typeof month.paid!=="number") month.paid=0;
-        if(typeof month.carry!=="number") month.carry=0;
-        const [y,m]=mk.split("-").map(Number);
-        if(!month.closing||new Date(y,m-1,month.closing).getDay()!==0) month.closing=getLastSunday(y,m-1);
-      });
-      saveYearData(year,data);
+    /* =====================
+       CHARGEMENT ANNÉE
+    ===================== */
+    registerYear(year);
+
+    const existing = loadYearData(year);
+    let imported = 0;
+    let repaired = 0;
+
+    Object.entries(payload.DATA).forEach(([monthKey, month])=>{
+      if(!/^\d{4}-\d{2}$/.test(monthKey)) return;
+
+      // 🔧 réparation minimale
+      if(!month.days || typeof month.days !== "object"){
+        month.days = {};
+        repaired++;
+      }
+      if(typeof month.paid !== "number") month.paid = 0;
+      if(typeof month.carry !== "number") month.carry = 0;
+      if(typeof month.closing !== "number") month.closing = null;
+      if(typeof month.locked !== "boolean") month.locked = false;
+
+      existing[monthKey] = month;
+      imported++;
     });
-  }catch(e){}
-}
-function renderSnapshots(){
-  const list=document.getElementById("snapshotList");
-  if(!list) return;
-  const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||"[]");
-  list.innerHTML=snaps.length
-    ? snaps.map((s,i)=>`<button onclick="restoreSnapshot(${i})">Snapshot ${new Date(s.date).toLocaleString()} – ${s.reason}</button>`).join("")
-    : "<p style='font-size:12px;color:var(--muted)'>Aucun snapshot</p>";
-}
 
-/* =======================
-   MODALES UI
-======================= */
-function acceptLegal(){ localStorage.setItem("LEGAL_OK","1"); document.getElementById("legalModal").classList.remove("open"); }
-function closeOnboarding(){ localStorage.setItem("ONBOARDING_DONE","1"); document.getElementById("onboardingModal").classList.remove("open"); }
-function openTutorial(){ document.getElementById("tutorialModal").classList.add("open"); }
-function closeTutorial(){ document.getElementById("tutorialModal").classList.remove("open"); }
+    /* =====================
+       ÉCRITURE + CACHE
+    ===================== */
+    saveYearData(year, existing);
 
+    // 🔥 CRITIQUE : mise à jour mémoire
+    ALL_DATA[year] = existing;
+
+    // 🔁 recalcul global
+    recalcCascade();
+
+    // 🔄 reload UI
+    DATA = ALL_DATA[getYearFromMonth(currentKey)];
+    loadMonth();
+
+    alert(
+      `✅ Import terminé\n` +
+      `Année : ${year}\n` +
+      `Mois importés : ${imported}\n` +
+      (repaired ? `Mois réparés : ${repaired}` : "")
+    );
+  };
+
+  reader.readAsText(file);
+  e.target.value = "";
+}
+document.getElementById("importFile").addEventListener("change", importJSONFile);
 /* =======================
-   ANTI-CRASH
+   🛡️ ANTI-CRASH GLOBAL
 ======================= */
+
+// Erreurs JavaScript classiques
+window.onerror = function (message, source, lineno, colno, error) {
+  handleFatalError({
+    type: "JS_ERROR",
+    message,
+    source,
+    lineno,
+    colno,
+    stack: error?.stack || null
+  });
+  return true; // empêche le crash brutal
+};
+
+// Promesses non catchées
+window.addEventListener("unhandledrejection", event => {
+  handleFatalError({
+    type: "PROMISE_REJECTION",
+    message: event.reason?.message || String(event.reason),
+    stack: event.reason?.stack || null
+  });
+});
 function safe(fn){
   return function(...args){
-    try{ return fn.apply(this,args); }
-    catch(e){ handleFatalError({type:"SAFE_FN",message:e.message,stack:e.stack}); }
+    try{
+      return fn.apply(this, args);
+    }catch(e){
+      handleFatalError({
+        type: "SAFE_FN",
+        message: e.message,
+        stack: e.stack
+      });
+    }
   };
 }
-window.onerror=(msg,src,l,c,err)=>{ handleFatalError({type:"JS_ERROR",message:msg,stack:err?.stack}); return true; };
-window.addEventListener("unhandledrejection",e=>{
-  handleFatalError({type:"PROMISE_REJECTION",message:e.reason?.message||String(e.reason),stack:e.reason?.stack});
+/* =======================
+   🧯 PROTECTION DES FONCTIONS CRITIQUES
+======================= */
+
+recalc = safe(recalc);
+renderCalendar = safe(renderCalendar);
+loadMonth = safe(loadMonth);
+save = safe(save);
+function renderSnapshots(){
+  const list = document.getElementById("snapshotList");
+  if(!list) return;
+
+  const snaps = JSON.parse(
+    localStorage.getItem(SNAP_KEY) || "[]"
+  );
+
+  list.innerHTML = snaps.length
+    ? snaps.map((s,i)=>`
+      <button onclick="restoreSnapshot(${i})">
+        📸 ${new Date(s.date).toLocaleString()} – ${s.reason}
+      </button>
+    `).join("")
+    : "<p style='font-size:12px;color:#aaa'>Aucun snapshot</p>";
+}
+/* =======================
+   🔐 DEBUG CACHÉ SÉCURISÉ
+======================= */
+
+const DEBUG_CODE = "1234";
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  const dbg = document.getElementById("debugTrigger");
+  if(dbg){
+    dbg.addEventListener("click", ()=>{
+      document.getElementById("debugGate").classList.add("open");
+    });
+  }
 });
-function handleFatalError(err){
-  console.error("ERREUR",err);
-  localStorage.setItem("CA_HS_RECOVERY_MODE","1");
-  if(document.getElementById("crashOverlay")) return;
-  const o=document.createElement("div");
-  o.id="crashOverlay";
-  o.style="position:fixed;inset:0;background:var(--bg);color:var(--text);z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center";
-  o.innerHTML=`<h2>Une erreur est survenue</h2><p style="opacity:.8;font-size:14px">Aucune donnée n'a été supprimée.</p>
-    <button onclick="location.reload()" style="margin-top:15px;padding:12px 20px;border-radius:8px;border:none;background:var(--accent);color:white;font-size:15px">Recharger</button>`;
-  document.body.appendChild(o);
+
+function closeDebugGate(){
+  document.getElementById("debugGate").classList.remove("open");
 }
 
-recalc         = safe(recalc);
-renderCalendar = safe(renderCalendar);
-loadMonth      = safe(loadMonth);
-save           = safe(save);
-
-/* =======================
-   DEBUG
-======================= */
-function simulateCrash(){ handleFatalError({type:"SIMULATED_CRASH",message:"Crash simulé"}); }
-function closeDebugGate(){ document.getElementById("debugGate").classList.remove("open"); }
 function validateDebugAccess(){
-  if(document.getElementById("debugCode").value!=="1234"){ toast("Code incorrect");  return; }
+  const input = document.getElementById("debugCode").value;
+
+  if(input !== DEBUG_CODE){
+    alert("❌ Code incorrect");
+    return;
+  }
+
+  alert(
+    "🧪 Test de crash requis.\n" +
+    "L’application va volontairement planter."
+  );
+
+  // autorise le debug APRÈS redémarrage
   localStorage.setItem("CA_DEBUG","1");
+
+  // 🔥 crash volontaire obligatoire
   simulateCrash();
 }
-window.addEventListener("DOMContentLoaded",()=>{
-  const dbg=document.getElementById("debugTrigger");
-  if(dbg) dbg.addEventListener("click",()=>document.getElementById("debugGate").classList.add("open"));
-});
+function handleFatalError(err){
+  console.error("💥 ERREUR CAPTURÉE", err);
+  localStorage.setItem("CA_HS_RECOVERY_MODE", "1");
 
-function goMenu(){ localStorage.removeItem("lastApp"); window.location.href="../menu.html"; }
+  // Sauvegarde du log (optionnel)
+  try{
+    localStorage.setItem(
+      "CA_HS_LAST_CRASH",
+      JSON.stringify({
+        date: new Date().toISOString(),
+        error: err,
+        state: {
+          currentKey,
+          unlocked
+        }
+      })
+    );
+  }catch(e){}
 
-/* =======================
-   DÉMARRAGE
-======================= */
-loadMonth();
-</script>
+  // UI de secours (une seule fois)
+  if(document.getElementById("crashOverlay")) return;
 
+  const overlay = document.createElement("div");
+  overlay.id = "crashOverlay";
+  overlay.style = `
+    position:fixed;
+    inset:0;
+    background:#0f1115;
+    color:#fff;
+    z-index:99999;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    text-align:center;
+  `;
+
+  overlay.innerHTML = `
+    <h2>⚠️ Une erreur est survenue</h2>
+    <p style="opacity:.8;font-size:14px;max-width:500px">
+      L’application a rencontré un problème inattendu.<br>
+      Aucune donnée n’a été supprimée.
+    </p>
+    <button onclick="location.reload()" style="
+      margin-top:15px;
+      padding:12px 20px;
+      border-radius:8px;
+      border:none;
+      background:#4f8cff;
+      color:white;
+      font-size:15px;
+    ">
+      🔄 Recharger l’application
+    </button>
+  `;
+
+  document.body.appendChild(overlay);
+}
+
+</script><div class="card" style="font-size:13px;color:#aaa">
+  <h3>📘 Notice utilisateur</h3><p>
+    Cet outil est destiné au suivi personnel des heures supplémentaires
+    dans le cadre d’une rémunération mensuelle.
+  </p><p>
+    Les calculs sont indicatifs et reposent sur les principes généraux :
+  </p><ul>
+    <li>Code du travail</li>
+    <li>Convention collective du commerce de gros (IDCC 573)</li>
+  </ul><p>
+    ⚠️ En cas de litige, seuls les bulletins de paie et documents
+    officiels de l’employeur font foi.
+  </p>
+</div>
+<div class="card" style="font-size:12px;color:#9aa0a6;line-height:1.5">
+  <b>⚠️ Responsabilité et limites</b><br><br>Les données saisies dans ce simulateur sont renseignées
+<b>sous la seule responsabilité de l’utilisateur</b>.<br><br>
+Les résultats affichés sont fournis à titre indicatif et peuvent
+ne pas refléter exactement la réalité du terrain, notamment en raison
+d’erreurs de saisie, de paramètres incomplets ou inexacts, de différences
+liées à la convention collective, aux accords d’entreprise, aux pratiques
+internes, d’évolutions du droit applicable, ou de
+<b>dysfonctionnements techniques, bugs ou limites du simulateur</b>.<br><br>
+Malgré le soin apporté à sa conception, le simulateur peut contenir
+des erreurs et ne saurait se substituer aux documents officiels,
+outils de l’employeur ou à l’interprétation des textes légaux.<br><br>
+<b>Seuls les documents établis par l’employeur et le droit applicable
+font foi.</b>
+</div>
+<footer
+  id="debugTrigger"
+  style="margin-top:30px;text-align:center;font-size:12px;color:#777;cursor:pointer">
+  © C. Anthony<br>
+  Outil indicatif – ne constitue pas un bulletin de paie
+</footer>
+<div id="versionBadge"></div>
 </body>
 </html>
