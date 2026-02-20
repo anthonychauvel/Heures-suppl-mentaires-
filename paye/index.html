@@ -499,6 +499,24 @@ input[type="number"] {
 
   <hr style="border-color:#2a3040;margin:12px 0">
 
+  <div style="font-size:13px;color:var(--text);margin-bottom:6px">
+    <b>🗺️ Ou via un lien Google Maps</b>
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4">
+    Sur Google Maps : maintiens appuyé sur ton lieu de travail → copie les coordonnées ou le lien, colle-le ici.
+  </div>
+  <input
+    type="text"
+    id="gmapsInput"
+    placeholder="Colle un lien Google Maps ou des coordonnées (48.8566, 2.3522)"
+    style="font-size:12px"
+  >
+  <button onclick="importFromGMaps()" style="background:#1a3a2a;color:#4caf50;border:1px solid #4caf50;font-size:13px;margin-top:6px">
+    📍 Extraire les coordonnées
+  </button>
+
+  <hr style="border-color:#2a3040;margin:12px 0">
+
   <!-- Rayon de détection -->
   <div class="geo-config-row">
     <label>Rayon de détection</label>
@@ -779,6 +797,9 @@ window.addEventListener("load", () => {
   if(!localStorage.getItem("ONBOARDING_DONE")){
     document.getElementById("onboardingModal").classList.add("open");
   }
+
+  // Demander permission notifications
+  requestNotifPermission();
 
   // Restaurer état géo depuis config sauvegardée
   loadGeoConfig();
@@ -1167,6 +1188,30 @@ function todayKey(){
 /**
  * Charge la config géo depuis localStorage et met à jour l'UI.
  */
+/* =======================
+   NOTIFICATIONS SYSTÈME
+======================= */
+function requestNotifPermission(){
+  if(!("Notification" in window)) return;
+  if(Notification.permission === "default"){
+    Notification.requestPermission();
+  }
+}
+
+// Réception de l'ordre de pointer depuis la notification cliquée
+if(navigator.serviceWorker){
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    if(event.data?.type === "DO_PUNCH"){
+      recordPunch(event.data.action);
+    }
+  });
+}
+
+// Enregistrement du SW s'il ne l'est pas encore
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("../service-worker.js").catch(()=>{});
+}
+
 function loadGeoConfig(){
   GEO_CONFIG = JSON.parse(localStorage.getItem(GEO_KEY)||"{}");
 
@@ -1241,6 +1286,86 @@ function clearWorkLocation(){
 /**
  * Enregistre la config et redémarre la surveillance si nécessaire.
  */
+/**
+ * Extrait les coordonnées GPS depuis un lien Google Maps ou une saisie directe.
+ * Formats supportés :
+ *  - https://maps.google.com/?q=48.8566,2.3522
+ *  - https://www.google.com/maps/place/.../@48.8566,2.3522,17z/...
+ *  - https://maps.app.goo.gl/xxxxx  (lien court — non résolvable sans serveur)
+ *  - "48.8566, 2.3522" (saisie directe)
+ *  - "48.8566,2.3522"
+ */
+function importFromGMaps(){
+  const raw = document.getElementById("gmapsInput").value.trim();
+  if(!raw){ alert("⚠️ Colle un lien ou des coordonnées"); return; }
+
+  let lat = null, lng = null;
+
+  // Format 1 : coordonnées directes "48.8566, 2.3522"
+  const directMatch = raw.match(/^(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)$/);
+  if(directMatch){
+    lat = parseFloat(directMatch[1]);
+    lng = parseFloat(directMatch[2]);
+  }
+
+  // Format 2 : lien Google Maps avec @lat,lng
+  if(!lat){
+    const atMatch = raw.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if(atMatch){ lat = parseFloat(atMatch[1]); lng = parseFloat(atMatch[2]); }
+  }
+
+  // Format 3 : ?q=lat,lng
+  if(!lat){
+    const qMatch = raw.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if(qMatch){ lat = parseFloat(qMatch[1]); lng = parseFloat(qMatch[2]); }
+  }
+
+  // Format 4 : /place/.../lat,lng (variante mobile)
+  if(!lat){
+    const placeMatch = raw.match(/\/(-?\d+\.\d+),(-?\d+\.\d+)/);
+    if(placeMatch){ lat = parseFloat(placeMatch[1]); lng = parseFloat(placeMatch[2]); }
+  }
+
+  // Lien court goo.gl — impossible à résoudre sans serveur
+  if(!lat && raw.includes("goo.gl")){
+    alert(
+      "⚠️ Les liens courts Google Maps (goo.gl) ne peuvent pas être décodés directement.\n\n" +
+      "Sur Google Maps :\n" +
+      "1. Maintiens appuyé sur ton lieu de travail\n" +
+      "2. Copie les coordonnées affichées en haut (ex: 48.8566, 2.3522)\n" +
+      "3. Colle-les ici directement"
+    );
+    return;
+  }
+
+  // Validation plausible (France / Europe)
+  if(lat === null || isNaN(lat) || isNaN(lng)){
+    alert(
+      "❌ Impossible d'extraire les coordonnées.\n\n" +
+      "Essaie de coller directement les coordonnées :\n" +
+      "Exemple : 48.8566, 2.3522"
+    );
+    return;
+  }
+
+  GEO_CONFIG.lat     = lat;
+  GEO_CONFIG.lng     = lng;
+  GEO_CONFIG.savedAt = new Date().toLocaleString();
+
+  // Vider le champ
+  document.getElementById("gmapsInput").value = "";
+
+  saveGeoConfig();
+  updateGeoLocationLabel();
+
+  // Lien de vérification
+  const verifyUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+  const ok = confirm(
+    `✅ Coordonnées enregistrées !\n${lat.toFixed(5)}, ${lng.toFixed(5)}\n\nVérifier sur Google Maps ?`
+  );
+  if(ok) window.open(verifyUrl, "_blank");
+}
+
 function saveGeoConfig(){
   GEO_CONFIG.radius       = Number(document.getElementById("geoRadius").value)||200;
   GEO_CONFIG.watchEnabled = document.getElementById("geoWatchToggle").checked;
@@ -1345,32 +1470,41 @@ let geoActionCooldown = false; // évite de spammer le toast
 function proposeGeoAction(type, dist){
   if(geoToastPending || geoActionCooldown) return;
 
-  geoToastPending  = type;
+  geoToastPending   = type;
   geoActionCooldown = true;
-
-  // Cooldown 3 minutes
   setTimeout(() => { geoActionCooldown = false; }, 3*60*1000);
 
+  // ✅ Notification système via SW (Android background + app ouverte)
+  const swReady = navigator.serviceWorker?.controller;
+  const notifOk = Notification.permission === "granted";
+
+  if(swReady && notifOk){
+    navigator.serviceWorker.controller.postMessage({
+      type: "GEO_NOTIFY",
+      action: type,
+      distance: dist
+    });
+  }
+
+  // ✅ Toast visuel toujours affiché (fallback + iOS app ouverte)
   const toast = document.getElementById("geoToast");
   const title = document.getElementById("geoToastTitle");
   const msg   = document.getElementById("geoToastMsg");
   const btn   = document.getElementById("geoToastConfirm");
 
   if(type === "in"){
-    title.textContent     = "📍 Tu arrives au travail";
-    msg.textContent       = `À ${Math.round(dist)} m du lieu de travail – Démarrer le pointage ?`;
-    btn.textContent       = "▶ Pointer l'arrivée";
-    btn.style.background  = "var(--geo-active)";
+    title.textContent    = "📍 Tu arrives au travail";
+    msg.textContent      = `À ${Math.round(dist)} m du lieu de travail – Démarrer le pointage ?`;
+    btn.textContent      = "▶ Pointer l'arrivée";
+    btn.style.background = "var(--geo-active)";
   } else {
-    title.textContent     = "🏁 Tu quittes le travail";
-    msg.textContent       = `Tu t'éloignes (${Math.round(dist)} m) – Enregistrer la sortie ?`;
-    btn.textContent       = "⏹ Pointer la sortie";
-    btn.style.background  = "#ff6b6b";
+    title.textContent    = "🏁 Tu quittes le travail";
+    msg.textContent      = `Tu t'éloignes (${Math.round(dist)} m) – Enregistrer la sortie ?`;
+    btn.textContent      = "⏹ Pointer la sortie";
+    btn.style.background = "#ff6b6b";
   }
 
   toast.classList.add("show");
-
-  // Auto-dismiss après 20 secondes
   if(geoToastTimer) clearTimeout(geoToastTimer);
   geoToastTimer = setTimeout(dismissGeoToast, 20000);
 }
