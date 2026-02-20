@@ -1418,9 +1418,6 @@ function recordPunch(type){
  */
 function manualPunch(){
   const type = geoIsPunchedIn ? "out" : "in";
-  if(!confirm(type==="in" ? "▶ Pointer l'arrivée maintenant ?" : "⏹ Pointer la sortie maintenant ?")){
-    return;
-  }
   recordPunch(type);
 }
 
