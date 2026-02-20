@@ -98,13 +98,17 @@ button.secondary { background: #2a2f3a; }
 button.danger { background: var(--danger); }
 input, select {
   width: 100%;
-  padding: 8px;
+  padding: 12px 8px;
   margin-top: 6px;
   background: #262a33;
   color: var(--text);
   border: 1px solid #333;
   border-radius: 6px;
   box-sizing: border-box;
+  height: 46px;
+  line-height: 1.2;
+  -webkit-appearance: none;
+  appearance: none;
 }
 .card {
   background: var(--card);
@@ -491,11 +495,9 @@ input[type="number"] {
 ```
 <!-- Statut distance temps réel -->
 <div id="geoDistanceBlock" style="margin-top:8px;display:none">
-  <span class="geo-distance-badge" id="geoDistanceBadge">📡 Calcul…</span>
+  <span class="geo-distance-badge" id="geoDistanceBadge">Calcul…</span>
 </div>
 
-<!-- Radar animation -->
-<div class="geo-radar" id="geoRadar">Surveillance en cours…</div>
 
 <!-- Bouton pointage manuel -->
 <button class="punch-btn start" id="punchBtn" onclick="manualPunch()">
@@ -1054,9 +1056,9 @@ function renderCalendar(){
     const val      = DATA[currentKey].days[d];
     const hasPunch = punches[dateKey]?.length > 0;
     div.innerHTML = `
-      <b>${d}</b><br>
-      ${val ? val.toFixed(2)+" h" : ""}
-      ${hasPunch ? '<span style="font-size:10px;color:var(--geo-active)">📍</span>' : ""}
+      <b>${d}</b>
+      ${val ? `<span style="color:#4f8cff">${val.toFixed(2)}h</span>` : ""}
+      ${hasPunch ? '<span style="color:var(--geo-active)">·geo</span>' : ""}
     `;
     div.onclick = () => {
       if(isLocked){ alert("🔒 Mois verrouillé (paie validée)"); return; }
@@ -1505,7 +1507,7 @@ function pollGeoPosition(){
   if(!navigator.geolocation||!GEO_CONFIG.lat) return;
   navigator.geolocation.getCurrentPosition(
     onGeoPosition,
-    err => console.warn("📡 Géo poll erreur:", err.message),
+    err => console.warn("Géo poll erreur:", err.message),
     { enableHighAccuracy:false, timeout:8000 }
   );
 }
@@ -1830,12 +1832,12 @@ function updateDistanceBadge(dist, isNear){
 function setGeoStatusUI(active){
   const dot    = document.getElementById("geoDot");
   const label  = document.getElementById("geoStatusLabel");
-  const radar  = document.getElementById("geoRadar");
+  const radar  = null; // retiré
   const card   = document.getElementById("geoCard");
   if(!dot) return;
   dot.className    = "geo-status-dot" + (active?" active":"");
   label.textContent = active ? "🟢 Surveillance active" : "Inactif";
-  if(radar) radar.className = "geo-radar" + (active?" visible":"");
+  // radar retiré (problème emoji iOS)
   if(card)  card.classList.toggle("pointed-in", geoIsPunchedIn);
 }
 
