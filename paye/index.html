@@ -96,7 +96,7 @@ button {
 }
 button.secondary { background: #2a2f3a; }
 button.danger { background: var(--danger); }
-input, select {
+input:not([type="checkbox"]), select {
   width: 100%;
   padding: 12px 8px;
   margin-top: 6px;
@@ -109,6 +109,14 @@ input, select {
   line-height: 1.2;
   -webkit-appearance: none;
   appearance: none;
+}
+input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--geo-active);
 }
 .card {
   background: var(--card);
@@ -588,7 +596,7 @@ input[type="number"] {
 
   <!-- Activation de la surveillance -->
   <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px">
-    <input type="checkbox" id="geoWatchToggle" style="width:auto;margin:0">
+    <input type="checkbox" id="geoWatchToggle" style="width:auto;margin:0" onchange="onWatchToggle()">
     Activer la surveillance automatique
   </label>
   <div style="font-size:11px;color:var(--muted);margin-top:4px">
@@ -1445,6 +1453,26 @@ function importFromGMaps(){
   if(ok) window.open(verifyUrl, "_blank");
 }
 
+function onWatchToggle(){
+  const enabled = document.getElementById("geoWatchToggle").checked;
+  GEO_CONFIG.watchEnabled = enabled;
+  GEO_CONFIG.radius = Number(document.getElementById("geoRadius").value) || 200;
+  localStorage.setItem(GEO_KEY, JSON.stringify(GEO_CONFIG));
+
+  if(enabled && GEO_CONFIG.lat){
+    startGeoWatch();
+    showGeoFeedback("Surveillance activée");
+  } else if(enabled && !GEO_CONFIG.lat){
+    alert("⚠️ Enregistre d'abord ton lieu de travail avant d'activer la surveillance.");
+    document.getElementById("geoWatchToggle").checked = false;
+    GEO_CONFIG.watchEnabled = false;
+    localStorage.setItem(GEO_KEY, JSON.stringify(GEO_CONFIG));
+  } else {
+    stopGeoWatch();
+    showGeoFeedback("Surveillance désactivée");
+  }
+}
+
 function saveGeoConfig(){
   GEO_CONFIG.radius       = Number(document.getElementById("geoRadius").value)||200;
   GEO_CONFIG.watchEnabled = document.getElementById("geoWatchToggle").checked;
@@ -1463,9 +1491,16 @@ function saveGeoConfig(){
  * Démarre la surveillance de position.
  */
 function startGeoWatch(){
-  if(!navigator.geolocation || !GEO_CONFIG.lat) return;
-  stopGeoWatch(); // évite les doublons
+  if(!navigator.geolocation){
+    alert("❌ La géolocalisation n'est pas disponible sur cet appareil");
+    return;
+  }
+  if(!GEO_CONFIG.lat){
+    alert("⚠️ Enregistre d'abord ton lieu de travail.");
+    return;
+  }
 
+  stopGeoWatch(); // évite les doublons
   setGeoStatusUI(true);
 
   // watchPosition natif (le plus précis)
@@ -1832,14 +1867,14 @@ function updateDistanceBadge(dist, isNear){
  * Met à jour l'UI de statut géo (point lumineux, labels).
  */
 function setGeoStatusUI(active){
-  const dot    = document.getElementById("geoDot");
-  const label  = document.getElementById("geoStatusLabel");
-  const radar  = null; // retiré
-  const card   = document.getElementById("geoCard");
+  const dot   = document.getElementById("geoDot");
+  const label = document.getElementById("geoStatusLabel");
+  const radar = document.getElementById("geoRadar");
+  const card  = document.getElementById("geoCard");
   if(!dot) return;
-  dot.className    = "geo-status-dot" + (active?" active":"");
-  label.textContent = active ? "🟢 Surveillance active" : "Inactif";
-  // radar retiré (problème emoji iOS)
+  dot.className     = "geo-status-dot" + (active ? " active" : "");
+  label.textContent = active ? "Surveillance active" : "Inactif";
+  if(radar) radar.style.display = active ? "block" : "none";
   if(card)  card.classList.toggle("pointed-in", geoIsPunchedIn);
 }
 
