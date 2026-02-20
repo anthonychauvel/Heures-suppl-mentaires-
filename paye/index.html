@@ -2,58 +2,18 @@
 
 <html lang="fr">
 <head>
- <link rel="manifest" href="/manifest.json">
+<link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/hs/apple-touch-icon.png">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Compteur Heures & Paie">
 <meta name="theme-color" content="#4FB3C2">
 <meta charset="UTF-8">
 <title>Simulateur d'heures mensualisé</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-.kitsune-btn {
-  flex: 1;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  background: linear-gradient(135deg, #FF8C42, #e06a1a);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(255,140,66,0.35);
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.kitsune-btn:hover { transform: scale(1.02); box-shadow: 0 4px 16px rgba(255,140,66,0.55); }
-.kitsune-btn:active { transform: scale(0.97); }
-.top-nav-bar {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-  margin-bottom: 20px;
-  padding-top: env(safe-area-inset-top);
-}
-.top-nav-bar .menu-btn { flex: 1; margin: 0; }
-.menu-btn {
-  margin-top: 8px;
-  margin-bottom: 20px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  background: rgba(255,255,255,0.85);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 2000;
-  background: var(--bg);
-  padding: calc(env(safe-area-inset-top) + 10px) 15px 10px;
-}
+/* =======================
+   THÈME – VARIABLES
+======================= */
 :root {
   --bg: #0f1115;
   --card: #1c1f26;
@@ -62,419 +22,384 @@
   --accent: #4f8cff;
   --danger: #c0392b;
   --success: #2ecc71;
-  --geo-active: #00c896;
-  --geo-inactive: #555;
+  --border: #333;
+  --input-bg: #262a33;
 }
-#versionBadge {
-  position: fixed;
-  bottom: calc(env(safe-area-inset-bottom) + 14px);
-  right: calc(env(safe-area-inset-right) + 14px);
-  font-size: 11px;
-  opacity: 0.55;
-  color: #9aa0a6;
-  z-index: 99999;
-  user-select: none;
-  pointer-events: none;
+body.light {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --muted: #555;
+  --accent: #2255cc;
+  --danger: #c0392b;
+  --success: #1a8a4a;
+  --border: #ddd;
+  --input-bg: #eef0f4;
 }
-body {
-  margin: 0;
+html, body {
+  min-height: 100%;
+}
+body.light, body.light .main, body.light footer {
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
 }
-.main { padding: 15px; }
-h1, h2, h3 { text-align: center; }
-button {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
+body.light h1, body.light h2, body.light h3,
+body.light p, body.light label {
+  color: var(--text);
+}
+body.light .modal-content {
+  background: var(--card);
+  color: var(--text);
+}
+body.light input:not([type="checkbox"]),
+body.light select {
+  background: var(--input-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+body.light button {
   background: var(--accent);
   color: white;
-  font-size: 15px;
-  margin-top: 6px;
 }
-button.secondary { background: #2a2f3a; }
-button.danger { background: var(--danger); }
-input:not([type="checkbox"]), select {
-  width: 100%;
-  padding: 12px 8px;
-  margin-top: 6px;
-  background: #262a33;
-  color: var(--text);
-  border: 1px solid #333;
-  border-radius: 6px;
-  box-sizing: border-box;
-  height: 46px;
-  line-height: 1.2;
-  -webkit-appearance: none;
-  appearance: none;
-}
-input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  min-width: 22px;
-  margin: 0;
-  cursor: pointer;
-  accent-color: var(--geo-active);
-}
-.card {
+body.light button.secondary {
   background: var(--card);
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 15px;
+  color: var(--text);
+  border: 1px solid var(--border);
 }
+body.light button.danger {
+  background: var(--danger);
+  color: white;
+}
+body.light .menu-btn {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+body.light .theme-toggle {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+body.light .top-nav-bar,
+body.light .topbar {
+  background: var(--bg);
+}
+body.light #versionBadge { color: var(--muted); }
+
+/* =======================
+BASE
+======================= */
+body {
+margin: 0;
+background: var(–bg);
+color: var(–text);
+font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+transition: background 0.3s, color 0.3s;
+}
+.main { padding: 15px; }
+h1, h2, h3 { text-align: center; color: var(–text); }
+
+/* =======================
+BOUTONS
+======================= */
+button {
+width: 100%;
+padding: 12px;
+border-radius: 8px;
+border: none;
+background: var(–accent);
+color: white;
+font-size: 15px;
+margin-top: 6px;
+cursor: pointer;
+transition: opacity 0.15s, transform 0.1s;
+}
+button:active { transform: scale(0.98); opacity: 0.85; }
+button.secondary { background: var(–card); color: var(–text); border: 1px solid var(–border); }
+button.danger { background: var(–danger); color: white; border: none; }
+
+/* =======================
+INPUTS
+======================= */
+input:not([type=“checkbox”]), select {
+width: 100%;
+padding: 12px 8px;
+margin-top: 6px;
+background: var(–input-bg);
+color: var(–text);
+border: 1px solid var(–border);
+border-radius: 6px;
+box-sizing: border-box;
+height: 46px;
+line-height: 1.2;
+-webkit-appearance: none;
+appearance: none;
+transition: background 0.3s, color 0.3s, border 0.3s;
+}
+input[type=“checkbox”] {
+width: 22px;
+height: 22px;
+min-width: 22px;
+margin: 0;
+cursor: pointer;
+accent-color: var(–accent);
+}
+input[type=“month”], input[type=“date”] {
+text-align: center;
+}
+input[type=“number”] {
+text-align: center;
+-moz-appearance: textfield;
+}
+
+/* =======================
+CARDS
+======================= */
+.card {
+background: var(–card);
+padding: 15px;
+border-radius: 12px;
+margin-top: 15px;
+border: 1px solid transparent;
+transition: background 0.3s;
+}
+body.light .card {
+border-color: var(–border);
+box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+/* =======================
+TOP NAV
+======================= */
+.top-nav-bar {
+display: flex;
+gap: 8px;
+padding: calc(env(safe-area-inset-top) + 8px) 15px 8px;
+background: var(–bg);
+position: sticky;
+top: 0;
+z-index: 2000;
+transition: background 0.3s;
+}
+.menu-btn {
+flex: 1;
+margin: 0;
+padding: 8px 16px;
+border-radius: 20px;
+border: 1px solid var(–border);
+background: var(–card);
+color: var(–text);
+font-size: 14px;
+font-weight: 500;
+cursor: pointer;
+}
+.kitsune-btn {
+flex: 1;
+padding: 8px 16px;
+border-radius: 20px;
+border: none;
+background: linear-gradient(135deg, #FF8C42, #e06a1a);
+color: #fff;
+font-size: 14px;
+font-weight: 500;
+cursor: pointer;
+box-shadow: 0 2px 8px rgba(255,140,66,0.35);
+}
+
+/* =======================
+TOPBAR
+======================= */
+.topbar {
+background: var(–bg);
+padding: 0 15px 10px;
+display: flex;
+gap: 8px;
+transition: background 0.3s;
+}
+.topbar button {
+flex: 1;
+margin-top: 0;
+}
+
+/* =======================
+TOGGLE THÈME
+======================= */
+.theme-toggle {
+flex: 0 0 auto;
+width: auto;
+padding: 8px 14px;
+border-radius: 20px;
+border: 1px solid var(–border);
+background: var(–card);
+color: var(–text);
+font-size: 14px;
+margin-top: 0;
+cursor: pointer;
+white-space: nowrap;
+}
+
+/* =======================
+CALENDRIER
+======================= */
 .calendar {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 4px;
+width: 100%;
+box-sizing: border-box;
 }
-.weekday { text-align: center; font-weight: bold; font-size: 12px; }
+.weekday {
+text-align: center;
+font-weight: bold;
+font-size: 10px;
+padding: 4px 0;
+color: var(–muted);
+min-width: 0;
+}
 .day {
-  background: #262a33;
-  border-radius: 8px;
-  padding: 6px;
-  text-align: center;
-  cursor: pointer;
-  min-height: 60px;
-  transition: border 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
+background: var(–input-bg);
+border-radius: 8px;
+padding: 6px 4px;
+text-align: center;
+cursor: pointer;
+min-height: 62px;
+box-sizing: border-box;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-start;
+font-size: 12px;
+min-width: 0;
+transition: border 0.2s, opacity 0.2s, transform 0.1s, background 0.3s;
 }
+.day b { font-size: 13px; line-height: 1.5; display: block; }
+.day span { font-size: 10px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; display: block; }
 .day.today {
-  border: 2px solid #ff9500 !important;
-  opacity: 1 !important;
-  background: #2e2a1f;
-  box-shadow: 0 0 0 2px rgba(255,149,0,0.4);
-  transform: scale(1.03);
-  z-index: 2;
+border: 2px solid #ff9500 !important;
+background: #2e2a1f;
+box-shadow: 0 0 0 2px rgba(255,149,0,0.3);
+transform: scale(1.03);
+z-index: 2;
+opacity: 1 !important;
 }
+body.light .day.today { background: #fff8ec; }
 .day.locked { opacity: .4; cursor: not-allowed; }
-.day.after-closing { border: 1px dashed #4f8cff; opacity: 0.75; }
+.day.after-closing { border: 1px dashed var(–accent); opacity: 0.7; }
 .day.after-closing.today { opacity: 1 !important; border-style: solid; }
+
+/* =======================
+MODALES
+======================= */
 .modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 4000;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px);
-  transition: opacity .2s ease, transform .2s ease;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,.65);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 4000;
+opacity: 0;
+pointer-events: none;
+transform: translateY(10px);
+transition: opacity .2s ease, transform .2s ease;
 }
 .modal.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
 .modal-content {
-  background: var(--card);
-  border-radius: 16px;
-  padding: 20px;
-  width: 90%;
-  max-width: 420px;
-  max-height: 85vh;
-  overflow-y: auto;
+background: var(–card);
+border-radius: 16px;
+padding: 20px;
+width: 90%;
+max-width: 420px;
+max-height: 85vh;
+overflow-y: auto;
+transition: background 0.3s;
 }
+
+/* =======================
+BLUR €
+======================= */
 .blur { filter: blur(8px); }
+
+/* =======================
+BADGES
+======================= */
 .badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
+display: inline-block;
+padding: 4px 8px;
+border-radius: 12px;
+font-size: 12px;
+margin-bottom: 4px;
 }
-.badge.ok { background: #1b5e20; }
-.badge.file { background: #283593; }
-input[type="month"] {
-  text-align: center;
-  padding-right: 0;
-  appearance: none;
-  -webkit-appearance: none;
-}
-input[type="number"] {
-  text-align: center;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: textfield;
-  padding-left: 0;
-  padding-right: 0;
-}
+.badge.ok { background: #1b5e20; color: #fff; }
+body.light .badge.ok { background: #d4edda; color: #155724; }
+.badge.file { background: #283593; color: #fff; }
+body.light .badge.file { background: #d0e4ff; color: #1a3a6e; }
 
-/* =========================================
-   GÉOLOCALISATION – STYLES SPÉCIFIQUES
-========================================= */
-
-/* Historique */
-.geo-history-day {
-  background: #12161e;
-  border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-left: 3px solid #2a3040;
+/* =======================
+VERSION
+======================= */
+#versionBadge {
+position: fixed;
+bottom: calc(env(safe-area-inset-bottom) + 14px);
+right: calc(env(safe-area-inset-right) + 14px);
+font-size: 11px;
+opacity: 0.45;
+color: var(–muted);
+z-index: 99999;
+user-select: none;
+pointer-events: none;
 }
-.geo-history-day.has-hours {
-  border-left-color: var(--geo-active);
-}
-.geo-history-day.short-session {
-  border-left-color: #ff9500;
-}
-.geo-history-date {
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-.geo-history-total {
-  font-size: 12px;
-  color: var(--geo-active);
-  margin-top: 6px;
-}
-.geo-history-total.too-short {
-  color: #ff9500;
-}
-.geo-history-punch {
-  font-size: 12px;
-  color: var(--muted);
-  padding: 2px 0;
-}
-.geo-history-punch.in  { color: var(--geo-active); }
-.geo-history-punch.out { color: #ff6b6b; }
-
-/* Pastille de statut géo */
-.geo-status-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--geo-inactive);
-  margin-right: 6px;
-  vertical-align: middle;
-  transition: background 0.4s;
-}
-.geo-status-dot.active {
-  background: var(--geo-active);
-  box-shadow: 0 0 6px var(--geo-active);
-  animation: geo-pulse 1.8s ease-in-out infinite;
-}
-@keyframes geo-pulse {
-  0%, 100% { box-shadow: 0 0 4px var(--geo-active); }
-  50% { box-shadow: 0 0 14px var(--geo-active); }
-}
-
-/* Carte de statut pointage */
-.geo-card {
-  background: #12161e;
-  border: 1px solid #2a3040;
-  border-radius: 12px;
-  padding: 15px;
-  margin-top: 15px;
-}
-.geo-card.pointed-in {
-  border-color: var(--geo-active);
-  background: #0a1f18;
-}
-
-/* Timeline des pointages du jour */
-.punch-timeline {
-  margin-top: 10px;
-  padding-left: 10px;
-  border-left: 2px solid #333;
-}
-.punch-entry {
-  position: relative;
-  padding: 6px 0 6px 16px;
-  font-size: 13px;
-  color: var(--muted);
-}
-.punch-entry::before {
-  content: '';
-  position: absolute;
-  left: -5px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #4f8cff;
-}
-.punch-entry.in::before { background: var(--geo-active); }
-.punch-entry.out::before { background: #ff6b6b; }
-.punch-entry .punch-hours {
-  font-weight: bold;
-  color: var(--text);
-  margin-left: 6px;
-}
-
-/* Bouton pointage principal */
-.punch-btn {
-  font-size: 18px;
-  font-weight: bold;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  width: 100%;
-  margin-top: 10px;
-}
-.punch-btn.start {
-  background: linear-gradient(135deg, #00c896, #009966);
-  color: white;
-  box-shadow: 0 4px 16px rgba(0, 200, 150, 0.3);
-}
-.punch-btn.stop {
-  background: linear-gradient(135deg, #ff6b6b, #cc2200);
-  color: white;
-  box-shadow: 0 4px 16px rgba(255, 80, 80, 0.3);
-}
-.punch-btn:active { transform: scale(0.97); }
-
-/* Zone configuration géo */
-.geo-config-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-top: 10px;
-}
-.geo-config-row label {
-  font-size: 13px;
-  color: var(--muted);
-  min-width: 130px;
-}
-.geo-config-row input {
-  flex: 1;
-  margin-top: 0;
-}
-
-/* Radar animé quand surveillance active */
-.geo-radar {
-  display: none;
-  text-align: center;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--geo-active);
-  animation: radar-blink 2s ease-in-out infinite;
-}
-.geo-radar.visible { display: block; }
-@keyframes radar-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* Badge distance */
-.geo-distance-badge {
-  display: inline-block;
-  background: #1c2535;
-  border: 1px solid #2a3a55;
-  border-radius: 20px;
-  padding: 3px 10px;
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 6px;
-}
-.geo-distance-badge.near { border-color: var(--geo-active); color: var(--geo-active); }
-.geo-distance-badge.far { border-color: #ff6b6b; color: #ff9999; }
-
-/* Toast notification */
-.geo-toast {
-  position: fixed;
-  top: calc(env(safe-area-inset-top) + 80px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-200px);
-  background: #1c1f26;
-  border: 1px solid var(--geo-active);
-  color: var(--text);
-  border-radius: 14px;
-  padding: 14px 20px;
-  max-width: 340px;
-  width: 90%;
-  z-index: 9999;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  font-size: 14px;
-}
-.geo-toast.show { transform: translateX(-50%) translateY(0); }
-.geo-toast .geo-toast-title {
-  font-weight: bold;
-  font-size: 15px;
-  margin-bottom: 6px;
-}
-.geo-toast .geo-toast-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-.geo-toast .geo-toast-actions button {
-  flex: 1;
-  padding: 8px;
-  font-size: 13px;
-  margin: 0;
-  border-radius: 8px;
-}
-.geo-toast .btn-confirm {
-  background: var(--geo-active);
-  color: #000;
-  font-weight: bold;
-}
-.geo-toast .btn-dismiss {
-  background: #2a2f3a;
-  color: var(--muted);
-}
-
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </head>
 <body>
+
+<!-- NAV -->
+
 <div class="top-nav-bar">
-  <button class="menu-btn" onclick="goMenu()">⬅ Retour au menu</button>
-  <button class="kitsune-btn" onclick="window.location.href='../fox/index.html'" title="Ouvrir FOX Engine">🦊 Kitsune</button>
+  <button class="menu-btn" onclick="goMenu()">← Retour au menu</button>
+  <button class="kitsune-btn" onclick="window.location.href='../fox/index.html'">🦊 Kitsune</button>
 </div>
 
-<!-- ==================== MODALES SYSTÈME ==================== -->
+<!-- MODALES SYSTÈME -->
 
 <div class="modal" id="debugGate">
   <div class="modal-content">
-    <h3>🧪 Accès debug sécurisé</h3>
+    <h3>Acces debug sécurisé</h3>
     <p style="font-size:14px">Avant toute intervention, un <b>test de crash</b> est obligatoire.</p>
     <input type="password" id="debugCode" placeholder="Code requis (1234)">
-    <button class="danger" onclick="validateDebugAccess()">💥 Tester le crash maintenant</button>
+    <button class="danger" onclick="validateDebugAccess()">Tester le crash</button>
     <button class="secondary" onclick="closeDebugGate()">Annuler</button>
   </div>
 </div>
 
 <div class="modal" id="recoveryModal">
   <div class="modal-content">
-    <h2>🛠️ Mode récupération</h2>
-    <h3>📸 Snapshots disponibles</h3>
+    <h2>Mode récupération</h2>
+    <h3>Snapshots disponibles</h3>
     <div id="snapshotList"></div>
     <p style="font-size:14px">L'application a détecté un problème lors du dernier démarrage.</p>
-    <button onclick="recoverAuto()">🔄 Réparation automatique</button>
-    <button class="secondary" onclick="recoverSoftReset()">♻️ Réinitialiser l'interface</button>
-    <button class="danger" onclick="recoverFactory()">🧨 Réinitialisation complète</button>
-    <p style="font-size:12px;color:#aaa;margin-top:10px">⚠️ La réinitialisation complète supprime les données locales.</p>
+    <button onclick="recoverAuto()">Réparation automatique</button>
+    <button class="secondary" onclick="recoverSoftReset()">Réinitialiser l'interface</button>
+    <button class="danger" onclick="recoverFactory()">Réinitialisation complète</button>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px">La réinitialisation complète supprime les données locales.</p>
   </div>
 </div>
 
-<!-- ==================== TOAST GÉOLOCALISATION ==================== -->
-
-<div class="geo-toast" id="geoToast">
-  <div class="geo-toast-title" id="geoToastTitle">📍 Tu arrives au travail</div>
-  <div id="geoToastMsg" style="color:var(--muted);font-size:13px"></div>
-  <div class="geo-toast-actions">
-    <button class="btn-confirm" id="geoToastConfirm" onclick="confirmGeoAction()">✅ Démarrer</button>
-    <button class="btn-dismiss" onclick="dismissGeoToast()">Plus tard</button>
-  </div>
-</div>
-
-<!-- ==================== TOPBAR ==================== -->
+<!-- TOPBAR -->
 
 <div class="topbar">
-  <button onclick="openTutorial()">❓ Tutoriel</button>
+  <button onclick="openTutorial()">? Tutoriel</button>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Clair</button>
 </div>
 
 <div class="main">
 
-  <h1>⏱️ Heures supplémentaires</h1>
-  <p style="text-align:center;font-size:14px;color:#9aa0a6;margin-top:-10px;">
+  <h1>Heures supplémentaires</h1>
+  <p style="text-align:center;font-size:14px;color:var(--muted);margin-top:-10px">
     Suivi précis des heures supplémentaires basé sur la
     <b>logique réelle de paie mensuelle</b>
     (clôture mensuelle + report automatique)
@@ -491,136 +416,14 @@ input[type="number"] {
     <div class="calendar" id="calendar"></div>
   </div>
 
-  <!-- ==================== CARTE POINTAGE GÉOLOCALISÉ ==================== -->
-
-  <div class="geo-card" id="geoCard">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <div>
-        <span class="geo-status-dot" id="geoDot"></span>
-        <b style="font-size:15px">Pointage géolocalisé</b>
-      </div>
-      <span id="geoStatusLabel" style="font-size:12px;color:var(--muted)">Inactif</span>
-    </div>
-
-```
-<!-- Statut distance temps réel -->
-<div id="geoDistanceBlock" style="margin-top:8px;display:none">
-  <span class="geo-distance-badge" id="geoDistanceBadge">Calcul…</span>
-</div>
-
-
-<!-- Bouton pointage manuel -->
-<button class="punch-btn start" id="punchBtn" onclick="manualPunch()">
-  ▶ Pointer l'arrivée
-</button>
-
-<!-- Timeline du jour -->
-<div class="punch-timeline" id="punchTimeline"></div>
-
-<!-- Résumé heures du jour -->
-<div id="geoTodaySummary" style="font-size:13px;color:var(--muted);margin-top:8px;display:none">
-  ⏱ Aujourd'hui : <b id="geoTodayHours">0.00 h</b>
-</div>
-
-<!-- Bouton historique -->
-<button class="secondary" style="margin-top:12px;font-size:13px" onclick="openGeoHistory()">
-  📋 Historique des pointages
-</button>
-
-<!-- Bouton config -->
-<button class="secondary" style="margin-top:6px;font-size:13px" onclick="toggleGeoConfig()">
-  ⚙️ Configuration du pointage
-</button>
-
-<!-- Zone de configuration dépliable -->
-<div id="geoConfigPanel" style="display:none;margin-top:12px">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <span style="font-size:13px;font-weight:bold;color:var(--muted)">⚙️ Configuration</span>
-    <button onclick="toggleGeoConfig()" style="
-      width:auto;
-      padding:6px 14px;
-      margin:0;
-      background:#2a2f3a;
-      font-size:13px;
-      border-radius:20px;
-    ">✕ Fermer</button>
-  </div>
-  <hr style="border-color:#2a3040;margin-bottom:12px">
-
-  <!-- Lieu de travail -->
-  <div style="font-size:13px;color:var(--muted);margin-bottom:8px">
-    <b style="color:var(--text)">📍 Lieu de travail</b>
-  </div>
-  <div id="geoSavedLocation" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
-
-  <button onclick="captureWorkLocation()" style="background:#1b3a2a;color:var(--geo-active);border:1px solid var(--geo-active);font-size:13px">
-    📌 Enregistrer ma position actuelle comme lieu de travail
-  </button>
-
-  <button class="secondary" style="font-size:13px;margin-top:6px" onclick="clearWorkLocation()">
-    🗑️ Supprimer le lieu enregistré
-  </button>
-
-  <hr style="border-color:#2a3040;margin:12px 0">
-
-  <div style="font-size:13px;color:var(--text);margin-bottom:6px">
-    <b>🗺️ Ou via un lien Google Maps</b>
-  </div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4">
-    Sur Google Maps : maintiens appuyé sur ton lieu de travail → copie les coordonnées ou le lien, colle-le ici.
-  </div>
-  <input
-    type="text"
-    id="gmapsInput"
-    placeholder="Colle un lien Google Maps ou des coordonnées (48.8566, 2.3522)"
-    style="font-size:12px"
-  >
-  <button onclick="importFromGMaps()" style="background:#1a3a2a;color:#4caf50;border:1px solid #4caf50;font-size:13px;margin-top:6px">
-    📍 Extraire les coordonnées
-  </button>
-
-  <hr style="border-color:#2a3040;margin:12px 0">
-
-  <!-- Rayon de détection -->
-  <div class="geo-config-row">
-    <label>Rayon de détection</label>
-    <input type="number" id="geoRadius" value="200" min="50" max="2000" step="50">
-    <span style="font-size:12px;color:var(--muted);white-space:nowrap">m</span>
-  </div>
-
-  <div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4">
-    ℹ️ Dès que tu entres dans cette zone, une notification te propose de pointer — quelle que soit l'heure. Tu restes libre de valider ou ignorer.
-  </div>
-
-  <hr style="border-color:#2a3040;margin:12px 0">
-
-  <!-- Activation de la surveillance -->
-  <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px">
-    <input type="checkbox" id="geoWatchToggle" style="width:auto;margin:0" onchange="onWatchToggle()">
-    Activer la surveillance automatique
-  </label>
-  <div style="font-size:11px;color:var(--muted);margin-top:4px">
-    Nécessite que l'application reste ouverte. Aucune donnée n'est envoyée à l'extérieur.
-  </div>
-
-  <button onclick="saveGeoConfig()" style="margin-top:12px;background:#1a2a3a;border:1px solid var(--accent);font-size:13px">
-    💾 Enregistrer la configuration
-  </button>
-</div>
-```
-
-  </div>
-
-  <!-- ==================== RECAP ==================== -->
-
   <div class="card">
     <h3>Récapitulatif</h3>
     <p>Report précédent : <b id="prevCarry">0.00</b> h</p>
     <p>Total période : <b id="totalMonth">0.00</b> h</p>
     <p>Heures à 25 % : <b id="hours25">0.00</b> h</p>
     <p>Heures à 50 % : <b id="hours50">0.00</b> h</p>
-    <p style="font-size:12px;color:#aaa;margin-top:8px">
-      ℹ️ Calcul basé sur une hypothèse standard : 25% jusqu'à 8h hebdomadaires, puis 50%.
+    <p style="font-size:12px;color:var(--muted);margin-top:8px">
+      Calcul basé sur une hypothèse standard : 25% jusqu'à 8h hebdomadaires, puis 50%.
       Peut varier selon la convention collective.
     </p>
     <p>Heures payées : <input type="number" id="paidHours" step="0.25"></p>
@@ -628,7 +431,7 @@ input[type="number"] {
   </div>
 
   <div class="card">
-    <h3>💰 Valeur €</h3>
+    <h3>Valeur €</h3>
     <div id="euroBox" class="blur">
       <label>Taux horaire (€)</label>
       <input type="number" id="rate">
@@ -639,9 +442,9 @@ input[type="number"] {
       <label>Coef brut → net</label>
       <input type="number" id="coefNet">
       <p><b id="euroResult">0.00 €</b></p>
-      <p id="euroDetail" style="font-size:12px;color:#aaa;margin-top:8px"></p>
-      <p style="font-size:12px;color:#9aa0a6;margin-top:10px;line-height:1.4">
-        ⚠️ Les <b>taux</b> et <b>coefficients</b> utilisés sont fournis à titre <b>strictement indicatif</b>.<br>
+      <p id="euroDetail" style="font-size:12px;color:var(--muted);margin-top:8px"></p>
+      <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.4">
+        Les taux et coefficients sont fournis à titre indicatif.<br>
         <b>Seul le bulletin de paie fait foi.</b>
       </p>
     </div>
@@ -649,7 +452,7 @@ input[type="number"] {
     <button onclick="unlockEuro()">Déverrouiller</button>
   </div>
 
-<button class="secondary" onclick="toggleChangeCode()">🔁 Changer le code</button>
+<button class="secondary" onclick="toggleChangeCode()">Changer le code</button>
 
   <div id="changeCodeBox" style="display:none;margin-top:10px">
     <input type="password" id="oldCode" placeholder="Ancien code">
@@ -659,50 +462,54 @@ input[type="number"] {
   </div>
 
   <div class="card">
-    <span class="badge ok">🟢 Sauvegarde locale auto</span>
-    <span class="badge file">👤 Usage personnel – outil indicatif</span>
-    <span class="badge file">💾 Dernier fichier : <span id="fileDate">—</span></span>
-    <button onclick="exportJSON()">💾 Sauvegarde dans un fichier</button>
+    <span class="badge ok">Sauvegarde locale auto</span><br>
+    <span class="badge file">Usage personnel – outil indicatif</span><br>
+    <span class="badge file">Dernier fichier : <span id="fileDate">—</span></span>
+    <button onclick="exportJSON()">Sauvegarde dans un fichier</button>
     <input type="file" id="importFile" accept=".json" style="display:none">
-    <button class="secondary" onclick="document.getElementById('importFile').click()">📥 Importer une sauvegarde</button>
-    <button onclick="exportMonthlyPDF()">📄 PDF mensuel détaillé</button>
-    <button onclick="exportAnnualPDF()">📕 PDF annuel récapitulatif</button>
+    <button class="secondary" onclick="document.getElementById('importFile').click()">Importer une sauvegarde</button>
+    <button onclick="exportMonthlyPDF()">PDF mensuel détaillé</button>
+    <button onclick="exportAnnualPDF()">PDF annuel récapitulatif</button>
   </div>
 
-  <!-- ==================== MODALES ==================== -->
+  <!-- MODALE HEURES -->
 
   <div class="modal" id="hoursModal">
     <div class="modal-content">
-      <h3>⏱️ Ajouter des heures</h3>
+      <h3>Ajouter des heures</h3>
       <div id="hoursChoices"></div>
       <label>Saisie manuelle</label>
       <input type="number" id="manualHours" step="0.25">
       <button onclick="confirmManual()">Valider</button>
-      <button class="danger" onclick="deleteDayHours()">🗑️ Supprimer les heures du jour</button>
-      <button class="secondary" onclick="closeHours()">Annuler</button>
+      <button class="danger" onclick="deleteDayHours()">Supprimer les heures du jour</button>
+      <button class="secondary" onclick="document.getElementById('hoursModal').classList.remove('open')">Annuler</button>
     </div>
   </div>
 
+  <!-- MODALE TUTORIEL -->
+
   <div class="modal" id="tutorialModal">
-    <div class="modal-content" style="max-width:700px;max-height:80vh;overflow:auto;">
-      <h2>📘 Tutoriel – Suivi des heures supplémentaires</h2>
-      <h3>1️⃣ Principe général</h3>
+    <div class="modal-content" style="max-width:700px;max-height:80vh;overflow:auto">
+      <h2>Tutoriel – Suivi des heures supplémentaires</h2>
+      <h3>1 - Principe général</h3>
       <p>Cet outil permet de suivre les heures supplémentaires dans le cadre d'une <b>paie mensuelle</b>, avec report automatique des reliquats.</p>
-      <h3>2️⃣ Saisie des heures</h3>
-      <p>Clique sur un jour pour saisir manuellement tes heures, ou utilise le <b>pointage géolocalisé</b> pour une saisie automatique depuis le terrain.</p>
-      <h3>3️⃣ Pointage géolocalisé</h3>
-      <p>Configure une fois ton lieu de travail et tes horaires. L'app te propose de pointer dès que tu arrives dans la zone — <b>tu valides toujours manuellement</b>. Aucune donnée ne sort de ton appareil.</p>
-      <h3>4️⃣ Clôture mensuelle</h3>
+      <h3>2 - Saisie des heures</h3>
+      <p>Clique sur un jour, choisis +15 min, +30 min, +1h… ou saisis manuellement. Les heures sont enregistrées automatiquement.</p>
+      <h3>3 - Clôture mensuelle</h3>
       <p>Le jour de clôture définit la fin de la période de paie. Les heures après cette date sont automatiquement reportées.</p>
-      <h3>5️⃣ Zone €</h3>
+      <h3>4 - Zone €</h3>
       <p>Les montants sont floutés par défaut et protégés par code.</p>
+      <h3>5 - Mode clair / sombre</h3>
+      <p>Utilise le bouton en haut à droite pour basculer entre le mode sombre et le mode clair.</p>
       <button class="secondary" onclick="closeTutorial()">Fermer</button>
     </div>
   </div>
 
+  <!-- MODALE LÉGALE -->
+
   <div class="modal" id="legalModal">
     <div class="modal-content">
-      <h2>⚠️ Avertissement important</h2>
+      <h2>Avertissement important</h2>
       <p style="font-size:14px">
         Cet outil est un <b>simulateur personnel</b>.<br><br>
         Les calculs sont indicatifs et peuvent différer de votre bulletin de paie réel.<br><br>
@@ -712,129 +519,128 @@ input[type="number"] {
     </div>
   </div>
 
+  <!-- MODALE ONBOARDING -->
+
   <div class="modal" id="onboardingModal">
     <div class="modal-content">
-      <h2>👋 Bienvenue</h2>
-      <ol style="font-size:14px">
+      <h2>Bienvenue</h2>
+      <ol style="font-size:14px;color:var(--text)">
         <li>Sélectionne le mois suivi</li>
         <li>Définis le dimanche de clôture</li>
         <li>Clique sur un jour pour ajouter des heures</li>
-        <li>Configure le pointage géolocalisé (optionnel)</li>
+        <li>Renseigne les heures payées</li>
       </ol>
       <button onclick="closeOnboarding()">Commencer</button>
     </div>
   </div>
 
-  <!-- ==================== MODALE HISTORIQUE GEO ==================== -->
-
-  <div class="modal" id="geoHistoryModal">
-    <div class="modal-content" style="max-width:500px;max-height:85vh;overflow-y:auto">
-      <h3>📋 Historique des pointages</h3>
-
-```
-  <div style="display:flex;gap:8px;margin-bottom:12px">
-    <select id="geoHistoryMonth" style="flex:1;margin-top:0">
-    </select>
-    <button onclick="renderGeoHistory()" style="width:auto;padding:8px 14px;margin-top:0;font-size:13px">
-      🔍
-    </button>
-  </div>
-
-  <div id="geoHistoryContent"></div>
-
-  <button class="secondary" style="margin-top:12px" onclick="closeGeoHistory()">Fermer</button>
-</div>
-```
-
-  </div>
-
-  <!-- ==================== NOTICE ==================== -->
-
-  <div class="card" style="font-size:13px;color:#aaa">
-    <h3>📘 Notice utilisateur</h3>
+  <div class="card" style="font-size:13px;color:var(--muted)">
+    <h3>Notice utilisateur</h3>
     <p>Cet outil est destiné au suivi personnel des heures supplémentaires dans le cadre d'une rémunération mensuelle.</p>
-    <p>Les calculs sont indicatifs et reposent sur les principes généraux :</p>
-    <ul>
-      <li>Code du travail</li>
-      <li>Convention collective du commerce de gros (IDCC 573)</li>
-    </ul>
-    <p>⚠️ En cas de litige, seuls les bulletins de paie et documents officiels de l'employeur font foi.</p>
+    <p>Les calculs sont indicatifs et reposent sur les principes généraux du Code du travail et de la Convention collective du commerce de gros (IDCC 573).</p>
+    <p>En cas de litige, seuls les bulletins de paie et documents officiels de l'employeur font foi.</p>
   </div>
-  <div class="card" style="font-size:12px;color:#9aa0a6;line-height:1.5">
-    <b>⚠️ Responsabilité et limites</b><br><br>
+
+  <div class="card" style="font-size:12px;color:var(--muted);line-height:1.5">
+    <b>Responsabilité et limites</b><br><br>
     Les données saisies dans ce simulateur sont renseignées <b>sous la seule responsabilité de l'utilisateur</b>.<br><br>
-    Les résultats affichés sont fournis à titre indicatif. <b>Seuls les documents établis par l'employeur et le droit applicable font foi.</b>
+    <b>Seuls les documents établis par l'employeur et le droit applicable font foi.</b>
   </div>
 
-</div><!-- /main -->
+</div>
 
-<footer id="debugTrigger" style="margin-top:30px;text-align:center;font-size:12px;color:#777;cursor:pointer">
-  © C. Anthony<br>
-  Outil indicatif – ne constitue pas un bulletin de paie
+<footer id="debugTrigger" style="margin-top:30px;text-align:center;font-size:12px;color:var(--muted);cursor:pointer;padding-bottom:30px">
+  © C. Anthony<br>Outil indicatif – ne constitue pas un bulletin de paie
 </footer>
 <div id="versionBadge"></div>
 
-<!-- ==================== JAVASCRIPT ==================== -->
-
 <script>
 /* =======================
-   CONSTANTES GLOBALES
+   TOAST (remplace alert/confirm bloqués iOS PWA)
+======================= */
+function toast(msg, duration=3000){
+  let el = document.getElementById("_toast");
+  if(!el){
+    el = document.createElement("div");
+    el.id = "_toast";
+    el.style.cssText = `
+      position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);
+      background:#1c1f26;border:1px solid #333;color:#e6e6e6;
+      padding:12px 20px;border-radius:20px;font-size:14px;
+      z-index:99998;transition:opacity .3s,transform .3s;
+      opacity:0;pointer-events:none;text-align:center;max-width:85%;
+      box-shadow:0 4px 20px rgba(0,0,0,0.4);
+    `;
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.opacity = "1";
+  el.style.transform = "translateX(-50%) translateY(0)";
+  clearTimeout(el._timer);
+  el._timer = setTimeout(()=>{
+    el.style.opacity = "0";
+    el.style.transform = "translateX(-50%) translateY(20px)";
+  }, duration);
+}
+
+/* =======================
+   CONSTANTES
 ======================= */
 const STORAGE_PREFIX = "CA_HS_TRACKER_V1";
-const APP_VERSION    = "1.4.0"; // +géolocalisation
+const APP_VERSION    = "1.5.0";
 const SNAP_KEY       = `${STORAGE_PREFIX}_SNAPSHOTS`;
 const SNAP_LIMIT     = 5;
 const DATA_VERSION   = "1.0";
-const GEO_KEY        = `${STORAGE_PREFIX}_GEO_CONFIG`;
-const GEO_PUNCHES    = `${STORAGE_PREFIX}_GEO_PUNCHES`;
+
+function kData(y)    { return `${STORAGE_PREFIX}_DATA_${y}`; }
+function kSettings() { return `${STORAGE_PREFIX}_SETTINGS`; }
+function kCode()     { return `${STORAGE_PREFIX}_CODE_HASH`; }
+function kIndex()    { return `${STORAGE_PREFIX}_INDEX`; }
+function getYearFromMonth(k) { return k.split("-")[0]; }
 
 /* =======================
-   MODE RÉCUPÉRATION
+   ÉTAT GLOBAL
 ======================= */
-const RECOVERY_ACTIVE = localStorage.getItem("CA_HS_RECOVERY_MODE") === "1";
-if(RECOVERY_ACTIVE) console.warn("🛠️ MODE RÉCUPÉRATION ACTIVÉ");
-
-/* =======================
-   DONNÉES PRINCIPALES
-======================= */
-let DATA = {};
+let DATA     = {};
 let SETTINGS = JSON.parse(localStorage.getItem(kSettings()) || "{}");
 let ALL_DATA = {};
 let currentKey = "", currentDay = null, unlocked = false;
 
 /* =======================
-   GÉOLOCALISATION – ÉTAT
+   THÈME CLAIR / SOMBRE
 ======================= */
-let GEO_CONFIG = JSON.parse(localStorage.getItem(GEO_KEY) || "{}");
-// GEO_CONFIG : { lat, lng, radius, watchEnabled }
-
-let GEO_PUNCHES_DATA = JSON.parse(localStorage.getItem(GEO_PUNCHES) || "{}");
-// GEO_PUNCHES_DATA : { "2025-02-20": [ {type:"in"|"out", ts: ISO}, ... ] }
-
-let geoWatchId        = null;   // ID watchPosition
-let geoCheckInterval  = null;   // Polling fallback
-let geoIsPunchedIn    = false;  // état actuel de la journée
-let geoLastDistance   = null;   // dernière distance calculée (m)
-let geoToastPending   = null;   // "in" | "out" | null – action proposée
-let geoToastTimer     = null;   // setTimeout pour auto-dismiss
+function initTheme(){
+  const saved = localStorage.getItem("CA_THEME") || "dark";
+  applyTheme(saved, false);
+}
+function applyTheme(theme, save=true){
+  if(theme === "light"){
+    document.body.classList.add("light");
+    document.getElementById("themeBtn").textContent = "🌙 Sombre";
+  } else {
+    document.body.classList.remove("light");
+    document.getElementById("themeBtn").textContent = "☀️ Clair";
+  }
+  if(save) localStorage.setItem("CA_THEME", theme);
+}
+function toggleTheme(){
+  const isLight = document.body.classList.contains("light");
+  applyTheme(isLight ? "dark" : "light");
+}
 
 /* =======================
-   HELPERS CLÉ STOCKAGE
+   MODE RÉCUPÉRATION
 ======================= */
-function kData(year)    { return `${STORAGE_PREFIX}_DATA_${year}`; }
-function kSettings()    { return `${STORAGE_PREFIX}_SETTINGS`; }
-function kCode()        { return `${STORAGE_PREFIX}_CODE_HASH`; }
-function kIndex()       { return `${STORAGE_PREFIX}_INDEX`; }
-function getYearFromMonth(key) { return key.split("-")[0]; }
+const RECOVERY_ACTIVE = localStorage.getItem("CA_HS_RECOVERY_MODE") === "1";
 
 /* =======================
-   PRÉCHARGEMENT ANNÉES
+   PRÉCHARGEMENT
 ======================= */
 (function preloadAllYears(){
   const index = JSON.parse(localStorage.getItem(kIndex()) || "[]");
   index.forEach(year => {
     try { ALL_DATA[year] = loadYearData(year); }
-    catch(e) { console.warn("⚠️ Impossible de charger", year); ALL_DATA[year] = {}; }
+    catch(e) { console.warn("Impossible de charger", year); ALL_DATA[year] = {}; }
   });
 })();
 
@@ -847,14 +653,14 @@ function getYearFromMonth(key) { return key.split("-")[0]; }
   if(last !== APP_VERSION){
     localStorage.setItem(key, APP_VERSION);
     if(!sessionStorage.getItem("CA_REFRESHED")){
-      sessionStorage.setItem("CA_REFRESHED","1");
+      sessionStorage.setItem("CA_REFRESHED", "1");
       location.reload();
     }
   }
 })();
 
 /* =======================
-   MIGRATION DONNÉES
+   MIGRATION
 ======================= */
 (function migrateLocalDataIfNeeded(){
   const stored = localStorage.getItem("CA_DATA_VERSION");
@@ -862,7 +668,7 @@ function getYearFromMonth(key) { return key.split("-")[0]; }
   Object.entries(ALL_DATA).forEach(([year, yearData]) => {
     Object.values(yearData).forEach(month => {
       if(typeof month.closing !== "number") month.closing = null;
-      if(typeof month.locked !== "boolean") month.locked = false;
+      if(typeof month.locked  !== "boolean") month.locked  = false;
     });
     saveYearData(year, yearData);
   });
@@ -870,11 +676,13 @@ function getYearFromMonth(key) { return key.split("-")[0]; }
 })();
 
 /* =======================
-   INIT PAGE
+   INIT
 ======================= */
 window.addEventListener("load", () => {
   const v = document.getElementById("versionBadge");
   if(v) v.textContent = "v" + APP_VERSION;
+
+  initTheme();
 
   if(RECOVERY_ACTIVE){ openRecovery(); return; }
   if(!localStorage.getItem("LEGAL_OK")){
@@ -884,35 +692,27 @@ window.addEventListener("load", () => {
   if(!localStorage.getItem("ONBOARDING_DONE")){
     document.getElementById("onboardingModal").classList.add("open");
   }
-
-  // Demander permission notifications
-  requestNotifPermission();
-
-  // Restaurer état géo depuis config sauvegardée
-  loadGeoConfig();
 });
 
 /* =======================
-   CALENDRIER / MOIS
+   CALENDRIER
 ======================= */
-const monthPicker  = document.getElementById("monthPicker");
-const closingDate  = document.getElementById("closingDate");
-const paidInput    = document.getElementById("paidHours");
+const monthPicker = document.getElementById("monthPicker");
+const closingDate = document.getElementById("closingDate");
+const paidInput   = document.getElementById("paidHours");
 
-monthPicker.value  = new Date().toISOString().slice(0,7);
+monthPicker.value    = new Date().toISOString().slice(0,7);
 monthPicker.onchange = loadMonth;
-paidInput.oninput  = () => {
+paidInput.oninput    = () => {
   if(!DATA || !DATA[currentKey]) return;
   DATA[currentKey].paid = parseFloat(paidInput.value) || 0;
-  save();
-  recalc();
+  save(); recalc();
 };
 
 function getLastSunday(year, monthIndex){
-  const lastDay = new Date(year, monthIndex + 1, 0);
+  const lastDay = new Date(year, monthIndex+1, 0);
   const day = lastDay.getDay();
-  const diff = day === 0 ? 0 : day;
-  lastDay.setDate(lastDay.getDate() - diff);
+  lastDay.setDate(lastDay.getDate() - (day === 0 ? 0 : day));
   return lastDay.getDate();
 }
 
@@ -923,10 +723,7 @@ function getPeriodBounds(monthKey){
              end:   new Date(now.getFullYear(), now.getMonth()+1, 0) };
   }
   const [y, m] = monthKey.split("-").map(Number);
-  if(!y || !m) return { start: new Date(y||1970,(m||1)-1,1), end: new Date(y||1970,m||1,0) };
-
-  const year      = String(y);
-  const yearData  = ALL_DATA[year];
+  const yearData  = ALL_DATA[String(y)];
   const currentM  = yearData?.[monthKey];
   if(!currentM) return { start: new Date(y,m-1,1), end: new Date(y,m,0) };
 
@@ -976,7 +773,6 @@ function loadMonth(){
   recalcCascade();
   recalc();
   scrollToToday();
-  renderGeoTimeline();
   if(needSave) save();
 }
 
@@ -986,7 +782,6 @@ function setClosingLimits(){
   closingDate.min = `${y}-${String(m).padStart(2,"0")}-01`;
   closingDate.max = `${y}-${String(m).padStart(2,"0")}-${lastDay}`;
 }
-
 function syncClosingDate(){
   if(!DATA[currentKey]) return;
   const [y,m] = currentKey.split("-").map(Number);
@@ -997,13 +792,13 @@ function syncClosingDate(){
 closingDate.oninput = () => {
   if(!closingDate.value) return;
   const selected = new Date(closingDate.value);
-  const [y,m]    = currentKey.split("-").map(Number);
+  const [y,m] = currentKey.split("-").map(Number);
   if(selected.getFullYear()!==y || selected.getMonth()+1!==m){
-    alert("⛔ La date doit être dans le mois sélectionné");
+    toast("La date doit être dans le mois sélectionné"); 
     syncClosingDate(); return;
   }
   if(selected.getDay()!==0){
-    alert("⛔ La clôture doit obligatoirement être un dimanche");
+    toast("La clôture doit être un dimanche"); 
     syncClosingDate(); return;
   }
   DATA[currentKey].closing = selected.getDate();
@@ -1013,9 +808,7 @@ closingDate.oninput = () => {
 closingDate.addEventListener("blur", () => {
   const cal = document.getElementById("calendar");
   if(!cal) return;
-  cal.style.display = "none";
-  cal.offsetHeight;
-  cal.style.display = "grid";
+  cal.style.display = "none"; cal.offsetHeight; cal.style.display = "grid";
 });
 
 function scrollToToday(){
@@ -1025,53 +818,39 @@ function scrollToToday(){
   if(el) el.scrollIntoView({ behavior:"smooth", block:"center" });
 }
 
-/* =======================
-   RENDU CALENDRIER
-======================= */
 function renderCalendar(){
-  const cal   = document.getElementById("calendar");
+  const cal = document.getElementById("calendar");
   cal.innerHTML = "";
   const weekDays = ["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
   weekDays.forEach(d => {
     const w = document.createElement("div");
-    w.className = "weekday";
-    w.textContent = d;
+    w.className = "weekday"; w.textContent = d;
     cal.appendChild(w);
   });
-  const [y,m]       = currentKey.split("-").map(Number);
-  const today       = new Date();
-  const isCurrentM  = currentKey === today.toISOString().slice(0,7);
-  const firstDay    = new Date(y,m-1,1).getDay() || 7;
-  const daysInMonth = new Date(y,m,0).getDate();
+  const [y,m]   = currentKey.split("-").map(Number);
+  const today   = new Date();
+  const isCurrentM = currentKey === today.toISOString().slice(0,7);
+  const firstDay   = new Date(y,m-1,1).getDay() || 7;
+  const daysInMonth= new Date(y,m,0).getDate();
   const { start, end } = getPeriodBounds(currentKey);
-  const isLocked    = DATA[currentKey].locked;
+  const isLocked = DATA[currentKey].locked;
 
   for(let i=1;i<firstDay;i++) cal.appendChild(document.createElement("div"));
 
-  // Récupérer les jours pointés
-  const todayKey  = today.toISOString().slice(0,10);
-  const punches   = GEO_PUNCHES_DATA;
-
   for(let d=1; d<=daysInMonth; d++){
-    const dateKey = `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-    const div     = document.createElement("div");
+    const div  = document.createElement("div");
     div.className = "day";
-    const date    = new Date(y,m-1,d);
+    const date = new Date(y,m-1,d);
     if(date > end) div.classList.add("after-closing");
     if(isLocked)   div.classList.add("locked");
     if(isCurrentM && d===today.getDate()){
       div.classList.add("today");
       div.id = "todayCell";
     }
-    const val      = DATA[currentKey].days[d];
-    const hasPunch = punches[dateKey]?.length > 0;
-    div.innerHTML = `
-      <b>${d}</b>
-      ${val ? `<span style="color:#4f8cff">${val.toFixed(2)}h</span>` : ""}
-      ${hasPunch ? '<span style="color:var(--geo-active)">·geo</span>' : ""}
-    `;
+    const val = DATA[currentKey].days[d];
+    div.innerHTML = `<b>${d}</b>${val ? `<span style="color:var(--accent)">${val.toFixed(2)}h</span>` : ""}`;
     div.onclick = () => {
-      if(isLocked){ alert("🔒 Mois verrouillé (paie validée)"); return; }
+      if(isLocked){ toast("Mois verrouillé");  return; }
       openHours(d);
     };
     cal.appendChild(div);
@@ -1079,7 +858,7 @@ function renderCalendar(){
 }
 
 /* =======================
-   POPUP HEURES MANUELLES
+   POPUP HEURES
 ======================= */
 function openHours(d){
   currentDay = d;
@@ -1094,25 +873,20 @@ function openHours(d){
   document.getElementById("hoursModal").classList.add("open");
 }
 function closeHours(){ document.getElementById("hoursModal").classList.remove("open"); }
-
 function applyHours(h){
   if(h<=0) return;
   DATA[currentKey].days[currentDay] = (DATA[currentKey].days[currentDay]||0)+h;
   save(); renderCalendar(); recalc(); closeHours();
 }
-
 function confirmManual(){
   const input = document.getElementById("manualHours");
   const h = parseFloat(input.value);
-  if(isNaN(h)||h<=0){ alert("⛔ Valeur invalide"); return; }
-  applyHours(h);
-  input.value = "";
+  if(isNaN(h)||h<=0){ toast("Valeur invalide");  return; }
+  applyHours(h); input.value = "";
 }
-
 function deleteDayHours(){
-  if(DATA[currentKey].locked){ alert("🔒 Mois verrouillé"); return; }
-  if(!currentDay||!DATA[currentKey].days[currentDay]){ alert("ℹ️ Aucune heure à supprimer"); return; }
-  if(!confirm(`Supprimer toutes les heures du ${currentDay} ?`)) return;
+  if(DATA[currentKey].locked){ toast("Mois verrouillé");  return; }
+  if(!currentDay||!DATA[currentKey].days[currentDay]){ toast("Aucune heure à supprimer");  return; }
   delete DATA[currentKey].days[currentDay];
   currentDay = null;
   save(); renderCalendar(); recalc(); closeHours();
@@ -1143,7 +917,8 @@ function recalc(){
   const weeks = {};
   Object.entries(DATA).forEach(([monthKey, month]) => {
     Object.entries(month.days||{}).forEach(([d,h]) => {
-      const date = new Date(monthKey.split("-")[0], monthKey.split("-")[1]-1, d);
+      const [y,m] = monthKey.split("-").map(Number);
+      const date  = new Date(y,m-1,d);
       if(date<start||date>end) return;
       const monday = new Date(date);
       const day = monday.getDay()||7;
@@ -1207,8 +982,8 @@ function calcEuro(){
   const h50 = Number(document.getElementById("hours50").textContent)||0;
   const w25 = h25*coef25, w50 = h50*coef50;
   const net = (w25+w50)*rate*netCoef;
-  document.getElementById("euroResult").textContent  = net.toFixed(2)+" €";
-  document.getElementById("euroDetail").innerHTML    = `
+  document.getElementById("euroResult").textContent = net.toFixed(2)+" €";
+  document.getElementById("euroDetail").innerHTML   = `
     ${h25.toFixed(2)} h × ${coef25} = ${w25.toFixed(2)} h<br>
     ${h50.toFixed(2)} h × ${coef50} = ${w50.toFixed(2)} h<br>
     <b>Total pondéré : ${(w25+w50).toFixed(2)} h</b><br>
@@ -1225,17 +1000,15 @@ function save(){
   Object.entries(ALL_DATA).forEach(([year,yd]) => saveYearData(year,yd));
   updateSaveBadge();
 }
-
 function updateSaveBadge(){
   const el  = document.querySelector(".badge.ok");
   if(!el) return;
   const raw = localStorage.getItem(`${STORAGE_PREFIX}_AUTO_SAVE_DATE`);
   const stamp = Number(raw);
   el.textContent = (!stamp||isNaN(stamp))
-    ? "🟢 Sauvegarde locale auto"
-    : "🟢 Sauvegarde locale : "+new Date(stamp).toLocaleString();
+    ? "Sauvegarde locale auto"
+    : "Sauvegarde : "+new Date(stamp).toLocaleString();
 }
-
 function registerYear(year){
   let index = JSON.parse(localStorage.getItem(kIndex())||"[]");
   if(!index.includes(year)){ index.push(year); index.sort(); localStorage.setItem(kIndex(),JSON.stringify(index)); }
@@ -1244,676 +1017,7 @@ function loadYearData(year){ return JSON.parse(localStorage.getItem(kData(year))
 function saveYearData(year,data){ localStorage.setItem(kData(year),JSON.stringify(data)); }
 
 /* =======================
-   ==========================================
-   GÉOLOCALISATION – LOGIQUE COMPLÈTE
-   ==========================================
-======================= */
-
-/**
- * Calcule la distance en mètres entre deux coordonnées GPS (formule Haversine).
- */
-function haversine(lat1, lon1, lat2, lon2){
-  const R  = 6371000; // rayon Terre en mètres
-  const φ1 = lat1 * Math.PI/180;
-  const φ2 = lat2 * Math.PI/180;
-  const Δφ = (lat2-lat1) * Math.PI/180;
-  const Δλ = (lon2-lon1) * Math.PI/180;
-  const a  = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-/**
- * Retourne la clé date locale (YYYY-MM-DD) du jour.
- */
-function todayKey(){
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
-}
-
-// Pas de fenêtre horaire : la notification se déclenche à toute heure
-
-/**
- * Charge la config géo depuis localStorage et met à jour l'UI.
- */
-/* =======================
-   NOTIFICATIONS SYSTÈME
-======================= */
-function requestNotifPermission(){
-  if(!("Notification" in window)) return;
-  if(Notification.permission === "default"){
-    Notification.requestPermission();
-  }
-}
-
-// Réception de l'ordre de pointer depuis la notification cliquée
-if(navigator.serviceWorker){
-  navigator.serviceWorker.addEventListener("message", (event) => {
-    if(event.data?.type === "DO_PUNCH"){
-      recordPunch(event.data.action);
-    }
-  });
-}
-
-// Enregistrement du SW s'il ne l'est pas encore
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("../service-worker.js").catch(()=>{});
-}
-
-function loadGeoConfig(){
-  GEO_CONFIG = JSON.parse(localStorage.getItem(GEO_KEY)||"{}");
-
-  // Remplir les inputs
-  if(GEO_CONFIG.radius)     document.getElementById("geoRadius").value     = GEO_CONFIG.radius;
-  if(GEO_CONFIG.watchEnabled) document.getElementById("geoWatchToggle").checked = true;
-
-  updateGeoLocationLabel();
-  updatePunchBtn();
-  renderGeoTimeline();
-
-  // Reprendre la surveillance si elle était active
-  if(GEO_CONFIG.watchEnabled && GEO_CONFIG.lat){
-    startGeoWatch();
-  }
-}
-
-/**
- * Met à jour le libellé du lieu enregistré.
- */
-function updateGeoLocationLabel(){
-  const el = document.getElementById("geoSavedLocation");
-  if(!el) return;
-  if(GEO_CONFIG.lat && GEO_CONFIG.lng){
-    el.textContent = `📍 ${GEO_CONFIG.lat.toFixed(5)}, ${GEO_CONFIG.lng.toFixed(5)} (enregistré le ${GEO_CONFIG.savedAt||"—"})`;
-    el.style.color = "var(--geo-active)";
-  } else {
-    el.textContent = "Aucun lieu enregistré";
-    el.style.color = "var(--muted)";
-  }
-}
-
-/**
- * Capture la position actuelle comme lieu de travail.
- */
-function captureWorkLocation(){
-  if(!navigator.geolocation){
-    alert("❌ La géolocalisation n'est pas disponible sur cet appareil");
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      GEO_CONFIG.lat     = pos.coords.latitude;
-      GEO_CONFIG.lng     = pos.coords.longitude;
-      GEO_CONFIG.savedAt = new Date().toLocaleString();
-      saveGeoConfig();
-      updateGeoLocationLabel();
-      alert(`✅ Lieu de travail enregistré !\n${GEO_CONFIG.lat.toFixed(5)}, ${GEO_CONFIG.lng.toFixed(5)}`);
-    },
-    err => {
-      alert("❌ Impossible de récupérer ta position :\n"+geoErrorMsg(err));
-    },
-    { enableHighAccuracy:true, timeout:10000 }
-  );
-}
-
-/**
- * Supprime le lieu de travail.
- */
-function clearWorkLocation(){
-  if(!confirm("Supprimer le lieu de travail enregistré ?")) return;
-  delete GEO_CONFIG.lat;
-  delete GEO_CONFIG.lng;
-  delete GEO_CONFIG.savedAt;
-  stopGeoWatch();
-  saveGeoConfig();
-  updateGeoLocationLabel();
-  setGeoStatusUI(false);
-  document.getElementById("geoDistanceBlock").style.display = "none";
-}
-
-/**
- * Enregistre la config et redémarre la surveillance si nécessaire.
- */
-/**
- * Extrait les coordonnées GPS depuis un lien Google Maps ou une saisie directe.
- * Formats supportés :
- *  - https://maps.google.com/?q=48.8566,2.3522
- *  - https://www.google.com/maps/place/.../@48.8566,2.3522,17z/...
- *  - https://maps.app.goo.gl/xxxxx  (lien court — non résolvable sans serveur)
- *  - "48.8566, 2.3522" (saisie directe)
- *  - "48.8566,2.3522"
- */
-function importFromGMaps(){
-  const raw = document.getElementById("gmapsInput").value.trim();
-  if(!raw){ alert("⚠️ Colle un lien ou des coordonnées"); return; }
-
-  let lat = null, lng = null;
-
-  // Format 1 : coordonnées directes "48.8566, 2.3522"
-  const directMatch = raw.match(/^(-?\d+\.\d+)[,\s]+(-?\d+\.\d+)$/);
-  if(directMatch){
-    lat = parseFloat(directMatch[1]);
-    lng = parseFloat(directMatch[2]);
-  }
-
-  // Format 2 : lien Google Maps avec @lat,lng
-  if(!lat){
-    const atMatch = raw.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-    if(atMatch){ lat = parseFloat(atMatch[1]); lng = parseFloat(atMatch[2]); }
-  }
-
-  // Format 3 : ?q=lat,lng
-  if(!lat){
-    const qMatch = raw.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
-    if(qMatch){ lat = parseFloat(qMatch[1]); lng = parseFloat(qMatch[2]); }
-  }
-
-  // Format 4 : /place/.../lat,lng (variante mobile)
-  if(!lat){
-    const placeMatch = raw.match(/\/(-?\d+\.\d+),(-?\d+\.\d+)/);
-    if(placeMatch){ lat = parseFloat(placeMatch[1]); lng = parseFloat(placeMatch[2]); }
-  }
-
-  // Lien court goo.gl — impossible à résoudre sans serveur
-  if(!lat && raw.includes("goo.gl")){
-    alert(
-      "⚠️ Les liens courts Google Maps (goo.gl) ne peuvent pas être décodés directement.\n\n" +
-      "Sur Google Maps :\n" +
-      "1. Maintiens appuyé sur ton lieu de travail\n" +
-      "2. Copie les coordonnées affichées en haut (ex: 48.8566, 2.3522)\n" +
-      "3. Colle-les ici directement"
-    );
-    return;
-  }
-
-  // Validation plausible (France / Europe)
-  if(lat === null || isNaN(lat) || isNaN(lng)){
-    alert(
-      "❌ Impossible d'extraire les coordonnées.\n\n" +
-      "Essaie de coller directement les coordonnées :\n" +
-      "Exemple : 48.8566, 2.3522"
-    );
-    return;
-  }
-
-  GEO_CONFIG.lat     = lat;
-  GEO_CONFIG.lng     = lng;
-  GEO_CONFIG.savedAt = new Date().toLocaleString();
-
-  // Vider le champ
-  document.getElementById("gmapsInput").value = "";
-
-  saveGeoConfig();
-  updateGeoLocationLabel();
-
-  // Lien de vérification
-  const verifyUrl = `https://www.google.com/maps?q=${lat},${lng}`;
-  const ok = confirm(
-    `✅ Coordonnées enregistrées !\n${lat.toFixed(5)}, ${lng.toFixed(5)}\n\nVérifier sur Google Maps ?`
-  );
-  if(ok) window.open(verifyUrl, "_blank");
-}
-
-function onWatchToggle(){
-  const enabled = document.getElementById("geoWatchToggle").checked;
-  GEO_CONFIG.watchEnabled = enabled;
-  GEO_CONFIG.radius = Number(document.getElementById("geoRadius").value) || 200;
-  localStorage.setItem(GEO_KEY, JSON.stringify(GEO_CONFIG));
-
-  if(enabled && GEO_CONFIG.lat){
-    startGeoWatch();
-    showGeoFeedback("Surveillance activée");
-  } else if(enabled && !GEO_CONFIG.lat){
-    alert("⚠️ Enregistre d'abord ton lieu de travail avant d'activer la surveillance.");
-    document.getElementById("geoWatchToggle").checked = false;
-    GEO_CONFIG.watchEnabled = false;
-    localStorage.setItem(GEO_KEY, JSON.stringify(GEO_CONFIG));
-  } else {
-    stopGeoWatch();
-    showGeoFeedback("Surveillance désactivée");
-  }
-}
-
-function saveGeoConfig(){
-  GEO_CONFIG.radius       = Number(document.getElementById("geoRadius").value)||200;
-  GEO_CONFIG.watchEnabled = document.getElementById("geoWatchToggle").checked;
-  localStorage.setItem(GEO_KEY, JSON.stringify(GEO_CONFIG));
-
-  if(GEO_CONFIG.watchEnabled && GEO_CONFIG.lat){
-    startGeoWatch();
-    showGeoFeedback("✅ Surveillance activée");
-  } else {
-    stopGeoWatch();
-    showGeoFeedback("ℹ️ Surveillance désactivée");
-  }
-}
-
-/**
- * Démarre la surveillance de position.
- */
-function startGeoWatch(){
-  if(!navigator.geolocation){
-    alert("❌ La géolocalisation n'est pas disponible sur cet appareil");
-    return;
-  }
-  if(!GEO_CONFIG.lat){
-    alert("⚠️ Enregistre d'abord ton lieu de travail.");
-    return;
-  }
-
-  stopGeoWatch(); // évite les doublons
-  setGeoStatusUI(true);
-
-  // watchPosition natif (le plus précis)
-  geoWatchId = navigator.geolocation.watchPosition(
-    onGeoPosition,
-    err => {
-      console.warn("⚠️ Géo erreur:", err.message);
-      // Fallback polling si watchPosition échoue
-      if(!geoCheckInterval){
-        geoCheckInterval = setInterval(pollGeoPosition, 30000);
-      }
-    },
-    { enableHighAccuracy:true, maximumAge:15000, timeout:20000 }
-  );
-
-  // Polling de sécurité toutes les 30s
-  if(!geoCheckInterval){
-    geoCheckInterval = setInterval(pollGeoPosition, 30000);
-  }
-}
-
-/**
- * Arrête la surveillance.
- */
-function stopGeoWatch(){
-  if(geoWatchId !== null){
-    navigator.geolocation.clearWatch(geoWatchId);
-    geoWatchId = null;
-  }
-  if(geoCheckInterval){
-    clearInterval(geoCheckInterval);
-    geoCheckInterval = null;
-  }
-  setGeoStatusUI(false);
-}
-
-/**
- * Récupère la position en mode polling (fallback).
- */
-function pollGeoPosition(){
-  if(!navigator.geolocation||!GEO_CONFIG.lat) return;
-  navigator.geolocation.getCurrentPosition(
-    onGeoPosition,
-    err => console.warn("Géo poll erreur:", err.message),
-    { enableHighAccuracy:false, timeout:8000 }
-  );
-}
-
-/**
- * Callback principal : traite une position reçue.
- */
-function onGeoPosition(pos){
-  if(!GEO_CONFIG.lat) return;
-
-  const dist = haversine(
-    pos.coords.latitude, pos.coords.longitude,
-    GEO_CONFIG.lat, GEO_CONFIG.lng
-  );
-
-  geoLastDistance = dist;
-  const radius    = GEO_CONFIG.radius || 200;
-  const isNear    = dist <= radius;
-
-  updateDistanceBadge(dist, isNear);
-
-  // Déterminer l'action à proposer
-  if(isNear && !geoIsPunchedIn){
-    // Arrivée dans la zone
-    proposeGeoAction("in", dist);
-  } else if(!isNear && geoIsPunchedIn){
-    // Sortie de la zone
-    proposeGeoAction("out", dist);
-  }
-}
-
-/**
- * Propose une action via le toast (non bloquant).
- */
-let geoActionCooldown = false; // évite de spammer le toast
-
-function proposeGeoAction(type, dist){
-  if(geoToastPending || geoActionCooldown) return;
-
-  geoToastPending   = type;
-  geoActionCooldown = true;
-  setTimeout(() => { geoActionCooldown = false; }, 3*60*1000);
-
-  // ✅ Notification système via SW (Android background + app ouverte)
-  const swReady = navigator.serviceWorker?.controller;
-  const notifOk = Notification.permission === "granted";
-
-  if(swReady && notifOk){
-    navigator.serviceWorker.controller.postMessage({
-      type: "GEO_NOTIFY",
-      action: type,
-      distance: dist
-    });
-  }
-
-  // ✅ Toast visuel toujours affiché (fallback + iOS app ouverte)
-  const toast = document.getElementById("geoToast");
-  const title = document.getElementById("geoToastTitle");
-  const msg   = document.getElementById("geoToastMsg");
-  const btn   = document.getElementById("geoToastConfirm");
-
-  if(type === "in"){
-    title.textContent    = "📍 Tu arrives au travail";
-    msg.textContent      = `À ${Math.round(dist)} m du lieu de travail – Démarrer le pointage ?`;
-    btn.textContent      = "▶ Pointer l'arrivée";
-    btn.style.background = "var(--geo-active)";
-  } else {
-    title.textContent    = "🏁 Tu quittes le travail";
-    msg.textContent      = `Tu t'éloignes (${Math.round(dist)} m) – Enregistrer la sortie ?`;
-    btn.textContent      = "⏹ Pointer la sortie";
-    btn.style.background = "#ff6b6b";
-  }
-
-  toast.classList.add("show");
-  if(geoToastTimer) clearTimeout(geoToastTimer);
-  geoToastTimer = setTimeout(dismissGeoToast, 20000);
-}
-
-/**
- * L'utilisateur confirme l'action proposée.
- */
-function confirmGeoAction(){
-  if(!geoToastPending) return;
-  recordPunch(geoToastPending);
-  dismissGeoToast();
-}
-
-/**
- * Ferme le toast sans action.
- */
-function dismissGeoToast(){
-  geoToastPending = null;
-  if(geoToastTimer){ clearTimeout(geoToastTimer); geoToastTimer=null; }
-  document.getElementById("geoToast").classList.remove("show");
-}
-
-/**
- * Enregistre un pointage (arrivée ou départ) avec timestamp.
- */
-function recordPunch(type){
-  const key   = todayKey();
-  const ts    = new Date().toISOString();
-  const punches = GEO_PUNCHES_DATA[key] || [];
-
-  punches.push({ type, ts });
-  GEO_PUNCHES_DATA[key] = punches;
-  localStorage.setItem(GEO_PUNCHES, JSON.stringify(GEO_PUNCHES_DATA));
-
-  geoIsPunchedIn = (type === "in");
-  updatePunchBtn();
-  renderGeoTimeline();
-  computeAndApplyGeoHours(key);
-  renderCalendar(); // rafraîchit les indicateurs 📍
-  showGeoFeedback(type==="in" ? "✅ Arrivée pointée" : "✅ Sortie pointée");
-}
-
-/**
- * Pointage manuel depuis le bouton principal.
- */
-function manualPunch(){
-  const type = geoIsPunchedIn ? "out" : "in";
-  recordPunch(type);
-}
-
-/**
- * Calcule les heures travaillées depuis les paires in/out du jour
- * et les applique dans le jour courant.
- */
-function computeAndApplyGeoHours(key){
-  const punches = GEO_PUNCHES_DATA[key] || [];
-  let totalMin  = 0;
-  let lastIn    = null;
-
-  punches.forEach(p => {
-    if(p.type==="in"){
-      lastIn = new Date(p.ts);
-    } else if(p.type==="out" && lastIn){
-      totalMin += (new Date(p.ts) - lastIn) / 60000;
-      lastIn = null;
-    }
-  });
-
-  // Paire en cours non fermée : on ne compte pas encore
-  const MIN_MINUTES = 15; // seuil minimum – en dessous ça ne compte pas
-  const totalH = totalMin >= MIN_MINUTES
-    ? Math.floor(totalMin / 15) * 0.25  // arrondi au quart d'heure INFÉRIEUR
-    : 0;
-
-  // Extraire le mois et le jour
-  const [y, m, d] = key.split("-").map(Number);
-  const mk = `${y}-${String(m).padStart(2,"0")}`;
-
-  // S'assurer que la structure existe
-  if(!ALL_DATA[String(y)]) ALL_DATA[String(y)] = {};
-  if(!ALL_DATA[String(y)][mk]) ALL_DATA[String(y)][mk] = { days:{}, paid:0, carry:0, closing:getLastSunday(y,m-1), locked:false };
-
-  // On NE pose pas les heures automatiquement dans le calendrier :
-  // l'utilisateur voit la timeline et valide lui-même via le bouton dédié.
-  // On affiche simplement le total calculé dans la géo-card.
-  const summaryEl = document.getElementById("geoTodaySummary");
-  const hoursEl   = document.getElementById("geoTodayHours");
-  if(summaryEl && hoursEl){
-    if(totalH > 0){
-      hoursEl.textContent     = totalH.toFixed(2)+" h";
-      summaryEl.style.display = "block";
-      summaryEl.style.color   = "var(--muted)";
-    } else if(totalMin > 0 && totalMin < 15){
-      hoursEl.textContent     = "< 15 min — non comptabilisé";
-      summaryEl.style.display = "block";
-      summaryEl.style.color   = "#ff9500";
-    } else {
-      summaryEl.style.display = "none";
-    }
-  }
-}
-
-/**
- * Applique les heures géo du jour dans le calendrier (action volontaire).
- */
-function applyGeoHoursToCalendar(){
-  const key = todayKey();
-  const [y, m, d] = key.split("-").map(Number);
-  const mk = `${y}-${String(m).padStart(2,"0")}`;
-
-  if(!ALL_DATA[String(y)]?.[mk]) return;
-
-  const punches = GEO_PUNCHES_DATA[key] || [];
-  let totalMin  = 0, lastIn = null;
-
-  punches.forEach(p => {
-    if(p.type==="in") lastIn = new Date(p.ts);
-    else if(p.type==="out" && lastIn){ totalMin += (new Date(p.ts)-lastIn)/60000; lastIn=null; }
-  });
-
-  const MIN_MINUTES = 15;
-  if(totalMin > 0 && totalMin < MIN_MINUTES){
-    alert("⚠️ Session trop courte ("+Math.round(totalMin)+" min)\nLe minimum est 15 minutes pour être comptabilisé.");
-    return;
-  }
-  const totalH = Math.floor(totalMin/15)*0.25;
-  if(totalH<=0){ alert("⚠️ Aucune heure complète à reporter (pointage de sortie manquant ?)"); return; }
-
-  ALL_DATA[String(y)][mk].days[d] = totalH;
-  DATA = ALL_DATA[String(y)];
-  save(); renderCalendar(); recalc();
-  showGeoFeedback(`✅ ${totalH.toFixed(2)} h reportées dans le calendrier`);
-}
-
-/**
- * Affiche la timeline des pointages du jour dans la carte géo.
- */
-function renderGeoTimeline(){
-  const timeline = document.getElementById("punchTimeline");
-  if(!timeline) return;
-
-  const key     = todayKey();
-  const punches = GEO_PUNCHES_DATA[key] || [];
-
-  if(punches.length === 0){
-    timeline.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:8px 0">Aucun pointage aujourd'hui</div>`;
-    updatePunchBtn();
-    return;
-  }
-
-  let lastIn = null, html = "";
-  let totalMin = 0;
-
-  punches.forEach(p => {
-    const t = new Date(p.ts);
-    const fmt = t.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-    if(p.type==="in"){
-      lastIn = t;
-      html += `<div class="punch-entry in">▶ Arrivée <span class="punch-hours">${fmt}</span></div>`;
-    } else {
-      if(lastIn) totalMin += (t-lastIn)/60000;
-      lastIn = null;
-      html += `<div class="punch-entry out">⏹ Départ  <span class="punch-hours">${fmt}</span></div>`;
-    }
-  });
-
-  if(totalMin > 0){
-    const h = Math.floor(totalMin/60);
-    const m = Math.round(totalMin%60);
-    const valid = totalMin >= 15;
-    html += `<div style="font-size:12px;color:${valid?"var(--geo-active)":"#ff9500"};margin-top:6px;padding:4px 0">
-      ${valid
-        ? "⏱ Total validé : <b>"+h+"h"+(m>0?m+"min":"")+"</b>"
-        : "⚠️ "+Math.round(totalMin)+" min – minimum 15 min requis"}
-    </div>`;
-  }
-
-  // Bouton "Reporter dans le calendrier"
-  if(punches.some(p=>p.type==="out")){
-    html += `<button onclick="applyGeoHoursToCalendar()" style="
-      background:#1b3a2a;
-      color:var(--geo-active);
-      border:1px solid var(--geo-active);
-      font-size:13px;
-      margin-top:8px
-    ">📥 Reporter les heures dans le calendrier</button>`;
-  }
-
-  // Bouton réinitialiser pointages du jour
-  html += `<button class="secondary" onclick="clearTodayPunches()" style="font-size:12px;margin-top:6px">
-    🗑️ Réinitialiser les pointages du jour
-  </button>`;
-
-  timeline.innerHTML = html;
-
-  // Mettre à jour état punchedIn
-  const lastPunch = punches[punches.length-1];
-  geoIsPunchedIn  = lastPunch?.type === "in";
-  updatePunchBtn();
-  computeAndApplyGeoHours(key);
-}
-
-/**
- * Réinitialise les pointages du jour en cours.
- */
-function clearTodayPunches(){
-  if(!confirm("Supprimer tous les pointages d'aujourd'hui ?")) return;
-  delete GEO_PUNCHES_DATA[todayKey()];
-  localStorage.setItem(GEO_PUNCHES, JSON.stringify(GEO_PUNCHES_DATA));
-  geoIsPunchedIn = false;
-  renderGeoTimeline();
-  renderCalendar();
-  document.getElementById("geoTodaySummary").style.display = "none";
-  showGeoFeedback("🗑️ Pointages supprimés");
-}
-
-/**
- * Met à jour le bouton pointage principal selon l'état.
- */
-function updatePunchBtn(){
-  const btn = document.getElementById("punchBtn");
-  if(!btn) return;
-  if(geoIsPunchedIn){
-    btn.textContent = "⏹ Pointer la sortie";
-    btn.className   = "punch-btn stop";
-  } else {
-    btn.textContent = "▶ Pointer l'arrivée";
-    btn.className   = "punch-btn start";
-  }
-}
-
-/**
- * Met à jour le badge de distance en temps réel.
- */
-function updateDistanceBadge(dist, isNear){
-  const block = document.getElementById("geoDistanceBlock");
-  const badge = document.getElementById("geoDistanceBadge");
-  if(!block||!badge) return;
-  block.style.display = "block";
-  const d = dist < 1000 ? Math.round(dist)+"m" : (dist/1000).toFixed(1)+"km";
-  badge.textContent = isNear ? `Sur place – ${d}` : `A ${d} du lieu`;
-  badge.className   = "geo-distance-badge " + (isNear ? "near" : "far");
-}
-
-/**
- * Met à jour l'UI de statut géo (point lumineux, labels).
- */
-function setGeoStatusUI(active){
-  const dot   = document.getElementById("geoDot");
-  const label = document.getElementById("geoStatusLabel");
-  const radar = document.getElementById("geoRadar");
-  const card  = document.getElementById("geoCard");
-  if(!dot) return;
-  dot.className     = "geo-status-dot" + (active ? " active" : "");
-  label.textContent = active ? "Surveillance active" : "Inactif";
-  if(radar) radar.style.display = active ? "block" : "none";
-  if(card)  card.classList.toggle("pointed-in", geoIsPunchedIn);
-}
-
-/**
- * Affiche un message de feedback court (toast léger).
- */
-function showGeoFeedback(msg){
-  const el = document.createElement("div");
-  el.style.cssText = `
-    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-    background:#1c1f26;border:1px solid #2a3040;color:var(--text);
-    padding:10px 18px;border-radius:20px;font-size:13px;z-index:9998;
-    transition:opacity .4s;pointer-events:none;
-  `;
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(()=>{ el.style.opacity="0"; setTimeout(()=>el.remove(),400); },2000);
-}
-
-/**
- * Message d'erreur géolocalisation.
- */
-function geoErrorMsg(err){
-  if(err.code===1) return "Permission refusée. Autorise la localisation dans les réglages.";
-  if(err.code===2) return "Position indisponible. Vérifie le GPS.";
-  if(err.code===3) return "Délai dépassé. Réessaie dans un endroit dégagé.";
-  return err.message;
-}
-
-/**
- * Bascule l'affichage du panneau de config.
- */
-function toggleGeoConfig(){
-  const p = document.getElementById("geoConfigPanel");
-  p.style.display = p.style.display==="none" ? "block" : "none";
-}
-
-/* =======================
-   SÉCURITÉ – CODE EURO
+   CODE EURO
 ======================= */
 async function sha256(str){
   const buf  = new TextEncoder().encode(str);
@@ -1933,13 +1037,13 @@ async function unlockEuro(){
     document.getElementById("euroBox").classList.remove("blur");
     document.getElementById("unlockCode").value = "";
     recalc();
-    if(input==="1234") alert("⚠️ Pense à changer le code par défaut");
+    if(input==="1234") toast("Pense à changer le code par défaut");
   } else {
-    alert("❌ Code incorrect");
+    toast("Code incorrect"); 
   }
 }
 function toggleChangeCode(){
-  if(!unlocked){ alert("🔒 Déverrouille d'abord la zone €"); return; }
+  if(!unlocked){ toast("Déverrouille d'abord la zone €");  return; }
   const box = document.getElementById("changeCodeBox");
   box.style.display = box.style.display==="none" ? "block" : "none";
 }
@@ -1947,13 +1051,23 @@ async function changeCode(){
   const old  = document.getElementById("oldCode").value;
   const nw   = document.getElementById("newCode").value;
   const conf = document.getElementById("confirmCode").value;
-  if(await sha256(old) !== await getSecureCode()){ alert("❌ Ancien code incorrect"); return; }
-  if(nw.length<4){ alert("⛔ Code trop court (4 chiffres min)"); return; }
-  if(nw!==conf){ alert("❌ Les deux nouveaux codes ne correspondent pas"); return; }
+  if(await sha256(old) !== await getSecureCode()){ toast("Ancien code incorrect");  return; }
+  if(nw.length<4){ toast("Code trop court (4 chiffres min)");  return; }
+  if(nw!==conf){ toast("Codes ne correspondent pas");  return; }
   localStorage.setItem(kCode(), await sha256(nw));
-  alert("✅ Code modifié");
+  toast("Code modifié avec succès"); 
   document.getElementById("changeCodeBox").style.display="none";
 }
+
+/* =======================
+   PARAMÈTRES €
+======================= */
+["rate","coef25","coef50","coefNet"].forEach(id=>{
+  const defaults={rate:10,coef25:1.25,coef50:1.50,coefNet:0.93};
+  const input=document.getElementById(id);
+  input.value=SETTINGS[id]??defaults[id];
+  input.oninput=()=>{ SETTINGS[id]=parseFloat(input.value)||0; localStorage.setItem(kSettings(),JSON.stringify(SETTINGS)); recalc(); };
+});
 
 /* =======================
    EXPORT / IMPORT
@@ -1963,24 +1077,21 @@ function prepareExport(){
   recalcCascade();
   saveYearData(getYearFromMonth(currentKey), ALL_DATA[getYearFromMonth(currentKey)]);
 }
-
 function exportJSON(){
   prepareExport();
-  const year    = getYearFromMonth(currentKey);
+  const year = getYearFromMonth(currentKey);
   const payload = {
-    exportedAt: new Date().toISOString(),
-    year, appVersion:APP_VERSION, dataVersion:DATA_VERSION,
-    DATA, SETTINGS,
-    GEO_PUNCHES: GEO_PUNCHES_DATA // ✅ export des pointages aussi
+    exportedAt:new Date().toISOString(), year,
+    appVersion:APP_VERSION, dataVersion:DATA_VERSION,
+    DATA, SETTINGS
   };
   const blob = new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
-  const a    = document.createElement("a");
-  a.href     = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
   a.download = "heures_sup_backup_"+Date.now()+".json";
   a.click();
   document.getElementById("fileDate").textContent = new Date().toLocaleDateString();
 }
-
 function importJSONFile(e){
   const file = e.target.files[0];
   if(!file) return;
@@ -1989,12 +1100,12 @@ function importJSONFile(e){
     createSnapshot("before_import");
     let payload;
     try{ payload=JSON.parse(reader.result); }
-    catch{ alert("❌ Fichier JSON invalide"); return; }
+    catch{ toast("Fichier JSON invalide"); return; }
     if(typeof payload!=="object"||typeof payload.DATA!=="object"||!payload.year){
-      alert("❌ Structure du fichier invalide"); return;
+      toast("Structure du fichier invalide"); return;
     }
     const year = String(payload.year);
-    if(!/^\d{4}$/.test(year)){ alert("❌ Année invalide"); return; }
+    if(!/^\d{4}$/.test(year)){ toast("Année invalide"); return; }
     registerYear(year);
     const existing = loadYearData(year);
     let imported=0, repaired=0;
@@ -2009,15 +1120,10 @@ function importJSONFile(e){
     });
     saveYearData(year,existing);
     ALL_DATA[year]=existing;
-    // Import pointages géo si présents
-    if(payload.GEO_PUNCHES && typeof payload.GEO_PUNCHES==="object"){
-      Object.assign(GEO_PUNCHES_DATA, payload.GEO_PUNCHES);
-      localStorage.setItem(GEO_PUNCHES, JSON.stringify(GEO_PUNCHES_DATA));
-    }
     recalcCascade();
     DATA=ALL_DATA[getYearFromMonth(currentKey)];
     loadMonth();
-    alert(`✅ Import terminé\nAnnée : ${year}\nMois importés : ${imported}${repaired?"\nMois réparés : "+repaired:""}`);
+    toast(`Import OK — ${imported} mois importés`);
   };
   reader.readAsText(file);
   e.target.value="";
@@ -2032,47 +1138,27 @@ function exportMonthlyPDF(){
   const { start,end } = getPeriodBounds(currentKey);
   const paid = month.paid||0;
   const prevCarry = getPreviousCarry(currentKey);
-  let yPos=15;
-  pdf.setFontSize(14);
-  pdf.text("Récapitulatif mensuel – Heures supplémentaires",10,yPos); yPos+=8;
-  pdf.setFontSize(11);
-  pdf.text(`Période comptable : ${formatDate(start)} → ${formatDate(end)}`,10,yPos); yPos+=10;
-  pdf.text(`Report précédent : ${prevCarry.toFixed(2)} h`,10,yPos); yPos+=6;
-  pdf.text(`Heures période : ${document.getElementById("totalMonth").textContent} h`,10,yPos); yPos+=6;
-  pdf.text(`Heures payées : ${paid.toFixed(2)} h`,10,yPos); yPos+=6;
-  pdf.text(`Reliquat final : ${(month.carry||0).toFixed(2)} h`,10,yPos); yPos+=12;
-
-  // Pointages géo du mois
-  const key = todayKey();
-  const punches = GEO_PUNCHES_DATA[key]||[];
-  if(punches.length>0){
-    pdf.setFontSize(11); pdf.text("Pointages géolocalisés du jour :",10,yPos); yPos+=6;
-    pdf.setFontSize(9);
-    punches.forEach(p=>{
-      const t=new Date(p.ts).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-      pdf.text(`${p.type==="in"?"▶":"⏹"} ${t}`,12,yPos); yPos+=5;
-    });
-    yPos+=4;
-  }
-
-  pdf.setFontSize(9);
-  pdf.text("Document personnel – valeurs indicatives – ne constitue pas un bulletin de paie",10,yPos);
+  let y=15;
+  pdf.setFontSize(14); pdf.text("Récapitulatif mensuel – Heures supplémentaires",10,y); y+=8;
+  pdf.setFontSize(11); pdf.text(`Période : ${formatDate(start)} → ${formatDate(end)}`,10,y); y+=10;
+  pdf.text(`Report précédent : ${prevCarry.toFixed(2)} h`,10,y); y+=6;
+  pdf.text(`Heures période : ${document.getElementById("totalMonth").textContent} h`,10,y); y+=6;
+  pdf.text(`Heures payées : ${paid.toFixed(2)} h`,10,y); y+=6;
+  pdf.text(`Reliquat final : ${(month.carry||0).toFixed(2)} h`,10,y); y+=12;
+  pdf.setFontSize(9); pdf.text("Document personnel – valeurs indicatives",10,y);
   pdf.save(`heures_mensuelles_${currentKey}.pdf`);
 }
-
 function exportAnnualPDF(){
   prepareExport();
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF();
   const mths = Object.keys(DATA).filter(k=>/^\d{4}-\d{2}$/.test(k)).sort();
-  let yPos=15;
-  pdf.setFontSize(14); pdf.text("Bilan annuel – Heures supplémentaires",10,yPos); yPos+=10;
-  pdf.setFontSize(10);
-  pdf.text("Mois",10,yPos); pdf.text("Carry fin",80,yPos); yPos+=6;
-  mths.forEach(key=>{ const m=DATA[key]; pdf.text(key,10,yPos); pdf.text((m.carry||0).toFixed(2)+" h",80,yPos); yPos+=6; });
-  pdf.save(`bilan_annuel_heures_sup_${mths[0]?.slice(0,4)||""}.pdf`);
+  let y=15;
+  pdf.setFontSize(14); pdf.text("Bilan annuel – Heures supplémentaires",10,y); y+=10;
+  pdf.setFontSize(10); pdf.text("Mois",10,y); pdf.text("Carry fin",80,y); y+=6;
+  mths.forEach(key=>{ const m=DATA[key]; pdf.text(key,10,y); pdf.text((m.carry||0).toFixed(2)+" h",80,y); y+=6; });
+  pdf.save(`bilan_annuel_${mths[0]?.slice(0,4)||""}.pdf`);
 }
-
 function formatDate(d){ return d.toLocaleDateString("fr-FR"); }
 
 /* =======================
@@ -2089,30 +1175,22 @@ function createSnapshot(reason="auto",force=false){
     snaps.unshift({ date:new Date().toISOString(),reason,currentKey,DATA:JSON.parse(JSON.stringify(ALL_DATA)),SETTINGS });
     snaps.splice(SNAP_LIMIT);
     localStorage.setItem(SNAP_KEY,JSON.stringify(snaps));
-  }catch(e){ console.warn("⚠️ Snapshot échoué",e); }
+  }catch(e){ console.warn("Snapshot échoué",e); }
 }
-function openRecovery(){
-  document.getElementById("recoveryModal").classList.add("open");
-  renderSnapshots();
-}
-function recoverAuto(){
-  attemptAutoRecovery();
-  localStorage.removeItem("CA_HS_RECOVERY_MODE");
-  alert("✅ Réparation effectuée. L'application va redémarrer.");
-  location.reload();
-}
+function openRecovery(){ document.getElementById("recoveryModal").classList.add("open"); renderSnapshots(); }
+function recoverAuto(){ attemptAutoRecovery(); localStorage.removeItem("CA_HS_RECOVERY_MODE"); toast("Réparation effectuée"); location.reload(); }
 function recoverSoftReset(){ localStorage.removeItem("CA_HS_RECOVERY_MODE"); location.reload(); }
 function recoverFactory(){
   createSnapshot("factory_reset",true);
-  if(!confirm("⚠️ Supprimer TOUTES les données locales ?")) return;
+  // confirm() non supporté iOS PWA — action directe
   Object.keys(localStorage).filter(k=>k.startsWith(STORAGE_PREFIX)).forEach(k=>localStorage.removeItem(k));
   location.reload();
 }
 function restoreSnapshot(index){
   const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||"[]");
-  if(!snaps[index]){ alert("❌ Snapshot introuvable"); return; }
+  if(!snaps[index]){ toast("Snapshot introuvable");  return; }
   const snap=snaps[index];
-  if(!confirm(`Restaurer l'état du ${new Date(snap.date).toLocaleString()} ?`)) return;
+  // pas de confirm iOS PWA
   ALL_DATA=snap.DATA; SETTINGS=snap.SETTINGS||{};
   Object.entries(ALL_DATA).forEach(([year,data])=>saveYearData(year,data));
   localStorage.setItem(kSettings(),JSON.stringify(SETTINGS));
@@ -2120,34 +1198,30 @@ function restoreSnapshot(index){
   location.reload();
 }
 function attemptAutoRecovery(){
-  let repaired=false;
   try{
     const index=JSON.parse(localStorage.getItem(kIndex())||"[]");
     index.forEach(year=>{
       let data;
       try{ data=loadYearData(year); }
-      catch(e){ localStorage.removeItem(kData(year)); repaired=true; return; }
+      catch(e){ localStorage.removeItem(kData(year)); return; }
       Object.entries(data).forEach(([mk,month])=>{
         if(!month.days) month.days={};
         if(typeof month.paid!=="number") month.paid=0;
         if(typeof month.carry!=="number") month.carry=0;
         const [y,m]=mk.split("-").map(Number);
-        if(!month.closing||new Date(y,m-1,month.closing).getDay()!==0){
-          month.closing=getLastSunday(y,m-1); repaired=true;
-        }
+        if(!month.closing||new Date(y,m-1,month.closing).getDay()!==0) month.closing=getLastSunday(y,m-1);
       });
       saveYearData(year,data);
     });
-  }catch(e){ return false; }
-  return repaired;
+  }catch(e){}
 }
 function renderSnapshots(){
   const list=document.getElementById("snapshotList");
   if(!list) return;
   const snaps=JSON.parse(localStorage.getItem(SNAP_KEY)||"[]");
   list.innerHTML=snaps.length
-    ? snaps.map((s,i)=>`<button onclick="restoreSnapshot(${i})">📸 ${new Date(s.date).toLocaleString()} – ${s.reason}</button>`).join("")
-    : "<p style='font-size:12px;color:#aaa'>Aucun snapshot</p>";
+    ? snaps.map((s,i)=>`<button onclick="restoreSnapshot(${i})">Snapshot ${new Date(s.date).toLocaleString()} – ${s.reason}</button>`).join("")
+    : "<p style='font-size:12px;color:var(--muted)'>Aucun snapshot</p>";
 }
 
 /* =======================
@@ -2157,16 +1231,6 @@ function acceptLegal(){ localStorage.setItem("LEGAL_OK","1"); document.getElemen
 function closeOnboarding(){ localStorage.setItem("ONBOARDING_DONE","1"); document.getElementById("onboardingModal").classList.remove("open"); }
 function openTutorial(){ document.getElementById("tutorialModal").classList.add("open"); }
 function closeTutorial(){ document.getElementById("tutorialModal").classList.remove("open"); }
-
-/* =======================
-   PARAMÈTRES €
-======================= */
-["rate","coef25","coef50","coefNet"].forEach(id=>{
-  const defaults={rate:10,coef25:1.25,coef50:1.50,coefNet:0.93};
-  const input=document.getElementById(id);
-  input.value=SETTINGS[id]??defaults[id];
-  input.oninput=()=>{ SETTINGS[id]=parseFloat(input.value)||0; localStorage.setItem(kSettings(),JSON.stringify(SETTINGS)); recalc(); };
-});
 
 /* =======================
    ANTI-CRASH
@@ -2182,21 +1246,21 @@ window.addEventListener("unhandledrejection",e=>{
   handleFatalError({type:"PROMISE_REJECTION",message:e.reason?.message||String(e.reason),stack:e.reason?.stack});
 });
 function handleFatalError(err){
-  console.error("💥",err);
+  console.error("ERREUR",err);
   localStorage.setItem("CA_HS_RECOVERY_MODE","1");
   if(document.getElementById("crashOverlay")) return;
   const o=document.createElement("div");
   o.id="crashOverlay";
-  o.style="position:fixed;inset:0;background:#0f1115;color:#fff;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center";
-  o.innerHTML=`<h2>⚠️ Une erreur est survenue</h2><p style="opacity:.8;font-size:14px">L'application a rencontré un problème inattendu.<br>Aucune donnée n'a été supprimée.</p>
-    <button onclick="location.reload()" style="margin-top:15px;padding:12px 20px;border-radius:8px;border:none;background:#4f8cff;color:white;font-size:15px">🔄 Recharger</button>`;
+  o.style="position:fixed;inset:0;background:var(--bg);color:var(--text);z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px;text-align:center";
+  o.innerHTML=`<h2>Une erreur est survenue</h2><p style="opacity:.8;font-size:14px">Aucune donnée n'a été supprimée.</p>
+    <button onclick="location.reload()" style="margin-top:15px;padding:12px 20px;border-radius:8px;border:none;background:var(--accent);color:white;font-size:15px">Recharger</button>`;
   document.body.appendChild(o);
 }
 
-recalc        = safe(recalc);
-renderCalendar= safe(renderCalendar);
-loadMonth     = safe(loadMonth);
-save          = safe(save);
+recalc         = safe(recalc);
+renderCalendar = safe(renderCalendar);
+loadMonth      = safe(loadMonth);
+save           = safe(save);
 
 /* =======================
    DEBUG
@@ -2204,9 +1268,7 @@ save          = safe(save);
 function simulateCrash(){ handleFatalError({type:"SIMULATED_CRASH",message:"Crash simulé"}); }
 function closeDebugGate(){ document.getElementById("debugGate").classList.remove("open"); }
 function validateDebugAccess(){
-  const input=document.getElementById("debugCode").value;
-  if(input!=="1234"){ alert("❌ Code incorrect"); return; }
-  alert("🧪 Test de crash requis.");
+  if(document.getElementById("debugCode").value!=="1234"){ toast("Code incorrect");  return; }
   localStorage.setItem("CA_DEBUG","1");
   simulateCrash();
 }
@@ -2214,158 +1276,8 @@ window.addEventListener("DOMContentLoaded",()=>{
   const dbg=document.getElementById("debugTrigger");
   if(dbg) dbg.addEventListener("click",()=>document.getElementById("debugGate").classList.add("open"));
 });
-(function enableDebugIfNeeded(){
-  if(localStorage.getItem("CA_DEBUG")==="1"){
-    document.querySelectorAll(".debug-only").forEach(el=>el.style.display="block");
-  }
-})();
 
 function goMenu(){ localStorage.removeItem("lastApp"); window.location.href="../menu.html"; }
-
-/* =======================
-   HISTORIQUE GEO
-======================= */
-function openGeoHistory(){
-  populateGeoHistoryMonths();
-  renderGeoHistory();
-  document.getElementById("geoHistoryModal").classList.add("open");
-}
-
-function closeGeoHistory(){
-  document.getElementById("geoHistoryModal").classList.remove("open");
-}
-
-function populateGeoHistoryMonths(){
-  const sel = document.getElementById("geoHistoryMonth");
-  sel.innerHTML = "";
-
-  // Collecter tous les mois qui ont des pointages
-  const months = new Set();
-  Object.keys(GEO_PUNCHES_DATA).forEach(dateKey => {
-    months.add(dateKey.slice(0,7));
-  });
-
-  // Ajouter le mois courant même sans pointages
-  months.add(new Date().toISOString().slice(0,7));
-
-  Array.from(months).sort().reverse().forEach(m => {
-    const opt = document.createElement("option");
-    opt.value = m;
-    const [y, mo] = m.split("-");
-    const label = new Date(y, mo-1, 1).toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
-    opt.textContent = label.charAt(0).toUpperCase() + label.slice(1);
-    if(m === currentKey) opt.selected = true;
-    sel.appendChild(opt);
-  });
-}
-
-function renderGeoHistory(){
-  const sel      = document.getElementById("geoHistoryMonth");
-  const monthKey = sel.value;
-  const [y, m]   = monthKey.split("-").map(Number);
-  const container = document.getElementById("geoHistoryContent");
-
-  // Filtrer les jours du mois sélectionné
-  const days = Object.entries(GEO_PUNCHES_DATA)
-    .filter(([k]) => k.startsWith(monthKey))
-    .sort(([a],[b]) => b.localeCompare(a)); // plus récent en premier
-
-  if(days.length === 0){
-    container.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">
-      Aucun pointage ce mois
-    </div>`;
-    return;
-  }
-
-  // Résumé mensuel
-  let totalMonthMin = 0;
-  let totalSessions = 0;
-
-  let html = "";
-
-  days.forEach(([dateKey, punches]) => {
-    const date = new Date(dateKey);
-    const dateLabel = date.toLocaleDateString("fr-FR",{
-      weekday:"long", day:"numeric", month:"long"
-    });
-
-    // Calcul durée du jour
-    let dayMin = 0, lastIn = null;
-    let pairsCount = 0;
-
-    punches.forEach(p => {
-      if(p.type==="in")  lastIn = new Date(p.ts);
-      else if(p.type==="out" && lastIn){
-        dayMin += (new Date(p.ts) - lastIn) / 60000;
-        lastIn  = null;
-        pairsCount++;
-      }
-    });
-
-    const isValid   = dayMin >= 15;
-    const dayH      = isValid ? Math.floor(dayMin/15)*0.25 : 0;
-    const dayClass  = dayMin === 0 ? "" : isValid ? "has-hours" : "short-session";
-
-    totalMonthMin  += isValid ? dayMin : 0;
-    if(isValid) totalSessions++;
-
-    // Ligne de pointages
-    let punchLines = punches.map(p => {
-      const t   = new Date(p.ts).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
-      const cls = p.type === "in" ? "in" : "out";
-      const ico = p.type === "in" ? "▶" : "⏹";
-      return `<div class="geo-history-punch ${cls}">${ico} ${t}</div>`;
-    }).join("");
-
-    // Total du jour
-    let totalLine = "";
-    if(dayMin > 0){
-      if(isValid){
-        const h = Math.floor(dayH), q = Math.round((dayH%1)*60);
-        totalLine = `<div class="geo-history-total">⏱ ${h}h${q>0?q+"min":""} comptabilisé</div>`;
-      } else {
-        totalLine = `<div class="geo-history-total too-short">⚠️ ${Math.round(dayMin)} min — non comptabilisé (< 15 min)</div>`;
-      }
-    }
-
-    // Bouton supprimer le jour
-    const delBtn = `<button onclick="deleteGeoDay('${dateKey}')" style="
-      background:none;border:none;color:#555;font-size:11px;
-      width:auto;padding:2px 6px;margin-top:4px;cursor:pointer
-    ">🗑️ Supprimer</button>`;
-
-    html += `<div class="geo-history-day ${dayClass}">
-      <div class="geo-history-date">${dateLabel.charAt(0).toUpperCase()+dateLabel.slice(1)}</div>
-      ${punchLines}
-      ${totalLine}
-      ${delBtn}
-    </div>`;
-  });
-
-  // Résumé en haut
-  const totalH   = Math.floor(totalMonthMin/15)*0.25;
-  const th       = Math.floor(totalH);
-  const tq       = Math.round((totalH%1)*60);
-  const summaryH = totalH > 0 ? `${th}h${tq>0?tq+"min":""}` : "0h";
-
-  container.innerHTML = `
-    <div style="background:#1a2535;border-radius:8px;padding:12px;margin-bottom:14px;font-size:13px">
-      <div style="color:var(--muted)">Ce mois</div>
-      <div style="font-size:20px;font-weight:bold;color:var(--geo-active);margin:4px 0">${summaryH}</div>
-      <div style="color:var(--muted);font-size:12px">${totalSessions} session${totalSessions>1?"s":""} comptabilisée${totalSessions>1?"s":""}</div>
-    </div>
-    ${html}
-  `;
-}
-
-function deleteGeoDay(dateKey){
-  if(!confirm(`Supprimer tous les pointages du ${new Date(dateKey).toLocaleDateString("fr-FR")} ?`)) return;
-  delete GEO_PUNCHES_DATA[dateKey];
-  localStorage.setItem(GEO_PUNCHES, JSON.stringify(GEO_PUNCHES_DATA));
-  renderGeoHistory();
-  renderCalendar();
-  showGeoFeedback("🗑️ Pointages supprimés");
-}
 
 /* =======================
    DÉMARRAGE
