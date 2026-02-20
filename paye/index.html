@@ -10,6 +10,12 @@
 <meta charset="UTF-8">
 <title>Simulateur d'heures mensualisé</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function(){
+  const t = localStorage.getItem("CA_THEME") || "dark";
+  if(t === "light") document.documentElement.classList.add("light-theme");
+})();
+</script>
 <style>
 /* =======================
    THÈME – VARIABLES
@@ -89,6 +95,20 @@ body.light #versionBadge { color: var(--muted); }
 /* =======================
 BASE
 ======================= */
+html {
+background: var(–bg);
+}
+html.light-theme {
+–bg: #f4f6f9;
+–card: #ffffff;
+–text: #1a1a2e;
+–muted: #555;
+–accent: #2255cc;
+–danger: #c0392b;
+–success: #1a8a4a;
+–border: #ddd;
+–input-bg: #eef0f4;
+}
 body {
 margin: 0;
 background: var(–bg);
@@ -393,7 +413,7 @@ pointer-events: none;
 
 <div class="topbar">
   <button onclick="openTutorial()">? Tutoriel</button>
-  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Clair</button>
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Mode sombre</button>
 </div>
 
 <div class="main">
@@ -616,10 +636,12 @@ function initTheme(){
 function applyTheme(theme, save=true){
   if(theme === "light"){
     document.body.classList.add("light");
-    document.getElementById("themeBtn").textContent = "🌙 Sombre";
+    document.documentElement.classList.add("light-theme");
+    document.getElementById("themeBtn").textContent = "☀️ Mode clair";
   } else {
     document.body.classList.remove("light");
-    document.getElementById("themeBtn").textContent = "☀️ Clair";
+    document.documentElement.classList.remove("light-theme");
+    document.getElementById("themeBtn").textContent = "🌙 Mode sombre";
   }
   if(save) localStorage.setItem("CA_THEME", theme);
 }
