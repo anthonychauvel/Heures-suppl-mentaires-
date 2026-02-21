@@ -2,12 +2,18 @@
 <html lang="fr">
 <head>
  <link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/hs/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="/hs/apple-touch-icon.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Compteur Heures & Paie">
 <meta name="theme-color" content="#4FB3C2">
 <meta charset="UTF-8">
-<title>Simulateur d’heures mensualisé</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
-/* Bouton Kitsune → M3 */
+<title>Simulateur d’heures mensualisé</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+ /* Bouton Kitsune → M3 */
 .kitsune-btn {
   flex: 1;
   padding: 8px 16px;
@@ -235,34 +241,38 @@ input[type="number"]{
   border-style: solid;
 }
 
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head><body>
-<div class="top-nav-bar">
+</style>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+  <div class="top-nav-bar">
   <button class="menu-btn" onclick="goMenu()">⬅ Retour au menu</button>
   <button class="kitsune-btn" onclick="window.location.href='../fox/index.html'" title="Ouvrir FOX Engine">🦊 Kitsune</button>
-</div><div class="modal" id="debugGate">
+</div>
+
+  <div class="modal" id="debugGate">
   <div class="modal-content">
     <h3>🧪 Accès debug sécurisé</h3>
 
-<p style="font-size:14px">
-  Avant toute intervention, un <b>test de crash</b> est obligatoire.
-</p>
+    <p style="font-size:14px">
+      Avant toute intervention, un <b>test de crash</b> est obligatoire.
+    </p>
 
-<input
-  type="password"
-  id="debugCode"
-  placeholder="Code requis (1234)"
->
+    <input
+      type="password"
+      id="debugCode"
+      placeholder="Code requis (1234)"
+    >
 
-<button class="danger" onclick="validateDebugAccess()">
-  💥 Tester le crash maintenant
-</button>
+    <button class="danger" onclick="validateDebugAccess()">
+      💥 Tester le crash maintenant
+    </button>
 
-<button class="secondary" onclick="closeDebugGate()">
-  Annuler
-</button>
-
-
-</div>
+    <button class="secondary" onclick="closeDebugGate()">
+      Annuler
+    </button>
+  </div>
 </div>
 <div class="modal" id="recoveryModal">
   <div class="modal-content">
@@ -273,19 +283,24 @@ input[type="number"]{
       L’application a détecté un problème lors du dernier démarrage.
     </p>
 
-<button onclick="recoverAuto()">🔄 Réparation automatique</button>
-<button class="secondary" onclick="recoverSoftReset()">♻️ Réinitialiser l’interface</button>
-<button class="danger" onclick="recoverFactory()">🧨 Réinitialisation complète</button>
+    <button onclick="recoverAuto()">🔄 Réparation automatique</button>
+    <button class="secondary" onclick="recoverSoftReset()">♻️ Réinitialiser l’interface</button>
+    <button class="danger" onclick="recoverFactory()">🧨 Réinitialisation complète</button>
 
-<p style="font-size:12px;color:#aaa;margin-top:10px">
-  ⚠️ La réinitialisation complète supprime les données locales.
-</p>
-
-
+    <p style="font-size:12px;color:#aaa;margin-top:10px">
+      ⚠️ La réinitialisation complète supprime les données locales.
+    </p>
+  </div>
 </div>
-</div><!-- le reste de ton compteur ici --><div class="topbar">
+
+<!-- le reste de ton compteur ici -->
+<div class="topbar">
   <button onclick="openTutorial()">❓ Tutoriel</button>
-</div><div class="main"><h1>⏱️ Heures supplémentaires</h1>
+</div>
+
+<div class="main">
+
+  <h1>⏱️ Heures supplémentaires</h1>
 <p style="
   text-align:center;
   font-size:14px;
@@ -301,7 +316,11 @@ input[type="number"]{
     <input type="month" id="monthPicker">
     <label>Jour de clôture mensuelle</label>
  <input type="date" id="closingDate">
-  </div><div class="calendar card" id="calendar"></div><div class="card">
+  </div>
+
+  <div class="calendar card" id="calendar"></div>
+  
+<div class="card">
   <h3>Récapitulatif</h3>
   <p>Report précédent : <b id="prevCarry">0.00</b> h</p>
 <p>Total période : <b id="totalMonth">0.00</b> h</p>
@@ -314,7 +333,9 @@ input[type="number"]{
 </p>
   <p>Heures payées : <input type="number" id="paidHours" step="0.25"></p>
   <p>Reliquat reporté : <b id="carryOver">0.00</b> h</p>
-</div><div class="card">
+</div>
+
+<div class="card">
   <h3>💰 Valeur €</h3>
   <div id="euroBox" class="blur">
     <label>Taux horaire (€)</label>
@@ -344,26 +365,40 @@ ou le mode de calcul de l’employeur).<br>
   <input type="password" id="unlockCode" placeholder="Code (1234)">
   <button onclick="unlockEuro()">Déverrouiller</button>
 </div>
-<button class="secondary" onclick="toggleChangeCode()">🔁 Changer le code</button><div id="changeCodeBox" style="display:none;margin-top:10px">
+<button class="secondary" onclick="toggleChangeCode()">🔁 Changer le code</button>
+
+<div id="changeCodeBox" style="display:none;margin-top:10px">
   <input type="password" id="oldCode" placeholder="Ancien code">
   <input type="password" id="newCode" placeholder="Nouveau code (4 chiffres min)">
   <input type="password" id="confirmCode" placeholder="Confirmer le code">
   <button class="danger" onclick="changeCode()">Valider le nouveau code</button>
-</div><div class="card"><span class="badge ok">🟢 Sauvegarde locale auto</span>
-<span class="badge file">
-👤 Usage personnel – outil indicatif
+</div>
+
+<div class="card">
+  
+  <span class="badge ok">🟢 Sauvegarde locale auto</span>
+  <span class="badge file">
+  👤 Usage personnel – outil indicatif
 </span>
-<span class="badge file">💾 Dernier fichier : <span id="fileDate">—</span></span>
-<button onclick="exportJSON()">💾 Sauvegarde dans un fichier</button>
-<input type="file" id="importFile" accept=".json" style="display:none">
+  <span class="badge file">💾 Dernier fichier : <span id="fileDate">—</span></span>
+  <button onclick="exportJSON()">💾 Sauvegarde dans un fichier</button>
+  <input type="file" id="importFile" accept=".json" style="display:none">
 <button class="secondary" onclick="document.getElementById('importFile').click()">
 📥 Importer une sauvegarde
 </button>
-<button onclick="exportMonthlyPDF()">📄 PDF mensuel détaillé</button>
+   <button onclick="exportMonthlyPDF()">📄 PDF mensuel détaillé</button>
 <button onclick="exportAnnualPDF()">📕 PDF annuel récapitulatif</button>
-</div><!-- =======================
+</div>
+
+
+
+
+
+
+<!-- =======================
      POPUP HEURES
-======================= --><div class="modal" id="hoursModal">
+======================= -->
+<div class="modal" id="hoursModal">
   <div class="modal-content">
     <h3>⏱️ Ajouter des heures</h3>
     <div id="hoursChoices"></div>
@@ -378,34 +413,32 @@ ou le mode de calcul de l’employeur).<br>
   <div class="modal-content" style="max-width:700px;max-height:80vh;overflow:auto;">
     <h2>📘 Tutoriel – Suivi des heures supplémentaires</h2>
 
-<h3>1️⃣ Principe général</h3>
-<p>
-  Cet outil permet de suivre les heures supplémentaires dans le cadre
-  d’une <b>paie mensuelle</b>, avec report automatique des reliquats.
-</p>
+    <h3>1️⃣ Principe général</h3>
+    <p>
+      Cet outil permet de suivre les heures supplémentaires dans le cadre
+      d’une <b>paie mensuelle</b>, avec report automatique des reliquats.
+    </p>
 
-<h3>2️⃣ Saisie des heures</h3>
-<ul>
-  <li>Clique sur un jour</li>
-  <li>Choisis +15 min, +30 min, +1h… ou saisis manuellement</li>
-  <li>Les heures sont enregistrées automatiquement</li>
-</ul>
+    <h3>2️⃣ Saisie des heures</h3>
+    <ul>
+      <li>Clique sur un jour</li>
+      <li>Choisis +15 min, +30 min, +1h… ou saisis manuellement</li>
+      <li>Les heures sont enregistrées automatiquement</li>
+    </ul>
 
-<h3>3️⃣ Clôture mensuelle</h3>
-<p>
-  Le jour de clôture définit la fin de la période de paie.
-  Les heures après cette date sont automatiquement reportées.
-</p>
+    <h3>3️⃣ Clôture mensuelle</h3>
+    <p>
+      Le jour de clôture définit la fin de la période de paie.
+      Les heures après cette date sont automatiquement reportées.
+    </p>
 
-<h3>4️⃣ Zone €</h3>
-<p>
-  Les montants sont floutés par défaut et protégés par code.
-</p>
+    <h3>4️⃣ Zone €</h3>
+    <p>
+      Les montants sont floutés par défaut et protégés par code.
+    </p>
 
-<button class="secondary" onclick="closeTutorial()">Fermer</button>
-
-
-</div>
+    <button class="secondary" onclick="closeTutorial()">Fermer</button>
+  </div>
 </div>
 <div class="modal" id="legalModal">
   <div class="modal-content">
@@ -430,7 +463,9 @@ ou le mode de calcul de l’employeur).<br>
     </ol>
     <button onclick="closeOnboarding()">Commencer</button>
   </div>
-</div><script>
+</div>
+
+<script>
 /* =======================
    🔄 MODE RÉCUPÉRATION
 ======================= */
@@ -480,7 +515,7 @@ const SNAP_LIMIT = 5;
 const DATA_VERSION = "1.0";
 
 function kData(year){
-  return `${STORAGE\_PREFIX}\_DATA\_${year}`;
+  return `${STORAGE_PREFIX}_DATA_${year}`;
 }
 (function autoRefreshPWA(){
   const key = "CA_APP_VERSION";
@@ -612,7 +647,7 @@ function kIndex(){
   return `${STORAGE_PREFIX}_INDEX`;
 }
 function kBackup(year, date){
-  return `${STORAGE\_PREFIX}\_BACKUP\_${year}_${date}`;
+  return `${STORAGE_PREFIX}_BACKUP_${year}_${date}`;
 }
 function getYearFromMonth(key){
   return key.split("-")[0];
@@ -1798,34 +1833,49 @@ function handleFatalError(err){
   document.body.appendChild(overlay);
 }
 
-</script><div class="card" style="font-size:13px;color:#aaa">
-  <h3>📘 Notice utilisateur</h3><p>
+</script>
+
+<div class="card" style="font-size:13px;color:#aaa">
+  <h3>📘 Notice utilisateur</h3>
+
+  <p>
     Cet outil est destiné au suivi personnel des heures supplémentaires
     dans le cadre d’une rémunération mensuelle.
-  </p><p>
+  </p>
+
+  <p>
     Les calculs sont indicatifs et reposent sur les principes généraux :
-  </p><ul>
+  </p>
+
+  <ul>
     <li>Code du travail</li>
     <li>Convention collective du commerce de gros (IDCC 573)</li>
-  </ul><p>
+  </ul>
+
+  <p>
     ⚠️ En cas de litige, seuls les bulletins de paie et documents
     officiels de l’employeur font foi.
   </p>
 </div>
 <div class="card" style="font-size:12px;color:#9aa0a6;line-height:1.5">
-  <b>⚠️ Responsabilité et limites</b><br><br>Les données saisies dans ce simulateur sont renseignées
-<b>sous la seule responsabilité de l’utilisateur</b>.<br><br>
-Les résultats affichés sont fournis à titre indicatif et peuvent
-ne pas refléter exactement la réalité du terrain, notamment en raison
-d’erreurs de saisie, de paramètres incomplets ou inexacts, de différences
-liées à la convention collective, aux accords d’entreprise, aux pratiques
-internes, d’évolutions du droit applicable, ou de
-<b>dysfonctionnements techniques, bugs ou limites du simulateur</b>.<br><br>
-Malgré le soin apporté à sa conception, le simulateur peut contenir
-des erreurs et ne saurait se substituer aux documents officiels,
-outils de l’employeur ou à l’interprétation des textes légaux.<br><br>
-<b>Seuls les documents établis par l’employeur et le droit applicable
-font foi.</b>
+  <b>⚠️ Responsabilité et limites</b><br><br>
+
+  Les données saisies dans ce simulateur sont renseignées
+  <b>sous la seule responsabilité de l’utilisateur</b>.<br><br>
+
+  Les résultats affichés sont fournis à titre indicatif et peuvent
+  ne pas refléter exactement la réalité du terrain, notamment en raison
+  d’erreurs de saisie, de paramètres incomplets ou inexacts, de différences
+  liées à la convention collective, aux accords d’entreprise, aux pratiques
+  internes, d’évolutions du droit applicable, ou de
+  <b>dysfonctionnements techniques, bugs ou limites du simulateur</b>.<br><br>
+
+  Malgré le soin apporté à sa conception, le simulateur peut contenir
+  des erreurs et ne saurait se substituer aux documents officiels,
+  outils de l’employeur ou à l’interprétation des textes légaux.<br><br>
+
+  <b>Seuls les documents établis par l’employeur et le droit applicable
+  font foi.</b>
 </div>
 <footer
   id="debugTrigger"
