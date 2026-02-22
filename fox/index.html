@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -34,6 +35,7 @@
 </div>
 
 <!-- HUD -->
+
 <div id="gaming-hud">
   <div class="hud-logo" id="hud-logo-btn" onclick="demoLogoClick()" style="cursor:pointer;user-select:none;">🦊 FOX</div>
   <div class="hud-xp-section" onclick="openPopup('popup-leagues')" style="cursor:pointer;" title="Voir ma ligue">
@@ -63,9 +65,11 @@
 </div>
 
 <!-- ZONE PRINCIPALE -->
+
 <div id="gaming-main">
 
   <!-- Bulle de dialogue Kitsune -->
+
   <div id="kitsune-shortcuts" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:0 10px 6px;"></div>
   <div id="kitsune-bubble" onclick="openPopup('popup-fox')">
     <div id="kitsune-bubble-text">🦊 Je surveille tes heures et te guide !</div>
@@ -73,12 +77,14 @@
   </div>
 
   <!-- Renard central -->
+
   <div id="kitsune-center" onclick="openPopup('popup-fox')">
     <img id="kitsune-svg" src="../images/foxplayer.PNG" style="filter:brightness(1.2) contrast(1.1);mix-blend-mode:screen; alt="Kitsune" onerror="this.style.display='none'">
     <div id="kitsune-tap-hint">Appuie sur moi !</div>
   </div>
 
   <!-- Barre de risque centrale -->
+
   <div id="risk-bar-center">
     <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:#fff;margin-bottom:4px;letter-spacing:1px;text-shadow:0 1px 6px rgba(0,0,0,0.9),0 0 12px rgba(0,0,0,0.8);font-weight:700;">
       <span>RISQUE GLOBAL</span><span id="risk-label-main">--</span>
@@ -87,6 +93,7 @@
   </div>
 
   <!-- Dock de boutons en bas -->
+
   <div id="action-dock">
     <button class="dock-btn" onclick="openPopup('popup-import')">
       <span class="dock-icon">📥</span>
@@ -105,35 +112,39 @@
       <span class="dock-label">Quêtes</span>
     </button>
 
-    <button class="dock-btn" onclick="openPopup('popup-export')">
-      <span class="dock-icon">📄</span>
-      <span class="dock-label">Export</span>
-    </button>
-    <button class="dock-btn" onclick="openPopup('popup-glossaire')">
-      <span class="dock-icon">📚</span>
-      <span class="dock-label">Glossaire</span>
-    </button>
-    <button class="dock-btn" onclick="openPopup('popup-heatmap')">
-      <span class="dock-icon">🗓</span>
-      <span class="dock-label">Calendrier</span>
-    </button>
-    <button class="dock-btn" onclick="openPopup('popup-violations')">
-      <span class="dock-icon">⚠️</span>
-      <span class="dock-label">Violations</span>
-    </button>
-    <button class="dock-btn" onclick="openPopup('popup-rapport')">
-      <span class="dock-icon">📋</span>
-      <span class="dock-label">Rapport</span>
-    </button>
-    <button class="dock-btn" onclick="openPopup('popup-xp-history')">
-      <span class="dock-icon">📊</span>
-      <span class="dock-label">XP</span>
-    </button>
+```
+<button class="dock-btn" onclick="openPopup('popup-export')">
+  <span class="dock-icon">📄</span>
+  <span class="dock-label">Export</span>
+</button>
+<button class="dock-btn" onclick="openPopup('popup-glossaire')">
+  <span class="dock-icon">📚</span>
+  <span class="dock-label">Glossaire</span>
+</button>
+<button class="dock-btn" onclick="openPopup('popup-heatmap')">
+  <span class="dock-icon">🗓</span>
+  <span class="dock-label">Calendrier</span>
+</button>
+<button class="dock-btn" onclick="openPopup('popup-violations')">
+  <span class="dock-icon">⚠️</span>
+  <span class="dock-label">Violations</span>
+</button>
+<button class="dock-btn" onclick="openPopup('popup-rapport')">
+  <span class="dock-icon">📋</span>
+  <span class="dock-label">Rapport</span>
+</button>
+<button class="dock-btn" onclick="openPopup('popup-xp-history')">
+  <span class="dock-icon">📊</span>
+  <span class="dock-label">XP</span>
+</button>
+```
+
   </div>
 
 </div>
 
 <!-- POP-UP KITSUNE -->
+
 <div class="fox-popup-backdrop" id="popup-fox">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -170,52 +181,56 @@
       <div id="kitsune-chart-legend" style="display:flex;gap:12px;justify-content:center;margin-top:6px;flex-wrap:wrap;"></div>
     </div>
 
-    <!-- Comparaison annuelle N vs N-1 -->
-    <div id="kitsune-annual-section" style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
-      <div style="color:#666;font-size:0.68rem;letter-spacing:1px;margin-bottom:8px;">
-        📆 COMPARAISON ANNUELLE
-      </div>
-      <div id="kitsune-annual-content">
-        <div style="color:#444;font-size:0.75rem;text-align:center;padding:10px;">Chargement…</div>
-      </div>
-    </div>
+```
+<!-- Comparaison annuelle N vs N-1 -->
+<div id="kitsune-annual-section" style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
+  <div style="color:#666;font-size:0.68rem;letter-spacing:1px;margin-bottom:8px;">
+    📆 COMPARAISON ANNUELLE
+  </div>
+  <div id="kitsune-annual-content">
+    <div style="color:#444;font-size:0.75rem;text-align:center;padding:10px;">Chargement…</div>
+  </div>
+</div>
 
-    <!-- Patterns détectés -->
-    <div id="kitsune-patterns-section" style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
-      <div style="color:#666;font-size:0.68rem;letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-        <span>🔍 PATTERNS DÉTECTÉS</span>
-        <button onclick="refreshPatternsSection()" style="background:none;border:none;color:#FF8C42;font-size:0.65rem;cursor:pointer;">Actualiser</button>
-      </div>
-      <div id="kitsune-patterns-list" style="display:flex;flex-direction:column;gap:6px;">
-        <div style="color:#444;font-size:0.78rem;text-align:center;padding:10px;">Chargement…</div>
-      </div>
-    </div>
+<!-- Patterns détectés -->
+<div id="kitsune-patterns-section" style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
+  <div style="color:#666;font-size:0.68rem;letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+    <span>🔍 PATTERNS DÉTECTÉS</span>
+    <button onclick="refreshPatternsSection()" style="background:none;border:none;color:#FF8C42;font-size:0.65rem;cursor:pointer;">Actualiser</button>
+  </div>
+  <div id="kitsune-patterns-list" style="display:flex;flex-direction:column;gap:6px;">
+    <div style="color:#444;font-size:0.78rem;text-align:center;padding:10px;">Chargement…</div>
+  </div>
+</div>
 
-    <!-- Journal Kitsune -->
-    <div id="kitsune-journal-section" style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
-      <div style="color:#666;font-size:0.68rem;letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-        <span>📜 JOURNAL KITSUNE</span>
-        <button onclick="clearKitsuneJournal()" style="background:none;border:none;color:#333;font-size:0.65rem;cursor:pointer;">Effacer</button>
-      </div>
-      <div id="kitsune-journal-log" style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;">
-        <div style="color:#444;font-size:0.78rem;text-align:center;padding:8px;">Aucune analyse pour l'instant</div>
-      </div>
-    </div>
+<!-- Journal Kitsune -->
+<div id="kitsune-journal-section" style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
+  <div style="color:#666;font-size:0.68rem;letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+    <span>📜 JOURNAL KITSUNE</span>
+    <button onclick="clearKitsuneJournal()" style="background:none;border:none;color:#333;font-size:0.65rem;cursor:pointer;">Effacer</button>
+  </div>
+  <div id="kitsune-journal-log" style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;">
+    <div style="color:#444;font-size:0.78rem;text-align:center;padding:8px;">Aucune analyse pour l'instant</div>
+  </div>
+</div>
 
-    <!-- Lien glossaire -->
-    <div style="text-align:center;margin-top:10px;margin-bottom:4px;">
-      <button onclick="openPopup('popup-glossaire')" style="background:none;border:1px solid rgba(255,140,66,0.2);color:rgba(255,140,66,0.6);border-radius:7px;padding:5px 14px;font-size:0.72rem;cursor:pointer;">📚 Glossaire juridique</button>
-    </div>
-    <div id="kitsune-rewards-section" style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
-      <div style="color:#666;font-size:0.68rem;letter-spacing:1px;margin-bottom:8px;">📜 HISTORIQUE RÉCOMPENSES</div>
-      <div id="kitsune-rewards-log" style="max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;">
-        <div style="color:#444;font-size:0.78rem;text-align:center;padding:8px;">Aucune récompense débloquée pour l'instant</div>
-      </div>
-    </div>
+<!-- Lien glossaire -->
+<div style="text-align:center;margin-top:10px;margin-bottom:4px;">
+  <button onclick="openPopup('popup-glossaire')" style="background:none;border:1px solid rgba(255,140,66,0.2);color:rgba(255,140,66,0.6);border-radius:7px;padding:5px 14px;font-size:0.72rem;cursor:pointer;">📚 Glossaire juridique</button>
+</div>
+<div id="kitsune-rewards-section" style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
+  <div style="color:#666;font-size:0.68rem;letter-spacing:1px;margin-bottom:8px;">📜 HISTORIQUE RÉCOMPENSES</div>
+  <div id="kitsune-rewards-log" style="max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;">
+    <div style="color:#444;font-size:0.78rem;text-align:center;padding:8px;">Aucune récompense débloquée pour l'instant</div>
+  </div>
+</div>
+```
+
   </div>
 </div>
 
 <!-- POP-UP ANALYSE -->
+
 <div class="fox-popup-backdrop" id="popup-analyse">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -249,6 +264,7 @@
 </div>
 
 <!-- POP-UP MODULES -->
+
 <div class="fox-popup-backdrop" id="popup-modules">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -260,6 +276,7 @@
 </div>
 
 <!-- POP-UP BURN-OUT -->
+
 <div class="fox-popup-backdrop" id="popup-burnout">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -271,6 +288,7 @@
 </div>
 
 <!-- POP-UP QUETES -->
+
 <div class="fox-popup-backdrop" id="popup-quetes">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -286,6 +304,7 @@
 </div>
 
 <!-- POP-UP SCENARIOS -->
+
 <div class="fox-popup-backdrop" id="popup-scenarios">
   <div class="fox-popup" style="max-width:680px;">
     <div class="fox-popup-header">
@@ -312,6 +331,7 @@
 </div>
 
 <!-- POP-UP EXPORT -->
+
 <div class="fox-popup-backdrop" id="popup-export">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -328,9 +348,8 @@
   </div>
 </div>
 
-
-
 <!-- POP-UP LEAGUES -->
+
 <div class="fox-popup-backdrop" id="popup-leagues">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -342,6 +361,7 @@
 </div>
 
 <!-- POP-UP IMPORT -->
+
 <div class="fox-popup-backdrop" id="popup-import">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -370,20 +390,24 @@
       <button class="fox-popup-close" onclick="closePopup('popup-badges')">✕</button>
     </div>
 
-    <div id="badges-filter" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-      <button onclick="filterBadgesByRarity('all')" class="badge-filter-btn active" data-rarity="all">Tous</button>
-      <button onclick="filterBadgesByRarity('common')" class="badge-filter-btn" data-rarity="common" style="color:#b0b0b0;">Communs</button>
-      <button onclick="filterBadgesByRarity('rare')" class="badge-filter-btn" data-rarity="rare" style="color:#5094ff;">Rares</button>
-      <button onclick="filterBadgesByRarity('epic')" class="badge-filter-btn" data-rarity="epic" style="color:#a050ff;">Épiques</button>
-      <button onclick="filterBadgesByRarity('legendary')" class="badge-filter-btn" data-rarity="legendary" style="color:#FFD700;">Légendaires</button>
-      <button onclick="showBadgesHistory()" class="badge-filter-btn" data-rarity="history" style="color:#FFD700;">📜 Historique</button>
-    </div>
-    <div id="badges-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px;max-height:420px;overflow-y:auto;"></div>
-    <div id="badges-history" style="display:none;max-height:420px;overflow-y:auto;"></div>
+```
+<div id="badges-filter" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+  <button onclick="filterBadgesByRarity('all')" class="badge-filter-btn active" data-rarity="all">Tous</button>
+  <button onclick="filterBadgesByRarity('common')" class="badge-filter-btn" data-rarity="common" style="color:#b0b0b0;">Communs</button>
+  <button onclick="filterBadgesByRarity('rare')" class="badge-filter-btn" data-rarity="rare" style="color:#5094ff;">Rares</button>
+  <button onclick="filterBadgesByRarity('epic')" class="badge-filter-btn" data-rarity="epic" style="color:#a050ff;">Épiques</button>
+  <button onclick="filterBadgesByRarity('legendary')" class="badge-filter-btn" data-rarity="legendary" style="color:#FFD700;">Légendaires</button>
+  <button onclick="showBadgesHistory()" class="badge-filter-btn" data-rarity="history" style="color:#FFD700;">📜 Historique</button>
+</div>
+<div id="badges-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px;max-height:420px;overflow-y:auto;"></div>
+<div id="badges-history" style="display:none;max-height:420px;overflow-y:auto;"></div>
+```
+
   </div>
 </div>
 
 <!-- POP-UP COMPÉTENCES (IDs 51-65) -->
+
 <div class="fox-popup-backdrop" id="popup-skills">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -396,6 +420,7 @@
 </div>
 
 <!-- Image agrandie (badges/compétences) -->
+
 <div id="badge-zoom-overlay" onclick="this.style.display='none'" style="display:none;position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;flex-direction:column;cursor:pointer;">
   <img id="badge-zoom-img" src="" style="max-width:260px;max-height:260px;object-fit:contain;border-radius:16px;box-shadow:0 0 60px rgba(255,140,66,0.4);">
   <div id="badge-zoom-name" style="color:#FF8C42;font-weight:900;font-size:1.1rem;margin-top:16px;"></div>
@@ -403,6 +428,7 @@
 </div>
 
 <!-- POP-UP SETTINGS -->
+
 <div class="fox-popup-backdrop" id="popup-settings">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -411,61 +437,63 @@
     </div>
     <div style="display:flex;flex-direction:column;gap:16px;color:#ccc;font-size:0.9rem;">
 
-      <!-- Profil Kitsune -->
+```
+  <!-- Profil Kitsune -->
+  <div>
+    <div style="color:#FF8C42;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">🦊 Profil Kitsune</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
       <div>
-        <div style="color:#FF8C42;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">🦊 Profil Kitsune</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <div>
-            <label style="color:#888;font-size:0.72rem;display:block;margin-bottom:4px;">Prénom (affiché par Kitsune)</label>
-            <input id="setting-prenom" type="text" maxlength="20" placeholder="Ton prénom…"
-              style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:8px;padding:8px 11px;font-size:0.85rem;box-sizing:border-box;"
-              oninput="saveKitsuneProfile()">
-          </div>
-          <div>
-            <label style="color:#888;font-size:0.72rem;display:block;margin-bottom:4px;">Secteur d'activité</label>
-            <select id="setting-secteur" onchange="saveKitsuneProfile()"
-              style="width:100%;background:rgba(20,15,40,0.9);border:1px solid rgba(255,255,255,0.12);color:#ccc;border-radius:8px;padding:8px 11px;font-size:0.85rem;box-sizing:border-box;">
-              <option value="">Non précisé</option>
-              <option value="commerce">Commerce / Distribution (détail)</option>
-              <option value="commerce_gros">Commerce de gros</option>
-              <option value="btp">BTP / Construction</option>
-              <option value="sante">Santé / Social</option>
-              <option value="transport">Transport / Logistique</option>
-              <option value="hotellerie">Hôtellerie / Restauration</option>
-              <option value="industrie">Industrie / Production</option>
-              <option value="bureaux">Bureaux / Tertiaire</option>
-              <option value="informatique">Informatique / Tech</option>
-              <option value="education">Éducation / Formation</option>
-              <option value="autre">Autre</option>
-            </select>
-          </div>
+        <label style="color:#888;font-size:0.72rem;display:block;margin-bottom:4px;">Prénom (affiché par Kitsune)</label>
+        <input id="setting-prenom" type="text" maxlength="20" placeholder="Ton prénom…"
+          style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:8px;padding:8px 11px;font-size:0.85rem;box-sizing:border-box;"
+          oninput="saveKitsuneProfile()">
+      </div>
+      <div>
+        <label style="color:#888;font-size:0.72rem;display:block;margin-bottom:4px;">Secteur d'activité</label>
+        <select id="setting-secteur" onchange="saveKitsuneProfile()"
+          style="width:100%;background:rgba(20,15,40,0.9);border:1px solid rgba(255,255,255,0.12);color:#ccc;border-radius:8px;padding:8px 11px;font-size:0.85rem;box-sizing:border-box;">
+          <option value="">Non précisé</option>
+          <option value="commerce">Commerce / Distribution (détail)</option>
+          <option value="commerce_gros">Commerce de gros</option>
+          <option value="btp">BTP / Construction</option>
+          <option value="sante">Santé / Social</option>
+          <option value="transport">Transport / Logistique</option>
+          <option value="hotellerie">Hôtellerie / Restauration</option>
+          <option value="industrie">Industrie / Production</option>
+          <option value="bureaux">Bureaux / Tertiaire</option>
+          <option value="informatique">Informatique / Tech</option>
+          <option value="education">Éducation / Formation</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
 
-        </div>
-        <div id="setting-save-status" style="color:#4CAF50;font-size:0.7rem;margin-top:5px;min-height:14px;"></div>
-      </div>
-      <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:14px;">
-        <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Animations d'alerte</div>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-          <input type="checkbox" id="toggle-burnout-anim" checked onchange="toggleBurnoutAnimations(this.checked)">
-          Effets visuels burn-out actifs
-        </label>
-      </div>
-      <div>
-        <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Années dans localStorage</div>
-        <div id="detected-years" style="color:#FF8C42;font-size:0.88rem;">—</div>
-      </div>
-      <div>
-        <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Reset RPG</div>
-        <button onclick="resetRPGConfirm()" style="background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.25);color:#E53935;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:0.85rem;">🗑️ Réinitialiser progression RPG</button>
-      </div>
-      <div>
-        <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Diagnostic</div>
-        <button onclick="debugM1Data()" style="background:rgba(255,140,66,0.08);border:1px solid rgba(255,140,66,0.2);color:#FF8C42;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:0.85rem;">🔍 Debug lecture M1</button>
-      </div>
     </div>
+    <div id="setting-save-status" style="color:#4CAF50;font-size:0.7rem;margin-top:5px;min-height:14px;"></div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:14px;">
+    <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Animations d'alerte</div>
+    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+      <input type="checkbox" id="toggle-burnout-anim" checked onchange="toggleBurnoutAnimations(this.checked)">
+      Effets visuels burn-out actifs
+    </label>
+  </div>
+  <div>
+    <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Années dans localStorage</div>
+    <div id="detected-years" style="color:#FF8C42;font-size:0.88rem;">—</div>
+  </div>
+  <div>
+    <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Reset RPG</div>
+    <button onclick="resetRPGConfirm()" style="background:rgba(229,57,53,0.1);border:1px solid rgba(229,57,53,0.25);color:#E53935;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:0.85rem;">🗑️ Réinitialiser progression RPG</button>
+  </div>
+  <div>
+    <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Diagnostic</div>
+    <button onclick="debugM1Data()" style="background:rgba(255,140,66,0.08);border:1px solid rgba(255,140,66,0.2);color:#FF8C42;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:0.85rem;">🔍 Debug lecture M1</button>
   </div>
 </div>
+```
 
+  </div>
+</div>
 
 <style>
 /* Animations récompenses */
@@ -816,6 +844,7 @@
 }
 
 </style>
+
 <style>
 .day-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:6px;padding:7px 2px;text-align:center;font-size:0.9rem;-moz-appearance:textfield;}
 .day-input::-webkit-outer-spin-button,.day-input::-webkit-inner-spin-button{-webkit-appearance:none;}
@@ -830,17 +859,29 @@
 </style>
 
 <!-- Scripts (ordre inchangé) -->
+
 <script src="js/storage.js"></script>
+
 <script src="js/config.js"></script>
+
 <script src="js/module-reader.js"></script>
+
 <script src="js/xp-system.js"></script>
+
 <script src="js/leagues.js"></script>
+
 <script src="js/badges.js"></script>
+
 <script src="js/scenarios-fox-data.js"></script>
+
 <script src="js/data-bridge.js"></script>
+
 <script src="js/snapshot-system.js"></script>
+
 <script src="js/export-rtf.js"></script>
+
 <script src="js/ai-integration.js"></script>
+
 <!-- <script src="js/main-rpg.js"></script> -->
 
 <script>
@@ -1480,18 +1521,12 @@ function kitsuneNarrateOvertime(deltaH, source) {
       }
     };
     
-    // FORCER bulle = message popup (PAS de message contextuel si violations)
-    if (s.globalLevel === 'danger' || s.globalLevel === 'warning') {
-      // SI violations → afficher le vrai message
-      bubbleText = dynamicMsg.titre;
-      console.log('🦊 Bulle FORCÉE avec message violations:', bubbleText);
-    }
-    
-    // Mettre à jour la bulle avec le texte final
+    // SYNCHRONISER bulle avec popup (TOUJOURS le même message)
+    bubbleText = dynamicMsg.message.substring(0, 120);
     const bubbleElFinal = document.getElementById('kitsune-bubble-text');
     if (bubbleElFinal) {
       bubbleElFinal.textContent = bubbleText;
-      console.log('🦊 Bulle affichée:', bubbleText);
+      console.log('🦊 Bulle = popup:', bubbleText);
     }
 
 
@@ -1735,21 +1770,30 @@ function syncModulesAndAwardXP(source) {
       console.log('⚠️ VIOLATION : Contingent annuel dépassé → -400 XP, +12 burn-out');
     }
     
-    // Appliquer pénalités XP
+    // Appliquer pénalités XP (ANTI-BOUCLE : max 1 fois par minute)
     if (xpPenalty > 0 && typeof xpSystem !== 'undefined') {
-      const oldXP = xpSystem.currentXP;
-      xpSystem.currentXP = Math.max(0, xpSystem.currentXP - xpPenalty);
-      xpSystem.level = xpSystem.calculateLevel();
-      xpSystem.saveToStorage();
-      console.log('💥 Pénalité XP appliquée:', oldXP, '→', xpSystem.currentXP, '(-' + xpPenalty + ')');
+      const now = Date.now();
+      const lastPenalty = window._lastXpPenaltyTime || 0;
       
-      // HISTORIQUE XP négatifs
-      if (typeof addRewardToHistory === 'function') {
-        addRewardToHistory('⚠️ Violation : -' + xpPenalty + ' XP', 'danger');
-      }
+      if (now - lastPenalty < 60000) {
+        console.log('⏸️ Pénalité XP skippée (cooldown 1 min)');
+        xpPenalty = 0;
+        burnoutIncrease = 0;
+      } else {
+        window._lastXpPenaltyTime = now;
+        const oldXP = xpSystem.currentXP;
+        xpSystem.currentXP = Math.max(0, xpSystem.currentXP - xpPenalty);
+        xpSystem.level = xpSystem.calculateLevel();
+        xpSystem.saveToStorage();
+        console.log('💥 Pénalité XP appliquée:', oldXP, '→', xpSystem.currentXP, '(-' + xpPenalty + ')');
       
-      // Afficher perte XP dans RISQUE (TRÈS VISIBLE)
-      if (!skipAnimation) {
+        // HISTORIQUE XP négatifs
+        if (typeof addRewardToHistory === 'function') {
+          addRewardToHistory('⚠️ Violation : -' + xpPenalty + ' XP', 'danger');
+        }
+      
+        // Afficher perte XP dans RISQUE (TRÈS VISIBLE)
+        if (!skipAnimation) {
         const riskEl = document.getElementById('hud-burnout');
         if (riskEl) {
           console.log('💥💥💥 AFFICHAGE PERTE XP DANS RISQUE:', '-' + xpPenalty);
@@ -2153,27 +2197,24 @@ function refreshHUD() {
     updateMenuColors();
     const bo      = moduleReader.getBurnoutScore ? moduleReader.getBurnoutScore() : {score:0,level:'sain'};
     const rolling = moduleReader.getRollingAnalysis ? moduleReader.getRollingAnalysis(12) : {avgTotal:35,violations:{over48:0,over35:0},trend:'stable',weeksAnalyzed:0};
+    // RISQUE = burnout score
     const boEl = document.getElementById('hud-burnout');
-    boEl.textContent = bo.score;
-    if (bo.score>=60) { boEl.classList.add('danger-val'); }
-    else { boEl.classList.remove('danger-val'); }
-    // \u00C9nergie = 100 - burnout + bonus r\u00E9cup\u00E9ration semaines r\u00E9centes
+    if (boEl) {
+      boEl.textContent = bo.score;
+      if (bo.score>=60) { boEl.classList.add('danger-val'); }
+      else { boEl.classList.remove('danger-val'); }
+    }
+    
+    // ÉNERGIE = 100 - risque (FORMULE SIMPLE)
     const enEl = document.getElementById('hud-energy');
-    let recoveryBonus = 0;
-    try {
-      const rolling2w = moduleReader.getRollingAnalysis ? moduleReader.getRollingAnalysis(2) : null;
-      if (rolling2w && rolling2w.weeksAnalyzed >= 1) {
-        const recentAvg = rolling2w.avgTotal || 0;
-        if (recentAvg <= 35) recoveryBonus = 15; // semaine l\u00E9gale = r\u00E9cup rapide
-        else if (recentAvg <= 38) recoveryBonus = 8;
-        else if (recentAvg <= 40) recoveryBonus = 3;
-      }
-    } catch(e) {}
-    const enBase = Math.max(0, 100 - bo.score);
-    const enVal  = Math.min(100, enBase + recoveryBonus);
-    enEl.textContent = enVal;
-    if (recoveryBonus > 0) enEl.style.color = '#4CAF50';
-    else enEl.style.color = '';
+    if (enEl) {
+      const enVal = Math.max(0, 100 - bo.score);
+      enEl.textContent = enVal;
+      if (enVal<30) enEl.classList.add('danger-val'); 
+      else enEl.classList.remove('danger-val'); }
+    }
+    
+    console.log('🔄 Risque=' + bo.score + ', Énergie=' + (100-bo.score) + ', Total=' + (bo.score + (100-bo.score)));
     if (enVal<30) enEl.classList.add('danger-val'); else enEl.classList.remove('danger-val');
     // violations supprimees du HUD
     // Cumul heures sup toutes annees (M1 + M2 fusionnes)
@@ -2824,6 +2865,7 @@ async function sendToKitsune() {
 </script>
 
 <!-- ══ POP-UP DÉMO CACHÉ (5 clics + code) ══ -->
+
 <div id="popup-demo-code" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(8,8,20,0.97);border-top:2px solid rgba(255,140,66,0.4);border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom);max-height:70vh;overflow-y:auto;align-items:center;justify-content:center;">
   <div style="background:#0d0d1a;border:2px solid #FF8C42;border-radius:20px;padding:28px;max-width:320px;width:90%;text-align:center;">
     <div style="font-size:2rem;margin-bottom:8px;">🔐</div>
@@ -2839,217 +2881,226 @@ async function sendToKitsune() {
 </div>
 
 <!-- ══ POP-UP DÉMO ACTIF ══ -->
+
 <div id="popup-demo-panel" style="display:none;">
 
   <!-- ── TIROIR CONTENU ─────────────────────────────────────── -->
+
   <div id="dev-drawer">
     <div style="padding:8px 12px 4px 12px;">
 
-      <!-- Status -->
-      <div id="demo-step-label" style="background:rgba(255,140,66,0.08);border:1px solid rgba(255,140,66,0.2);border-radius:7px;padding:6px 12px;color:#FF8C42;font-size:0.75rem;margin-bottom:8px;min-height:26px;">En attente&#x2026;</div>
+```
+  <!-- Status -->
+  <div id="demo-step-label" style="background:rgba(255,140,66,0.08);border:1px solid rgba(255,140,66,0.2);border-radius:7px;padding:6px 12px;color:#FF8C42;font-size:0.75rem;margin-bottom:8px;min-height:26px;">En attente&#x2026;</div>
 
-      <!-- ── ONGLET : DONNÉES ──────────────────────────────── -->
-      <div id="dev-tab-data" class="dev-tab-content">
-        <div class="dev-section-label">SITUATIONS PR&#xc9;TES</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
-          <button class="demo-btn" onclick="demoStep('reset')">&#x1F504; Reset</button>
-          <button class="demo-btn" onclick="demoStep('start')">&#x1F331; D&#xe9;part</button>
-          <button class="demo-btn" onclick="demoStep('light')">&#x1F49B; 15h</button>
-          <button class="demo-btn" onclick="demoStep('medium')">&#x1F9E1; 60h</button>
-          <button class="demo-btn" onclick="demoStep('heavy')">&#x1F534; 150h</button>
-          <button class="demo-btn" onclick="demoStep('critical')">&#x1F6A8; 220h+</button>
-          <button class="demo-btn" onclick="demoStep('multiyear')">&#x1F570; 3 ans</button>
-          <button class="demo-btn" onclick="demoStep('burnout')">&#x1F525; Burnout</button>
-        </div>
-        <div class="dev-section-label">FEATURES DEV</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
-          <button class="demo-btn" onclick="localStorage.removeItem('FOX_ONBOARDING_DONE');location.reload()">🔰 Onboarding</button>
-          <button class="demo-btn" onclick="showMonthlySummary()">📅 Bilan</button>
-          <button class="demo-btn" onclick="document.getElementById('weekly-notif').classList.add('visible')">🔔 Notif</button>
-          <button class="demo-btn" onclick="refreshPatternsSection();openPopup('popup-fox')">🔍 Patterns</button>
-          <button class="demo-btn" onclick="openPopup('popup-glossaire')">📚 Glossaire</button>
-          <button class="demo-btn" onclick="renderEvolutionChart('month');openPopup('popup-fox')">📊 Graphique</button>
-          <button class="demo-btn" onclick="renderAnnualComparison();openPopup('popup-fox')">📆 Annuel</button>
-          <button class="demo-btn" onclick="openPopup('popup-violations')">⚠️ Violations</button>
-          <button class="demo-btn" onclick="openPopup('popup-rapport')">📋 Rapport</button>
-          <button class="demo-btn" onclick="openPopup('popup-heatmap')">🗓 Heatmap</button>
-          <button class="demo-btn" onclick="openPopup('popup-badges')">⭐ Achiev.</button>
-        </div>
-        <div class="dev-section-label">INJECTER HEURES M1</div>
-        <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
-          <input id="dev-inject-hours" type="number" min="0" max="500" value="50" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,140,66,0.3);color:#FF8C42;border-radius:7px;padding:5px 8px;font-size:0.82rem;">
-          <span style="color:#666;font-size:0.75rem;">h sup</span>
-          <button class="demo-btn" onclick="devInjectHours()">Injecter</button>
-        </div>
-        <div class="dev-section-label">INJECT M2 (AUJOURD'HUI)</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;">
-          <button class="demo-btn" onclick="devInjectM2Day(3)">+3h</button>
-          <button class="demo-btn" onclick="devInjectM2Day(5)">+5h</button>
-          <button class="demo-btn" onclick="devInjectM2Day(7)">+7h</button>
-          <button class="demo-btn" onclick="devInjectM2Day(10)">+10h</button>
-        </div>
-      </div>
+  <!-- ── ONGLET : DONNÉES ──────────────────────────────── -->
+  <div id="dev-tab-data" class="dev-tab-content">
+    <div class="dev-section-label">SITUATIONS PR&#xc9;TES</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
+      <button class="demo-btn" onclick="demoStep('reset')">&#x1F504; Reset</button>
+      <button class="demo-btn" onclick="demoStep('start')">&#x1F331; D&#xe9;part</button>
+      <button class="demo-btn" onclick="demoStep('light')">&#x1F49B; 15h</button>
+      <button class="demo-btn" onclick="demoStep('medium')">&#x1F9E1; 60h</button>
+      <button class="demo-btn" onclick="demoStep('heavy')">&#x1F534; 150h</button>
+      <button class="demo-btn" onclick="demoStep('critical')">&#x1F6A8; 220h+</button>
+      <button class="demo-btn" onclick="demoStep('multiyear')">&#x1F570; 3 ans</button>
+      <button class="demo-btn" onclick="demoStep('burnout')">&#x1F525; Burnout</button>
+    </div>
+    <div class="dev-section-label">FEATURES DEV</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
+      <button class="demo-btn" onclick="localStorage.removeItem('FOX_ONBOARDING_DONE');location.reload()">🔰 Onboarding</button>
+      <button class="demo-btn" onclick="showMonthlySummary()">📅 Bilan</button>
+      <button class="demo-btn" onclick="document.getElementById('weekly-notif').classList.add('visible')">🔔 Notif</button>
+      <button class="demo-btn" onclick="refreshPatternsSection();openPopup('popup-fox')">🔍 Patterns</button>
+      <button class="demo-btn" onclick="openPopup('popup-glossaire')">📚 Glossaire</button>
+      <button class="demo-btn" onclick="renderEvolutionChart('month');openPopup('popup-fox')">📊 Graphique</button>
+      <button class="demo-btn" onclick="renderAnnualComparison();openPopup('popup-fox')">📆 Annuel</button>
+      <button class="demo-btn" onclick="openPopup('popup-violations')">⚠️ Violations</button>
+      <button class="demo-btn" onclick="openPopup('popup-rapport')">📋 Rapport</button>
+      <button class="demo-btn" onclick="openPopup('popup-heatmap')">🗓 Heatmap</button>
+      <button class="demo-btn" onclick="openPopup('popup-badges')">⭐ Achiev.</button>
+    </div>
+    <div class="dev-section-label">INJECTER HEURES M1</div>
+    <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+      <input id="dev-inject-hours" type="number" min="0" max="500" value="50" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,140,66,0.3);color:#FF8C42;border-radius:7px;padding:5px 8px;font-size:0.82rem;">
+      <span style="color:#666;font-size:0.75rem;">h sup</span>
+      <button class="demo-btn" onclick="devInjectHours()">Injecter</button>
+    </div>
+    <div class="dev-section-label">INJECT M2 (AUJOURD'HUI)</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <button class="demo-btn" onclick="devInjectM2Day(3)">+3h</button>
+      <button class="demo-btn" onclick="devInjectM2Day(5)">+5h</button>
+      <button class="demo-btn" onclick="devInjectM2Day(7)">+7h</button>
+      <button class="demo-btn" onclick="devInjectM2Day(10)">+10h</button>
+    </div>
+  </div>
 
-      <!-- ── ONGLET : CALCULS ──────────────────────────────── -->
-      <div id="dev-tab-calculs" class="dev-tab-content" style="display:none;">
-        <div class="dev-section-label">VIOLATION JOURNALI&#xc8;RE (base 7h)</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;">
-          <button class="demo-btn" onclick="devTestDay(2)">+2h<br><span style="font-size:0.6rem;opacity:0.7;">9h &#x2705;</span></button>
-          <button class="demo-btn" onclick="devTestDay(3)">+3h<br><span style="font-size:0.6rem;opacity:0.7;">10h &#x26A0;</span></button>
-          <button class="demo-btn" onclick="devTestDay(5)">+5h<br><span style="font-size:0.6rem;opacity:0.7;">12h &#x1F534;</span></button>
-          <button class="demo-btn" onclick="devTestDay(7)">+7h<br><span style="font-size:0.6rem;opacity:0.7;">14h crit</span></button>
-        </div>
-        <div class="dev-section-label">VIOLATION HEBDO (base 35h)</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;">
-          <button class="demo-btn" onclick="devTestWeek(6)">+6h<br><span style="font-size:0.6rem;opacity:0.7;">41h &#x2705;</span></button>
-          <button class="demo-btn" onclick="devTestWeek(9)">+9h<br><span style="font-size:0.6rem;opacity:0.7;">44h &#x26A0;</span></button>
-          <button class="demo-btn" onclick="devTestWeek(13)">+13h<br><span style="font-size:0.6rem;opacity:0.7;">48h &#x1F534;</span></button>
-          <button class="demo-btn" onclick="devTestWeek(18)">+18h<br><span style="font-size:0.6rem;opacity:0.7;">53h crit</span></button>
-        </div>
-        <div class="dev-section-label">CONTINGENT ANNUEL (220h)</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;">
-          <button class="demo-btn" onclick="devTestAnnual(100)">100h<br><span style="font-size:0.6rem;opacity:0.7;">45%</span></button>
-          <button class="demo-btn" onclick="devTestAnnual(165)">165h<br><span style="font-size:0.6rem;opacity:0.7;">75% &#x26A0;</span></button>
-          <button class="demo-btn" onclick="devTestAnnual(200)">200h<br><span style="font-size:0.6rem;opacity:0.7;">90%</span></button>
-          <button class="demo-btn" onclick="devTestAnnual(230)">230h<br><span style="font-size:0.6rem;opacity:0.7;">105% &#x1F6A8;</span></button>
-        </div>
-        <button class="demo-btn" style="width:100%;" onclick="kitsuneNarrateOvertime(0,'DEV')">&#x1F98A; Analyser maintenant</button>
-      </div>
+  <!-- ── ONGLET : CALCULS ──────────────────────────────── -->
+  <div id="dev-tab-calculs" class="dev-tab-content" style="display:none;">
+    <div class="dev-section-label">VIOLATION JOURNALI&#xc8;RE (base 7h)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;">
+      <button class="demo-btn" onclick="devTestDay(2)">+2h<br><span style="font-size:0.6rem;opacity:0.7;">9h &#x2705;</span></button>
+      <button class="demo-btn" onclick="devTestDay(3)">+3h<br><span style="font-size:0.6rem;opacity:0.7;">10h &#x26A0;</span></button>
+      <button class="demo-btn" onclick="devTestDay(5)">+5h<br><span style="font-size:0.6rem;opacity:0.7;">12h &#x1F534;</span></button>
+      <button class="demo-btn" onclick="devTestDay(7)">+7h<br><span style="font-size:0.6rem;opacity:0.7;">14h crit</span></button>
+    </div>
+    <div class="dev-section-label">VIOLATION HEBDO (base 35h)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;">
+      <button class="demo-btn" onclick="devTestWeek(6)">+6h<br><span style="font-size:0.6rem;opacity:0.7;">41h &#x2705;</span></button>
+      <button class="demo-btn" onclick="devTestWeek(9)">+9h<br><span style="font-size:0.6rem;opacity:0.7;">44h &#x26A0;</span></button>
+      <button class="demo-btn" onclick="devTestWeek(13)">+13h<br><span style="font-size:0.6rem;opacity:0.7;">48h &#x1F534;</span></button>
+      <button class="demo-btn" onclick="devTestWeek(18)">+18h<br><span style="font-size:0.6rem;opacity:0.7;">53h crit</span></button>
+    </div>
+    <div class="dev-section-label">CONTINGENT ANNUEL (220h)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;">
+      <button class="demo-btn" onclick="devTestAnnual(100)">100h<br><span style="font-size:0.6rem;opacity:0.7;">45%</span></button>
+      <button class="demo-btn" onclick="devTestAnnual(165)">165h<br><span style="font-size:0.6rem;opacity:0.7;">75% &#x26A0;</span></button>
+      <button class="demo-btn" onclick="devTestAnnual(200)">200h<br><span style="font-size:0.6rem;opacity:0.7;">90%</span></button>
+      <button class="demo-btn" onclick="devTestAnnual(230)">230h<br><span style="font-size:0.6rem;opacity:0.7;">105% &#x1F6A8;</span></button>
+    </div>
+    <button class="demo-btn" style="width:100%;" onclick="kitsuneNarrateOvertime(0,'DEV')">&#x1F98A; Analyser maintenant</button>
+  </div>
 
-      <!-- ── ONGLET : SCÉNARIOS ─────────────────────────────── -->
-      <div id="dev-tab-scenarios" class="dev-tab-content" style="display:none;">
-        <div style="display:flex;gap:6px;margin-bottom:6px;">
-          <input id="dev-sc-search" type="number" min="1" max="600" placeholder="N&#xb0; sc&#xe9;nario 1&#x2013;600" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,140,66,0.3);color:#FF8C42;border-radius:7px;padding:5px 8px;font-size:0.8rem;">
-          <button class="demo-btn" onclick="devPlayScenarioById()">Jouer</button>
-        </div>
-        <div class="dev-section-label" style="margin-bottom:5px;">FILTRER PAR CAT&#xc9;GORIE</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;" id="dev-cat-filters"></div>
-        <div style="font-size:0.72rem;color:#FF8C42;font-weight:700;margin-bottom:5px;" id="dev-sc-count">Chargement&#x2026;</div>
-        <div style="display:flex;flex-direction:column;gap:5px;max-height:30vh;overflow-y:auto;" id="dev-scenario-list"></div>
-      </div>
+  <!-- ── ONGLET : SCÉNARIOS ─────────────────────────────── -->
+  <div id="dev-tab-scenarios" class="dev-tab-content" style="display:none;">
+    <div style="display:flex;gap:6px;margin-bottom:6px;">
+      <input id="dev-sc-search" type="number" min="1" max="600" placeholder="N&#xb0; sc&#xe9;nario 1&#x2013;600" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,140,66,0.3);color:#FF8C42;border-radius:7px;padding:5px 8px;font-size:0.8rem;">
+      <button class="demo-btn" onclick="devPlayScenarioById()">Jouer</button>
+    </div>
+    <div class="dev-section-label" style="margin-bottom:5px;">FILTRER PAR CAT&#xc9;GORIE</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;" id="dev-cat-filters"></div>
+    <div style="font-size:0.72rem;color:#FF8C42;font-weight:700;margin-bottom:5px;" id="dev-sc-count">Chargement&#x2026;</div>
+    <div style="display:flex;flex-direction:column;gap:5px;max-height:30vh;overflow-y:auto;" id="dev-scenario-list"></div>
+  </div>
 
-      <!-- ── ONGLET : PERSO ─────────────────────────────────── -->
-      <div id="dev-tab-perso" class="dev-tab-content" style="display:none;">
-        <div class="dev-section-label">NIVEAU</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px;">
-          <button class="demo-btn" onclick="devSetLevel(1)">Niv 1</button>
-          <button class="demo-btn" onclick="devSetLevel(3)">Niv 3</button>
-          <button class="demo-btn" onclick="devSetLevel(5)">Niv 5</button>
-          <button class="demo-btn" onclick="devSetLevel(8)">Niv 8</button>
-          <button class="demo-btn" onclick="devSetLevel(10)">Niv 10</button>
-          <button class="demo-btn" onclick="devSetLevel(12)">Niv 12</button>
-          <button class="demo-btn" onclick="devSetLevel(15)">Niv 15</button>
-          <button class="demo-btn" onclick="devSetLevel(20)">Niv 20</button>
-        </div>
-        <div class="dev-section-label">XP</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
-          <button class="demo-btn" onclick="demoXP(100)">+100</button>
-          <button class="demo-btn" onclick="demoXP(500)">+500</button>
-          <button class="demo-btn" onclick="demoXP(1000)">+1k</button>
-          <button class="demo-btn" onclick="demoXP(5000)">+5k</button>
-          <button class="demo-btn" onclick="demoXP(10000)">+10k</button>
-        </div>
-        <div class="dev-section-label">LIGUE</div>
-        <div style="display:flex;flex-direction:column;gap:5px;" id="dev-league-list"></div>
-      </div>
+  <!-- ── ONGLET : PERSO ─────────────────────────────────── -->
+  <div id="dev-tab-perso" class="dev-tab-content" style="display:none;">
+    <div class="dev-section-label">NIVEAU</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px;">
+      <button class="demo-btn" onclick="devSetLevel(1)">Niv 1</button>
+      <button class="demo-btn" onclick="devSetLevel(3)">Niv 3</button>
+      <button class="demo-btn" onclick="devSetLevel(5)">Niv 5</button>
+      <button class="demo-btn" onclick="devSetLevel(8)">Niv 8</button>
+      <button class="demo-btn" onclick="devSetLevel(10)">Niv 10</button>
+      <button class="demo-btn" onclick="devSetLevel(12)">Niv 12</button>
+      <button class="demo-btn" onclick="devSetLevel(15)">Niv 15</button>
+      <button class="demo-btn" onclick="devSetLevel(20)">Niv 20</button>
+    </div>
+    <div class="dev-section-label">XP</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
+      <button class="demo-btn" onclick="demoXP(100)">+100</button>
+      <button class="demo-btn" onclick="demoXP(500)">+500</button>
+      <button class="demo-btn" onclick="demoXP(1000)">+1k</button>
+      <button class="demo-btn" onclick="demoXP(5000)">+5k</button>
+      <button class="demo-btn" onclick="demoXP(10000)">+10k</button>
+    </div>
+    <div class="dev-section-label">LIGUE</div>
+    <div style="display:flex;flex-direction:column;gap:5px;" id="dev-league-list"></div>
+  </div>
 
-      <!-- ── ONGLET : BURN-OUT ──────────────────────────────── -->
-      <div id="dev-tab-burnout" class="dev-tab-content" style="display:none;">
-        <div class="dev-section-label">SCORE BURN-OUT</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-          <input type="range" min="0" max="100" value="0" id="dev-burnout-slider" oninput="devSetBurnout(this.value)" style="flex:1;accent-color:#FF8C42;">
-          <span id="dev-burnout-val" style="color:#FF8C42;font-weight:900;min-width:30px;text-align:right;">0</span>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;">
-          <button class="demo-btn" onclick="devSetBurnout(0)">0</button>
-          <button class="demo-btn" onclick="devSetBurnout(30)">30</button>
-          <button class="demo-btn" onclick="devSetBurnout(50)">50</button>
-          <button class="demo-btn" onclick="devSetBurnout(60)">60 &#x26A0;</button>
-          <button class="demo-btn" onclick="devSetBurnout(75)">75</button>
-          <button class="demo-btn" onclick="devSetBurnout(85)">85</button>
-          <button class="demo-btn" onclick="devSetBurnout(95)">95</button>
-          <button class="demo-btn" onclick="devSetBurnout(100)">100 &#x1F6A8;</button>
-        </div>
-      </div>
+  <!-- ── ONGLET : BURN-OUT ──────────────────────────────── -->
+  <div id="dev-tab-burnout" class="dev-tab-content" style="display:none;">
+    <div class="dev-section-label">SCORE BURN-OUT</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <input type="range" min="0" max="100" value="0" id="dev-burnout-slider" oninput="devSetBurnout(this.value)" style="flex:1;accent-color:#FF8C42;">
+      <span id="dev-burnout-val" style="color:#FF8C42;font-weight:900;min-width:30px;text-align:right;">0</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;">
+      <button class="demo-btn" onclick="devSetBurnout(0)">0</button>
+      <button class="demo-btn" onclick="devSetBurnout(30)">30</button>
+      <button class="demo-btn" onclick="devSetBurnout(50)">50</button>
+      <button class="demo-btn" onclick="devSetBurnout(60)">60 &#x26A0;</button>
+      <button class="demo-btn" onclick="devSetBurnout(75)">75</button>
+      <button class="demo-btn" onclick="devSetBurnout(85)">85</button>
+      <button class="demo-btn" onclick="devSetBurnout(95)">95</button>
+      <button class="demo-btn" onclick="devSetBurnout(100)">100 &#x1F6A8;</button>
+    </div>
+  </div>
 
-      <!-- ── ONGLET : BADGES ────────────────────────────────── -->
-      <div id="dev-tab-badges" class="dev-tab-content" style="display:none;">
-        <div style="display:flex;gap:6px;margin-bottom:6px;">
-          <button class="demo-btn" onclick="devBadgesAll(true)">Tout d&#xe9;bloquer</button>
-          <button class="demo-btn" onclick="devBadgesAll(false)">Tout verrouiller</button>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px;max-height:32vh;overflow-y:auto;" id="dev-badges-list"></div>
-      </div>
+  <!-- ── ONGLET : BADGES ────────────────────────────────── -->
+  <div id="dev-tab-badges" class="dev-tab-content" style="display:none;">
+    <div style="display:flex;gap:6px;margin-bottom:6px;">
+      <button class="demo-btn" onclick="devBadgesAll(true)">Tout d&#xe9;bloquer</button>
+      <button class="demo-btn" onclick="devBadgesAll(false)">Tout verrouiller</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;max-height:32vh;overflow-y:auto;" id="dev-badges-list"></div>
+  </div>
 
-      <!-- ── ONGLET : ANIMATIONS ────────────────────────────── -->
-      <div id="dev-tab-anim" class="dev-tab-content" style="display:none;">
-        <div class="dev-section-label">LEVEL-UP</div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px;">
-          <button class="demo-btn" onclick="devAnim('levelup',1)">Niv 1</button>
-          <button class="demo-btn" onclick="devAnim('levelup',5)">Niv 5</button>
-          <button class="demo-btn" onclick="devAnim('levelup',10)">Niv 10</button>
-          <button class="demo-btn" onclick="devAnim('levelup',20)">Niv 20</button>
-        </div>
-        <div class="dev-section-label">BADGE UNLOCK</div>
-        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px;" id="dev-anim-badge-list"></div>
-        <div class="dev-section-label">STORM / KITSUNE</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px;">
-          <button class="demo-btn" onclick="devAnim('storm',0)">Storm 0</button>
-          <button class="demo-btn" onclick="devAnim('storm',45)">Storm 45</button>
-          <button class="demo-btn" onclick="devAnim('storm',75)">Storm 75</button>
-          <button class="demo-btn" onclick="devAnim('storm',90)">Storm 90</button>
-          <button class="demo-btn" onclick="demoNarrate(1)">&#x1F98A; +1h</button>
-          <button class="demo-btn" onclick="demoNarrate(10)">&#x1F98A; +10h</button>
-          <button class="demo-btn" onclick="demoNarrate(48)">&#x1F98A; +48h</button>
-        </div>
-      </div>
+  <!-- ── ONGLET : ANIMATIONS ────────────────────────────── -->
+  <div id="dev-tab-anim" class="dev-tab-content" style="display:none;">
+    <div class="dev-section-label">LEVEL-UP</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px;">
+      <button class="demo-btn" onclick="devAnim('levelup',1)">Niv 1</button>
+      <button class="demo-btn" onclick="devAnim('levelup',5)">Niv 5</button>
+      <button class="demo-btn" onclick="devAnim('levelup',10)">Niv 10</button>
+      <button class="demo-btn" onclick="devAnim('levelup',20)">Niv 20</button>
+    </div>
+    <div class="dev-section-label">BADGE UNLOCK</div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px;" id="dev-anim-badge-list"></div>
+    <div class="dev-section-label">STORM / KITSUNE</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;">
+      <button class="demo-btn" onclick="devAnim('storm',0)">Storm 0</button>
+      <button class="demo-btn" onclick="devAnim('storm',45)">Storm 45</button>
+      <button class="demo-btn" onclick="devAnim('storm',75)">Storm 75</button>
+      <button class="demo-btn" onclick="devAnim('storm',90)">Storm 90</button>
+      <button class="demo-btn" onclick="demoNarrate(1)">&#x1F98A; +1h</button>
+      <button class="demo-btn" onclick="demoNarrate(10)">&#x1F98A; +10h</button>
+      <button class="demo-btn" onclick="demoNarrate(48)">&#x1F98A; +48h</button>
+    </div>
+  </div>
 
-      <!-- ── ONGLET : SAISON ────────────────────────────────── -->
-      <div id="dev-tab-saison" class="dev-tab-content" style="display:none;">
-        <div class="dev-section-label">D&#xc9;COR SAISONNIER</div>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px;">
-          <button class="demo-btn" onclick="devSetSeason(0)">&#x2744;&#xFE0F; Q1</button>
-          <button class="demo-btn" onclick="devSetSeason(1)">&#x1F33A; Q2</button>
-          <button class="demo-btn" onclick="devSetSeason(2)">&#x2600;&#xFE0F; Q3</button>
-          <button class="demo-btn" onclick="devSetSeason(3)">&#x1F342; Q4</button>
-          <button class="demo-btn" onclick="devSetSeason(-1)">&#x1F504; R&#xe9;el</button>
-        </div>
-        <div class="dev-section-label">PNJ — 10 &#xc9;VOLUTIONS</div>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;">
-          <button class="demo-btn" onclick="updatePNJLevel(1)">F1<br><span style="font-size:0.6rem;opacity:0.7;">1-5</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(6)">F2<br><span style="font-size:0.6rem;opacity:0.7;">6-10</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(11)">F3<br><span style="font-size:0.6rem;opacity:0.7;">11-15</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(16)">F4<br><span style="font-size:0.6rem;opacity:0.7;">16-20</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(21)">F5<br><span style="font-size:0.6rem;opacity:0.7;">21-25</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(26)">F6<br><span style="font-size:0.6rem;opacity:0.7;">26-30</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(31)">F7<br><span style="font-size:0.6rem;opacity:0.7;">31-35</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(36)">F8<br><span style="font-size:0.6rem;opacity:0.7;">36-40</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(41)">F9<br><span style="font-size:0.6rem;opacity:0.7;">41-45</span></button>
-          <button class="demo-btn" onclick="updatePNJLevel(46)">F10<br><span style="font-size:0.6rem;opacity:0.7;">46-50</span></button>
-        </div>
-      </div>
+  <!-- ── ONGLET : SAISON ────────────────────────────────── -->
+  <div id="dev-tab-saison" class="dev-tab-content" style="display:none;">
+    <div class="dev-section-label">D&#xc9;COR SAISONNIER</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:8px;">
+      <button class="demo-btn" onclick="devSetSeason(0)">&#x2744;&#xFE0F; Q1</button>
+      <button class="demo-btn" onclick="devSetSeason(1)">&#x1F33A; Q2</button>
+      <button class="demo-btn" onclick="devSetSeason(2)">&#x2600;&#xFE0F; Q3</button>
+      <button class="demo-btn" onclick="devSetSeason(3)">&#x1F342; Q4</button>
+      <button class="demo-btn" onclick="devSetSeason(-1)">&#x1F504; R&#xe9;el</button>
+    </div>
+    <div class="dev-section-label">PNJ — 10 &#xc9;VOLUTIONS</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;">
+      <button class="demo-btn" onclick="updatePNJLevel(1)">F1<br><span style="font-size:0.6rem;opacity:0.7;">1-5</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(6)">F2<br><span style="font-size:0.6rem;opacity:0.7;">6-10</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(11)">F3<br><span style="font-size:0.6rem;opacity:0.7;">11-15</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(16)">F4<br><span style="font-size:0.6rem;opacity:0.7;">16-20</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(21)">F5<br><span style="font-size:0.6rem;opacity:0.7;">21-25</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(26)">F6<br><span style="font-size:0.6rem;opacity:0.7;">26-30</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(31)">F7<br><span style="font-size:0.6rem;opacity:0.7;">31-35</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(36)">F8<br><span style="font-size:0.6rem;opacity:0.7;">36-40</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(41)">F9<br><span style="font-size:0.6rem;opacity:0.7;">41-45</span></button>
+      <button class="demo-btn" onclick="updatePNJLevel(46)">F10<br><span style="font-size:0.6rem;opacity:0.7;">46-50</span></button>
+    </div>
+  </div>
 
-    </div><!-- /padding -->
+</div><!-- /padding -->
+```
+
   </div><!-- /#dev-drawer -->
 
   <!-- ── BARRE D'ONGLETS HORIZONTALE (toujours visible) ─────── -->
+
   <div id="dev-tabbar">
     <span style="color:#FF8C42;font-weight:900;font-size:0.7rem;white-space:nowrap;margin-right:4px;">&#x1F6E0; DEV</span>
 
-    <button class="dev-tabbar-btn active" onclick="devTab('data')">&#x1F4CA; Donn&#xe9;es</button>
-    <button class="dev-tabbar-btn" onclick="devTab('calculs')">&#x2696; Calculs</button>
-    <button class="dev-tabbar-btn" onclick="devTab('scenarios')">&#x1F98A; Sc&#xe9;narios</button>
-    <button class="dev-tabbar-btn" onclick="devTab('perso')">&#x2694; Perso</button>
-    <button class="dev-tabbar-btn" onclick="devTab('burnout')">&#x1F525; Burn-out</button>
-    <button class="dev-tabbar-btn" onclick="devTab('badges')">&#x1F3C5; Badges</button>
-    <button class="dev-tabbar-btn" onclick="devTab('anim')">&#x2728; Anim</button>
-    <button class="dev-tabbar-btn" onclick="devTab('saison')">&#x1F332; Saison</button>
+```
+<button class="dev-tabbar-btn active" onclick="devTab('data')">&#x1F4CA; Donn&#xe9;es</button>
+<button class="dev-tabbar-btn" onclick="devTab('calculs')">&#x2696; Calculs</button>
+<button class="dev-tabbar-btn" onclick="devTab('scenarios')">&#x1F98A; Sc&#xe9;narios</button>
+<button class="dev-tabbar-btn" onclick="devTab('perso')">&#x2694; Perso</button>
+<button class="dev-tabbar-btn" onclick="devTab('burnout')">&#x1F525; Burn-out</button>
+<button class="dev-tabbar-btn" onclick="devTab('badges')">&#x1F3C5; Badges</button>
+<button class="dev-tabbar-btn" onclick="devTab('anim')">&#x2728; Anim</button>
+<button class="dev-tabbar-btn" onclick="devTab('saison')">&#x1F332; Saison</button>
 
-    <!-- Séparateur -->
-    <span style="flex-shrink:0;width:1px;height:20px;background:rgba(255,140,66,0.2);margin:0 4px;"></span>
+<!-- Séparateur -->
+<span style="flex-shrink:0;width:1px;height:20px;background:rgba(255,140,66,0.2);margin:0 4px;"></span>
 
-    <button id="demo-toggle-btn" onclick="toggleDemoPanel()" title="R&#xe9;duire/agrandir" style="background:rgba(255,140,66,0.1);border:1px solid rgba(255,140,66,0.3);color:#FF8C42;border-radius:7px;padding:5px 9px;font-size:0.8rem;cursor:pointer;flex-shrink:0;">&#x25BC;</button>
-    <button onclick="exitDemoMode()" style="background:rgba(229,57,53,0.12);border:1px solid #E53935;color:#E53935;border-radius:7px;padding:5px 9px;cursor:pointer;font-weight:700;font-size:0.75rem;flex-shrink:0;">&#x2715;</button>
+<button id="demo-toggle-btn" onclick="toggleDemoPanel()" title="R&#xe9;duire/agrandir" style="background:rgba(255,140,66,0.1);border:1px solid rgba(255,140,66,0.3);color:#FF8C42;border-radius:7px;padding:5px 9px;font-size:0.8rem;cursor:pointer;flex-shrink:0;">&#x25BC;</button>
+<button onclick="exitDemoMode()" style="background:rgba(229,57,53,0.12);border:1px solid #E53935;color:#E53935;border-radius:7px;padding:5px 9px;cursor:pointer;font-weight:700;font-size:0.75rem;flex-shrink:0;">&#x2715;</button>
+```
+
   </div>
 
 </div>
@@ -3224,6 +3275,7 @@ async function sendToKitsune() {
   a.hud-nav-btn::before { content: none !important; }
 }
 </style>
+
 <script>
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 // ════════════════════════════════════════════════════════════════
@@ -3789,6 +3841,7 @@ function demoNarrate(hours) {
   _demoLabel('Kitsune : +' + hours + 'h sup narré');
 }
 </script>
+
 <script>
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
 //  NOUVELLES FONCTIONS FOX ENGINE \u2014 patch complet
@@ -6097,6 +6150,7 @@ function buildBadgeStats() {
 </script>
 
 <!-- ══ ONBOARDING ════════════════════════════════════════════ -->
+
 <div id="popup-onboarding" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(4,4,14,0.97);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
   <div style="max-width:340px;width:100%;text-align:center;">
     <div id="ob-steps">
@@ -6142,6 +6196,7 @@ function buildBadgeStats() {
 </div>
 
 <!-- ══ POPUP RÉSUMÉ MENSUEL ══════════════════════════════════ -->
+
 <div class="fox-popup-backdrop" id="popup-monthly-summary">
   <div class="fox-popup">
     <div class="fox-popup-header">
@@ -6154,7 +6209,9 @@ function buildBadgeStats() {
 </div>
 
 <!-- ══ NOTIFICATION HEBDO ════════════════════════════════════ -->
+
 <!-- POPUP WEEKLY-NOTIF DÉSACTIVÉE -->
+
 <!-- <div id="weekly-notif">
   <div style="display:flex;align-items:center;gap:10px;">
     <span style="font-size:1.5rem;">🦊</span>
@@ -6172,8 +6229,8 @@ function buildBadgeStats() {
   </div>
 </div> -->
 
-
 <!-- ══ POPUP GLOSSAIRE JURIDIQUE ════════════════════════════ -->
+
 <div class="fox-popup-backdrop" id="popup-glossaire">
   <div class="fox-popup" style="max-width:480px;">
     <div class="fox-popup-header">
@@ -6187,8 +6244,8 @@ function buildBadgeStats() {
   </div>
 </div>
 
-
 <!-- ══ POPUP HISTORIQUE VIOLATIONS ══════════════════════════ -->
+
 <div class="fox-popup-backdrop" id="popup-violations">
   <div class="fox-popup" style="max-width:480px;">
     <div class="fox-popup-header">
@@ -6205,6 +6262,7 @@ function buildBadgeStats() {
 </div>
 
 <!-- ══ POPUP MODE RAPPORT ════════════════════════════════════ -->
+
 <div class="fox-popup-backdrop" id="popup-rapport">
   <div class="fox-popup" style="max-width:480px;">
     <div class="fox-popup-header">
@@ -6219,8 +6277,8 @@ function buildBadgeStats() {
   </div>
 </div>
 
-
 <!-- ══ POPUP HEATMAP ANNUELLE ═══════════════════════════════ -->
+
 <div class="fox-popup-backdrop" id="popup-heatmap">
   <div class="fox-popup" style="max-width:500px;">
     <div class="fox-popup-header">
@@ -6244,8 +6302,8 @@ function buildBadgeStats() {
   </div>
 </div>
 
-
 <!-- POPUP HISTORIQUE XP -->
+
 <div class="fox-popup-backdrop" id="popup-xp-history">
   <div class="fox-popup">
     <div class="fox-popup-header">
