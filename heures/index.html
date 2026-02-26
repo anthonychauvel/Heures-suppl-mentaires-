@@ -49,7 +49,7 @@ h1, h2 { text-align: center; }
   display: flex; flex-direction: column; justify-content: space-between;
 }
 .day small { font-size: 11px; line-height: 1.1; white-space: nowrap; }
-.day.in-period { border: 2px solid #2e7d32; background: #e8f5e9; }
+.day.in-period { border: 2px solid #2196a6; background: #e0f4f7; }
 button, input, textarea { width: 100%; padding: 8px; margin: 5px 0; }
 .popup {
   position: fixed; inset: 0; background: rgba(0,0,0,.5);
@@ -372,15 +372,15 @@ button, input, textarea { width: 100%; padding: 8px; margin: 5px 0; }
 
 <div style="max-width:900px;margin:15px auto;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;">
   <div style="display:flex;gap:10px;flex-wrap:wrap;">
-    <button onclick="exportJSON()" style="background:#e8f5e9;border:1px solid #2e7d32;font-weight:bold;">
+    <button onclick="exportJSON()" style="background:#e0f4f7;border:1px solid #2196a6;font-weight:bold;">
       &#x1F4BE; Sauvegarde dans un fichier
     </button>
   </div>
-  <div id="saveBadges" style="font-size:13px;color:#2e7d32;margin-top:6px;width:100%;">
+  <div id="saveBadges" style="font-size:13px;color:#2196a6;margin-top:6px;width:100%;">
     <span id="autoSaveBadge">&#x1F7E2; Dans l&apos;application : &mdash;</span><br>
     <span id="fileSaveBadge">&#x1F4BE; Sauvegarde fichier : &mdash;</span>
   </div>
-  <span style="font-size:13px;color:#2e7d32;align-self:center;">Sauvegarde automatique dans l&apos;application &middot; Sauvegarde fichier recommand&eacute;e</span>
+  <span style="font-size:13px;color:#2196a6;align-self:center;">Sauvegarde automatique dans l&apos;application &middot; Sauvegarde fichier recommand&eacute;e</span>
 </div>
 
 <div class="totaux main-zone" id="totaux"></div>
@@ -819,7 +819,7 @@ function calculate() {
       const v = Number(document.getElementById("hourlyRateInput").value);
       annualRate = isNaN(v) ? 10 : v; localStorage.setItem("ANNUAL_RATE_" + currentSuffix, annualRate); calculate();
     };
-    totaux.innerHTML += `<hr><div style="background:#e8f5e9;padding:15px;border:2px solid #2e7d32;border-radius:8px;"><h3 style="margin:0;color:#2e7d32;">🎯 Clôture Annuelle</h3><b>Paiement (${annualRate}€/h) :</b> ${(net * annualRate).toFixed(2)} €</div>`;
+    totaux.innerHTML += `<hr><div style="background:#e0f4f7;padding:15px;border:2px solid #2196a6;border-radius:8px;"><h3 style="margin:0;color:#2196a6;">🎯 Clôture Annuelle</h3><b>Paiement (${annualRate}€/h) :</b> ${(net * annualRate).toFixed(2)} €</div>`;
   }
 }
 
@@ -1325,7 +1325,7 @@ function protectFunctions() {
         <div class="wiz-choice-btn" id="wizChoiceManual" onclick="wizSelectClosureMode('manual')">✏️ Manuel<br><small style="font-weight:400;color:#999;">Je saisis les 12 dates moi-même</small></div>
       </div>
       <div id="wizManualDates" style="display:none;"><div class="wiz-closures-grid" id="wizClosuresGrid"></div></div>
-      <div id="wizAutoInfo" style="display:none;font-size:13px;color:#2e7d32;background:#e8f5e9;border-radius:8px;padding:10px;margin-bottom:10px;">✅ Les 12 derniers dimanches de chaque mois seront générés automatiquement.</div>
+      <div id="wizAutoInfo" style="display:none;font-size:13px;color:#2196a6;background:#e0f4f7;border-radius:8px;padding:10px;margin-bottom:10px;">✅ Les 12 derniers dimanches de chaque mois seront générés automatiquement.</div>
       <div class="wiz-nav">
         <button onclick="wizGoTo(1)" style="flex:0 0 auto;width:auto;padding:8px 16px;">← Retour</button>
         <button class="kitsune-btn" onclick="wizGoTo(3)">Suivant →</button>
