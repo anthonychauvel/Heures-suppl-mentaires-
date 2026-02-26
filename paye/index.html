@@ -16,12 +16,12 @@
 .kitsune-btn:hover{transform:scale(1.02);box-shadow:0 4px 16px rgba(79,179,194,0.55)}
 .kitsune-btn:active{transform:scale(0.97)}
 .menu-btn{padding:9px 16px;border-radius:20px;border:none;background:rgba(255,255,255,0.12);color:#e6e6e6;font-size:14px;font-weight:500;cursor:pointer;width:auto;margin:0;line-height:1}
-.topbar{position:sticky;top:0;z-index:2000;background:var(--bg);padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;display:flex;gap:8px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;border-bottom:1px solid #1c1f26}
+.topbar{position:sticky;top:0;z-index:2000;background:var(--bg);padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;display:flex;gap:8px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;border-bottom:1px solid #1c1f26;min-height:54px}
 
 :root{–bg:#0f1115;–card:#1c1f26;–text:#e6e6e6;–muted:#9aa0a6;–accent:#4FB3C2;–accent2:#2196a6;–danger:#c0392b;–success:#2ecc71}
 #versionBadge{position:fixed;bottom:calc(env(safe-area-inset-bottom) + 14px);right:calc(env(safe-area-inset-right) + 14px);font-size:11px;opacity:.55;color:#9aa0a6;z-index:99999;user-select:none;pointer-events:none}
-body{margin:0;background:var(–bg);color:var(–text);font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;overflow-x:hidden}
-.main{padding:12px;overflow-x:hidden}
+html{background:var(–bg)}body{margin:0;min-height:100vh;background:var(–bg);color:var(–text);font-family:-apple-system,BlinkMacSystemFont,Arial,sans-serif;overflow-x:hidden}
+.main{padding:12px;padding-top:70px;overflow-x:hidden}
 h1,h2,h3{text-align:center}
 button{width:100%;padding:10px;border-radius:8px;border:none;background:var(–accent);color:white;font-size:15px;margin-top:6px}
 button.secondary{background:#2a2f3a}
@@ -332,7 +332,7 @@ async function wizFinish(){
   if(!isNaN(r)){SETTINGS["rate"]=r;document.getElementById("rate").value=r}
   if(!isNaN(cn)){SETTINGS["coefNet"]=cn;document.getElementById("coefNet").value=cn}
   localStorage.setItem(kSettings(),JSON.stringify(SETTINGS));
-  localStorage.setItem("ONBOARDING_DONE","1");
+  localStorage.setItem("ONBOARDING_DONE","1");localStorage.setItem("CA_HS_TRACKER_V1_ONBOARDING","1");
   closeWizard();loadMonth();
 }
 
@@ -344,12 +344,14 @@ async function wizFinish(){
 window.addEventListener("load",()=>{
   const v=document.getElementById("versionBadge");if(v)v.textContent="v"+APP_VERSION;
   if(RECOVERY_ACTIVE){openRecovery();return}
+  // Legal d'abord si jamais accepté
   if(!localStorage.getItem("LEGAL_OK")){document.getElementById("legalModal").classList.add("open");return}
-  if(!localStorage.getItem("ONBOARDING_DONE")){openWizard();return}
+  // Wizard si première utilisation de CE fichier (clé propre)
+  if(!localStorage.getItem("CA_HS_TRACKER_V1_ONBOARDING")){openWizard();return}
   loadMonth();
 });
 
-function acceptLegal(){localStorage.setItem("LEGAL_OK","1");document.getElementById("legalModal").classList.remove("open");if(!localStorage.getItem("ONBOARDING_DONE"))openWizard();else loadMonth()}
+function acceptLegal(){localStorage.setItem("LEGAL_OK","1");document.getElementById("legalModal").classList.remove("open");if(!localStorage.getItem("CA_HS_TRACKER_V1_ONBOARDING"))openWizard();else loadMonth()}
 
 /* RECOVERY */
 function openRecovery(){document.getElementById("recoveryModal").classList.add("open");renderSnapshots()}
@@ -491,7 +493,7 @@ function closeDebugGate(){document.getElementById("debugGate").classList.remove(
 function validateDebugAccess(){const inp=document.getElementById("debugCode").value;if(inp!==DEBUG_CODE){alert("❌ Code incorrect");return}alert("🧪 Test de crash requis.");localStorage.setItem("CA_DEBUG","1");simulateCrash()}
 function restartWizard(){
   if(!confirm("Relancer l'assistant de configuration ?\nTes données ne seront pas effacées.")) return;
-  localStorage.removeItem("ONBOARDING_DONE");
+  localStorage.removeItem("ONBOARDING_DONE");localStorage.removeItem("CA_HS_TRACKER_V1_ONBOARDING");
   openWizard();
 }
 
