@@ -23,8 +23,10 @@
       align-items: center;
       min-height: 100vh;
       justify-content: flex-start;
-      padding: 40px 20px;
+      padding: calc(env(safe-area-inset-top) + 40px) 20px calc(env(safe-area-inset-bottom) + 20px);
       gap: 20px;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn {
@@ -359,17 +361,17 @@
 ===================== -->
 
 <div class="btn" onclick="go('heures')">
-  <img src="images/renard-annuel.png.jpg" alt="Compteur annuel">
+  <img src="images/renard-annuel.png.jpg" loading="lazy" alt="Compteur annuel">
   <div class="title">Simulateur de compteur annuel</div>
 </div>
 
 <div class="btn" onclick="go('paye')">
-  <img src="images/renard-mensuel.png.jpg" alt="Paye mensuelle">
+  <img src="images/renard-mensuel.png.jpg" loading="lazy" alt="Paye mensuelle">
   <div class="title">Simulateur d'heures mensualisées</div>
 </div>
 
 <div class="btn" onclick="go('fox')">
-  <img src="images/renard-central.png.jpg" alt="Module central">
+  <img src="images/renard-central.png.jpg" loading="lazy" alt="Module central">
   <div class="title">Fox player</div>
 </div>
 
@@ -390,9 +392,28 @@
     });
   }
 
+  // Scroll lock iOS
+  let _scrollY = 0;
+  function lockScroll() {
+    _scrollY = window.scrollY;
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.top = "-" + _scrollY + "px";
+    document.body.style.width = "100%";
+  }
+  function unlockScroll() {
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.width = "";
+    window.scrollTo(0, _scrollY);
+  }
+
   // Afficher le wizard seulement à la première ouverture
   if (localStorage.getItem("menuWizardDone") === "1") {
     document.getElementById("welcomeWizard").style.display = "none";
+  } else {
+    lockScroll();
   }
 
   let selectedMode = null;
@@ -415,9 +436,11 @@
   function closeWizard() {
     localStorage.setItem("menuWizardDone", "1");
     document.getElementById("welcomeWizard").style.display = "none";
+    unlockScroll();
   }
 
   function reopenWizard() {
+    lockScroll();
     selectedMode = null;
     document.getElementById("cardAnnuel").classList.remove("selected");
     document.getElementById("cardMensuel").classList.remove("selected");
@@ -434,10 +457,12 @@
 
   function openPresentation() {
     document.getElementById("presentationPopup").style.display = "flex";
+    lockScroll();
   }
 
   function closePresentation() {
     document.getElementById("presentationPopup").style.display = "none";
+    unlockScroll();
   }
 
   function go(app) {
