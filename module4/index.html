@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Digital Twin Engine — Module 4</title>
+  <meta name="theme-color" content="#00060f">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/twin-body.css">
+  <link rel="stylesheet" href="css/charts.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<!-- ANIMUS BOOT SCREEN -->
+<div id="animus-boot">
+  <div class="boot-hex-grid"></div>
+  <div class="boot-scan"></div>
+  <div class="boot-sweep"></div>
+  <span class="boot-corner tl"></span>
+  <span class="boot-corner tr"></span>
+  <span class="boot-corner bl"></span>
+  <span class="boot-corner br"></span>
+  <div class="boot-core">
+    <div class="boot-rings">
+      <div class="boot-ring"></div>
+      <div class="boot-ring"></div>
+      <div class="boot-ring"></div>
+      <div class="boot-ring"></div>
+      <div class="boot-center-dot"></div>
+    </div>
+    <div class="boot-title">DIGITAL TWIN ENGINE</div>
+    <div class="boot-subtitle">MODULE 4 &mdash; PREDICTIVE BEHAVIORAL CORE</div>
+    <div class="boot-status" id="boot-status">INITIALISATION...</div>
+    <div class="boot-progress-wrap">
+      <div class="boot-progress-bar" id="boot-progress-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div id="notifications-container"></div>
+
+<!-- MODAL CHECK-IN -->
+<div id="checkin-modal" class="modal hidden">
+  <div class="modal-overlay"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>&#9728; CHECK-IN QUOTIDIEN</h2>
+      <span class="modal-close" id="checkin-close">&#x2715;</span>
+    </div>
+    <div id="checkin-content"></div>
+  </div>
+</div>
+
+<!-- MODAL CONSEILLER -->
+<div id="ai-modal" class="modal hidden">
+  <div class="modal-overlay"></div>
+  <div class="modal-box modal-box--lg">
+    <div class="modal-header">
+      <h2>&#9830; CONSEILLER JURIDIQUE &amp; PREVENTION</h2>
+      <span class="modal-close" id="ai-close">&#x2715;</span>
+    </div>
+    <div id="ai-content"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:flex;">
+
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="brand-icon">&#9830;</div>
+      <span class="brand-name">DIGITAL TWIN</span>
+      <span class="brand-badge">MODULE 4</span>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" data-view="dashboard">TABLEAU DE BORD</button>
+      <button class="nav-btn" data-view="predictions">PREDICTIONS</button>
+      <button class="nav-btn" data-view="whatif">WHAT IF</button>
+      <button class="nav-btn" data-view="heatmap">CALENDRIER</button>
+    </nav>
+    <div class="header-actions">
+      <button class="action-btn" id="btn-checkin" title="Check-in quotidien">&#128203;</button>
+      <button class="action-btn" id="btn-ai" title="Conseiller scenarios">&#9830;</button>
+      <button class="action-btn" id="btn-pdf" title="Exporter PDF">&#128196;</button>
+      <button class="action-btn" id="btn-refresh" title="Actualiser">&#8635;</button>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view active">
+      <div class="dashboard-grid">
+
+        <div class="panel panel--hero">
+          <div class="panel-label">SCORE GLOBAL</div>
+          <div class="panel-corner-br"></div>
+          <div class="hero-score">
+            <span id="score-global-value" class="hero-score-num">--</span>
+            <span class="hero-score-unit">/100</span>
+          </div>
+          <div id="hero-level" class="hero-level bon">--</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);margin-top:4px;">
+            MARGE SECURITE : <span id="marge-securite" style="color:var(--animus)">--</span> pts
+          </div>
+        </div>
+
+        <div class="panel panel--twin">
+          <div class="panel-label">JUMEAU NUMERIQUE</div>
+          <div class="panel-corner-br"></div>
+          <div id="twin-body-container" style="height:calc(100% - 2.5rem);"></div>
+          <div id="twin-body-tooltip" class="twin-tooltip hidden"></div>
+        </div>
+
+        <div class="panel panel--scores">
+          <div class="panel-label">SCORES BIOMETRIQUES</div>
+          <div class="panel-corner-br"></div>
+          <div id="scores-grid"></div>
+        </div>
+
+        <div class="panel panel--radar">
+          <div class="panel-label">CONFORMITE LEGALE</div>
+          <div class="panel-corner-br"></div>
+          <canvas id="radar-canvas" width="250" height="250"></canvas>
+          <div class="radar-legend" id="radar-legend"></div>
+        </div>
+
+        <div class="panel panel--risks">
+          <div class="panel-label">RISQUES DETECTES</div>
+          <div class="panel-corner-br"></div>
+          <div id="risks-list">
+            <div style="color:var(--animus);font-family:var(--font-mono);font-size:10px;text-align:center;padding:var(--gap);opacity:.5;">
+              ANALYSE EN COURS...
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel--advice">
+          <div class="panel-label">RECOMMANDATIONS</div>
+          <div class="panel-corner-br"></div>
+          <div id="advice-list"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PREDICTIONS -->
+    <section id="view-predictions" class="view hidden">
+      <div class="predictions-grid">
+        <div class="panel panel--timeline">
+          <div class="panel-label">COURBE PREDICTIVE</div>
+          <div class="panel-corner-br"></div>
+          <div class="timeline-controls">
+            <label>HS/JOUR : <span id="timeline-hs-val">0</span>H</label>
+            <input type="range" id="timeline-hs" min="0" max="4" step="0.5" value="0">
+            <label>HORIZON :
+              <select id="timeline-days">
+                <option value="7">7 JOURS</option>
+                <option value="14">14 JOURS</option>
+                <option value="30" selected>30 JOURS</option>
+                <option value="60">60 JOURS</option>
+                <option value="90">90 JOURS</option>
+              </select>
+            </label>
+          </div>
+          <canvas id="timeline-canvas" style="height:220px;"></canvas>
+          <div class="timeline-legend">
+            <span class="timeline-legend-item"><span style="background:var(--red);height:2px;display:inline-block;width:14px;"></span>&nbsp;FATIGUE</span>
+            <span class="timeline-legend-item"><span style="background:var(--amber);height:2px;display:inline-block;width:14px;"></span>&nbsp;STRESS</span>
+            <span class="timeline-legend-item"><span style="background:var(--animus);height:2px;display:inline-block;width:14px;"></span>&nbsp;PERFORMANCE</span>
+          </div>
+        </div>
+        <div class="panel panel--scenarios">
+          <div class="panel-label">SCENARIOS</div>
+          <div class="panel-corner-br"></div>
+          <div id="scenarios-container"></div>
+        </div>
+        <div class="panel panel--futur">
+          <div class="panel-label">ETAT PREDIT +30J</div>
+          <div class="panel-corner-br"></div>
+          <div id="futur-state-container"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT IF -->
+    <section id="view-whatif" class="view hidden">
+      <div id="whatif-container" style="display:grid;grid-template-columns:300px 1fr;gap:6px;min-height:calc(100vh - 70px);"></div>
+    </section>
+
+    <!-- HEATMAP -->
+    <section id="view-heatmap" class="view hidden">
+      <div class="panel" style="min-height:calc(100vh - 70px);">
+        <div class="panel-label">HEATMAP ANNUELLE &mdash; RISQUES PAR JOUR</div>
+        <div class="panel-corner-br"></div>
+        <div id="heatmap-container" style="overflow-x:auto;margin-top:4px;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <span id="footer-year">ANNEE --</span>
+    <span id="footer-timestamp">DERNIERE ANALYSE : --</span>
+    <span id="footer-contingent">CONTINGENT : --/220H</span>
+    <span id="footer-status" class="status-ok">&#9632; SYNCHRONISE</span>
+  </footer>
+
+</div>
+
+<div id="chart-tooltip" class="chart-tooltip"></div>
+
+<!-- DATA PARTICLES (spawned by boot) -->
+
+<!-- CORE -->
+<script src="js/core/dte-engine.js"></script>
+<script src="js/core/dte-simulator.js"></script>
+<script src="js/core/dte-risks.js"></script>
+<script src="js/core/dte-learning.js"></script>
+<!-- UI -->
+<script src="js/ui/animus-boot.js"></script>
+<script src="js/ui/twin-body.js"></script>
+<script src="js/ui/radar-chart.js"></script>
+<script src="js/ui/timeline-chart.js"></script>
+<script src="js/ui/heatmap.js"></script>
+<script src="js/ui/whatif-panel.js"></script>
+<script src="js/ui/dashboard.js"></script>
+<!-- FEATURES -->
+<script src="js/features/dte-scenarios.js"></script>
+<script src="js/features/ai-advisor.js"></script>
+<script src="js/features/checkin.js"></script>
+<script src="js/features/pdf-report.js"></script>
+<script src="js/features/notifications.js"></script>
+<!-- APP -->
+<script src="js/app.js"></script>
+
+<!-- BOOT INIT -->
+<script>
+function showApp() {
+  var app = document.getElementById('app');
+  var boot = document.getElementById('animus-boot');
+  if (app) app.style.display = 'flex';
+  if (boot) boot.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  // Fallback: affiche l'app après 5s max si le boot plante
+  var fallback = setTimeout(showApp, 5000);
+
+  try {
+    var boot = new AnimusBoot();
+    boot.start(function(){
+      clearTimeout(fallback);
+      showApp();
+      for(var i=0;i<12;i++){
+        var p = document.createElement('div');
+        p.className = 'data-particle';
+        var x = Math.random()*100, h = 30+Math.random()*90;
+        var dur = 3+Math.random()*5, delay = Math.random()*4;
+        p.style.cssText='position:fixed;left:'+x+'%;height:'+h+'px;width:1px;background:linear-gradient(to bottom,transparent,rgba(0,200,255,0.15),transparent);pointer-events:none;z-index:0;animation:particle-fall '+dur+'s linear -'+delay+'s infinite;';
+        document.body.appendChild(p);
+      }
+    });
+  } catch(e) {
+    clearTimeout(fallback);
+    showApp();
+  }
+});
+</script>
+
+</body>
+</html>
