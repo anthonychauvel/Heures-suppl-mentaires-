@@ -9,8 +9,6 @@
   <meta name="format-detection" content="telephone=no">
   <title>🦊 FOX Engine — Heures Sup' Ultimate</title>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body class="gaming-mode">
 
@@ -86,14 +84,15 @@ window._fox_pre = (function() {
   </div>
   <div class="hud-stats">
     <div class="hud-stat" onclick="openPopup('popup-modules')" title="Voir les données heures sup" style="cursor:pointer;"><div class="hud-stat-icon">⏱️</div><div class="hud-stat-val" id="hud-hours"><script>document.write(window._fox_pre.hrs||0)</script></div><div class="hud-stat-lbl">H.SUP</div></div>
-    <div class="hud-stat hud-stat-game" id="hud-stat-energy" onclick="openPopup('popup-burnout')" title="Voir l'énergie et burn-out" style="cursor:pointer;"><div class="hud-stat-icon">❤️</div><div class="hud-stat-val" id="hud-energy">100</div><div class="hud-stat-lbl">ÉNERGIE</div></div>
-    <div class="hud-stat hud-stat-game" id="hud-stat-burnout" onclick="openPopup('popup-burnout')" title="Voir le risque burn-out" style="cursor:pointer;"><div class="hud-stat-icon">🔥</div><div class="hud-stat-val" id="hud-burnout"><script>document.write(window._fox_pre.bo||0)</script></div><div class="hud-stat-lbl">RISQUE</div></div>
-    <div class="hud-stat hud-stat-game" id="hud-stat-badges" onclick="openPopup('popup-badges')" title="Voir mes badges" style="cursor:pointer;"><div class="hud-stat-icon">🏅</div><div class="hud-stat-val" id="hud-badges"><script>document.write(window._fox_pre.rwds||0)</script></div><div class="hud-stat-lbl">BADGES</div></div>
+    <div class="hud-stat" onclick="openPopup('popup-burnout')" title="Voir l'énergie et burn-out" style="cursor:pointer;"><div class="hud-stat-icon">❤️</div><div class="hud-stat-val" id="hud-energy">100</div><div class="hud-stat-lbl">ÉNERGIE</div></div>
+    <div class="hud-stat" onclick="openPopup('popup-burnout')" title="Voir le risque burn-out" style="cursor:pointer;"><div class="hud-stat-icon">🔥</div><div class="hud-stat-val" id="hud-burnout"><script>document.write(window._fox_pre.bo||0)</script></div><div class="hud-stat-lbl">RISQUE</div></div>
+    <div class="hud-stat" onclick="openPopup('popup-badges')" title="Voir mes badges" style="cursor:pointer;"><div class="hud-stat-icon">🏅</div><div class="hud-stat-val" id="hud-badges"><script>document.write(window._fox_pre.rwds||0)</script></div><div class="hud-stat-lbl">BADGES</div></div>
   </div>
   <div id="hud-buttons">
     <a href="../heures/index.html" class="hud-menu-btn hud-nav-btn" style="text-decoration:none;border-color:rgba(80,180,220,0.4);color:#50B4DC;" title="Module 1 — Suivi annuel">📅 Annuel</a>
     <a href="../paye/index.html"   class="hud-menu-btn hud-nav-btn" style="text-decoration:none;border-color:rgba(80,200,120,0.4);color:#50C878;" title="Module 2 — Paie mensuelle">💰 Mensuel</a>
     <button class="hud-menu-btn" onclick="openPopup('popup-settings')">⚙️</button>
+    <button class="hud-menu-btn" onclick="VuePro.show()" style="border-color:rgba(255,140,66,0.5);color:#FF8C42;font-weight:700;" title="Vue Analyse PRO">📊 PRO</button>
     <a href="../menu.html" class="hud-menu-btn" style="text-decoration:none;">← Menu</a>
   </div>
 </div>
@@ -101,6 +100,9 @@ window._fox_pre = (function() {
 
 
 <!-- ZONE PRINCIPALE -->
+<!-- ── Vue PRO (analytics) ─────────────────────────── -->
+<div id="vue-pro" style="display:none;position:fixed;inset:0;z-index:900;background:#04040e;overflow-y:auto;padding:18px 16px;box-sizing:border-box;font-family:inherit;color:#e0e0e0;"></div>
+
 <div id="gaming-main">
 
   <!-- Bulle de dialogue Kitsune -->
@@ -135,7 +137,7 @@ window._fox_pre = (function() {
   <div id="subdock-suivi" class="subdock" style="display:none;">
     <button class="dock-btn" onclick="openPopup('popup-burnout');closeSubs()"><span class="dock-icon">🔥</span><span class="dock-label">Burn-Out</span></button>
     <button class="dock-btn" onclick="openPopup('popup-violations');closeSubs()"><span class="dock-icon">⚠️</span><span class="dock-label">Violations</span></button>
-    <button class="dock-btn dock-game-btn" onclick="openPopup('popup-xp-history');closeSubs()"><span class="dock-icon">📊</span><span class="dock-label">XP</span></button>
+    <button class="dock-btn" onclick="openPopup('popup-xp-history');closeSubs()"><span class="dock-icon">📊</span><span class="dock-label">XP</span></button>
   </div>
 
   <div id="action-dock">
@@ -150,7 +152,7 @@ window._fox_pre = (function() {
       <span class="dock-label">Suivi</span>
     </button>
     <!-- Seul : Trophées -->
-    <button class="dock-btn dock-game-btn" onclick="openPopup('popup-quetes');closeSubs()">
+    <button class="dock-btn" onclick="openPopup('popup-quetes');closeSubs()">
       <span class="dock-icon">🏆</span>
       <span class="dock-label">Trophées</span>
     </button>
@@ -402,22 +404,6 @@ window._fox_pre = (function() {
     <div style="display:flex;flex-direction:column;gap:16px;color:#ccc;font-size:0.9rem;">
 
 
-      <!-- Mode sobriété -->
-      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <div style="font-weight:700;font-size:0.9rem;margin-bottom:3px;">🎯 Mode sobriété</div>
-            <div style="color:#666;font-size:0.78rem;">Masque XP, badges, niveaux et le renard.<br>Affiche uniquement l'analyse juridique.</div>
-          </div>
-          <label style="position:relative;display:inline-block;width:48px;height:26px;flex-shrink:0;margin-left:12px;cursor:pointer;">
-            <input type="checkbox" id="toggle-sobriete" onchange="setSobrieteMode(this.checked)" style="position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2;">
-            <span style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#333;border-radius:26px;transition:.3s;" id="sobriete-slider">
-              <span style="position:absolute;height:20px;width:20px;left:3px;bottom:3px;background:#aaa;border-radius:50%;transition:.3s;" id="sobriete-knob"></span>
-            </span>
-          </label>
-        </div>
-      </div>
-
       <div>
         <div style="color:#888;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Années dans localStorage</div>
         <div id="detected-years" style="color:#FF8C42;font-size:0.88rem;">—</div>
@@ -485,8 +471,6 @@ window._fox_pre = (function() {
 
 /* Mode démo — sidebar droite, pas plein écran */
 /* ── Sous-menus dock dépliables ── */
-
-
 .subdock {
   position: fixed;
   bottom: calc(72px + env(safe-area-inset-bottom));
@@ -844,6 +828,7 @@ window._fox_pre = (function() {
 <script src="js/export-rtf.js"></script>
 <script src="js/ai-integration.js"></script>
 <!-- <script src="js/main-rpg.js"></script> -->
+<script src="js/vue-pro.js"></script>
 
 <script>
 /* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1410,191 +1395,872 @@ function _getHourlyBubble(hour, day, todayOT) {
   const name  = localStorage.getItem('FOX_USER_NAME') || '';
   const pr    = name ? name + ' ' : '';
 
-  // ── Seed déterministe : même message toute la journée pour les mêmes HS ──
-  // Varie uniquement si les heures changent (xh) ou si c'est un autre jour
-  const _now = new Date();
+  // Seed : varie par heure + jour + HS → message change à chaque tranche horaire
+  const _now  = new Date();
   const _seed = _now.getFullYear() * 10000 + (_now.getMonth()+1) * 100 + _now.getDate()
-                + Math.round((todayOT ? todayOT.extra : 0) * 10);
+                + Math.round((todayOT ? todayOT.extra : 0) * 10)
+                + _now.getHours();
   function _pick(arr) { return arr[_seed % arr.length]; }
 
-  // ═══════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════
   // MODE VERROUILLÉ : HS saisies aujourd'hui
-  // ═══════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════
   if (todayOT && todayOT.extra > 0) {
     const xh = todayOT.extra;
     const th = todayOT.total;
 
-    // Tranche nuit tardive / madrugada
     if (hour >= 23 || hour < 5) {
       const msgs = [
-        `🦊 [${jr} — nuit] ${pr}${_fmtH(xh)} sup saisies aujourd'hui. Tu travailles encore ? Ton repos de 11h commence à la fin de poste (Art. L3131-1).`,
-        `🦊 [${jr} — ${hour}h] Journée de ${_fmtH(th)} enregistrée. Nuit de travail détectée — ces heures génèrent des droits spécifiques selon ta convention.`,
-        `🦊 Nuit de travail + ${_fmtH(xh)} sup aujourd'hui = journée de ${_fmtH(th)} totales. Assure-toi du repos de 11h avant la prochaine prise de poste.`,
+        `🦊 [${jr} — nuit] ${pr}${_fmtH(xh)} sup saisies. Tu travailles encore ? Repos de 11h obligatoire à la fin du poste (Art. L3131-1).`,
+        `🦊 [${jr} — ${hour}h] Journée de ${_fmtH(th)} enregistrée. Nuit de travail → droits spécifiques selon ta convention.`,
+        `🦊 Nuit de travail + ${_fmtH(xh)} sup = journée de ${_fmtH(th)}. Vérifie le repos de 11h avant la prochaine prise de poste.`,
+        `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup la nuit, bien tracées. Ces heures ont une valeur légale — ne les laisse pas disparaître.`,
+        `🦊 Travailler la nuit avec ${_fmtH(xh)} sup, c'est potentiellement une double majoration selon ta convention.`,
       ];
       return _pick(msgs);
     }
 
-    // Tranche matin très tôt (5h-8h)
     if (hour < 8) {
       const msgs = [
-        `🦊 [${jr} — tôt] Prise de poste matinale avec ${_fmtH(xh)} sup déjà saisies. Journée à ${_fmtH(th)} au compteur — surveille l'amplitude.`,
-        `🦊 ${pr}Tu commences tôt ce ${jr} avec ${_fmtH(xh)} sup enregistrées. Ton repos depuis hier était-il bien de 11h minimum (Art. L3131-1) ?`,
-        `🦊 [${jr} matin] ${_fmtH(xh)} sup saisies aujourd'hui. Ces heures doivent figurer sur ton prochain bulletin de paie avec majorations.`,
+        `🦊 [${jr} — tôt] Prise de poste matinale avec ${_fmtH(xh)} sup déjà saisies. Journée à ${_fmtH(th)} — surveille l'amplitude.`,
+        `🦊 [${hour}h] ${_fmtH(xh)} sup enregistrées. Le repos de 11h depuis hier a-t-il bien été respecté ?`,
+        `🦊 [${jr} — ${hour}h] Début de journée chargé ${pr}. ${_fmtH(xh)} sup au compteur. Pense à prendre ta pause de 20 min après 6h de travail.`,
+        `🦊 Matin tôt + ${_fmtH(xh)} sup = journée sous surveillance. FOX calcule en continu.`,
+        `🦊 [${hour}h] ${_fmtH(xh)} de HS enregistrées. Si tu finis tard ce soir, la journée va dépasser les 10h — prévu par accord ?`,
       ];
       return _pick(msgs);
     }
 
-    // Tranche matin (8h-12h)
     if (hour < 12) {
       const msgs = [
-        `🦊 [${jr} matin] ${_fmtH(xh)} sup saisies pour aujourd'hui — journée à ${_fmtH(th)}. Surveille ton total hebdomadaire en cours.`,
-        `🦊 ${_fmtH(xh)} supplémentaires enregistrées ce ${jr} matin. Ces heures s'ajoutent à ton contingent annuel — consulte le suivi dans FOX.`,
-        `🦊 Journée de ${_fmtH(th)} en cours (${_fmtH(xh)} sup). Rappel : au-delà de 10h/jour, une dérogation est nécessaire (Art. L3121-18).`,
-        `🦊 [${jr}] ${_fmtH(xh)} sup saisies ce matin. Ton majorations : +25% sur les 8 premières h sup hebdo, +50% au-delà (Art. L3121-36).`,
+        `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup enregistrées ce matin. Total journée : ${_fmtH(th)}. FOX continue de surveiller.`,
+        `🦊 [${hour}h] Matinée chargée ${pr}. Journée de ${_fmtH(th)} dont ${_fmtH(xh)} sup. Si ça continue l'après-midi, note tout.`,
+        `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup en matinée — ces heures sont déjà une créance sur ton employeur.`,
+        `🦊 [${hour}h] Journée de ${_fmtH(th)} avec ${_fmtH(xh)} sup saisies. La pause méridienne n'est pas négociable si tu travailles depuis 6h+.`,
+        `🦊 [${jr}] ${_fmtH(xh)} sup avant midi. Bon rythme de saisie ${pr} — continue comme ça.`,
+        `🦊 [${hour}h] Total ${_fmtH(th)} dont ${_fmtH(xh)} sup. Si la journée atteint 10h, vérifier si un accord l'autorise.`,
       ];
       return _pick(msgs);
     }
 
-    // Tranche midi (12h-14h)
     if (hour < 14) {
       const msgs = [
-        `🦊 [${jr} — midi] Mi-journée avec ${_fmtH(xh)} sup au compteur. Total du jour : ${_fmtH(th)}. Prends ta pause déjeuner — c'est du temps de récupération légal.`,
-        `🦊 Pause méritée ! ${_fmtH(xh)} sup enregistrées ce ${jr}. Ces heures apparaîtront sur ta fiche de paie avec la majoration applicable.`,
-        `🦊 [Midi] Journée à ${_fmtH(th)} avec ${_fmtH(xh)} sup. Ta pause déjeuner est un droit — 20 min minimum après 6h de travail (Art. L3121-16).`,
+        `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup enregistrées. La pause déjeuner réduit-elle l'amplitude effective ? Note l'heure de reprise.`,
+        `🦊 [${hour}h] Milieu de journée avec ${_fmtH(xh)} sup — journée à ${_fmtH(th)}. L'après-midi sera-t-il aussi chargé ?`,
+        `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup saisies. Pause méridienne : à partir de combien de temps est-elle obligatoire dans ta convention ?`,
+        `🦊 [${hour}h] Journée de ${_fmtH(th)} au compteur. L'heure de déjeuner est-elle décomptée du temps de travail ? Vérifie ton contrat.`,
+        `🦊 [${jr}] ${_fmtH(xh)} sup ce matin ${pr}. Bon moment pour vérifier dans FOX le total hebdomadaire.`,
       ];
       return _pick(msgs);
     }
 
-    // Tranche après-midi (14h-17h)
     if (hour < 17) {
       const msgs = [
-        `🦊 [${jr} après-midi] ${_fmtH(xh)} sup saisies aujourd'hui — journée à ${_fmtH(th)}. En fin de journée, pense à noter l'heure exacte de sortie.`,
-        `🦊 ${_fmtH(xh)} supplémentaires ce ${jr}. À ce rythme, surveille ta moyenne sur 12 semaines : limite de 44h/sem (Art. L3121-22).`,
-        `🦊 Journée à ${_fmtH(th)} en cours. ${_fmtH(xh)} sup enregistrées — ton contingent annuel est mis à jour automatiquement dans FOX.`,
-        `🦊 [${jr}] ${_fmtH(xh)} sup aujourd'hui. Le total de la semaine est visible dans l'analyse. Consulte-le pour anticiper le dépassement.`,
+        `🦊 [${jr} — ${hour}h] Après-midi en cours avec ${_fmtH(xh)} sup au compteur. Total journée : ${_fmtH(th)}.`,
+        `🦊 [${hour}h] ${_fmtH(xh)} sup enregistrées. Si tu quittes à 18h avec ${_fmtH(th)} de travail effectif, la journée est bien tracée.`,
+        `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup + après-midi chargé = risque de dépasser 10h. L'accord le permet-il chez toi ?`,
+        `🦊 [${hour}h] Bon suivi ${pr}. ${_fmtH(xh)} sup saisies, journée à ${_fmtH(th)}. Continue sur cette lancée.`,
+        `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} de plus sur la semaine. FOX calcule le total hebdomadaire en continu — vérifie l'onglet analyse.`,
+        `🦊 [${hour}h] Journée bien chargée ${pr}. Ces ${_fmtH(xh)} sup à 25% ou 50% selon le total hebdomadaire.`,
       ];
       return _pick(msgs);
     }
 
-    // Tranche fin de journée (17h-20h)
     if (hour < 20) {
       const msgs = [
-        `🦊 [${jr} soir] Journée de ${_fmtH(th)} — dont ${_fmtH(xh)} sup. Bien enregistré. Ton repos de 11h démarre à la fin de poste (Art. L3131-1).`,
-        `🦊 Fin de journée avec ${_fmtH(xh)} sup. Total : ${_fmtH(th)}. Ces heures doivent figurer sur ton bulletin de la période. Vérifie à réception.`,
-        `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup saisies. Bonne saisie — déconnecte vraiment ce soir. Le droit à la déconnexion te protège (Art. L2242-17).`,
-        `🦊 Journée de ${_fmtH(th)} terminée (${_fmtH(xh)} sup). Calcule le repos minimal avant demain : heure de fin + 11h = heure de reprise légale.`,
+        `🦊 [${jr} — ${hour}h] Fin de journée avec ${_fmtH(xh)} sup. Journée de ${_fmtH(th)} — bien notée. Pense au repos de 11h si tu reprends tôt demain.`,
+        `🦊 [${hour}h] ${_fmtH(xh)} sup enregistrées sur cette journée de ${_fmtH(th)}. Le bulletin de paie devra les refléter.`,
+        `🦊 [${jr} — ${hour}h] Soirée avec ${_fmtH(xh)} sup — si tu continues après 21h, des droits nuit peuvent s'appliquer.`,
+        `🦊 [${hour}h] ${_fmtH(xh)} sup aujourd'hui ${pr}. C'est noté. N'oublie pas de te déconnecter complètement ce soir.`,
+        `🦊 [${jr} — ${hour}h] Journée de ${_fmtH(th)} dont ${_fmtH(xh)} sup. Bien tracé. Le droit à la déconnexion commence maintenant.`,
+        `🦊 [${hour}h] Ces ${_fmtH(xh)} sup saisies + soirée qui continue → vérifie l'heure de fin pour le calcul exact.`,
       ];
       return _pick(msgs);
     }
 
-    // Tranche soirée (20h-23h)
-    const msgs = [
-      `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup saisies + travail en soirée. Journée de ${_fmtH(th)} — ton repos de 11h consécutives est obligatoire (Art. L3131-1).`,
-      `🦊 Soirée de travail avec ${_fmtH(xh)} sup au compteur. Au-delà de 21h, certaines conventions prévoient une majoration de nuit — vérifie la tienne.`,
-      `🦊 [${jr} soir] Journée de ${_fmtH(th)} avec ${_fmtH(xh)} sup. Il est ${hour}h — droit à la déconnexion activé (Art. L2242-17). Ces heures sont bien tracées.`,
+    // Soirée tardive 20h+
+    const msgs_soir = [
+      `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup enregistrées et tu es encore actif à ${hour}h. Repos de 11h avant demain — c'est la loi.`,
+      `🦊 [${hour}h] Journée de ${_fmtH(th)} dont ${_fmtH(xh)} sup. Travailler encore le soir ? Note l'heure de fin exacte.`,
+      `🦊 [${jr} — ${hour}h] ${_fmtH(xh)} sup + saisie tardive = bonus XP nuit dans FOX. Et potentiellement une majoration nuit selon ta convention.`,
+      `🦊 [${hour}h] ${_fmtH(xh)} sup aujourd'hui ${pr}. Après ${hour}h, chaque heure supplémentaire mérite d'être tracée.`,
+      `🦊 [${jr}] Journée de ${_fmtH(th)} avec ${_fmtH(xh)} sup — et tu continues. Ces heures sont une créance, pas un cadeau.`,
     ];
-    return _pick(msgs);
+    return _pick(msgs_soir);
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // MODE NORMAL : message horaire contextuel (sans HS du jour)
-  // ═══════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════
+  // MODE SANS HS : messages informatifs selon l'heure
+  // ═══════════════════════════════════════════════════════
 
-  // Nuit tardive 23h-5h
   if (hour >= 23 || hour < 5) {
     const msgs = [
-      `🦊 [${jr} — nuit] Tu consultes FOX très tard. Si tu travailles, ces heures de nuit génèrent des droits spécifiques — trace-les.`,
-      `🦊 [Nuit] Il est ${hour}h. Le travail entre 21h et 6h est considéré comme travail de nuit par la plupart des conventions.`,
-      `🦊 [${jr} — ${hour}h] Nuit de travail ou simple consultation ? Si tu travailles, note l'heure — le repos de 11h part d'ici (Art. L3131-1).`,
+      `🦊 [${jr} — nuit] ${hour}h du matin. Si tu travailles, ces heures comptent — saisis-les dans FOX avant de te coucher.`,
+      `🦊 [${jr}] Pleine nuit. Si tu reçois des messages pros en ce moment, c'est du temps de travail. Trace-le.`,
+      `🦊 [${hour}h] La nuit, le corps récupère. Si tu travailles quand même, le repos de 11h avant la prochaine prise de poste s'impose.`,
+      `🦊 [${jr} — nuit] Quelqu'un qui travaille à ${hour}h mérite que ses heures soient tracées. FOX est là pour ça.`,
+      `🦊 Nuit de travail détectée. Pense à saisir tes heures avant de t'endormir — même tardivement, ça compte.`,
     ];
     return _pick(msgs);
   }
 
-  // Aube 5h-7h
-  if (hour < 7) {
+  if (hour < 8) {
     const msgs = [
-      `🦊 [${jr} — ${hour}h] Prise de poste très matinale. Avant 6h, c'est souvent du travail de nuit — vérifie les majorations de ta convention.`,
-      `🦊 Début de journée tôt ${pr}. N'oublie pas ton repos de 11h depuis hier — essentiel avant une longue journée (Art. L3131-1).`,
-      `🦊 [${jr} matin] Démarrage à ${hour}h. Pense à noter tes heures dès maintenant — une saisie immédiate est toujours plus précise.`,
+      `🦊 [${jr} — tôt] Prise de poste à ${hour}h ${pr}. As-tu respecté les 11h de repos depuis hier soir ?`,
+      `🦊 [${hour}h] Début de journée. Si tu démarre à ${hour}h, note l'heure — l'amplitude commence maintenant.`,
+      `🦊 [${jr} — ${hour}h] Matin tôt. Les postes qui démarrent avant 8h peuvent donner droit à des contreparties selon ta convention.`,
+      `🦊 [${hour}h] Bonne prise de poste ${pr}. Pense à saisir tes heures en fin de journée — la mémoire est fragile le soir.`,
+      `🦊 [${jr}] Matin tôt. Si tu travailles avant 6h habituellement (2 fois/sem. ou 270h/an), tu es "travailleur de nuit" légalement.`,
     ];
     return _pick(msgs);
   }
 
-  // Matin 7h-9h
   if (hour < 9) {
     const msgs = [
-      `🦊 [${jr} matin] Bonne journée ${pr}! Pense à saisir tes heures au fil de la journée — c'est plus précis que de reconstituer en fin de semaine.`,
-      `🦊 Début de semaine matinale. La semaine civile (lundi 0h → dimanche 24h) est la référence légale pour le calcul des HS.`,
-      `🦊 [${jr} — ${hour}h] Journée qui commence. Un conseil : note l'heure de prise de poste maintenant — 10 secondes de précision qui peuvent compter.`,
-      `🦊 Matin ${pr}. Rappel utile : ton repos quotidien de 11h depuis hier doit être respecté avant toute reprise (Art. L3131-1).`,
+      `🦊 [${jr} — ${hour}h] Bonne matinée ${pr}. Si ta semaine est déjà chargée, FOX calcule le total en temps réel.`,
+      `🦊 [${hour}h] Début de matinée. As-tu pensé à vérifier le bilan de la semaine passée dans FOX ?`,
+      `🦊 [${jr} — ${hour}h] La journée commence. Si ton planning dépasse déjà 8h sur les 5 premiers jours, surveille le total.`,
+      `🦊 [${hour}h] Matinée en cours ${pr}. Rappel : la semaine civile va du lundi 0h au dimanche 24h.`,
+      `🦊 [${jr}] Début de journée — un bon moment pour vérifier si des repos compensateurs sont à prendre cette semaine.`,
+      `🦊 [${hour}h] ${jr} matin. La semaine se dessine. Si des HS sont prévisibles, anticipe-les dans FOX.`,
     ];
     return _pick(msgs);
   }
 
-  // Milieu de matinée 9h-11h
-  if (hour < 11) {
+  if (hour < 12) {
     const msgs = [
-      `🦊 [${jr} — ${hour}h] Milieu de matinée. Si ta journée est déjà chargée, anticipe le total hebdomadaire dans FOX.`,
-      `🦊 Bonne matinée ${pr}. FOX te permet de tenir ton propre décompte d'heures — utile pour vérifier ton bulletin de paie chaque mois.`,
-      `🦊 [${jr}] Il est ${hour}h. La convention collective de ta branche peut améliorer la loi — mais jamais la dégrader. Connais-tu la tienne ?`,
-      `🦊 Matinée en cours. Le droit à la déconnexion (Art. L2242-17) s'applique hors heures de travail — mais pendant la journée, tu es disponible.`,
+      `🦊 [${jr} — ${hour}h] Milieu de matinée. Si tu n'as pas encore saisi les heures d'hier, c'est encore le bon moment.`,
+      `🦊 [${hour}h] Matinée chargée ? Le total hebdomadaire s'accumule — FOX surveille les 44h de moyenne sur 12 sem.`,
+      `🦊 [${jr} — ${hour}h] ${hour}h du matin. Le droit à la déconnexion (Art. L2242-17) s'applique aussi le soir et le week-end.`,
+      `🦊 [${jr}] Il est ${hour}h. La convention collective de ta branche peut modifier les horaires légaux — connais-tu les tiens ?`,
+      `🦊 [${jr} — ${hour}h] Rappel matinée : aucune pression ne peut t'obliger à dépasser 48h/semaine (Art. L3121-20).`,
+      `🦊 [${hour}h] Bonne matinée ${pr}. FOX te donne les outils — c'est toi qui décides de les utiliser.`,
+      `🦊 [${jr} — ${hour}h] Si tu travailles depuis 6h+, ta pause de 20 min est obligatoire et bientôt nécessaire (Art. L3121-16).`,
     ];
     return _pick(msgs);
   }
 
-  // Pause déj 11h-14h
   if (hour < 14) {
     const msgs = [
-      `🦊 [${jr} — ${hour}h] Heure de déjeuner. Ta pause est un droit : 20 min minimum après 6h de travail (Art. L3121-16). Prends-la vraiment.`,
-      `🦊 Midi ${pr}. Mange loin de ton écran si tu peux — les pauses physiques réelles améliorent la concentration de l'après-midi.`,
-      `🦊 [${jr} midi] Une vraie coupure à midi, c'est de la prévention. Ton score burn-out FOX en tient compte sur la durée.`,
-      `🦊 Il est ${hour}h — mi-journée. Si tu as déjà dépassé 5h de travail, ta pause de 20 min est obligatoire (Art. L3121-16).`,
-      `🦊 Pause méritée. Rappel : les pauses obligatoires ne font pas partie du temps de travail effectif — sauf disposition conventionnelle contraire.`,
+      `🦊 [${jr} — ${hour}h] Heure de déjeuner. La pause méridienne est-elle décomptée du temps de travail dans ton entreprise ?`,
+      `🦊 [${hour}h] Milieu de journée ${pr}. Si tu travailles durant la pause déj, ces minutes s'ajoutent au temps effectif.`,
+      `🦊 [${jr} — ${hour}h] Midi. Bon moment pour vérifier dans FOX l'état de la semaine en cours.`,
+      `🦊 [${hour}h] La pause méridienne est importante — elle coupe l'amplitude et aide à la récupération cognitive.`,
+      `🦊 [${jr}] ${hour}h. As-tu pris ta pause obligatoire de 20 min si tu travailles depuis 6h+ ce matin ?`,
+      `🦊 [${jr} — ${hour}h] Milieu de journée. Si une réunion à l'heure du déj est imposée régulièrement, c'est du temps de travail.`,
     ];
     return _pick(msgs);
   }
 
-  // Début d'après-midi 14h-16h
-  if (hour < 16) {
+  if (hour < 17) {
     const msgs = [
-      `🦊 [${jr} après-midi] Il est ${hour}h. Si la semaine est chargée, c'est le bon moment pour faire le point sur ton cumul dans FOX.`,
-      `🦊 Après-midi en cours. Pense à noter tout événement inhabituel aujourd'hui — rappel imprévu, réunion tardive — ça compte dans les HS.`,
-      `🦊 [${jr} — ${hour}h] Mi-journée passée. Ton analyse légale FOX se met à jour à chaque saisie — consulte-la pour voir où tu en es.`,
-      `🦊 Il est ${hour}h. Les heures sup se calculent sur la semaine civile complète — surveille le cumul, pas juste la journée.`,
+      `🦊 [${jr} — ${hour}h] Après-midi en cours. Le compteur hebdomadaire tourne — FOX surveille les seuils de 44h et 48h.`,
+      `🦊 [${hour}h] Après-midi bien entamé ${pr}. Si la journée dépasse 10h ce soir, un accord doit l'autoriser.`,
+      `🦊 [${jr} — ${hour}h] Bonne après-midi. Si ton planning change à la dernière minute, un délai de prévenance légal s'applique.`,
+      `🦊 [${hour}h] L'après-midi est parfois le moment où les HS s'accumulent sans qu'on le réalise. Garde un œil sur l'horloge.`,
+      `🦊 [${jr} — ${hour}h] Les heures entre 14h et 17h sont souvent les plus productives — et aussi les plus exploitées.`,
+      `🦊 [${hour}h] Si tu as des réunions tardives prévues ce soir, compte-les dans ton temps de travail effectif.`,
+      `🦊 [${jr}] Après-midi ${pr}. Les objectifs fixés par l'employeur doivent être réalisables dans les heures contractuelles.`,
     ];
     return _pick(msgs);
   }
 
-  // Fin d'après-midi 16h-18h
-  if (hour < 18) {
-    const msgs = [
-      `🦊 [${jr} — ${hour}h] La journée tire à sa fin. Si tu dépasses l'heure habituelle, pense à noter la sortie exacte pour ta saisie HS.`,
-      `🦊 Fin d'après-midi ${pr}. Si tu restes au-delà de ta base, ces heures s'ajoutent à ton contingent. Saisis-les dès que possible.`,
-      `🦊 [${jr} — ${hour}h] Bientôt la fin de journée. La saisie immédiate est toujours plus fiable que la reconstitution le lendemain.`,
-      `🦊 Il est ${hour}h. Ton droit à la déconnexion commence dès la fin de poste — aucune obligation de répondre après (Art. L2242-17).`,
-    ];
-    return _pick(msgs);
-  }
-
-  // Début de soirée 18h-20h
   if (hour < 20) {
     const msgs = [
-      `🦊 [${jr} soir] Il est ${hour}h. Si tu travailles encore, note l'heure — ton repos de 11h part de ta sortie (Art. L3131-1).`,
-      `🦊 Soirée qui commence. Ton droit à la déconnexion est actif — pas d'obligation légale de répondre aux messages pro (Art. L2242-17).`,
-      `🦊 [${jr} — ${hour}h] Tu travailles encore ? Saisis tes heures dès la fin — la précision sur l'heure de sortie est importante pour le repos.`,
-      `🦊 Fin de journée ${pr}. Si tu as fait des HS cette semaine, vérifie le cumul dans FOX — la limite de 48h/sem est ferme (Art. L3121-20).`,
+      `🦊 [${jr} — ${hour}h] Fin de journée. Si tu pars après ${hour}h, note l'heure exacte — l'amplitude de la journée se calcule de pointage à pointage.`,
+      `🦊 [${hour}h] Soirée qui commence ${pr}. As-tu saisi les heures d'aujourd'hui dans FOX ?`,
+      `🦊 [${jr} — ${hour}h] ${hour}h. Si tu es encore au bureau, le droit à la déconnexion s'applique dès que tu pars.`,
+      `🦊 [${hour}h] Fin de journée normale ou prolongée ? Dans un cas comme dans l'autre, une saisie précise vaut mieux qu'une estimation.`,
+      `🦊 [${jr} — ${hour}h] Soirée en cours. Si tu continues après 21h, les droits "travail de nuit" peuvent s'appliquer.`,
+      `🦊 [${hour}h] ${jr} soir. La semaine avance. Si des HS ont été faites sans validation, c'est encore temps de les noter.`,
+      `🦊 [${jr} — ${hour}h] Bonne fin de journée ${pr}. Une saisie ce soir garantit un bilan exact demain matin.`,
     ];
     return _pick(msgs);
   }
 
-  // Soirée tardive 20h-23h
-  const msgs = [
-    `🦊 [${jr} — ${hour}h] Il est tard. Ton repos de 11h consécutives est obligatoire avant la prochaine prise de poste (Art. L3131-1).`,
-    `🦊 [${jr} soir] ${hour}h passées — si tu travailles encore, ces heures de soirée sont du travail effectif à déclarer.`,
-    `🦊 Soirée tardive. Le droit à la déconnexion te protège (Art. L2242-17). Au-delà de 21h, certaines conventions prévoient une majoration de nuit.`,
-    `🦊 [${jr} — ${hour}h] Tu consultes FOX en soirée — si tu as saisid des heures aujourd'hui, elles sont bien enregistrées. Bonne nuit ${pr}!`,
+  // Soirée tardive 20h+
+  const msgs_tard = [
+    `🦊 [${jr} — ${hour}h] Il est tard. Ton repos quotidien de 11h commence à la fin de ce poste (Art. L3131-1).`,
+    `🦊 [${hour}h] Travail de soirée ${pr}. Après ${hour}h, chaque heure travaillée mérite d'être tracée dans FOX.`,
+    `🦊 [${jr} — ${hour}h] Saisie tardive = bonus XP nuit dans FOX. Et peut-être des droits supplémentaires selon ta convention.`,
+    `🦊 [${hour}h] ${jr} soir. Si tu travailles encore, pense à l'heure de reprise demain. 11h de repos minimum.`,
+    `🦊 [${jr} — ${hour}h] Soirée de travail. Ces heures comptent dans ton total hebdomadaire — FOX les intègre automatiquement.`,
+    `🦊 [${hour}h] Il est ${hour}h. Le corps a besoin de repos pour être efficace demain. Tes droits aussi ont besoin d'être respectés.`,
   ];
-  return _pick(msgs);
+  return _pick(msgs_tard);
+}
+
+
+function _getExtendedBubble(hour, day, todayOT, _seed) {
+  const JOURS = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const jr  = JOURS[day];
+  const nm  = localStorage.getItem('FOX_USER_NAME') || '';
+  const pr  = nm ? nm + ' ' : '';
+  const xh  = todayOT ? todayOT.extra : 0;
+  const th  = todayOT ? todayOT.total : 0;
+  const xs  = _fmtH(xh);
+  const ts  = _fmtH(th);
+  const hasHS = xh > 0;
+  const isMatin   = hour >= 6  && hour < 12;
+  const isApresMidi = hour >= 12 && hour < 18;
+  const isSoiree  = hour >= 18 && hour < 22;
+  const isNuit    = hour >= 22 || hour < 6;
+  const isLundi   = day === 1;
+  const isVendredi = day === 5;
+  const isWE      = day === 0 || day === 6;
+  function _p(arr) { return arr[Math.abs(_seed) % arr.length]; }
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 1 — DROITS FONDAMENTAUX
+  // ═══════════════════════════════════════════════════════
+  const droits = [
+    `🦊 [${jr} — ${hour}h] Le Code du travail est un plancher, jamais un plafond. Ta convention collective peut t'accorder plus — mais jamais moins.`,
+    `🦊 Savais-tu ${pr}? Les heures sup doivent être majorées même si tu es cadre, sauf forfait jour signé. Vérifie ton contrat.`,
+    `🦊 [${hour}h] Refuser de faire des HS n'est pas une faute — sauf si un accord collectif le prévoit (Art. L3121-11).`,
+    `🦊 Ton employeur ne peut pas compenser des HS par des repos non écrits. Tout accord doit être tracé. C'est pour ça que FOX existe.`,
+    `🦊 [${jr}] Le médecin du travail peut être ton allié si les HS s'accumulent. Il est indépendant de l'employeur.`,
+    `🦊 Art. L3171-4 : en cas de litige, le juge apprécie les éléments des deux parties. Tes données FOX peuvent faire foi.`,
+    `🦊 [${jr} — ${hour}h] Les HS impayées sont réclamables jusqu'à 3 ans après leur réalisation (Art. L3245-1).`,
+    `🦊 [${hour}h] Le travail dissimulé (HS non déclarées) est sanctionné pour l'employeur — déclarer te protège, toi.`,
+    `🦊 [${jr}] Les astreintes : dès que tu interviens, chaque minute est du travail effectif rémunéré.`,
+    `🦊 [${jr} — ${hour}h] Si tu reçois des mails pro pendant tes congés, c'est potentiellement de l'astreinte selon ta convention.`,
+    `🦊 [${hour}h] La charge de travail déraisonnable peut être invoquée comme manquement de l'employeur (Art. L4121-1).`,
+    `🦊 [${jr}] L'accord le plus favorable au salarié s'applique toujours — convention ou accord d'entreprise.`,
+    `🦊 [${jr} — ${hour}h] L'accord de forfait jour n'exclut pas les limites d'amplitude. Même en forfait, 13h/jour reste le plafond habituel.`,
+    `🦊 [${hour}h] Les formations obligatoires en dehors du temps de travail peuvent générer des HS. Vérifie avec ton RH.`,
+    `🦊 [${jr}] Même en CDD, les droits aux HS et aux majorations s'appliquent intégralement.`,
+    `🦊 [${jr} — ${hour}h] La période d'essai n'exclut pas les droits aux heures supplémentaires. Tu es salarié dès le premier jour.`,
+    `🦊 [${hour}h] Un salarié à temps partiel ne peut pas faire d'HS sans accord — mais peut faire des heures complémentaires dans certaines limites.`,
+    `🦊 [${jr}] Les HS réalisées avec l'accord tacite du supérieur (sans refus explicite) doivent être rémunérées.`,
+    `🦊 [${jr} — ${hour}h] Le droit à la déconnexion s'applique à tous — les entreprises de +50 salariés ont l'obligation de négocier dessus.`,
+    `🦊 [${hour}h] Même un mail de 5 minutes envoyé à 22h est du temps de travail. Sur une année, ça représente des heures.`,
+    `🦊 [${jr}] Les représentants du personnel ont accès aux données sur les HS de l'entreprise. Tes délégués peuvent t'aider.`,
+    `🦊 [${jr} — ${hour}h] Un licenciement suite à un refus d'HS illégal peut être contesté aux prud'hommes.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 2 — CALCUL DES HEURES
+  // ═══════════════════════════════════════════════════════
+  const calcul = [
+    `🦊 [${jr} — ${hour}h] La semaine civile va du lundi 0h au dimanche 24h. Cette convention peut changer ton total de HS.`,
+    `🦊 [${hour}h] Les HS se déclenchent à partir de la 36e heure — chaque heure au-dessus de 35h est une HS.`,
+    `🦊 [${jr}] Les absences (CP, maladie) ne génèrent pas d'HS mais comptent dans l'amplitude de la semaine.`,
+    `🦊 [${hour}h] Temps de trajet entre deux sites de travail = temps de travail effectif (Art. L3121-4).`,
+    `🦊 [${jr} — ${hour}h] Les réunions hors horaires habituels = HS si elles dépassent ta base contractuelle.`,
+    `🦊 [${hour}h] Le contingent de 220h/an est la limite légale sans accord spécifique (Art. L3121-30).`,
+    `🦊 [${jr} — ${hour}h] Les jours fériés travaillés peuvent générer des majorations selon ta convention collective.`,
+    `🦊 [${jr}] En accord de modulation, les HS se comptent à la fin de la période de référence.`,
+    `🦊 [${jr} — ${hour}h] 10 min/jour de mails après 18h = environ 40h/an. Pas anodin.`,
+    `🦊 [${hour}h] Si tu as un forfait heures, le décompte est différent — mais les plafonds légaux s'appliquent toujours.`,
+    `🦊 [${jr}] Le temps de déplacement domicile-travail au-delà du trajet habituel est compensé (Art. L3121-4).`,
+    `🦊 [${jr} — ${hour}h] Les heures de délégation des élus du personnel comptent comme heures de travail effectif.`,
+    `🦊 [${hour}h] La durée réelle de travail prime sur l'horaire théorique. Si tu travailles plus, ça se calcule.`,
+    `🦊 [${jr} — ${hour}h] En cas d'annualisation, un bilan en fin d'année détermine les vraies HS. FOX te garde l'historique.`,
+    `🦊 [${jr}] Les pauses obligatoires (20 min après 6h de travail) ne comptent pas dans le temps de travail effectif.`,
+    `🦊 [${hour}h] Un contrat à 39h intègre souvent 4h en RTT — mais ça doit être prévu par accord. Vérifie le tien.`,
+    `🦊 [${jr} — ${hour}h] La durée hebdomadaire contractuelle est la base. Tout ce qui dépasse sur la semaine civile est une HS.`,
+    `🦊 [${jr}] Les heures effectuées à la demande explicite ou implicite de l'employeur sont des HS, même non déclarées.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 3 — SANTÉ & PRÉVENTION BURN-OUT
+  // ═══════════════════════════════════════════════════════
+  const sante = [
+    `🦊 [${jr} — ${hour}h] La fatigue chronique liée aux HS est documentée médicalement. Surveille ton score burn-out FOX sur plusieurs semaines.`,
+    `🦊 [${hour}h] 5 signaux d'alerte précoce : irritabilité, troubles du sommeil, perte de concentration, douleurs physiques, perte de plaisir.`,
+    `🦊 [${jr}] La prévention burn-out commence par la traçabilité. On ne peut agir que sur ce qu'on mesure.`,
+    `🦊 [${hour}h] Moins de 6h de sommeil régulièrement = risque élevé de surmenage selon la HAS.`,
+    `🦊 [${jr} — ${hour}h] Des pauses courtes et fréquentes (5 min/heure) sont plus efficaces contre la fatigue qu'une longue pause.`,
+    `🦊 [${jr}] L'employeur a une obligation légale de résultat sur ta santé mentale (Art. L4121-1).`,
+    `🦊 [${hour}h] Le présentéisme (être là sans efficacité) coûte plus cher que l'absentéisme — même pour l'entreprise.`,
+    `🦊 [${jr} — ${hour}h] La déconnexion totale pendant les vacances est prouvée scientifiquement nécessaire.`,
+    `🦊 [${jr}] L'OMS classe le burn-out comme phénomène professionnel depuis 2019. Ce n'est pas une faiblesse personnelle.`,
+    `🦊 [${jr} — ${hour}h] Prendre ses congés n'est pas optionnel. Le refus de l'employeur est illégal (Art. L3141-12).`,
+    `🦊 [${hour}h] L'activité physique régulière réduit le risque de burn-out de 30%. Même 20 min de marche par jour.`,
+    `🦊 [${jr} — ${hour}h] Si tu ressens une pression constante pour dépasser tes horaires, note-la. C'est un indicateur RPS à signaler.`,
+    `🦊 [${jr}] Les risques psychosociaux (RPS) doivent figurer dans le document unique d'évaluation des risques de ton entreprise.`,
+    `🦊 [${hour}h] Parler de sa charge de travail à son manager, par écrit, crée une traçabilité utile en cas de problème.`,
+    `🦊 [${jr} — ${hour}h] Le médecin du travail peut recommander un aménagement de poste si la charge est excessive. C'est gratuit et confidentiel.`,
+    `🦊 [${jr}] Les HS régulières augmentent le risque cardiovasculaire de 17% selon une étude Lancet (2015).`,
+    `🦊 [${hour}h] Ton énergie n'est pas une ressource infinie. FOX mesure le rythme — écoute ce qu'il dit.`,
+    `🦊 [${jr} — ${hour}h] En cas de surcharge persistante, le CSSCT (ex-CHSCT) peut diligenter une enquête dans ton entreprise.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 4 — RÉMUNÉRATION & PAIE
+  // ═══════════════════════════════════════════════════════
+  const remuneration = [
+    `🦊 [${jr} — ${hour}h] 25% de majoration sur les 8 premières HS/semaine, 50% au-delà (Art. L3121-36).`,
+    `🦊 [${hour}h] Les HS peuvent être compensées en repos si un accord collectif le prévoit — les deux options coexistent.`,
+    `🦊 [${jr} — ${hour}h] Le repos compensateur de remplacement (RCR) = temps libre au lieu d'être payé pour les HS.`,
+    `🦊 [${jr}] La contrepartie obligatoire en repos (COR) s'applique automatiquement pour les HS au-delà du contingent.`,
+    `🦊 [${hour}h] Les HS doivent apparaître sur ton bulletin de paie avec le détail des majorations. Contrôle à réception.`,
+    `🦊 [${jr} — ${hour}h] Si ton employeur remplace les majorations par du repos, ce repos doit être pris dans les 2 mois.`,
+    `🦊 [${jr}] Les HS payées augmentent ta base de calcul pour l'indemnité de licenciement.`,
+    `🦊 [${jr} — ${hour}h] Des HS non rémunérées réclamables sur 3 ans : même une heure par semaine = 156h sur 3 ans.`,
+    `🦊 [${jr}] Le bulletin de paie doit mentionner séparément les HS et leur taux. L'omission est une infraction.`,
+    `🦊 [${jr} — ${hour}h] Une prime exceptionnelle ne peut pas remplacer les majorations légales de HS. Ce sont deux choses indépendantes.`,
+    `🦊 [${hour}h] Si tu n'as pas pu prendre tes repos compensateurs à la date limite, ils doivent être rémunérés.`,
+    `🦊 [${jr}] En cas de rupture du contrat, les repos compensateurs non pris sont payés dans le solde de tout compte.`,
+    `🦊 [${jr} — ${hour}h] La rémunération des HS est soumise à cotisations — sauf si tu bénéficies de la défiscalisation prévue par la loi.`,
+    `🦊 [${hour}h] Les HS comprises dans un forfait doivent être explicitement mentionnées dans le contrat avec leur rémunération.`,
+    `🦊 [${jr} — ${hour}h] Vérifier son bulletin de paie chaque mois est un réflexe de 5 minutes qui peut éviter des années de litiges.`,
+    `🦊 [${jr}] Le salaire minimum conventionnel peut être supérieur au SMIC dans ta branche. Vérifie ta grille.`,
+    `🦊 [${jr} — ${hour}h] Les heures du dimanche sont souvent majorées par la convention collective, en plus des HS éventuelles.`,
+    `🦊 [${hour}h] La rémunération des astreintes (hors intervention) est fixée par accord. Vérifie qu'elle figure sur ton bulletin.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 5 — REPOS & LIMITES LÉGALES
+  // ═══════════════════════════════════════════════════════
+  const repos = [
+    `🦊 [${jr} — ${hour}h] 11h de repos quotidien minimum entre deux prises de poste — absolu (Art. L3131-1).`,
+    `🦊 [${hour}h] 35h de repos hebdomadaire consécutif minimum (Art. L3132-2). Généralement le dimanche.`,
+    `🦊 [${jr} — ${hour}h] Durée max journalière : 10h, extensible à 12h par accord (Art. L3121-18). Au-delà, c'est illégal.`,
+    `🦊 [${jr}] La durée de 48h/semaine est absolue — aucun accord individuel ne peut y déroger (Art. L3121-20).`,
+    `🦊 [${jr} — ${hour}h] La moyenne de 44h sur 12 semaines consécutives est une limite glissante. FOX la calcule en continu.`,
+    `🦊 [${hour}h] Plus de 6h d'affilée sans pause = illégal. Minimum 20 minutes obligatoires (Art. L3121-16).`,
+    `🦊 [${jr} — ${hour}h] En dépassement du repos quotidien de 11h, tu peux le signaler à l'inspection du travail.`,
+    `🦊 [${jr}] Les RTT sont une compensation des HS dans les accords d'entreprise — ils doivent être pris, jamais perdus.`,
+    `🦊 [${jr} — ${hour}h] Les repos compensateurs acquis apparaissent sur le bulletin de paie. Contrôle leur solde mensuel.`,
+    `🦊 [${hour}h] Un planning établi sans respecter le repos de 11h entre deux postes est illégal et opposable.`,
+    `🦊 [${jr}] Les travailleurs de nuit ont droit à des temps de pause supplémentaires selon leur convention.`,
+    `🦊 [${jr} — ${hour}h] Le repos compensateur doit être pris dans un délai maximum prévu par accord — passé ce délai, il est dû en argent.`,
+    `🦊 [${hour}h] Travailler 6 jours consécutifs sans 35h de repos entre les semaines = violation du repos hebdomadaire.`,
+    `🦊 [${jr} — ${hour}h] Même bénévole, le dépassement des durées max est une infraction de l'employeur — pas une faveur que tu lui fais.`,
+    `🦊 [${jr}] La récupération n'est autorisée que pour des interruptions collectives de travail non imputables à l'employeur.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 6 — TRAVAIL DE NUIT
+  // ═══════════════════════════════════════════════════════
+  const travailNuit = [
+    `🦊 [${jr} — ${hour}h] Travailleur de nuit : statut légal si ≥270h/an ou au moins 2 nuits/sem habituellement (Art. L3122-5).`,
+    `🦊 [${hour}h] Les travailleurs de nuit ont droit à une surveillance médicale renforcée. Demande-la à ton médecin du travail.`,
+    `🦊 [${jr} — ${hour}h] Les heures de nuit (21h-6h) peuvent ouvrir droit à des majorations spécifiques en plus des HS.`,
+    `🦊 [${hour}h] Durée maximale en travail de nuit : 8h par poste (Art. L3122-7).`,
+    `🦊 [${jr} — ${hour}h] Le travail de nuit régulier impacte le rythme circadien sur le long terme. FOX tient compte du profil nuit.`,
+    `🦊 [${jr}] La période de nuit légale est 21h-6h (Art. L3122-2) — ta convention peut la définir différemment.`,
+    `🦊 [${jr} — ${hour}h] Passage nuit→jour : un délai de prévenance s'applique (généralement 5 jours ouvrés).`,
+    `🦊 [${hour}h] La femme enceinte travaillant de nuit peut demander son affectation de jour sans perte de salaire.`,
+    `🦊 [${jr}] Le travailleur de nuit peut demander un passage de nuit en jour si son état de santé l'exige.`,
+    `🦊 [${jr} — ${hour}h] Les contreparties du travail de nuit (repos compensateur ou prime) doivent figurer dans un accord.`,
+    `🦊 [${hour}h] La majoration nuit et la majoration HS se cumulent si les deux conditions sont remplies.`,
+    `🦊 [${jr} — ${hour}h] Travailler la nuit augmente significativement le risque d'erreurs opérationnelles. Les pauses y sont encore plus importantes.`,
+    `🦊 [${jr}] Le recours excessif au travail de nuit sans justification économique peut être contesté par les représentants du personnel.`,
+    `🦊 [${hour}h] En logistique/transport, les postes de nuit sont fréquents — connais exactement la grille nuit de ta convention.`,
+    `🦊 [${jr} — ${hour}h] Ton score FOX tient compte des postes de nuit pour l'évaluation du niveau d'énergie.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 7 — WEEK-END & JOURS FÉRIÉS
+  // ═══════════════════════════════════════════════════════
+  const weekendTheme = [
+    `🦊 [${jr} — ${hour}h] Un dimanche travaillé compte dans la semaine civile pour les HS — il n'est pas "hors compteur".`,
+    `🦊 [${hour}h] Les week-ends travaillés s'accumulent dans l'année. Vérifie que ta convention prévoit des contreparties.`,
+    `🦊 [${jr}] 6 jours sur 7 régulièrement = risque de violation du repos hebdomadaire de 35h. Surveille.`,
+    `🦊 [${jr} — ${hour}h] Le 1er mai est le seul jour férié légalement payé double (Art. L3133-6). Les autres dépendent de ta convention.`,
+    `🦊 [${hour}h] En logistique, les primes de samedi sont fréquentes dans les conventions. Connais-tu la tienne ?`,
+    `🦊 [${jr} — ${hour}h] Les salariés qui travaillent habituellement le dimanche ont des droits spécifiques selon l'autorisation de leur zone.`,
+    `🦊 [${jr}] Travailler le dimanche dans une zone commerciale non autorisée est illégal pour l'employeur.`,
+    `🦊 [${jr} — ${hour}h] Le repos compensateur pour dimanche travaillé doit être pris dans les 6 semaines selon beaucoup de conventions.`,
+    `🦊 [${hour}h] Les ponts accordés unilatéralement par l'employeur peuvent être récupérés — ce n'est pas une obligation légale.`,
+    `🦊 [${jr}] Un dimanche travaillé dans le cadre d'une astreinte qui donne lieu à intervention = dimanche effectivement travaillé.`,
+    `🦊 [${jr} — ${hour}h] Si tu travailles tous les week-ends depuis des mois, c'est un pattern que FOX voit — et que tu peux faire constater.`,
+    `🦊 [${hour}h] Les jours fériés "chômés" non récupérés ne peuvent pas être déduits de ton salaire.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 8 — LOGISTIQUE / ENTREPÔT
+  // ═══════════════════════════════════════════════════════
+  const logistique = [
+    `🦊 [${jr} — ${hour}h] En logistique, les pics d'activité (fêtes, soldes, Black Friday) génèrent souvent des HS. Anticipe-les.`,
+    `🦊 [${hour}h] En entrepôt, les temps de chargement/déchargement sont du temps de travail effectif.`,
+    `🦊 [${jr}] Les astreintes en logistique doivent être rémunérées même si tu n'interviens pas.`,
+    `🦊 [${jr} — ${hour}h] Le travail posté (3x8, 2x8) en logistique a ses propres règles de repos et de rotation.`,
+    `🦊 [${hour}h] En flux tendu, la pression est forte. Mais tes droits ne disparaissent pas avec l'urgence opérationnelle.`,
+    `🦊 [${jr} — ${hour}h] En préparation de commandes, les objectifs doivent être réalisables dans le temps de travail prévu.`,
+    `🦊 [${jr}] Les accidents liés à la fatigue engagent la responsabilité de l'employeur. Ta traçabilité te protège.`,
+    `🦊 [${jr} — ${hour}h] Les équipements de protection individuelle (EPI) doivent être fournis sans frais et maintenus en état.`,
+    `🦊 [${hour}h] En logistique, les manutentions répétitives sont un risque ergonomique. Le DUER doit le mentionner.`,
+    `🦊 [${jr} — ${hour}h] Les temps de douche/habillage liés à des contraintes de poste peuvent être du temps de travail.`,
+    `🦊 [${jr}] La convention collective du transport et de la logistique prévoit des dispositions spécifiques sur les HS.`,
+    `🦊 [${hour}h] En entrepôt frigorifique ou sous conditions particulières, des contreparties spécifiques s'appliquent.`,
+    `🦊 [${jr} — ${hour}h] Les caristes et conducteurs d'engins ont des limites de temps de travail renforcées liées à la sécurité.`,
+    `🦊 [${jr}] Les inventaires nocturnes ou les réceptions tardives génèrent des HS qui doivent être tracées.`,
+    `🦊 [${hour}h] En logistique e-commerce, les cadences imposées doivent respecter les limites légales de travail effectif.`,
+    `🦊 [${jr} — ${hour}h] Le port de charges lourdes répété peut justifier une visite médicale de mi-carrière anticipée.`,
+    `🦊 [${jr}] Un poste de travail mal conçu ergonomiquement peut être signalé au CSSCT ou à l'inspection du travail.`,
+    `🦊 [${hour}h] En logistique internationale, les décalages horaires lors des astreintes comptent dans le temps de travail effectif.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 9 — TRANSPORT / CHAUFFEURS
+  // ═══════════════════════════════════════════════════════
+  const transport = [
+    `🦊 [${jr} — ${hour}h] Les conducteurs routiers ont une réglementation spécifique (règlement CE 561/2006) sur les temps de conduite.`,
+    `🦊 [${hour}h] 9h de conduite/jour max pour les poids lourds — extensible à 10h deux fois par semaine.`,
+    `🦊 [${jr}] 45h de repos hebdomadaire pour les conducteurs, réductibles à 24h avec compensation.`,
+    `🦊 [${jr} — ${hour}h] Les temps d'attente en point de chargement/déchargement comptent selon la convention transport.`,
+    `🦊 [${hour}h] Le chronotachygraphe est un outil légal — mais tes propres notes restent une preuve complémentaire.`,
+    `🦊 [${jr} — ${hour}h] Les chauffeurs VTC/taxi ont des règles spécifiques de temps de service — différentes du droit commun.`,
+    `🦊 [${jr}] En transport de personnes, la fatigue est un enjeu de sécurité publique. Les règles sont strictes pour de bonnes raisons.`,
+    `🦊 [${hour}h] Les temps de liaison (entre deux missions) sans passager peuvent être du temps de disponibilité rémunéré.`,
+    `🦊 [${jr} — ${hour}h] Les nuits hors domicile en déplacement ouvrent droit à des indemnités et des repos compensateurs.`,
+    `🦊 [${jr}] Les grands routiers ont droit à un repos hebdomadaire normal pris en dehors du véhicule.`,
+    `🦊 [${hour}h] En transport sanitaire, les gardes génèrent des droits spécifiques. Vérifie ta convention.`,
+    `🦊 [${jr} — ${hour}h] Le temps de briefing avant départ et debriefing après retour est du temps de travail effectif.`,
+    `🦊 [${jr}] Les missions tardives imposées en dernière minute peuvent constituer une modification unilatérale du contrat.`,
+    `🦊 [${jr} — ${hour}h] Les primes de salissure, de nuit ou de risque ne remplacent pas les HS. Ce sont des indemnités distinctes.`,
+    `🦊 [${hour}h] Un accident de trajet en mission est un accident du travail — même si tu conduis ton propre véhicule.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 10 — RECOURS & DÉMARCHES
+  // ═══════════════════════════════════════════════════════
+  const recours = [
+    `🦊 [${jr} — ${hour}h] Le conseil de prud'hommes est gratuit. Tu peux t'y présenter sans avocat pour les affaires simples.`,
+    `🦊 [${hour}h] L'inspection du travail peut intervenir sans que tu révèles ton identité. Le signalement est protégé.`,
+    `🦊 [${jr}] Un conseiller du salarié (liste en mairie) peut t'assister gratuitement lors d'un entretien de licenciement.`,
+    `🦊 [${jr} — ${hour}h] La médiation préalable au prud'hommes est obligatoire et souvent plus rapide.`,
+    `🦊 [${hour}h] Avant toute démarche contentieuse, une lettre recommandée à l'employeur est souvent suffisante pour régler le litige.`,
+    `🦊 [${jr} — ${hour}h] Les syndicats proposent des consultations juridiques gratuites — renseigne-toi auprès des sections locales.`,
+    `🦊 [${jr}] La prise d'acte de rupture permet de quitter l'entreprise avec les droits au chômage si l'employeur a manqué à ses obligations.`,
+    `🦊 [${hour}h] Un avocat spécialisé en droit du travail peut estimer ton dossier gratuitement lors d'une première consultation.`,
+    `🦊 [${jr} — ${hour}h] Le délai de prescription est de 3 ans pour les salaires et 1 an pour les licenciements. Ne tarde pas.`,
+    `🦊 [${jr}] L'aide juridictionnelle permet d'accéder à un avocat gratuitement sous conditions de ressources.`,
+    `🦊 [${hour}h] Les données FOX (exports) peuvent constituer un commencement de preuve recevable devant le juge.`,
+    `🦊 [${jr} — ${hour}h] Documenter les demandes de HS par mail crée une preuve de l'accord implicite de l'employeur.`,
+    `🦊 [${jr}] En cas de harcèlement moral lié aux HS, le CSST et l'inspection du travail peuvent mener une enquête.`,
+    `🦊 [${jr} — ${hour}h] Conserver ses bulletins de paie sans limitation de durée est conseillé — même après la rupture du contrat.`,
+    `🦊 [${hour}h] Une demande de rappel de salaire pour HS impayées peut inclure les intérêts légaux depuis la date d'exigibilité.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 11 — CONVENTIONS COLLECTIVES
+  // ═══════════════════════════════════════════════════════
+  const conventions = [
+    `🦊 [${jr} — ${hour}h] Ta convention collective est consultable gratuitement sur legifrance.gouv.fr — cherche ton code APE.`,
+    `🦊 [${hour}h] Les accords d'entreprise peuvent améliorer la convention collective, jamais la détériorer.`,
+    `🦊 [${jr}] L'employeur est obligé d'informer tout nouveau salarié de la convention collective applicable.`,
+    `🦊 [${jr} — ${hour}h] Une convention de branche peut prévoir des taux de majoration supérieurs aux 25%/50% légaux.`,
+    `🦊 [${hour}h] Le taux de majoration peut atteindre 100% le dimanche dans certaines conventions de distribution.`,
+    `🦊 [${jr} — ${hour}h] La convention collective transport et logistique (CCN 3085) prévoit des dispositions spécifiques sur les HS.`,
+    `🦊 [${jr}] En cas de changement de convention collective suite à une fusion, tes droits acquis sont maintenus pendant 15 mois.`,
+    `🦊 [${hour}h] Les accords de branche "défavorables" aux salariés ne s'appliquent que si l'accord d'entreprise ne les contredit pas.`,
+    `🦊 [${jr} — ${hour}h] Les usages d'entreprise (avantages accordés sans texte) peuvent être maintenus ou dénoncés — avec un préavis.`,
+    `🦊 [${jr}] Les classifications conventionnelles déterminent ton salaire minimum. Vérifie que ton coefficient est correct.`,
+    `🦊 [${hour}h] La convention collective s'applique à tous les salariés de l'entreprise, CDI comme CDD.`,
+    `🦊 [${jr} — ${hour}h] Consulter les panneaux d'affichage obligatoires (convention, règlement intérieur) est ton droit à tout moment.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 12 — TÉLÉTRAVAIL
+  // ═══════════════════════════════════════════════════════
+  const teletravail = [
+    `🦊 [${jr} — ${hour}h] En télétravail, les HS existent et se calculent de la même façon qu'au bureau.`,
+    `🦊 [${hour}h] Le droit à la déconnexion est encore plus important en télétravail où les frontières sont floues.`,
+    `🦊 [${jr}] L'employeur doit prendre en charge ou indemniser les frais liés au télétravail (Art. L1222-10).`,
+    `🦊 [${jr} — ${hour}h] La durée légale du travail s'applique identiquement en télétravail — ne laisse pas le bureau entrer dans ta chambre.`,
+    `🦊 [${hour}h] Les accidents du travail en télétravail sont couverts par la CPAM si le lien avec l'activité professionnelle est établi.`,
+    `🦊 [${jr} — ${hour}h] En télétravail, tenir un journal d'activité horodaté t'aide à objectiver ta charge réelle.`,
+    `🦊 [${jr}] Le refus de télétravailler n'est pas un motif de licenciement. C'est un droit, pas une obligation.`,
+    `🦊 [${jr} — ${hour}h] Le télétravail imposé d'urgence sans accord peut ouvrir des droits à indemnisation selon les circonstances.`,
+    `🦊 [${hour}h] Les horaires flexibles en télétravail ne suppriment pas les plafonds légaux — tu restes protégé.`,
+    `🦊 [${jr} — ${hour}h] Si ton manager t'envoie des messages à toutes heures, c'est du temps de travail. Trace-le.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 13 — FAQ RAPIDE
+  // ═══════════════════════════════════════════════════════
+  const faq = [
+    `🦊 [${jr} — ${hour}h] "Mon employeur peut-il me forcer à faire des HS ?" → Oui jusqu'à 220h/an. Au-delà, non sans accord.`,
+    `🦊 [${hour}h] "Les HS non validées sont-elles dues ?" → Si l'employeur les a acceptées tacitement (sans refus), oui.`,
+    `🦊 [${jr} — ${hour}h] "Puis-je prendre mes HS en repos ?" → Oui si un accord collectif le prévoit (RCR).`,
+    `🦊 [${jr}] "Je suis cadre, ai-je droit aux majorations ?" → Si pas de forfait jours signé, oui.`,
+    `🦊 [${jr} — ${hour}h] "Les HS des semaines précédentes compensent-elles une semaine normale ?" → Non, ça se calcule semaine par semaine.`,
+    `🦊 [${hour}h] "Puis-je réclamer des HS non déclarées de l'an dernier ?" → Oui, jusqu'à 3 ans après. Il te faut des preuves.`,
+    `🦊 [${jr} — ${hour}h] "En arrêt maladie, mes HS sont-elles perdues ?" → Non. Celles réalisées avant l'arrêt restent dues.`,
+    `🦊 [${jr}] "Mon manager dit que les HS ne se paient pas ici" → C'est illégal sauf accord de modulation signé.`,
+    `🦊 [${hour}h] "Puis-je refuser une mission qui dépasse les durées légales ?" → Oui. Ce n'est pas de l'insubordination.`,
+    `🦊 [${jr} — ${hour}h] "Que faire si mon planning change à la dernière minute ?" → Un délai de prévenance légal ou conventionnel s'applique.`,
+    `🦊 [${jr}] "L'employeur peut-il imposer des RTT à des dates qu'il choisit ?" → Oui dans certaines limites — vérifie ton accord.`,
+    `🦊 [${hour}h] "Mon contrat dit 39h mais on m'en demande 45 chaque semaine — est-ce normal ?" → Non. Les 6h excédentaires sont des HS.`,
+    `🦊 [${jr} — ${hour}h] "Une prime de résultat peut-elle remplacer les majorations d'HS ?" → Non, sauf si l'accord est très explicite sur ce point.`,
+    `🦊 [${jr}] "En intérim, ai-je droit aux HS ?" → Oui, aux mêmes conditions que les salariés permanents.`,
+    `🦊 [${hour}h] "Mon employeur me demande d'arriver 15 minutes avant le pointage — est-ce légal ?" → Non, c'est du temps de travail non rémunéré.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 14 — TEXTES LÉGAUX CLÉS
+  // ═══════════════════════════════════════════════════════
+  const legal = [
+    `🦊 Art. L3121-18 : durée max journalière 10h, extensible à 12h par accord ou urgence.`,
+    `🦊 Art. L3121-20 : 48h/semaine = maximum absolu. Aucune dérogation individuelle possible.`,
+    `🦊 Art. L3121-22 : moyenne de 44h sur toute période de 12 semaines consécutives.`,
+    `🦊 Art. L3121-30 : contingent annuel légal = 220h. Au-delà, contrepartie obligatoire en repos.`,
+    `🦊 Art. L3131-1 : 11h de repos quotidien minimum entre deux prises de poste.`,
+    `🦊 Art. L3132-2 : 35h de repos hebdomadaire consécutif minimum.`,
+    `🦊 Art. L3121-16 : pause de 20 minutes minimum après 6 heures de travail effectif.`,
+    `🦊 Art. L3121-36 : majoration de 25% sur les 8 premières HS/semaine, 50% au-delà.`,
+    `🦊 Art. L2242-17 : négociation obligatoire sur le droit à la déconnexion (entreprises +50 sal.).`,
+    `🦊 Art. L4121-1 : obligation de résultat de l'employeur sur la santé et la sécurité des salariés.`,
+    `🦊 Art. L3245-1 : délai de prescription pour réclamer des HS impayées = 3 ans.`,
+    `🦊 Art. L3122-5 : travailleur de nuit si ≥270h/an ou 2 nuits/semaine habituellement.`,
+    `🦊 Art. L3171-4 : en cas de litige sur les HS, la preuve est partagée entre salarié et employeur.`,
+    `🦊 Art. L3133-6 : le 1er mai est le seul jour férié légalement payé double.`,
+    `🦊 Art. L3121-11 : le salarié peut refuser de faire des HS sauf accord collectif les rendant obligatoires.`,
+    `🦊 Art. L1222-10 : l'employeur prend en charge les frais liés au télétravail.`,
+    `🦊 Art. L3141-12 : l'employeur ne peut refuser des congés légaux acquis.`,
+    `🦊 Art. L3122-7 : durée maximale de 8h par poste en travail de nuit.`,
+    `🦊 Art. L3121-4 : temps de déplacement entre deux sites de travail = temps de travail effectif.`,
+    `🦊 Art. L3121-33 : contrepartie obligatoire en repos pour HS au-delà du contingent annuel.`,
+    `🦊 Art. L1222-1 : le contrat de travail est exécuté de bonne foi — par les deux parties.`,
+    `🦊 Art. L1226-1 : en cas d'arrêt maladie, une indemnisation complémentaire peut être due après 1 an d'ancienneté.`,
+    `🦊 Art. L3141-1 : tout salarié a droit à 5 semaines de congés payés par an, à raison de 2,5 jours par mois travaillé.`,
+    `🦊 Art. L2315-1 : les délégués du personnel peuvent être saisis de toute question relative aux conditions de travail.`,
+    `🦊 Art. L3122-9 : les travailleurs de nuit bénéficient de contreparties en repos compensateur ou en rémunération.`,
+    `🦊 Art. L1237-19 : la rupture conventionnelle permet de quitter l'entreprise d'un commun accord avec droit au chômage.`,
+    `🦊 Art. L3123-1 : le temps partiel implique un contrat écrit précisant la durée hebdomadaire ou mensuelle convenue.`,
+    `🦊 Art. L4154-3 : formation sécurité renforcée obligatoire pour les salariés exposés à des risques particuliers.`,
+    `🦊 Art. L6321-1 : l'employeur assure l'adaptation des salariés à leur poste et veille à leur employabilité.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 15 — KITSUNE PARLE
+  // ═══════════════════════════════════════════════════════
+  const kitsune = [
+    `🦊 [${jr} — ${hour}h] Hey ${pr}! Je suis là pour surveiller que tes droits sont respectés. Le premier gardien, c'est toi — en saisissant tes heures.`,
+    `🦊 [${hour}h] Kitsune te parle depuis ce ${jr}. Ma mission : t'alerter quand quelque chose cloche. Donne-moi les données pour le faire correctement.`,
+    `🦊 [${jr} — ${hour}h] Je ne suis pas un avocat ${pr}, mais je connais bien le Code du travail. En cas de doute sérieux, un conseiller du salarié reste irremplaçable.`,
+    `🦊 [${jr}] Chaque saisie dans FOX est un acte de traçabilité. Petit en soi, crucial en cas de besoin. Continue comme ça ${pr}.`,
+    `🦊 [${jr} — ${hour}h] Ton bien-être au travail m'importe. Je veille.`,
+    `🦊 [${hour}h] Je calcule en silence, mais je suis là. Si les chiffres dépassent les seuils, tu le sauras immédiatement.`,
+    `🦊 [${jr} — ${hour}h] Il y a des semaines difficiles. FOX les voit toutes. Si le pattern dure, c'est le moment d'agir.`,
+    `🦊 [${hour}h] Rappel de Kitsune : tu mérites un travail qui respecte ta santé. Le droit du travail est là pour ça.`,
+    `🦊 [${jr} — ${hour}h] Je collecte des données, pas des émotions. Mais je sais que derrière chaque heure sup, il y a quelqu'un qui donne plus que prévu.`,
+    `🦊 [${jr}] Ce ${jr}, comme chaque jour, je surveille. Les violations, les tendances, les risques. Tu peux compter sur moi ${pr}.`,
+    `🦊 [${hour}h] FOX ne juge pas. FOX observe, calcule, et t'informe. La suite, c'est toi qui la décides.`,
+    `🦊 [${jr} — ${hour}h] L'important n'est pas de ne jamais dépasser — c'est de le savoir, le tracer, et décider en connaissance de cause.`,
+    `🦊 [${jr}] Chaque semaine que tu enregistres dans FOX est une semaine que personne ne peut te faire oublier.`,
+    `🦊 [${jr} — ${hour}h] Je suis discret, mais attentif. Et si un jour tu as besoin de preuves, elles seront là.`,
+    `🦊 [${hour}h] Les données FOX t'appartiennent à toi seul. Ni ton employeur ni personne n'y a accès sans toi.`,
+    `🦊 [${jr} — ${hour}h] Je préfère te donner une fausse alerte plutôt que laisser passer une vraie violation. C'est mon rôle.`,
+    `🦊 [${jr}] Bonne journée ${pr}. N'oublie pas : ce que tu fais aujourd'hui, note-le ce soir.`,
+    `🦊 [${hour}h] Kitsune te salue ${pr}. Le droit du travail est complexe, mais les fondamentaux tiennent en quelques règles — et FOX les surveille pour toi.`,
+    `🦊 Je suis ton allié silencieux. Pas de jugement, pas de conseil intempestif — juste des données et des alertes quand c'est nécessaire.`,
+    `🦊 Chaque alerte FOX est une information, pas une accusation. Sers-t'en pour prendre de meilleures décisions.`,
+    `🦊 Je connais ta situation semaine après semaine. Si le rythme devient dangereux, tu seras le premier informé.`,
+    `🦊 FOX ne te dira jamais quoi faire. Mais il te donnera tout ce qu'il faut pour décider toi-même.`,
+    `🦊 Mes calculs sont basés sur le droit français en vigueur. En cas de doute sérieux, un professionnel reste irremplaçable.`,
+    `🦊 Kitsune observe, calcule, et alerte. Le reste, c'est ta décision. Et ta vie professionnelle.`,
+    `🦊 Un bon suivi aujourd'hui, c'est une négociation plus forte demain. FOX te prépare.`,
+    `🦊 Je suis là depuis le début de ta journée. Et je serai là à la fin. C'est mon engagement.`,
+    `🦊 Merci de faire confiance à FOX. Je prends ce rôle au sérieux.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 16 — CITATIONS & SAGESSE
+  // ═══════════════════════════════════════════════════════
+  const citations = [
+    `🦊 "Le travail n'est pas une punition — mais travailler sans limites, si." — Kitsune.`,
+    `🦊 [${jr} — ${hour}h] "Connais tes droits autant que tes responsabilités." C'est pour ça que FOX existe.`,
+    `🦊 "Les heures non déclarées sont des heures données. Les heures tracées sont des heures protégées." — FOX Engine.`,
+    `🦊 [${hour}h] "Une journée bien saisie vaut mieux que dix journées reconstruites." Prends 2 minutes maintenant.`,
+    `🦊 [${jr}] "Le repos n'est pas une récompense — c'est une condition légale de continuité." Art. L3131-1.`,
+    `🦊 "Le meilleur moment pour noter ses heures, c'est maintenant." — Kitsune.`,
+    `🦊 "Déclarer ses HS, c'est aussi protéger ses collègues — l'employeur ne peut pas sous-doter indéfiniment si les HS sont visibles."`,
+    `🦊 [${hour}h] "Un salarié informé est un salarié protégé." — FOX Engine.`,
+    `🦊 [${jr}] "Les 35h ne sont pas un plafond de compétence — elles sont un plancher de protection."`,
+    `🦊 [${jr} — ${hour}h] "Tes droits existent même si tu ne les connais pas. Mais ils sont bien plus utiles quand tu les connais." — Kitsune.`,
+    `🦊 "Ce qui se mesure peut être amélioré. Ce qui est caché s'accumule." — FOX Engine.`,
+    `🦊 [${hour}h] "Un accord qui ne bénéficie qu'à une seule partie n'est pas un accord — c'est une concession."`,
+    `🦊 [${jr}] "La fatigue n'est pas une preuve de travail bien fait. C'est un signal d'alarme." — Kitsune.`,
+    `🦊 "Chaque heure sup tracée est une heure que l'oubli ne peut pas effacer." — FOX Engine.`,
+    `🦊 [${jr} — ${hour}h] "Le droit du travail a été écrit par ceux qui ont travaillé trop. Lis-le en leur honneur."`,
+    `🦊 "La connaissance de ses droits est la première forme de liberté au travail." — FOX Engine.`,
+    `🦊 "Le temps est la seule ressource que tu ne peux pas créer — seulement le protéger."`,
+    `🦊 "Ce qui se trace reste. Ce qui ne se trace pas disparaît." — Kitsune.`,
+    `🦊 "Exiger le respect de ses droits n'est pas de l'agressivité — c'est de la cohérence."`,
+    `🦊 "La loi protège ceux qui la connaissent autant que ceux qui l'appliquent." — FOX Engine.`,
+    `🦊 "Tes heures sont ta vie. Elles méritent d'être comptées."`,
+    `🦊 "Un droit inutilisé est un droit inexistant dans les faits. Utilise-les."`,
+    `🦊 "Le silence du salarié n'est pas une acceptation. Le droit ne se tait pas."`,
+    `🦊 "Données + droits = puissance. FOX te donne les deux." — Kitsune.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 17 — LUNDI (nouveau départ)
+  // ═══════════════════════════════════════════════════════
+  const lundi = [
+    `🦊 Lundi — nouvelle semaine civile, compteurs HS remis à zéro. C'est le bon moment pour vérifier le bilan de la semaine passée dans FOX.`,
+    `🦊 [Lundi — ${hour}h] La semaine commence. Si tu prévois des journées chargées, anticipe le total hebdomadaire dès maintenant.`,
+    `🦊 [Lundi] Semaine civile = lundi 0h → dimanche 24h. Toutes les HS de cette période forment une seule semaine légale.`,
+    `🦊 [Lundi — ${hour}h] Bon début de semaine ${pr}. Si la semaine passée était chargée, assure-toi que les HS sont bien saisies.`,
+    `🦊 [Lundi] C'est le moment de regarder ton solde de repos compensateurs. En as-tu à prendre cette semaine ?`,
+    `🦊 [Lundi — ${hour}h] Une semaine bien planifiée est une semaine où les droits sont respectés. FOX est là si ça dérape.`,
+    `🦊 [Lundi] Le repos hebdomadaire de 35h doit se terminer avant ce matin. Si tu travaillais hier soir, vérifie l'heure de fin.`,
+    `🦊 [Lundi — ${hour}h] Prêt pour la semaine ${pr}? Si ton planning dépasse déjà 48h sur 5 jours, c'est le signal de l'alerter maintenant.`,
+    `🦊 [Lundi] Rappel de début de semaine : la durée moyenne de 44h se calcule sur les 12 semaines glissantes. FOX surveille.`,
+    `🦊 [Lundi — ${hour}h] Lundi matin, regard neuf. Note dès aujourd'hui si tu débutes tôt — ça fait partie du calcul hebdomadaire.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 18 — VENDREDI (bilan de semaine)
+  // ═══════════════════════════════════════════════════════
+  const vendredi = [
+    `🦊 [Vendredi — ${hour}h] Fin de semaine approche. C'est le bon moment de vérifier ton total hebdomadaire avant de saisir les dernières heures.`,
+    `🦊 [Vendredi] Si tu as dépassé 44h cette semaine, note-le bien — ça entre dans la moyenne des 12 semaines.`,
+    `🦊 [Vendredi — ${hour}h] La semaine civile se termine dimanche soir. Toute heure ce week-end compte dans ce total.`,
+    `🦊 [Vendredi] Bon bilan de semaine ${pr}. Si des HS ont été faites sans être validées, c'est encore temps de le noter.`,
+    `🦊 [Vendredi — ${hour}h] Rappel vendredi : as-tu saisi toutes tes heures de la semaine dans FOX ?`,
+    `🦊 [Vendredi] Si tu prévois de travailler ce week-end, assure-toi que tes droits au repos hebdomadaire seront respectés.`,
+    `🦊 [Vendredi — ${hour}h] Une semaine bien documentée = une semaine où tu gardes la main. Bravo si c'est fait.`,
+    `🦊 [Vendredi] Si la semaine a été difficile, le corps a besoin de 48h de récupération complète. Essaie de les prendre.`,
+    `🦊 [Vendredi — ${hour}h] Fin de semaine : vérifie aussi si un repos compensateur acquis est à prendre prochainement.`,
+    `🦊 [Vendredi] Le vendredi soir, les mails pros peuvent attendre lundi. Le droit à la déconnexion, ça commence maintenant.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 19 — MATIN (contexte 6h-12h)
+  // ═══════════════════════════════════════════════════════
+  const matinPools = [
+    `🦊 [${jr} — ${hour}h] Bonne prise de poste ${pr}. Si tu commences tôt, assure-toi que le repos de 11h depuis hier a bien été respecté.`,
+    `🦊 [${jr} — ${hour}h] Matinée en cours. Si tu as travaillé hier soir, vérifie le délai entre fin de poste hier et début aujourd'hui.`,
+    `🦊 [${hour}h] Le matin, l'amplitude de la journée commence. Si tu termines tard ce soir, l'Art. L3131-1 sera le juge.`,
+    `🦊 [${jr} — ${hour}h] Prise de poste matinale. Les journées qui commencent tôt finissent souvent tard — note l'heure de début.`,
+    `🦊 [${hour}h] Matin calme ou chargé, c'est pareil — le chrono du temps de travail tourne dès que tu es opérationnel.`,
+    `🦊 [${jr} — ${hour}h] Une pause de 20 minutes est obligatoire après 6h de travail continu. Pense-y avant que la journée s'emballe.`,
+    `🦊 [${hour}h] Bon matin ${pr}. Si tu as des questions sur tes droits, FOX est là. Sinon, bonne journée !`,
+    `🦊 [${jr} — ${hour}h] Les prises de poste avant 6h du matin peuvent ouvrir droit à des contreparties selon ta convention.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 20 — SOIRÉE (contexte 18h-22h)
+  // ═══════════════════════════════════════════════════════
+  const soireePools = [
+    `🦊 [${jr} — ${hour}h] ${hour}h passées. Si tu es encore au travail, note bien l'heure de fin pour le calcul de la journée.`,
+    `🦊 [${hour}h] En soirée, la fatigue fausse l'évaluation du temps passé. Note tes heures maintenant, avant d'oublier.`,
+    `🦊 [${jr} — ${hour}h] Si tu quittes le bureau après ${hour}h ce soir, vérifie à quelle heure tu dois reprendre demain. Le repos de 11h compte.`,
+    `🦊 [${hour}h] Soirée de travail = bonus XP nuit dans FOX. Et aussi, des droits potentiels selon ta convention.`,
+    `🦊 [${jr} — ${hour}h] Une journée longue mérite une saisie précise. FOX calcule, mais c'est toi qui fournis les données.`,
+    `🦊 [${hour}h] Si tu reçois des messages pros en ce moment, est-ce de l'astreinte ou simplement du travail non déclaré ? La différence compte.`,
+    `🦊 [${jr} — ${hour}h] Soirée chargée ? Pense à te déconnecter complètement après ta prise en charge — le cerveau a besoin du signal "c'est fini".`,
+    `🦊 [${hour}h] ${pr}si tu travailles encore à ${hour}h, le repos de 11h avant demain matin est une priorité légale.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 21 — BEAUCOUP D'HS AUJOURD'HUI (xh > 2h)
+  // ═══════════════════════════════════════════════════════
+  const avecBeaucoupHS = hasHS && xh > 2 ? [
+    `🦊 [${jr} — ${hour}h] ${xs} sup enregistrées aujourd'hui — c'est une journée de ${ts} au total. Ton repos de 11h avant demain est prioritaire.`,
+    `🦊 [${hour}h] ${xs} sup, journée de ${ts}. Au taux de 25% : +${Math.round(xh*0.25*10)/10}h de salaire brut théorique. À 50% si c'est la 9e HS ou + cette semaine.`,
+    `🦊 [${jr}] Journée de ${ts} avec ${xs} sup. Si ce rythme persiste toute la semaine, le contingent annuel avance vite.`,
+    `🦊 [${hour}h] ${xs} de plus au compteur. Bien noté ${pr}. Ces heures sont une créance certaine sur ton employeur.`,
+    `🦊 [${jr} — ${hour}h] Après une journée de ${ts}, le repos de 11h n'est pas optionnel. C'est la loi.`,
+    `🦊 [${hour}h] ${xs} sup aujourd'hui. Si le total de la semaine dépasse 44h, la moyenne sur 12 sem. sera impactée.`,
+    `🦊 [${jr}] Grosse journée ${pr}. ${xs} sup bien tracées. L'important maintenant : récupération et continuité du suivi.`,
+    `🦊 [${jr} — ${hour}h] ${xs} enregistrées. Si ces heures ne figurent pas sur ton prochain bulletin, tu peux les réclamer dans les 3 ans.`,
+  ] : [];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 22 — PEU D'HS OU ZÉRO
+  // ═══════════════════════════════════════════════════════
+  const avecPeuHS = !hasHS ? [
+    `🦊 [${jr} — ${hour}h] Pas d'HS enregistrées aujourd'hui. Journée dans les clous ? Bien. Ou données à saisir ?`,
+    `🦊 [${hour}h] Si tu n'as pas eu d'HS aujourd'hui, c'est une bonne nouvelle — ou une opportunité de vérifier que les données sont à jour.`,
+    `🦊 [${jr}] Journée sans dépassement ${pr}. Profite du temps sans HS pour regarder le bilan annuel.`,
+    `🦊 [${jr} — ${hour}h] Pas d'HS aujourd'hui selon FOX. Si tu en as quand même fait, saisis-les — même tard, ça compte.`,
+    `🦊 [${hour}h] Une journée dans les limites légales est une journée de droits respectés. C'est la norme, pas l'exception.`,
+  ] : [];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 23 — MOTIVATION & BIENVEILLANCE
+  // ═══════════════════════════════════════════════════════
+  const motivation = [
+    `🦊 [${jr} — ${hour}h] Tu utilises FOX — ça veut dire que tu prends tes droits au sérieux. C'est la première ligne de défense.`,
+    `🦊 [${hour}h] Tenir un journal d'heures n'est pas de la méfiance envers l'employeur. C'est de la rigueur professionnelle.`,
+    `🦊 [${jr}] Chaque semaine de données dans FOX, c'est une semaine que personne ne peut te faire oublier.`,
+    `🦊 [${jr} — ${hour}h] Les personnes qui connaissent leurs droits sont moins exposées aux abus. Continue comme ça ${pr}.`,
+    `🦊 [${hour}h] FOX est ton carnet de bord légal. Discret, personnel, toujours disponible.`,
+    `🦊 [${jr} — ${hour}h] Même les semaines difficiles ont une fin. Ce qui compte, c'est de les traverser avec les données pour en témoigner si besoin.`,
+    `🦊 [${jr}] Tu mérites un travail qui respecte ton temps et ta santé. Ce n'est pas une exigence excessive — c'est la loi.`,
+    `🦊 [${jr} — ${hour}h] Prendre soin de toi, c'est aussi être plus disponible pour les autres. Le repos n'est pas de l'égoïsme.`,
+    `🦊 [${hour}h] Si aujourd'hui a été difficile, note-le. Si demain l'est aussi, FOX le verra. Et toi aussi.`,
+    `🦊 [${jr}] La régularité dans la saisie fait toute la différence. Même 2 minutes ce soir.`,
+    `🦊 [${jr} — ${hour}h] Chaque salarié qui trace ses heures contribue à rendre les abus moins fréquents. Merci ${pr}.`,
+    `🦊 [${hour}h] FOX n'est pas là pour créer des conflits — il est là pour que tu aies les éléments si un conflit survient.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 24 — HORAIRES ATYPIQUES / TRAVAIL POSTÉ
+  // ═══════════════════════════════════════════════════════
+  const horairesAtypiques = [
+    `🦊 [${jr} — ${hour}h] Le travail posté (3x8, 2x8) génère des HS qui se calculent semaine par semaine, comme tout le monde.`,
+    `🦊 [${hour}h] En rotation de postes, la semaine civile reste lundi-dimanche. Peu importe que ton "lundi" soit un dimanche de travail.`,
+    `🦊 [${jr} — ${hour}h] Les changements de planning de dernière minute en travail posté doivent respecter un délai de prévenance.`,
+    `🦊 [${hour}h] En 3x8, les postes du soir (14h-22h) et nuit (22h-6h) ont souvent des majorations conventionnelles spécifiques.`,
+    `🦊 [${jr}] Le passage d'un poste à l'autre doit garantir 11h de repos minimum. Vérifie le planning avant de l'accepter.`,
+    `🦊 [${jr} — ${hour}h] En travail posté continu, les salariés ont parfois droit à des contreparties santé spécifiques.`,
+    `🦊 [${hour}h] La rotation rapide de postes (matin→nuit en 24h) peut violer le repos quotidien. Documente-le.`,
+    `🦊 [${jr} — ${hour}h] En cycle de 4 jours travaillés / 2 jours off, les HS se calculent sur la semaine civile, pas sur le cycle.`,
+    `🦊 [${hour}h] Les équipes de suppléance (week-end) ont un régime légal distinct avec des majorations spécifiques.`,
+    `🦊 [${jr}] En "semaine décalée", les heures du lundi soir au dimanche soir restent la référence légale pour le calcul des HS.`,
+    `🦊 [${jr} — ${hour}h] Si ton planning est modifié plus de 2 fois par mois, une prime de flexibilité peut être prévue par accord.`,
+    `🦊 [${hour}h] Les agents de sécurité, soignants et personnels postés ont des règles de repos renforcées. Connais les tiennes.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 25 — CONTRATS & STATUTS
+  // ═══════════════════════════════════════════════════════
+  const contrats = [
+    `🦊 [${jr} — ${hour}h] En CDD, les droits aux HS et majorations s'appliquent exactement comme en CDI.`,
+    `🦊 [${hour}h] Les intérimaires ont les mêmes droits aux HS que les salariés permanents de l'entreprise utilisatrice.`,
+    `🦊 [${jr}] En apprentissage, les HS sont possibles mais encadrées différemment selon l'âge de l'apprenti.`,
+    `🦊 [${jr} — ${hour}h] Le CDI est la norme — tout autre contrat doit être justifié par un motif légal précis.`,
+    `🦊 [${hour}h] En contrat à temps partiel, des "heures complémentaires" peuvent être demandées dans certaines limites.`,
+    `🦊 [${jr} — ${hour}h] Le forfait jours exclut les HS mais pas les limites d'amplitude journalière et hebdomadaire.`,
+    `🦊 [${hour}h] En portage salarial, les droits aux repos légaux s'appliquent intégralement.`,
+    `🦊 [${jr}] Un contrat qui prévoit des HS systématiques intégrées dans le salaire doit préciser le nombre d'heures incluses.`,
+    `🦊 [${jr} — ${hour}h] La période d'essai ne suspend pas les droits — tu es salarié à part entière dès le premier jour.`,
+    `🦊 [${hour}h] En cas de renouvellement de CDD, les HS réalisées lors du premier contrat restent dues.`,
+    `🦊 [${jr} — ${hour}h] Le contrat saisonnier n'échappe pas aux règles sur les HS — le Code du travail s'applique toute l'année.`,
+    `🦊 [${jr}] Les auto-entrepreneurs qui travaillent comme des salariés peuvent être requalifiés — et récupérer des droits.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 26 — ÉQUILIBRE VIE PRO / PERSO
+  // ═══════════════════════════════════════════════════════
+  const equilibre = [
+    `🦊 [${jr} — ${hour}h] L'équilibre vie pro/perso n'est pas un luxe — c'est une condition de performance durable.`,
+    `🦊 [${hour}h] Les personnes qui prennent leurs congés entièrement sont en moyenne plus productives. Ce n'est pas de la paresse.`,
+    `🦊 [${jr}] Être disponible en permanence n'est pas une valeur professionnelle — c'est un symptôme de surcharge.`,
+    `🦊 [${jr} — ${hour}h] Dire non à une demande déraisonnable est une compétence professionnelle, pas un manque de motivation.`,
+    `🦊 [${hour}h] Tes enfants, tes proches, tes loisirs ont de la valeur. Le droit du travail protège aussi ces moments.`,
+    `🦊 [${jr} — ${hour}h] Le repos de qualité améliore la concentration, la créativité et la résistance au stress.`,
+    `🦊 [${jr}] Une entreprise qui respecte le temps de ses salariés fidélise mieux et réduit l'absentéisme.`,
+    `🦊 [${hour}h] Les études montrent que travailler plus de 50h/semaine régulièrement réduit la productivité horaire.`,
+    `🦊 [${jr} — ${hour}h] Protéger son temps personnel n'est pas en contradiction avec être un bon professionnel.`,
+    `🦊 [${jr}] Le surmenage coûte cher à long terme — à toi, à ta famille, et paradoxalement à ton employeur.`,
+    `🦊 [${hour}h] Décrocher du travail le soir n'est pas de l'abandon — c'est une hygiène de vie nécessaire.`,
+    `🦊 [${jr} — ${hour}h] Le cerveau a besoin de temps "sans travail" pour consolider les apprentissages et recharger.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 27 — MANAGEMENT & RELATIONS AU TRAVAIL
+  // ═══════════════════════════════════════════════════════
+  const management = [
+    `🦊 [${jr} — ${hour}h] Un manager qui valide des plannings dépassant 48h/semaine engage sa responsabilité et celle de l'entreprise.`,
+    `🦊 [${hour}h] La pression implicite pour faire des HS non rémunérées peut constituer un harcèlement moral.`,
+    `🦊 [${jr}] Un bon manager sait que des équipes reposées sont plus efficaces qu'une équipe épuisée.`,
+    `🦊 [${jr} — ${hour}h] Si ton supérieur te demande de "rester un peu plus" régulièrement, note-le. Le pattern devient une preuve.`,
+    `🦊 [${hour}h] Les managers sont également concernés par les durées légales — et responsables du respect de celles de leurs équipes.`,
+    `🦊 [${jr} — ${hour}h] Un entretien annuel qui ne traite pas la charge de travail est incomplet. Tu peux l'y aborder formellement.`,
+    `🦊 [${jr}] La mise en place d'objectifs irréalisables dans les horaires contractuels est une faute de l'employeur.`,
+    `🦊 [${hour}h] Si tu es encadrant, sache que valider les HS de ton équipe engage aussi ta responsabilité.`,
+    `🦊 [${jr} — ${hour}h] Les remontées de charge au manager, par mail, créent une trace documentée utilisable en cas de litige.`,
+    `🦊 [${jr}] Une culture d'entreprise qui valorise les heures plutôt que les résultats est un facteur de risque reconnu.`,
+    `🦊 [${hour}h] Si la surcharge vient d'un sous-effectif chronique, le CSE peut l'inscrire à l'ordre du jour d'une réunion.`,
+    `🦊 [${jr} — ${hour}h] Refuser de signer un avenant défavorable n'est pas un motif de licenciement — c'est un droit.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 28 — OUTILS FOX & BONS RÉFLEXES
+  // ═══════════════════════════════════════════════════════
+  const outils = [
+    `🦊 [${jr} — ${hour}h] FOX est ton journal de bord légal personnel. Plus tu remplis M1 ou M2 régulièrement, plus les analyses sont précises.`,
+    `🦊 [${hour}h] Exporter tes données FOX régulièrement te donne un historique portable, indépendant de ton appareil.`,
+    `🦊 [${jr} — ${hour}h] Le glossaire juridique FOX couvre les 30 termes clés du droit du travail — accessible depuis le menu.`,
+    `🦊 [${jr}] M1 (Annuel) et M2 (Mensuel) sont complémentaires — utilise celui qui colle à ton organisation de travail.`,
+    `🦊 [${jr} — ${hour}h] Conseil : prends une photo de ta feuille de pointage chaque semaine. Double documentation = double sécurité.`,
+    `🦊 [${hour}h] Le rapport FOX te donne une vue synthétique de ta situation légale. Génère-le avant chaque entretien annuel.`,
+    `🦊 [${jr} — ${hour}h] Les données FOX restent sur ton appareil. Elles ne sont jamais transmises à ton employeur.`,
+    `🦊 [${jr}] Compare ton bulletin de paie avec le rapport FOX. Toute différence significative mérite investigation.`,
+    `🦊 [${jr} — ${hour}h] Les badges FOX ne sont pas que décoratifs — ils indiquent des patterns réels dans tes données.`,
+    `🦊 [${hour}h] La vue analyse PRO te donne une lecture rapide de ta situation légale et de ton niveau de burn-out.`,
+    `🦊 [${jr} — ${hour}h] Saisir ses heures prend 2 minutes. Ne pas le faire peut coûter des mois de preuve en cas de litige.`,
+    `🦊 [${jr}] L'export RTF de FOX est un document formaté que tu peux imprimer ou joindre à un courrier.`,
+  ];
+
+    // ═══════════════════════════════════════════════════════
+  // SÉLECTION CONTEXTUELLE DU POOL
+  // ═══════════════════════════════════════════════════════
+  // Construire la liste des pools éligibles selon le contexte
+  // ═══════════════════════════════════════════════════════
+  // POOL 29 — SITUATIONS CONCRÈTES / SCÉNARIOS VÉCUS
+  // ═══════════════════════════════════════════════════════
+  const situations = [
+    `🦊 [${jr} — ${hour}h] "On finit à 20h ce soir" dit le chef à 17h. Si c'est régulier, ce sont des HS. Si c'est la première fois, note quand même.`,
+    `🦊 [${hour}h] Réunion à 7h30 "pour éviter de déborder sur la journée" — c'est quand même 7h30 de temps de travail effectif.`,
+    `🦊 [${jr}] "Le vendredi on finit plus tôt" mais la semaine fait 42h quand même. Les HS ne disparaissent pas avec les arrangements informels.`,
+    `🦊 [${jr} — ${hour}h] Formation obligatoire le samedi = HS, peu importe comment l'employeur l'appelle.`,
+    `🦊 [${hour}h] "Je t'envoie le rapport pour demain matin" reçu à 22h. Si tu le traites ce soir, c'est du temps de travail.`,
+    `🦊 [${jr}] Inventaire de nuit "une fois par mois" × 12 = 12 nuits de travail par an. Elles doivent toutes être tracées.`,
+    `🦊 [${jr} — ${hour}h] Déjeuner de travail avec un client = temps de travail effectif si tu représentes l'entreprise.`,
+    `🦊 [${hour}h] "Tu peux rester pour finir le dossier ?" — si c'est toutes les semaines, ce n'est plus une exception.`,
+    `🦊 [${jr} — ${hour}h] Astreinte "informelle" le week-end : disponible sur le téléphone sans être rémunéré = astreinte non déclarée.`,
+    `🦊 [${hour}h] "On récupère en prenant une après-midi" sans accord écrit : ce n'est pas un repos compensateur légal.`,
+    `🦊 [${jr}] Embauche à 8h pour un démarrage client à 9h — le temps de préparation entre 8h et 9h est du temps de travail.`,
+    `🦊 [${jr} — ${hour}h] "La prime de fin d'année couvre tes HS" : illégal si la prime n'est pas explicitement qualifiée de majoration d'HS dans le contrat.`,
+    `🦊 [${hour}h] Badger en sortant mais continuer à travailler depuis sa voiture : le travail réel prime sur le pointage.`,
+    `🦊 [${jr} — ${hour}h] "On n'est pas au Japon ici" — non, tu es en France, avec un Code du travail qui te protège.`,
+    `🦊 [${jr}] Reprendre le travail pendant ses congés pour un "dossier urgent" : c'est rappel sur congés, avec des droits spécifiques.`,
+    `🦊 [${hour}h] Le commercial qui répond aux clients jusqu'à 23h "parce que c'est son job" : les HS s'accumulent quand même.`,
+    `🦊 [${jr} — ${hour}h] "On ne compte pas les heures dans notre métier" n'est pas une phrase légalement valide.`,
+    `🦊 [${hour}h] Le manager qui dit "je ne te demande pas de faire des HS" tout en confiant un volume de travail impossible en 35h — c'est une faute.`,
+    `🦊 [${jr}] "C'est la saison, on s'en sortira" — la saison a une durée légale. Elle ne suspend pas le Code du travail.`,
+    `🦊 [${jr} — ${hour}h] Répondre aux urgences depuis les toilettes à 2h du matin = temps de travail effectif. Trace-le.`,
+    `🦊 [${hour}h] "Mon contrat dit disponibilité étendue" : les clauses contraires à la loi sont nulles de plein droit.`,
+    `🦊 [${jr}] Formation e-learning obligatoire réalisée sur temps personnel = heures dues par l'employeur.`,
+    `🦊 [${jr} — ${hour}h] "Tout le monde fait pareil" ne crée pas une obligation légale. Une pratique illégale généralisée reste illégale.`,
+    `🦊 [${hour}h] Les réunions d'équipe le lundi à 8h quand les bureaux ouvrent à 9h = HS. Même pour 1 heure.`,
+    `🦊 [${jr} — ${hour}h] Travail non déclaré "pour rendre service" un samedi : tu prends un risque que l'employeur ne prend pas.`,
+  ];
+
+  // ═══════════════════════════════════════════════════════
+  // POOL 30 — PROGRESSION & LONG TERME
+  // ═══════════════════════════════════════════════════════
+  const longterme = [
+    `🦊 [${jr} — ${hour}h] Chaque mois de données FOX renforce la qualité de ton analyse légale. Continue à alimenter M1 ou M2.`,
+    `🦊 [${hour}h] Après 6 mois de saisie régulière, FOX peut détecter des tendances que tu n'avais pas vues.`,
+    `🦊 [${jr}] Sur 3 ans, même 1h de HS impayée par semaine représente ~150h. À ton taux horaire brut majoré.`,
+    `🦊 [${jr} — ${hour}h] L'historique FOX grandit avec toi. Dans 2 ans, tu auras une vue de ton évolution que personne ne peut effacer.`,
+    `🦊 [${hour}h] Si tu cherches un autre poste, ton historique FOX peut montrer ta vraie charge de travail — utile pour négocier.`,
+    `🦊 [${jr}] La retraite se calcule sur les trimestres validés. Les HS non déclarées ne sont pas cotisées. Pense au long terme.`,
+    `🦊 [${jr} — ${hour}h] Les HS chroniques sont un indicateur de sous-dimensionnement des équipes. Le CSE peut s'en saisir.`,
+    `🦊 [${hour}h] Chaque violation détectée par FOX est une information pour toi. Tu décides quoi en faire — et quand.`,
+    `🦊 [${jr}] Le burn-out ne se déclare pas du jour au lendemain. FOX te donne les signaux faibles avant qu'ils deviennent forts.`,
+    `🦊 [${jr} — ${hour}h] Dans 10 ans, tu te souviendras d'avoir pris soin de toi. Les patterns que FOX documente aujourd'hui te protègent demain.`,
+    `🦊 [${hour}h] L'objectif de FOX n'est pas de te rendre conflictuel — c'est de t'armer pour des échanges équilibrés.`,
+    `🦊 [${jr} — ${hour}h] Un salarié qui connaît ses droits est un acteur de sa carrière, pas un subissant. FOX t'aide à rester acteur.`,
+    `🦊 [${jr}] Construis ton dossier heure par heure. Si tu n'en as jamais besoin, tant mieux. Si tu en as besoin, il sera là.`,
+    `🦊 [${jr} — ${hour}h] L'expérience FOX s'accumule avec tes données. Plus tu l'utilises, plus il te connaît — et mieux il t'aide.`,
+    `🦊 [${hour}h] Le meilleur investissement temps : 2 minutes par jour dans FOX pour des années de protection.`,
+    `🦊 [${jr}] Partager FOX autour de toi, c'est aussi aider tes collègues à mieux connaître leurs droits.`,
+  ];
+
+    var allPools = [
+    droits, calcul, sante, remuneration, repos,
+    travailNuit, weekendTheme, logistique, transport,
+    recours, conventions, teletravail, faq, legal,
+    kitsune, citations, motivation,
+    horairesAtypiques, contrats, equilibre, management, outils,
+    situations, longterme
+  ];
+
+  // Pools conditionnels selon le contexte
+  if (isLundi)             allPools.push(lundi);
+  if (isVendredi)          allPools.push(vendredi);
+  if (isMatin)             allPools.push(matinPools);
+  if (isSoiree || isNuit)  allPools.push(soireePools);
+  if (avecBeaucoupHS.length) allPools.push(avecBeaucoupHS);
+  if (avecPeuHS.length)      allPools.push(avecPeuHS);
+
+  // Filtrer les pools vides
+  allPools = allPools.filter(function(p) { return p && p.length > 0; });
+
+  var poolIdx = Math.abs(_seed) % allPools.length;
+  return _p(allPools[poolIdx]);
 }
 
 
@@ -3113,7 +3779,7 @@ function _getDailyVisitIdx(todayExtraVal) {
   if (stored.date !== todayKey || stored.extra !== xh) {
     stored = { date: todayKey, extra: xh, idx: 0 };
   } else {
-    stored.idx = ((stored.idx || 0) + 1) % 5;   // ← boucle sur 5
+    stored.idx = ((stored.idx || 0) + 1) % 10;  // boucle sur 10
   }
 
   localStorage.setItem('FOX_BUBBLE_DAILY_IDX', JSON.stringify(stored));
@@ -3291,8 +3957,23 @@ function kitsuneNarrateOvertime(deltaH, source) {
     // Pool ordonné : HS du jour → violations → semaine → contingent → juridique
     // Index incrémenté à chaque visite, ancré sur les HS du jour (reset le lendemain)
     // 5 messages ancrés jour+heures, boucle mod 5
-    const _dailyLoop  = _buildDailyLoop5(s, h, _todayOT);          // tableau de 5
-    const _visitIdx   = _getDailyVisitIdx(_todayOT ? _todayOT.extra : 0);  // 0-4
+    const _dailyLoop5 = _buildDailyLoop5(s, h, _todayOT);
+    const _hourNow = new Date().getHours();
+    const _dayNow  = new Date().getDay();
+    const _seed2   = new Date().getFullYear()*10000 + (new Date().getMonth()+1)*100
+                   + new Date().getDate() + Math.round((_todayOT ? _todayOT.extra : 0)*10)
+                   + _hourNow + 7;
+    const _extMsg  = (typeof _getExtendedBubble === 'function')
+      ? [
+          _getExtendedBubble(_hourNow, _dayNow, _todayOT, _seed2),
+          _getExtendedBubble(_hourNow, _dayNow, _todayOT, _seed2+1),
+          _getExtendedBubble(_hourNow, _dayNow, _todayOT, _seed2+2),
+          _getExtendedBubble(_hourNow, _dayNow, _todayOT, _seed2+3),
+          _getExtendedBubble(_hourNow, _dayNow, _todayOT, _seed2+4),
+        ]
+      : _dailyLoop5;
+    const _dailyLoop = [..._dailyLoop5, ..._extMsg]; // 10 messages
+    const _visitIdx   = _getDailyVisitIdx(_todayOT ? _todayOT.extra : 0);  // 0-9
     let bubbleText    = _dailyLoop[_visitIdx] || _dailyLoop[0] || '🦊 Analyse en cours…';
 
     // Adapter la technicité selon le niveau utilisateur (bulle uniquement)
@@ -3520,7 +4201,7 @@ function openPopup(id) {
   if (id==='popup-violations') { renderViolationsHistory(); }
   if (id==='popup-rapport')    { renderRapport(); localStorage.setItem('FOX_RAPPORT_GENERATED','1'); }
   if (id==='popup-xp-history') { renderXPHistory(); }
-  if (id==='popup-settings')   { _loadProfileIntoSettings(); const _sob = localStorage.getItem('FOX_SOBRIETE') === '1'; setSobrieteMode(_sob); }
+  if (id==='popup-settings')   { _loadProfileIntoSettings(); }
   if (id==='popup-heatmap')    { initHeatmap(); }
   if (id==='popup-badges')     { }
   if (id==='popup-leagues')  refreshLeaguesPopup();
@@ -3998,6 +4679,71 @@ function syncModulesAndAwardXP(source) {
     _lastM2Tot = cumM2Cap !== undefined ? cumM2Cap : cumM2Tot;
     _saveLastCumul(cumM1Net, cumM2Tot);
 
+    // ── Bonus XP nuit / week-end ──────────────────────────────────────
+    if (totalDelta > 0.09 && typeof xpSystem !== 'undefined') {
+      var _nowHour = new Date().getHours();
+      var _isNightEntry = (_nowHour >= 20 || _nowHour < 8);
+      var _isWE = (function() {
+        try {
+          var _yrs = [];
+          Object.keys(localStorage).forEach(function(k) {
+            var m = k.match(/\d{4}$/);
+            if ((k.indexOf('DATA_REPORT_') === 0 || k.indexOf('CA_HS_TRACKER_V1_DATA_') === 0) && m)
+              { if (_yrs.indexOf(m[0]) < 0) _yrs.push(m[0]); }
+          });
+          for (var _i = 0; _i < _yrs.length; _i++) {
+            var _r1 = JSON.parse(localStorage.getItem('DATA_REPORT_' + _yrs[_i]) || '{}');
+            var _k1 = Object.keys(_r1);
+            for (var _j = 0; _j < _k1.length; _j++) {
+              var _dk = _k1[_j]; var _dv = _r1[_dk];
+              if (!/^\d{4}-\d{2}-\d{2}$/.test(_dk) || (_dv.extra || 0) <= 0) continue;
+              var _dow = new Date(_dk + 'T12:00:00').getDay();
+              if (_dow === 0 || _dow === 6) return true;
+            }
+            var _r2 = JSON.parse(localStorage.getItem('CA_HS_TRACKER_V1_DATA_' + _yrs[_i]) || '{}');
+            var _k2 = Object.keys(_r2);
+            for (var _k = 0; _k < _k2.length; _k++) {
+              var _mv = _r2[_k2[_k]];
+              if (!_mv || !_mv.days) continue;
+              var _pts = _k2[_k].split('-'); var _my = parseInt(_pts[0]); var _mm = parseInt(_pts[1]);
+              var _dk2 = Object.keys(_mv.days);
+              for (var _l = 0; _l < _dk2.length; _l++) {
+                var _h = _mv.days[_dk2[_l]];
+                if ((_h || 0) <= 0) continue;
+                var _dow2 = new Date(_my, _mm - 1, parseInt(_dk2[_l])).getDay();
+                if (_dow2 === 0 || _dow2 === 6) return true;
+              }
+            }
+          }
+        } catch(e) {}
+        return false;
+      })();
+      var _xpBonus = 0; var _bonusLabel = '';
+      if (_isNightEntry && _isWE) {
+        _xpBonus = Math.round(totalDelta * 100 * 0.75);
+        _bonusLabel = '🌙⚡ Nuit + Week-end';
+        localStorage.setItem('FOX_NIGHT_WEEKEND_COUNT', String(parseInt(localStorage.getItem('FOX_NIGHT_WEEKEND_COUNT') || '0') + 1));
+      } else if (_isNightEntry) {
+        _xpBonus = Math.round(totalDelta * 100 * 0.5);
+        _bonusLabel = '🌙 Travail de nuit';
+        localStorage.setItem('FOX_NIGHT_COUNT', String(parseInt(localStorage.getItem('FOX_NIGHT_COUNT') || '0') + 1));
+      } else if (_isWE) {
+        _xpBonus = Math.round(totalDelta * 100 * 0.5);
+        _bonusLabel = '🏖️ Week-end travaillé';
+        localStorage.setItem('FOX_WEEKEND_COUNT', String(parseInt(localStorage.getItem('FOX_WEEKEND_COUNT') || '0') + 1));
+      }
+      if (_xpBonus > 0) {
+        xpSystem.currentXP += _xpBonus;
+        xpSystem.level = xpSystem.calculateLevel ? xpSystem.calculateLevel() : xpSystem.level;
+        xpSystem.saveToStorage();
+        console.log('🌙 Bonus XP ' + _bonusLabel + ' : +' + _xpBonus + ' XP');
+        if (typeof addRewardToHistory === 'function')
+          addRewardToHistory(_bonusLabel + ' : +' + _xpBonus + ' XP', 'info');
+        if (typeof foxToast === 'function')
+          foxToast(_bonusLabel + '\n+' + _xpBonus + ' XP bonus !');
+      }
+    }
+
     // Rafra\u00EEchir tout l'affichage
     refreshHUD();
     if (typeof updateAllDisplays === 'function') {
@@ -4120,29 +4866,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.BADGES = rpgSystem.badges;
   }
   // syncModulesAndAwardXP immédiat — supprime le flash de 800ms
-  
-// ══════════════════════════════════════════
-//  MODE SOBRIÉTÉ
-// ══════════════════════════════════════════
-function setSobrieteMode(on) {
-  localStorage.setItem('FOX_SOBRIETE', on ? '1' : '0');
-  document.body.classList.toggle('mode-sobriete', on);
-  // Sync visuel du toggle
-  const cb = document.getElementById('toggle-sobriete');
-  const sl = document.getElementById('sobriete-slider');
-  const kn = document.getElementById('sobriete-knob');
-  if (cb) cb.checked = on;
-  if (sl) sl.style.background = on ? '#FF8C42' : '#333';
-  if (kn) kn.style.transform = on ? 'translateX(22px)' : 'translateX(0)';
-  if (kn) kn.style.background = on ? '#fff' : '#aaa';
-}
-function _initSobrieteMode() {
-  const on = localStorage.getItem('FOX_SOBRIETE') === '1';
-  if (on) setSobrieteMode(true);
-}
-
-  _initSobrieteMode();
   syncModulesAndAwardXP('init');
+  if (typeof VuePro !== 'undefined') VuePro.init();
   console.log('🏅 Vérification badges au démarrage DÉSACTIVÉE (anti auto-unlock)');
   // PNJ niveau immédiat
   { const _lv = typeof xpSystem !== 'undefined' ? (xpSystem.level || 1) : 1; if (typeof updatePNJLevel === 'function') updatePNJLevel(_lv); }
@@ -6872,17 +7597,7 @@ function obNext(step) {
   if (stepEl) stepEl.style.display = 'block';
   if (dotEl)  dotEl.classList.add('active');
 }
-let _obModeSelected = false; // false = aventure, true = sobre
-function obSelectMode(sobre) {
-  _obModeSelected = sobre;
-  const gEl = document.getElementById('ob-mode-game');
-  const sEl = document.getElementById('ob-mode-sobre');
-  if (gEl) { gEl.style.borderColor = sobre ? 'rgba(255,255,255,0.08)' : 'rgba(255,140,66,0.7)'; gEl.style.background = sobre ? 'rgba(255,140,66,0.06)' : 'rgba(255,140,66,0.15)'; }
-  if (sEl) { sEl.style.borderColor = sobre ? 'rgba(80,200,120,0.7)' : 'rgba(255,255,255,0.08)'; sEl.style.background = sobre ? 'rgba(80,200,120,0.08)' : 'rgba(255,255,255,0.03)'; }
-}
 function obFinish() {
-  // Appliquer le mode choisi dans le wizard
-  if (typeof setSobrieteMode === 'function') setSobrieteMode(_obModeSelected);
   localStorage.setItem('FOX_ONBOARDING_DONE', '1');
   const el = document.getElementById('popup-onboarding');
   if (el) { el.style.opacity = '0'; el.style.transition = 'opacity 0.5s'; setTimeout(() => el.style.display = 'none', 500); }
@@ -13799,6 +14514,66 @@ function buildBadgeStats() {
     yearsTracked:        yearsTracked,
     burnoutPeak:         burnoutPeak,
     
+    // Heures réelles nuit / week-end (attendus par badges.js)
+    nightHours: (function() {
+      var _nh = 0;
+      try {
+        var _yrs = [];
+        Object.keys(localStorage).forEach(function(k) {
+          var m = k.match(/\d{4}$/);
+          if ((k.indexOf('DATA_REPORT_') === 0 || k.indexOf('CA_HS_TRACKER_V1_DATA_') === 0) && m)
+            { if (_yrs.indexOf(m[0]) < 0) _yrs.push(m[0]); }
+        });
+        _yrs.forEach(function(yr) {
+          var r1 = JSON.parse(localStorage.getItem('DATA_REPORT_' + yr) || '{}');
+          Object.keys(r1).forEach(function(dk) {
+            var dv = r1[dk];
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(dk)) return;
+            if ((dv.extra || 0) <= 0) return;
+            if (dv.hasNight || dv.nightHours) _nh += (dv.nightHours || dv.extra || 0);
+          });
+          var r2 = JSON.parse(localStorage.getItem('CA_HS_TRACKER_V1_DATA_' + yr) || '{}');
+          Object.keys(r2).forEach(function(mk) {
+            var mv = r2[mk]; if (!mv || !mv.days || !mv.nightDays) return;
+            mv.nightDays.forEach(function(d) { _nh += (mv.days[d] || 0); });
+          });
+        });
+      } catch(e) {}
+      var _fb = parseInt(localStorage.getItem('FOX_NIGHT_COUNT') || '0');
+      return _nh > 0 ? _nh : _fb;
+    })(),
+    weekendHours: (function() {
+      var _wh = 0;
+      try {
+        var _yrs = [];
+        Object.keys(localStorage).forEach(function(k) {
+          var m = k.match(/\d{4}$/);
+          if ((k.indexOf('DATA_REPORT_') === 0 || k.indexOf('CA_HS_TRACKER_V1_DATA_') === 0) && m)
+            { if (_yrs.indexOf(m[0]) < 0) _yrs.push(m[0]); }
+        });
+        _yrs.forEach(function(yr) {
+          var r1 = JSON.parse(localStorage.getItem('DATA_REPORT_' + yr) || '{}');
+          Object.keys(r1).forEach(function(dk) {
+            var dv = r1[dk];
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(dk) || (dv.extra || 0) <= 0) return;
+            var _dow = new Date(dk + 'T12:00:00').getDay();
+            if (_dow === 0 || _dow === 6) _wh += dv.extra;
+          });
+          var r2 = JSON.parse(localStorage.getItem('CA_HS_TRACKER_V1_DATA_' + yr) || '{}');
+          Object.keys(r2).forEach(function(mk) {
+            var mv = r2[mk]; if (!mv || !mv.days) return;
+            var _p = mk.split('-'); var _my = parseInt(_p[0]); var _mm = parseInt(_p[1]);
+            Object.keys(mv.days).forEach(function(d) {
+              var h = mv.days[d]; if ((h || 0) <= 0) return;
+              var _dow = new Date(_my, _mm - 1, parseInt(d)).getDay();
+              if (_dow === 0 || _dow === 6) _wh += h;
+            });
+          });
+        });
+      } catch(e) {}
+      var _fb = parseInt(localStorage.getItem('FOX_WEEKEND_COUNT') || '0');
+      return _wh > 0 ? _wh : _fb;
+    })(),
     // Stats totales
     totalHours:          s.annual?.annualOT || 0,
   };
@@ -13839,36 +14614,7 @@ function buildBadgeStats() {
         </div>
 
         <div style="color:#444;font-size:0.73rem;margin-bottom:18px;line-height:1.6;">En cas de doute sérieux, parle à un conseiller du salarié ou un syndicat — je suis un outil d'information, pas un avis juridique.</div>
-        <button onclick="obNext(3)" style="width:100%;background:linear-gradient(135deg,#FF8C42,#FF6B35);border:none;color:#fff;border-radius:12px;padding:15px;font-weight:900;font-size:1rem;cursor:pointer;">Continuer →</button>
-      </div>
-
-      <!-- Step 3 — Mode sobriété -->
-      <div class="ob-step" id="ob-step-3" style="display:none;">
-        <div style="font-size:3rem;margin-bottom:16px;">🎯</div>
-        <div style="color:#FF8C42;font-weight:900;font-size:1.25rem;margin-bottom:8px;">Comment tu veux utiliser FOX ?</div>
-        <div style="color:#888;font-size:0.83rem;margin-bottom:20px;line-height:1.6;">Tu peux changer ce choix à tout moment dans les ⚙️ Options.</div>
-
-        <div id="ob-mode-game" onclick="obSelectMode(false)" style="background:rgba(255,140,66,0.06);border:2px solid rgba(255,140,66,0.25);border-radius:14px;padding:16px;margin-bottom:12px;text-align:left;cursor:pointer;transition:all 0.2s;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="font-size:2rem;">🦊</div>
-            <div>
-              <div style="color:#fff;font-weight:800;font-size:0.95rem;margin-bottom:3px;">Mode aventure</div>
-              <div style="color:#888;font-size:0.8rem;line-height:1.5;">XP, badges, niveaux, renard animé. Idéal si tu aimes les applis gamifiées.</div>
-            </div>
-          </div>
-        </div>
-
-        <div id="ob-mode-sobre" onclick="obSelectMode(true)" style="background:rgba(255,255,255,0.03);border:2px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:22px;text-align:left;cursor:pointer;transition:all 0.2s;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="font-size:2rem;">📊</div>
-            <div>
-              <div style="color:#fff;font-weight:800;font-size:0.95rem;margin-bottom:3px;">Mode sobre</div>
-              <div style="color:#888;font-size:0.8rem;line-height:1.5;">Uniquement l'analyse juridique et les données. Sans jeu, sans mascotte.</div>
-            </div>
-          </div>
-        </div>
-
-        <button id="ob-finish-btn" onclick="obFinish()" style="width:100%;background:linear-gradient(135deg,#FF8C42,#FF6B35);border:none;color:#fff;border-radius:12px;padding:15px;font-weight:900;font-size:1rem;cursor:pointer;">🦊 C'est parti !</button>
+        <button onclick="obFinish()" style="width:100%;background:linear-gradient(135deg,#FF8C42,#FF6B35);border:none;color:#fff;border-radius:12px;padding:15px;font-weight:900;font-size:1rem;cursor:pointer;">🦊 C'est parti !</button>
       </div>
 
     </div>
@@ -13876,7 +14622,6 @@ function buildBadgeStats() {
     <div style="display:flex;justify-content:center;gap:8px;margin-top:16px;">
       <div class="ob-dot active" id="ob-dot-1"></div>
       <div class="ob-dot" id="ob-dot-2"></div>
-      <div class="ob-dot" id="ob-dot-3"></div>
     </div>
   </div>
 </div>
