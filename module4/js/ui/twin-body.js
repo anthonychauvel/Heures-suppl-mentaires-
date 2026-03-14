@@ -13,7 +13,7 @@ const ZONE_DEFS = {
   core:   { x:25, y:37,  w:50, h:14,  score:'fatigue',      label:'Colonne',  desc:'Fatigue structurelle',              shape:'rect' },
   armL:   { x:0,  y:20,  w:22, h:40,  score:'performance',  label:'Bras G',   desc:'Performance motrice',  invert:true, shape:'rect' },
   armR:   { x:78, y:20,  w:22, h:40,  score:'performance',  label:'Bras D',   desc:'Performance motrice',  invert:true, shape:'rect' },
-  legs:   { x:20, y:58,  w:60, h:42,  score:'fatigue',      label:'Jambes',   desc:'Endurance & mobilité', invert:true, shape:'rect' },
+  legs:   { x:20, y:58,  w:60, h:42,  score:'fatigue',      label:'Jambes',   desc:'Endurance & mobilité', invert:false, shape:'rect' },
 };
 
 const COLORS = { ok:'#00ffcc', warn:'#ffb300', risk:'#ff6600', crit:'#ff2244' };
@@ -130,7 +130,9 @@ class TwinBody {
       return;
     }
     Object.entries(ZONE_DEFS).forEach(([z,d])=>{
-      const v   = s[d.score]||0;
+      // Si score = 0 et invert:true (ex: performance), on force neutre
+      let v = s[d.score] || 0;
+      if(d.invert && v === 0) v = 70; // valeur neutre pour éviter le faux rouge
       const c   = col(v, d.invert);
       const lvl = level(v, d.invert);
 
