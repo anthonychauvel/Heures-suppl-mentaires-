@@ -160,8 +160,22 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function renderPredictions(state) {
-    const hs   = parseFloat(document.getElementById('timeline-hs')?.value   || 0);
-    const days = parseInt(document.getElementById('timeline-days')?.value || 30);
+    const sliderAdj = parseFloat(document.getElementById('timeline-hs')?.value || 0);
+    const days      = parseInt(document.getElementById('timeline-days')?.value || 30);
+    const norm      = state && state.norm;
+    // hs = rythme actuel réel + ajustement slider
+    const currentHs = (norm && norm._avgExtra7) || 0;
+    const hs        = Math.max(0, currentHs + sliderAdj);
+
+    // Mettre à jour le label pour montrer ce que ça représente
+    const hsVal = document.getElementById('timeline-hs-val');
+    if (hsVal) {
+      const sign = sliderAdj > 0 ? '+' : '';
+      hsVal.textContent = sliderAdj === 0
+        ? 'Rythme actuel'
+        : sign + sliderAdj + 'h/j vs actuel';
+    }
+
     let sim = null, fut = null, scen = null;
     try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: [0] }, state.scores); } catch(e) {}
     try { fut  = DTE.simulator.futurState(days, state.norm); } catch(e) {}
@@ -446,15 +460,39 @@ document.addEventListener('DOMContentLoaded', function () {
   runAnalysis();
   showWelcomeIfNeeded();
 
-  // ── LIVE SYNC — re-analyse toutes les 5s (capter les changements M1/M2/M3)
+  // ── LIVE SYNC — re-analyse toutes les 3s
+  let _syncHash = '';
   setInterval(() => {
     try {
+      // Hash rapide des données M1 pour détecter un vrai changement
+      const yr   = localStorage.getItem('ACTIVE_YEAR_SUFFIX') || '';
+      const m1raw = localStorage.getItem('DATA_REPORT_' + yr) || '';
+      const m2raw = localStorage.getItem('CA_HS_TRACKER_V1_DATA_' + yr) || '';
+      const hash  = m1raw.length + '|' + m2raw.length + '|' + yr;
+      if (hash === _syncHash) return; // rien changé → pas de re-analyse
+      _syncHash = hash;
+
       const s = DTE.engine.analyze();
-      const changed = !DTE._state
-        || s.scores._hasData !== DTE._state.scores._hasData
-        || Math.abs((s.scores.fatigue||0)-(DTE._state.scores.fatigue||0)) >= 1
-        || Math.abs((s.scores.performance||0)-(DTE._state.scores.performance||0)) >= 1;
-      if (changed) { DTE._state = s; DTE.dashboard.render(s); }
+      DTE._state = s;
+
+      // Mettre à jour TOUT : dashboard + twin + footer
+      DTE.dashboard.render(s);
+      if (DTE.twin) DTE.twin.update(s.scores);
+
+      // Mettre à jour la vue active si prédictions/simulation
+      const activeView = document.querySelector('.view:not(.hidden)');
+      if (activeView) {
+        const vid = activeView.id;
+        if (vid === 'view-predictions') renderPredictions(s);
+        if (vid === 'view-whatif' && DTE.whatif) DTE.whatif.render();
+        if (vid === 'view-heatmap' && DTE.heatmap) DTE.heatmap.render(s);
+      }
+
+      // Mettre à jour le footer
+      const el = id => document.getElementById(id);
+      if(el('footer-year'))    el('footer-year').textContent    = 'ANNÉE ' + (s.raw && s.raw.year || '');
+      if(el('footer-time'))    el('footer-time').textContent    = 'ANALYSE : ' + new Date().toTimeString().slice(0,5);
+      if(el('footer-status'))  el('footer-status').textContent  = s.scores._hasData ? '■ SYNCHRONISÉ' : '○ EN ATTENTE';
     } catch(_) {}
-  }, 5000);
+  }, 3000);
 });
