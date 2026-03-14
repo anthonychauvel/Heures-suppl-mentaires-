@@ -214,7 +214,21 @@ class DTEEngine {
   _m1(year) {
     const r = { days: {}, totalExtra: 0, totalRecup: 0, violations: [], totalWorkedDays: 0 };
     try {
-      const raw = localStorage.getItem('DATA_REPORT_' + year);
+      // Essayer plusieurs formats de clé utilisés par M1
+      const keys = [
+        'DATA_REPORT_' + year,
+        'DATA_REPORT_' + new Date().getFullYear(),
+        'DATA_REPORT_' + (new Date().getFullYear() - 1),
+      ];
+      // Aussi scanner toutes les clés localStorage qui ressemblent à DATA_REPORT_
+      try {
+        for(let i=0; i<localStorage.length; i++){
+          const k=localStorage.key(i);
+          if(k && k.startsWith('DATA_REPORT_') && !keys.includes(k)) keys.push(k);
+        }
+      } catch(_) {}
+      let raw = null;
+      for(const k of keys){ raw = localStorage.getItem(k); if(raw) break; }
       if (!raw) return r;
       const d = JSON.parse(raw);
       const days = d.days || d.jours || {};
@@ -235,7 +249,19 @@ class DTEEngine {
   _m2(year) {
     const r = { months: {}, contract: D.BASE_HEBDO, totalWorked: 0, totalDaysOff: 0 };
     try {
-      const raw = localStorage.getItem('CA_HS_TRACKER_V1_DATA_' + year);
+      const keys = [
+        'CA_HS_TRACKER_V1_DATA_' + year,
+        'CA_HS_TRACKER_V1_DATA_' + new Date().getFullYear(),
+        'CA_HS_TRACKER_V1_DATA_' + (new Date().getFullYear() - 1),
+      ];
+      try {
+        for(let i=0; i<localStorage.length; i++){
+          const k=localStorage.key(i);
+          if(k && k.startsWith('CA_HS_TRACKER_V1_DATA_') && !keys.includes(k)) keys.push(k);
+        }
+      } catch(_) {}
+      let raw = null;
+      for(const k of keys){ raw = localStorage.getItem(k); if(raw) break; }
       if (!raw) return r;
       const d = JSON.parse(raw);
       r.contract = parseFloat(d.contractHours || d.heuresContrat || D.BASE_HEBDO);
@@ -467,6 +493,26 @@ class DTEEngine {
   }
 
   /* Expose les fonctions scientifiques */
+
+  /** Debug : affiche les clés localStorage trouvées */
+  debugStorage() {
+    const report = { keys: [], m1Keys: [], m2Keys: [], rpgKeys: [] };
+    try {
+      for(let i=0; i<localStorage.length; i++){
+        const k = localStorage.key(i);
+        if(!k) continue;
+        report.keys.push(k);
+        if(k.startsWith('DATA_REPORT_')) report.m1Keys.push({ key:k, size: localStorage.getItem(k)?.length });
+        if(k.startsWith('CA_HS_TRACKER')) report.m2Keys.push({ key:k, size: localStorage.getItem(k)?.length });
+        if(k.startsWith('rpg_')) report.rpgKeys.push({ key:k, val: localStorage.getItem(k)?.substring(0,50) });
+      }
+    } catch(e) { report.error = e.message; }
+    console.table(report.m1Keys);
+    console.table(report.m2Keys);
+    console.log('[DTE Debug] Toutes les clés:', report.keys);
+    return report;
+  }
+
   static pencavelPerf(h) { return pencavelPerf(h); }
   static cvRisk(h, m)    { return cvRisk(h, m); }
   static cogRisk(h, w)   { return cogRisk(h, w); }
