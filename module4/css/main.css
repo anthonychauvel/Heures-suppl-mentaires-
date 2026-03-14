@@ -802,3 +802,96 @@ body {
 }
 
 .hdr-btn--glossary:hover { border-color: rgba(0,255,204,0.4); color: var(--sync); }
+
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE LISIBILITÉ — tailles augmentées
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  /* Base font plus grande */
+  body { font-size: 13px; }
+
+  /* Header */
+  .app-header { height: 50px; padding: 0 8px; }
+  .back-btn   { font-size: 11px; padding: 6px 12px; }
+  .nav-btn    { font-size: 10px; letter-spacing: .06em; padding: 4px 10px; }
+  .hdr-btn-icon { font-size: 14px; }
+  .hdr-btn-lbl  { font-size: 8px; }
+  .brand-name   { font-size: 11px; }
+
+  /* Panel labels */
+  .panel-label { font-size: 10px; letter-spacing: .12em; }
+
+  /* Score hero */
+  .hero-score-num { font-size: 56px; }
+  .hero-level     { font-size: 13px; padding: 4px 14px; }
+
+  /* Score cards */
+  .score-card-label { font-size: 10px; }
+  .score-card-val   { font-size: 24px; }
+  .score-card-sub   { font-size: 10px; }
+
+  /* Risks */
+  .risk-title   { font-size: 12px; }
+  .risk-msg     { font-size: 11px; }
+  .risk-article { font-size: 9px; }
+  .risk-emoji   { font-size: 17px; }
+
+  /* Advice */
+  .advice-title { font-size: 11px; }
+  .advice-msg   { font-size: 11px; }
+
+  /* Twin legend */
+  .twin-legend-item { font-size: 10px; }
+
+  /* Futur grid */
+  .futur-item-label { font-size: 10px; }
+  .futur-item-val   { font-size: 22px; }
+
+  /* Scenario cards */
+  .scenario-name { font-size: 12px; }
+  .scenario-desc { font-size: 11px; }
+
+  /* Boutons action bloc */
+  .abtn-label { font-size: 10px; }
+  .abtn-sub   { font-size: 9px; }
+  .abtn-icon  { font-size: 18px; }
+
+  /* Footer */
+  .app-footer { font-size: 9px; height: 24px; }
+
+  /* Notifications */
+  .notif-title { font-size: 12px; }
+  .notif-msg   { font-size: 11px; }
+
+  /* Check-in */
+  .checkin-question { font-size: 14px; }
+  .checkin-option   { font-size: 13px; padding: 8px 12px; }
+
+  /* AI / conseiller */
+  .ai-msg-bubble { font-size: 13px; }
+  .ai-input      { font-size: 12px; }
+  .ai-suggestion { font-size: 10px; padding: 4px 10px; }
+
+  /* Glossaire */
+  .gloss-tab { font-size: 10px; padding: 6px 12px; }
+
+  /* Modales */
+  .modal-box   { padding: var(--gap-l); }
+  .modal-header h2 { font-size: 15px; }
+
+  /* Bienvenue */
+  .welcome-desc        { font-size: 14px; }
+  .welcome-step        { font-size: 13px; }
+  .welcome-step-num    { font-size: 20px; }
+  .welcome-logo        { font-size: 24px; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .hero-score-num { font-size: 48px; }
+  .score-card-val { font-size: 22px; }
+  .nav-btn        { font-size: 9px; padding: 3px 7px; }
+  .panel          { padding: 10px; }
+  .panel-label    { font-size: 9px; }
+}
