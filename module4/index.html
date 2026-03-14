@@ -44,6 +44,48 @@
 <!-- NOTIFICATIONS -->
 <div id="notifications-container"></div>
 
+<!-- MODAL AIDE -->
+<div id="help-modal" class="modal hidden">
+  <div class="modal-overlay"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>&#63; COMMENT ÇA MARCHE</h2>
+      <span class="modal-close" id="help-close">&#x2715;</span>
+    </div>
+    <div id="help-content">
+      <div class="help-intro">
+        Le Digital Twin lit automatiquement vos données de suivi des heures (M1) et de paie (M2) pour calculer votre état de santé au travail en temps réel.
+      </div>
+      <div class="help-sections">
+        <div class="help-card">
+          <div class="help-card-icon">&#9650;</div>
+          <div class="help-card-title">MON ÉTAT</div>
+          <div class="help-card-desc">Votre score global de 0 à 100. Le corps humain se colore selon chaque zone : vert = OK, orange = vigilance, rouge = danger. Chaque score (fatigue, stress, performance…) est calculé depuis vos vraies heures travaillées.</div>
+        </div>
+        <div class="help-card">
+          <div class="help-card-icon">&#9654;</div>
+          <div class="help-card-title">PRÉVISIONS</div>
+          <div class="help-card-desc">Si vous continuez à ce rythme, où serez-vous dans 30 jours ? Bougez le curseur "HS/jour" pour voir l'impact d'heures supplémentaires sur votre fatigue future.</div>
+        </div>
+        <div class="help-card">
+          <div class="help-card-icon">&#8645;</div>
+          <div class="help-card-title">SIMULATION</div>
+          <div class="help-card-desc">Testez des scénarios : "Et si je prends 2 jours de repos ?", "Et si la semaine prochaine est chargée ?". L'application calcule l'impact sur votre santé.</div>
+        </div>
+        <div class="help-card">
+          <div class="help-card-icon">&#9830;</div>
+          <div class="help-card-title">CONSEILS</div>
+          <div class="help-card-desc">Le bouton ◈ ouvre 1000 conseils juridiques et de prévention adaptés à votre situation. Aucune connexion internet requise.</div>
+        </div>
+      </div>
+      <div class="help-legal-note">
+        &#9632; Les risques affichés indiquent les articles du Code du travail applicables à votre situation.
+      </div>
+      <button class="btn btn--animus" id="help-ok" style="width:100%;margin-top:var(--gap-l);justify-content:center;">COMPRIS — VOIR MON ÉTAT</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL CHECK-IN -->
 <div id="checkin-modal" class="modal hidden">
   <div class="modal-overlay"></div>
@@ -73,19 +115,18 @@
 
   <header class="app-header">
     <div class="header-brand">
-      <div class="brand-icon">&#9830;</div>
-      <span class="brand-name">DIGITAL TWIN</span>
-      <span class="brand-badge">MODULE 4</span>
+      <button class="back-btn" id="btn-back" title="Retourner au module précédent">&#8592; RETOUR</button>
     </div>
     <nav class="header-nav">
-      <button class="nav-btn active" data-view="dashboard">TABLEAU DE BORD</button>
-      <button class="nav-btn" data-view="predictions">PREDICTIONS</button>
-      <button class="nav-btn" data-view="whatif">WHAT IF</button>
+      <button class="nav-btn active" data-view="dashboard">MON ÉTAT</button>
+      <button class="nav-btn" data-view="predictions">PRÉVISIONS</button>
+      <button class="nav-btn" data-view="whatif">SIMULATION</button>
       <button class="nav-btn" data-view="heatmap">CALENDRIER</button>
     </nav>
     <div class="header-actions">
+      <button class="action-btn" id="btn-help" title="Comment ça marche ?">&#63;</button>
       <button class="action-btn" id="btn-checkin" title="Check-in quotidien">&#128203;</button>
-      <button class="action-btn" id="btn-ai" title="Conseiller scenarios">&#9830;</button>
+      <button class="action-btn" id="btn-ai" title="Conseils & prévention">&#9830;</button>
       <button class="action-btn" id="btn-pdf" title="Exporter PDF">&#128196;</button>
       <button class="action-btn" id="btn-refresh" title="Actualiser">&#8635;</button>
     </div>
