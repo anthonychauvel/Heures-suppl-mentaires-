@@ -214,8 +214,6 @@ class DTEEngine {
       if (s2) return s2;
     } catch(_) {}
     return String(new Date().getFullYear());
-  } catch(_) {}
-    return String(new Date().getFullYear());
   }
 
   _m1(year) {
@@ -244,6 +242,10 @@ class DTEEngine {
         const fk = Object.keys(d)[0] || '';
         if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(fk)) days = d;
       }
+      for (const [date, e] of Object.entries(days)) {
+        if (!e || typeof e !== 'object') continue;
+        const extra  = parseFloat(e.extra || e.hs || 0);
+        const recup  = parseFloat(e.recup || e.repos || 0);
         const absent = parseFloat(e.absent || 0);
         r.days[date] = { extra, recup, absent };
         r.totalExtra += extra;
