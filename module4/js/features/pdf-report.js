@@ -133,7 +133,7 @@ class PDFReport {
     // Footer
     doc.setFillColor(9,14,26); doc.rect(0,285,W,12,'F');
     doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(45,74,97);
-    doc.text(pdfStr('Digital Twin Engine — Module 4 | Ce rapport est un outil d'aide à la décision. Il ne remplace pas un avis médical ou juridique.'),M,292);
+    doc.text(pdfStr('Digital Twin Engine — Module 4 | Ce rapport est un outil d\'aide à la décision. Il ne remplace pas un avis médical ou juridique.'),M,292);
 
     doc.save('digital-twin-rapport-'+new Date().toISOString().slice(0,10)+'.pdf');
     window.DTE&&window.DTE.notifications&&window.DTE.notifications.show('PDF exporté','ok','📄','Rapport enregistré');

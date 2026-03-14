@@ -399,7 +399,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -419,7 +419,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 3,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -439,7 +439,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -459,7 +459,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 3,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -479,7 +479,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -499,7 +499,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 3,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -519,7 +519,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -539,7 +539,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 3,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -559,7 +559,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -579,7 +579,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 3,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -599,7 +599,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -619,7 +619,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 3,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -639,7 +639,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -659,7 +659,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 3,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -679,7 +679,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -699,7 +699,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 3,
 "titre": "Légère hausse de fatigue",
-"message": "Votre fatigue commence à s'accumuler. C'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
+"message": "Votre fatigue commence à s'accumuler. C\'est normal en phase de travail soutenu, mais anticipez le repos. Votre stress associé est notable.",
 "conseils": [
 "Prenez une pause de 15 min toutes les 2h",
 "Dormez au minimum 7h cette semaine",
@@ -1951,7 +1951,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -1971,7 +1971,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -1991,7 +1991,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2011,7 +2011,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2031,7 +2031,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2051,7 +2051,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2071,7 +2071,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2091,7 +2091,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2111,7 +2111,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2131,7 +2131,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2151,7 +2151,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2171,7 +2171,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2191,7 +2191,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2211,7 +2211,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2231,7 +2231,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Fatigue modérée — agissez maintenant",
-"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d'alerte dans 3 à 5 jours au rythme actuel.",
+"message": "Votre fatigue dépasse 60/100. Si vous n'agissez pas maintenant, vous entrerez en zone d\'alerte dans 3 à 5 jours au rythme actuel.",
 "conseils": [
 "Supprimez toute heure supplémentaire non urgente",
 "Dormez 8h minimum les 5 prochains jours",
@@ -2551,7 +2551,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2572,7 +2572,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2593,7 +2593,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2614,7 +2614,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2635,7 +2635,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2656,7 +2656,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2677,7 +2677,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2698,7 +2698,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2719,7 +2719,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2740,7 +2740,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2761,7 +2761,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2782,7 +2782,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2803,7 +2803,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2824,7 +2824,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2845,7 +2845,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Approche de la zone d'alerte légale",
-"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l'employeur. À 75 de fatigue, des mesures de prévention s'imposent.",
+"message": "Vous approchez des seuils déclencheurs d'obligations légales pour l\'employeur. À 75 de fatigue, des mesures de prévention s\'imposent.",
 "conseils": [
 "Signalez votre état à votre responsable RH",
 "Demandez un entretien avec le médecin du travail",
@@ -2866,7 +2866,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -2887,7 +2887,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -2908,7 +2908,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -2929,7 +2929,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -2950,7 +2950,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -2971,7 +2971,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -2992,7 +2992,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3013,7 +3013,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3034,7 +3034,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3055,7 +3055,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3076,7 +3076,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3097,7 +3097,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3118,7 +3118,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3139,7 +3139,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3160,7 +3160,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Jours consécutifs trop nombreux",
-"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d'erreur professionnelle et triple le risque d'accident.",
+"message": "Travailler plusieurs jours consécutifs sans repos suffisant double le risque d\'erreur professionnelle et triple le risque d'accident.",
 "conseils": [
 "Prenez un repos complet dès que possible",
 "Vérifiez que le repos hebdomadaire de 35h est bien planifié",
@@ -3451,7 +3451,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3472,7 +3472,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3493,7 +3493,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3514,7 +3514,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3535,7 +3535,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3556,7 +3556,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3577,7 +3577,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3598,7 +3598,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3619,7 +3619,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3640,7 +3640,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3661,7 +3661,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3682,7 +3682,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3703,7 +3703,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3724,7 +3724,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3745,7 +3745,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Surcharge structurelle détectée",
-"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c'est un mode de fonctionnement devenu la norme.",
+"message": "Votre charge dépasse régulièrement le seuil normal. Ce n'est pas une pointe — c\'est un mode de fonctionnement devenu la norme.",
 "conseils": [
 "Demandez une révision de poste",
 "Calculez votre charge réelle vs contractuelle",
@@ -3766,7 +3766,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3787,7 +3787,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3808,7 +3808,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3829,7 +3829,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3850,7 +3850,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3871,7 +3871,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3892,7 +3892,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3913,7 +3913,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3934,7 +3934,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3955,7 +3955,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3976,7 +3976,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -3997,7 +3997,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -4018,7 +4018,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -4039,7 +4039,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -4060,7 +4060,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Contingent HS significativement entamé",
-"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l'année.",
+"message": "Plus de 50% de votre contingent annuel est utilisé. Au rythme actuel, vous l'atteindrez avant la fin de l\'année.",
 "conseils": [
 "Établissez un plan de décompte hebdomadaire",
 "Identifiez les semaines sans HS possibles",
@@ -4081,7 +4081,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4102,7 +4102,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4123,7 +4123,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4144,7 +4144,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4165,7 +4165,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4186,7 +4186,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4207,7 +4207,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4228,7 +4228,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4249,7 +4249,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4270,7 +4270,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4291,7 +4291,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4312,7 +4312,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4333,7 +4333,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4354,7 +4354,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4375,7 +4375,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Variabilité horaire extrême",
-"message": "Vos semaines varient de plus de 5h d'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
+"message": "Vos semaines varient de plus de 5h d\'une semaine à l'autre. Cette instabilité empêche une récupération efficace.",
 "conseils": [
 "Négociez un planning prévisionnel à 4 semaines",
 "Exigez un délai de prévenance pour les HS",
@@ -4396,7 +4396,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4417,7 +4417,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4438,7 +4438,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4459,7 +4459,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4480,7 +4480,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4501,7 +4501,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4522,7 +4522,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4543,7 +4543,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4564,7 +4564,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4585,7 +4585,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4606,7 +4606,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4627,7 +4627,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4648,7 +4648,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4669,7 +4669,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4690,7 +4690,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "ALERTE — Seuil légal de vigilance atteint",
-"message": "Fatigue à 75+/100. Le Code du travail oblige l'employeur à mettre en place des mesures de prévention à ce niveau.",
+"message": "Fatigue à 75+/100. Le Code du travail oblige l\'employeur à mettre en place des mesures de prévention à ce niveau.",
 "conseils": [
 "Signalez formellement votre état par écrit (email tracé)",
 "Demandez une réduction temporaire de charge",
@@ -4711,10 +4711,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4732,10 +4732,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4753,10 +4753,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4774,10 +4774,10 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4795,10 +4795,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4816,10 +4816,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4837,10 +4837,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4858,10 +4858,10 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4879,10 +4879,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4900,10 +4900,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4921,10 +4921,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4942,10 +4942,10 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4963,10 +4963,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -4984,10 +4984,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -5005,10 +5005,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Repos quotidien en danger",
-"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d'amende.",
+"message": "Avec votre charge actuelle, le repos quotidien de 11h obligatoire est probablement insuffisant. C'est une infraction passible d\'amende.",
 "conseils": [
 "Vérifiez vos horaires de fin et de reprise",
-"Signalez toute infraction aux 11h à l'inspection du travail",
+"Signalez toute infraction aux 11h à l\'inspection du travail",
 "Conservez vos relevés badgeage"
 ],
 "refs": [
@@ -5025,7 +5025,7 @@ const DTE_SCENARIOS = [
 "consec": 0,
 "contingent": 0,
 "perf": 0,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5045,7 +5045,7 @@ const DTE_SCENARIOS = [
 "consec": 1,
 "contingent": 1,
 "perf": 1,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5065,7 +5065,7 @@ const DTE_SCENARIOS = [
 "consec": 2,
 "contingent": 2,
 "perf": 2,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5085,7 +5085,7 @@ const DTE_SCENARIOS = [
 "consec": 3,
 "contingent": 3,
 "perf": 0,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5105,7 +5105,7 @@ const DTE_SCENARIOS = [
 "consec": 0,
 "contingent": 0,
 "perf": 1,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5125,7 +5125,7 @@ const DTE_SCENARIOS = [
 "consec": 1,
 "contingent": 1,
 "perf": 2,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5145,7 +5145,7 @@ const DTE_SCENARIOS = [
 "consec": 2,
 "contingent": 2,
 "perf": 0,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5165,7 +5165,7 @@ const DTE_SCENARIOS = [
 "consec": 3,
 "contingent": 3,
 "perf": 1,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5185,7 +5185,7 @@ const DTE_SCENARIOS = [
 "consec": 0,
 "contingent": 0,
 "perf": 2,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5205,7 +5205,7 @@ const DTE_SCENARIOS = [
 "consec": 1,
 "contingent": 1,
 "perf": 0,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5225,7 +5225,7 @@ const DTE_SCENARIOS = [
 "consec": 2,
 "contingent": 2,
 "perf": 1,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5245,7 +5245,7 @@ const DTE_SCENARIOS = [
 "consec": 3,
 "contingent": 3,
 "perf": 2,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5265,7 +5265,7 @@ const DTE_SCENARIOS = [
 "consec": 0,
 "contingent": 0,
 "perf": 0,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5285,7 +5285,7 @@ const DTE_SCENARIOS = [
 "consec": 1,
 "contingent": 1,
 "perf": 1,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5305,7 +5305,7 @@ const DTE_SCENARIOS = [
 "consec": 2,
 "contingent": 2,
 "perf": 2,
-"titre": "Risque d'erreur professionnelle élevé",
+"titre": "Risque d\'erreur professionnelle élevé",
 "message": "Au-delà de 75 de fatigue, le risque d'erreur augmente de 75%. Dans les secteurs sensibles (conduite, santé, finance), cela peut engager votre responsabilité.",
 "conseils": [
 "Faites valider vos décisions importantes par un tiers",
@@ -5326,7 +5326,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5346,7 +5346,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5366,7 +5366,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5386,7 +5386,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5406,7 +5406,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5426,7 +5426,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5446,7 +5446,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5466,7 +5466,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5486,7 +5486,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5506,7 +5506,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5526,7 +5526,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5546,7 +5546,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5566,7 +5566,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5586,7 +5586,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -5606,7 +5606,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Semaine de récupération nécessaire",
-"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d'une semaine.",
+"message": "Votre modèle prédit que sans intervention, vous atteindrez la zone critique (85+) dans moins d\'une semaine.",
 "conseils": [
 "Posez 2 jours de RTT ou congé si possible",
 "Réduisez à zéro HS cette semaine",
@@ -6241,11 +6241,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6262,11 +6262,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6283,11 +6283,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6304,11 +6304,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6325,11 +6325,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6346,11 +6346,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6367,11 +6367,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6388,11 +6388,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6409,11 +6409,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 2,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6430,11 +6430,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6451,11 +6451,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 1,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6472,11 +6472,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 2,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6493,11 +6493,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6514,11 +6514,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6535,11 +6535,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 2,
 "titre": "Droit de retrait — conditions proches",
-"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s'applique en cas de danger grave et imminent pour la santé.",
+"message": "Vous approchez des conditions permettant l'exercice du droit de retrait. Ce droit s\'applique en cas de danger grave et imminent pour la santé.",
 "conseils": [
 "Documentez précisément votre état et votre charge",
 "Informez le CSE de votre situation",
-"En cas de refus d'action de l'employeur : droit de retrait applicable"
+"En cas de refus d'action de l\'employeur : droit de retrait applicable"
 ],
 "refs": [
 "Art. L4131-1 C. trav. — Droit de retrait",
@@ -6858,7 +6858,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -6878,7 +6878,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -6898,7 +6898,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -6918,7 +6918,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -6938,7 +6938,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -6958,7 +6958,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -6978,7 +6978,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -6998,7 +6998,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -7018,7 +7018,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -7038,7 +7038,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -7058,7 +7058,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -7078,7 +7078,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -7098,7 +7098,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -7118,7 +7118,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -7138,7 +7138,7 @@ const DTE_SCENARIOS = [
 "titre": "Surcharge : droit à la déconnexion",
 "message": "Le droit à la déconnexion est légalement reconnu. Votre employeur doit avoir mis en place des modalités pour le respecter.",
 "conseils": [
-"Vérifiez l'accord d'entreprise sur la déconnexion",
+"Vérifiez l'accord d\'entreprise sur la déconnexion",
 "Paramétrez des plages horaires sans notifications",
 "Refusez les sollicitations hors heures de travail"
 ],
@@ -7159,7 +7159,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7179,7 +7179,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7199,7 +7199,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7219,7 +7219,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7239,7 +7239,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7259,7 +7259,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7279,7 +7279,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7299,7 +7299,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7319,7 +7319,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7339,7 +7339,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7359,7 +7359,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7379,7 +7379,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7399,7 +7399,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7419,7 +7419,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -7439,7 +7439,7 @@ const DTE_SCENARIOS = [
 "message": "Tout salarié peut demander à tout moment une visite auprès du médecin du travail. C'est confidentiel et sans frais.",
 "conseils": [
 "Contactez le service de santé au travail (SST)",
-"La visite est confidentielle — l'employeur ne reçoit que l'aptitude",
+"La visite est confidentielle — l\'employeur ne reçoit que l'aptitude",
 "Le médecin peut proposer un aménagement de poste"
 ],
 "refs": [
@@ -8197,11 +8197,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8218,11 +8218,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8239,11 +8239,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8260,11 +8260,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8281,11 +8281,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8302,11 +8302,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8323,11 +8323,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8344,11 +8344,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8365,11 +8365,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8386,11 +8386,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8407,11 +8407,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8428,11 +8428,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8449,11 +8449,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8470,11 +8470,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8491,11 +8491,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8512,11 +8512,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8533,11 +8533,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8554,11 +8554,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8575,11 +8575,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Durée maximale hebdomadaire proche",
-"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l'employeur est en infraction.",
+"message": "Vous approchez ou dépassez les 48h hebdomadaires légales. Au-delà, l\'employeur est en infraction.",
 "conseils": [
 "Comptabilisez précisément vos heures cette semaine",
 "Refusez toute HS supplémentaire",
-"Signalez le dépassement à l'inspection du travail si nécessaire"
+"Signalez le dépassement à l\'inspection du travail si nécessaire"
 ],
 "refs": [
 "Art. L3121-20 C. trav. — 48h maximum/semaine",
@@ -8596,7 +8596,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8617,7 +8617,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8638,7 +8638,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8659,7 +8659,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8680,7 +8680,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8701,7 +8701,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8722,7 +8722,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8743,7 +8743,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8764,7 +8764,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8785,7 +8785,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8806,7 +8806,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8827,7 +8827,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8848,7 +8848,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8869,7 +8869,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8890,7 +8890,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8911,7 +8911,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8932,7 +8932,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8953,7 +8953,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8974,7 +8974,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Sécurité routière compromise",
-"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d'accident est multiplié par 6.",
+"message": "La fatigue à ce niveau réduit les réflexes autant que 0,5g d'alcool. Si vous conduisez pour le travail, le risque d\'accident est multiplié par 6.",
 "conseils": [
 "Ne conduisez pas si vous ressentez somnolence ou difficultés de concentration",
 "Signalez-le à votre employeur pour aménagement",
@@ -8995,11 +8995,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9016,11 +9016,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9037,11 +9037,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9058,11 +9058,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9079,11 +9079,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9100,11 +9100,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9121,11 +9121,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9142,11 +9142,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9163,11 +9163,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9184,11 +9184,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9205,11 +9205,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9226,11 +9226,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9247,11 +9247,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9268,11 +9268,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9289,11 +9289,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9310,11 +9310,11 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9331,11 +9331,11 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9352,11 +9352,11 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9373,11 +9373,11 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Contingent HS critique",
-"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l'employeur ne peut pas refuser.",
+"message": "Votre contingent est très avancé. Les HS au-delà du contingent ouvrent un droit à repos compensateur obligatoire (RCO) que l\'employeur ne peut pas refuser.",
 "conseils": [
 "Calculez vos heures au-delà du contingent",
 "Réclamez votre RCO formellement par écrit",
-"Le refus de l'employeur est passible de sanctions"
+"Le refus de l\'employeur est passible de sanctions"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — RCO",
@@ -9774,14 +9774,14 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9794,14 +9794,14 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9814,14 +9814,14 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9834,14 +9834,14 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9854,14 +9854,14 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9874,14 +9874,14 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9894,14 +9894,14 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9914,14 +9914,14 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9934,14 +9934,14 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9954,14 +9954,14 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9974,14 +9974,14 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -9994,14 +9994,14 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -10014,14 +10014,14 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -10034,14 +10034,14 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -10054,14 +10054,14 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -10074,14 +10074,14 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -10094,14 +10094,14 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -10114,14 +10114,14 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 1,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -10134,14 +10134,14 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "Accident du travail — risque réel",
-"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu'en état normal.",
+"message": "À ce niveau de fatigue, le risque d'accident du travail est statistiquement 8 fois plus élevé qu\'en état normal.",
 "conseils": [
-"Signalez votre état à votre employeur : il a l'obligation d'agir",
-"Tout accident survenu dans cet état peut engager la responsabilité de l'employeur",
+"Signalez votre état à votre employeur : il a l'obligation d\'agir",
+"Tout accident survenu dans cet état peut engager la responsabilité de l\'employeur",
 "Documentez votre état actuel"
 ],
 "refs": [
-"Art. L4121-1 C. trav. — Faute inexcusable de l'employeur si inaction"
+"Art. L4121-1 C. trav. — Faute inexcusable de l\'employeur si inaction"
 ],
 "urgence": 3,
 "question": "Que faire en zone de risque élevé ?"
@@ -10553,10 +10553,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10574,10 +10574,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10595,10 +10595,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10616,10 +10616,10 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10637,10 +10637,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10658,10 +10658,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10679,10 +10679,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10700,10 +10700,10 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10721,10 +10721,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10742,10 +10742,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10763,10 +10763,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10784,10 +10784,10 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10805,10 +10805,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10826,10 +10826,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10847,10 +10847,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10868,10 +10868,10 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10889,10 +10889,10 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10910,10 +10910,10 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10931,10 +10931,10 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -10952,10 +10952,10 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 CRITIQUE — Arrêt de travail recommandé",
-"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l'employeur.",
+"message": "Fatigue à 95+/100. Vous êtes en danger physique réel. Le maintien en poste à ce niveau est une faute grave de l\'employeur.",
 "conseils": [
 "Arrêtez le travail maintenant",
-"Contactez votre médecin traitant aujourd'hui",
+"Contactez votre médecin traitant aujourd\'hui",
 "Informez votre employeur par écrit de votre état"
 ],
 "refs": [
@@ -11415,7 +11415,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11435,7 +11435,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11455,7 +11455,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11475,7 +11475,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11495,7 +11495,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11515,7 +11515,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11535,7 +11535,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11555,7 +11555,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11575,7 +11575,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11595,7 +11595,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11615,7 +11615,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11635,7 +11635,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11655,7 +11655,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11675,7 +11675,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11695,7 +11695,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11715,7 +11715,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11735,7 +11735,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11755,7 +11755,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11775,7 +11775,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11795,7 +11795,7 @@ const DTE_SCENARIOS = [
 "titre": "🚨 Urgence médicale potentielle",
 "message": "Ce niveau de fatigue combiné à d'autres facteurs peut masquer des symptômes médicaux sérieux (burnout sévère, dépression, risque cardiovasculaire).",
 "conseils": [
-"Consultez les urgences ou votre médecin aujourd'hui",
+"Consultez les urgences ou votre médecin aujourd\'hui",
 "Ne banalisez pas la fatigue extrême",
 "Appelez le 15 (SAMU) en cas de symptômes physiques (douleurs thoraciques, vertiges)"
 ],
@@ -11813,7 +11813,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -11835,7 +11835,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -11857,7 +11857,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -11879,7 +11879,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -11901,7 +11901,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -11923,7 +11923,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -11945,7 +11945,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -11967,7 +11967,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -11989,7 +11989,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12011,7 +12011,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12033,7 +12033,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12055,7 +12055,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12077,7 +12077,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12099,7 +12099,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12121,7 +12121,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12143,7 +12143,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12165,7 +12165,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12187,7 +12187,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12209,7 +12209,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12231,7 +12231,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "🚨 Responsabilité employeur engagée",
-"message": "Si l'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
+"message": "Si l\'employeur est informé de votre état et n'agit pas, sa responsabilité civile et pénale est engagée.",
 "conseils": [
 "Envoyez un email de signalement formel avec accusé de lecture",
 "Conservez toutes les preuves de votre charge",
@@ -12367,7 +12367,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Rassemblez vos preuves (emails, badgeages, planning)",
 "Saisissez d'abord votre employeur par écrit",
-"En cas d'échec : saisie du Conseil de Prud'hommes"
+"En cas d'échec : saisie du Conseil de Prud\'hommes"
 ],
 "refs": [
 "Art. L3245-1 C. trav. — Prescription salariale 3 ans",
@@ -12388,7 +12388,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Rassemblez vos preuves (emails, badgeages, planning)",
 "Saisissez d'abord votre employeur par écrit",
-"En cas d'échec : saisie du Conseil de Prud'hommes"
+"En cas d'échec : saisie du Conseil de Prud\'hommes"
 ],
 "refs": [
 "Art. L3245-1 C. trav. — Prescription salariale 3 ans",
@@ -12409,7 +12409,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Rassemblez vos preuves (emails, badgeages, planning)",
 "Saisissez d'abord votre employeur par écrit",
-"En cas d'échec : saisie du Conseil de Prud'hommes"
+"En cas d'échec : saisie du Conseil de Prud\'hommes"
 ],
 "refs": [
 "Art. L3245-1 C. trav. — Prescription salariale 3 ans",
@@ -12430,7 +12430,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Rassemblez vos preuves (emails, badgeages, planning)",
 "Saisissez d'abord votre employeur par écrit",
-"En cas d'échec : saisie du Conseil de Prud'hommes"
+"En cas d'échec : saisie du Conseil de Prud\'hommes"
 ],
 "refs": [
 "Art. L3245-1 C. trav. — Prescription salariale 3 ans",
@@ -12451,7 +12451,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Rassemblez vos preuves (emails, badgeages, planning)",
 "Saisissez d'abord votre employeur par écrit",
-"En cas d'échec : saisie du Conseil de Prud'hommes"
+"En cas d'échec : saisie du Conseil de Prud\'hommes"
 ],
 "refs": [
 "Art. L3245-1 C. trav. — Prescription salariale 3 ans",
@@ -13067,7 +13067,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Vérifiez votre contingent conventionnel spécifique",
 "Au-delà : repos compensateur obligatoire de 100%",
-"L'employeur peut dépasser avec accord de l'inspecteur"
+"L'employeur peut dépasser avec accord de l\'inspecteur"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — Contingent annuel",
@@ -13088,7 +13088,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Vérifiez votre contingent conventionnel spécifique",
 "Au-delà : repos compensateur obligatoire de 100%",
-"L'employeur peut dépasser avec accord de l'inspecteur"
+"L'employeur peut dépasser avec accord de l\'inspecteur"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — Contingent annuel",
@@ -13109,7 +13109,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Vérifiez votre contingent conventionnel spécifique",
 "Au-delà : repos compensateur obligatoire de 100%",
-"L'employeur peut dépasser avec accord de l'inspecteur"
+"L'employeur peut dépasser avec accord de l\'inspecteur"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — Contingent annuel",
@@ -13130,7 +13130,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Vérifiez votre contingent conventionnel spécifique",
 "Au-delà : repos compensateur obligatoire de 100%",
-"L'employeur peut dépasser avec accord de l'inspecteur"
+"L'employeur peut dépasser avec accord de l\'inspecteur"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — Contingent annuel",
@@ -13151,7 +13151,7 @@ const DTE_SCENARIOS = [
 "conseils": [
 "Vérifiez votre contingent conventionnel spécifique",
 "Au-delà : repos compensateur obligatoire de 100%",
-"L'employeur peut dépasser avec accord de l'inspecteur"
+"L'employeur peut dépasser avec accord de l\'inspecteur"
 ],
 "refs": [
 "Art. L3121-33 C. trav. — Contingent annuel",
@@ -13171,7 +13171,7 @@ const DTE_SCENARIOS = [
 "message": "Chaque heure effectuée au-delà du contingent annuel ouvre droit à 1h de repos compensateur obligatoire (= repos = rémunération maintenue).",
 "conseils": [
 "Le RCO doit être pris dans les 2 mois suivant l'ouverture du droit",
-"Vous devez en faire la demande à l'employeur",
+"Vous devez en faire la demande à l\'employeur",
 "L'employeur ne peut pas refuser sans motif valable"
 ],
 "refs": [
@@ -13192,7 +13192,7 @@ const DTE_SCENARIOS = [
 "message": "Chaque heure effectuée au-delà du contingent annuel ouvre droit à 1h de repos compensateur obligatoire (= repos = rémunération maintenue).",
 "conseils": [
 "Le RCO doit être pris dans les 2 mois suivant l'ouverture du droit",
-"Vous devez en faire la demande à l'employeur",
+"Vous devez en faire la demande à l\'employeur",
 "L'employeur ne peut pas refuser sans motif valable"
 ],
 "refs": [
@@ -13213,7 +13213,7 @@ const DTE_SCENARIOS = [
 "message": "Chaque heure effectuée au-delà du contingent annuel ouvre droit à 1h de repos compensateur obligatoire (= repos = rémunération maintenue).",
 "conseils": [
 "Le RCO doit être pris dans les 2 mois suivant l'ouverture du droit",
-"Vous devez en faire la demande à l'employeur",
+"Vous devez en faire la demande à l\'employeur",
 "L'employeur ne peut pas refuser sans motif valable"
 ],
 "refs": [
@@ -13234,7 +13234,7 @@ const DTE_SCENARIOS = [
 "message": "Chaque heure effectuée au-delà du contingent annuel ouvre droit à 1h de repos compensateur obligatoire (= repos = rémunération maintenue).",
 "conseils": [
 "Le RCO doit être pris dans les 2 mois suivant l'ouverture du droit",
-"Vous devez en faire la demande à l'employeur",
+"Vous devez en faire la demande à l\'employeur",
 "L'employeur ne peut pas refuser sans motif valable"
 ],
 "refs": [
@@ -13255,7 +13255,7 @@ const DTE_SCENARIOS = [
 "message": "Chaque heure effectuée au-delà du contingent annuel ouvre droit à 1h de repos compensateur obligatoire (= repos = rémunération maintenue).",
 "conseils": [
 "Le RCO doit être pris dans les 2 mois suivant l'ouverture du droit",
-"Vous devez en faire la demande à l'employeur",
+"Vous devez en faire la demande à l\'employeur",
 "L'employeur ne peut pas refuser sans motif valable"
 ],
 "refs": [
@@ -13273,7 +13273,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Plan de prévention personnalisé",
-"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l'employeur.",
+"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l\'employeur.",
 "conseils": [
 "Faites un check-in quotidien pour affiner vos prédictions",
 "Fixez-vous un seuil personnel d'alerte (ex: 60 de fatigue)",
@@ -13293,7 +13293,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Plan de prévention personnalisé",
-"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l'employeur.",
+"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l\'employeur.",
 "conseils": [
 "Faites un check-in quotidien pour affiner vos prédictions",
 "Fixez-vous un seuil personnel d'alerte (ex: 60 de fatigue)",
@@ -13313,7 +13313,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 3,
 "titre": "Plan de prévention personnalisé",
-"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l'employeur.",
+"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l\'employeur.",
 "conseils": [
 "Faites un check-in quotidien pour affiner vos prédictions",
 "Fixez-vous un seuil personnel d'alerte (ex: 60 de fatigue)",
@@ -13333,7 +13333,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Plan de prévention personnalisé",
-"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l'employeur.",
+"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l\'employeur.",
 "conseils": [
 "Faites un check-in quotidien pour affiner vos prédictions",
 "Fixez-vous un seuil personnel d'alerte (ex: 60 de fatigue)",
@@ -13353,7 +13353,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Plan de prévention personnalisé",
-"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l'employeur.",
+"message": "Une démarche de prévention efficace repose sur 3 piliers : mesure régulière (comme ce module), action rapide aux premiers signaux, dialogue avec l\'employeur.",
 "conseils": [
 "Faites un check-in quotidien pour affiner vos prédictions",
 "Fixez-vous un seuil personnel d'alerte (ex: 60 de fatigue)",
@@ -13373,7 +13373,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Négociation de la charge de travail",
-"message": "La charge de travail est négociable. L'employeur a l'obligation de l'adapter aux capacités du salarié.",
+"message": "La charge de travail est négociable. L'employeur a l\'obligation de l\'adapter aux capacités du salarié.",
 "conseils": [
 "Demandez un entretien formel sur la charge",
 "Apportez des données chiffrées (heures réelles vs contrat)",
@@ -13393,7 +13393,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Négociation de la charge de travail",
-"message": "La charge de travail est négociable. L'employeur a l'obligation de l'adapter aux capacités du salarié.",
+"message": "La charge de travail est négociable. L'employeur a l\'obligation de l\'adapter aux capacités du salarié.",
 "conseils": [
 "Demandez un entretien formel sur la charge",
 "Apportez des données chiffrées (heures réelles vs contrat)",
@@ -13413,7 +13413,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 3,
 "titre": "Négociation de la charge de travail",
-"message": "La charge de travail est négociable. L'employeur a l'obligation de l'adapter aux capacités du salarié.",
+"message": "La charge de travail est négociable. L'employeur a l\'obligation de l\'adapter aux capacités du salarié.",
 "conseils": [
 "Demandez un entretien formel sur la charge",
 "Apportez des données chiffrées (heures réelles vs contrat)",
@@ -13433,7 +13433,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Négociation de la charge de travail",
-"message": "La charge de travail est négociable. L'employeur a l'obligation de l'adapter aux capacités du salarié.",
+"message": "La charge de travail est négociable. L'employeur a l\'obligation de l\'adapter aux capacités du salarié.",
 "conseils": [
 "Demandez un entretien formel sur la charge",
 "Apportez des données chiffrées (heures réelles vs contrat)",
@@ -13453,7 +13453,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Négociation de la charge de travail",
-"message": "La charge de travail est négociable. L'employeur a l'obligation de l'adapter aux capacités du salarié.",
+"message": "La charge de travail est négociable. L'employeur a l\'obligation de l\'adapter aux capacités du salarié.",
 "conseils": [
 "Demandez un entretien formel sur la charge",
 "Apportez des données chiffrées (heures réelles vs contrat)",
@@ -13783,7 +13783,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Télétravail et temps de travail",
-"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L'employeur doit s'assurer que le salarié respecte les temps de repos.",
+"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L\'employeur doit s\'assurer que le salarié respecte les temps de repos.",
 "conseils": [
 "Installez une plage horaire fixe et respectez-la",
 "Déconnectez-vous physiquement à l'heure de fin",
@@ -13804,7 +13804,7 @@ const DTE_SCENARIOS = [
 "contingent": 1,
 "perf": 2,
 "titre": "Télétravail et temps de travail",
-"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L'employeur doit s'assurer que le salarié respecte les temps de repos.",
+"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L\'employeur doit s\'assurer que le salarié respecte les temps de repos.",
 "conseils": [
 "Installez une plage horaire fixe et respectez-la",
 "Déconnectez-vous physiquement à l'heure de fin",
@@ -13825,7 +13825,7 @@ const DTE_SCENARIOS = [
 "contingent": 2,
 "perf": 3,
 "titre": "Télétravail et temps de travail",
-"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L'employeur doit s'assurer que le salarié respecte les temps de repos.",
+"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L\'employeur doit s\'assurer que le salarié respecte les temps de repos.",
 "conseils": [
 "Installez une plage horaire fixe et respectez-la",
 "Déconnectez-vous physiquement à l'heure de fin",
@@ -13846,7 +13846,7 @@ const DTE_SCENARIOS = [
 "contingent": 3,
 "perf": 0,
 "titre": "Télétravail et temps de travail",
-"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L'employeur doit s'assurer que le salarié respecte les temps de repos.",
+"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L\'employeur doit s\'assurer que le salarié respecte les temps de repos.",
 "conseils": [
 "Installez une plage horaire fixe et respectez-la",
 "Déconnectez-vous physiquement à l'heure de fin",
@@ -13867,7 +13867,7 @@ const DTE_SCENARIOS = [
 "contingent": 0,
 "perf": 1,
 "titre": "Télétravail et temps de travail",
-"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L'employeur doit s'assurer que le salarié respecte les temps de repos.",
+"message": "En télétravail, les mêmes règles de durée du travail s'appliquent. L\'employeur doit s\'assurer que le salarié respecte les temps de repos.",
 "conseils": [
 "Installez une plage horaire fixe et respectez-la",
 "Déconnectez-vous physiquement à l'heure de fin",
