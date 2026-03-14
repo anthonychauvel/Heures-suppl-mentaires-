@@ -17,10 +17,22 @@ class Dashboard {
         b.id = 'no-data-banner';
         b.style.cssText = 'background:rgba(255,179,0,0.08);border:1px solid rgba(255,179,0,0.3);border-left:3px solid var(--amber);padding:8px 14px;margin-bottom:6px;font-family:var(--font-mono);font-size:10px;color:var(--amber);letter-spacing:.08em;';
         const m1ok = state.scores._hasM1, m2ok = state.scores._hasM2;
+        // Scanner les clés localStorage pour diagnostic
+        const foundKeys = [];
+        try {
+          for(let i=0;i<localStorage.length;i++){
+            const k=localStorage.key(i);
+            if(k&&(k.startsWith('DATA_REPORT_')||k.startsWith('CA_HS_TRACKER')))
+              foundKeys.push(k);
+          }
+        } catch(_){}
+        const keyTxt = foundKeys.length
+          ? ' · Clés détectées : <b style="color:var(--sync)">' + foundKeys.join(', ') + '</b>'
+          : ' · <b style="color:var(--red)">Aucune clé M1/M2 dans localStorage</b> — vérifiez que M1 est bien sur le même domaine';
         const missing = [];
-        if(!m1ok) missing.push('M1 (suivi des heures)');
-        if(!m2ok) missing.push('M2 (données de paie)');
-        b.innerHTML = '&#9888;&nbsp; DONNÉES MANQUANTES — Saisissez vos données dans : ' + missing.join(' et ') + ' pour activer l\'analyse complète';
+        if(!m1ok) missing.push('M1 heures');
+        if(!m2ok) missing.push('M2 paie (optionnel)');
+        b.innerHTML = '&#9888;&nbsp; ANALYSE EN ATTENTE' + (missing.length ? ' — données manquantes : ' + missing.join(', ') : '') + keyTxt;
         const grid = document.querySelector('.dashboard-grid');
         if(grid) grid.parentNode.insertBefore(b, grid);
       }

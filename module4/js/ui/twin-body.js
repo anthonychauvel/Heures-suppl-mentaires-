@@ -110,6 +110,23 @@ class TwinBody {
   _apply(){
     const s = this._sc;
     if(!s||!Object.keys(s).length) return;
+    // Pas de données M1/M2 : corps en mode neutre (bleu)
+    if(!this._hasData){
+      Object.keys(ZONE_DEFS).forEach(z=>{
+        const s0=document.getElementById(`rg-${z}-s0`);
+        const s1=document.getElementById(`rg-${z}-s1`);
+        const col='#00c8ff';
+        if(s0){s0.setAttribute('stop-color',col);s0.setAttribute('stop-opacity','0.15');}
+        if(s1){s1.setAttribute('stop-color',col);}
+        const zone=document.getElementById(`zone-${z}`);
+        if(zone){zone.setAttribute('stroke',col);zone.setAttribute('stroke-width','0.2');zone.style.animation='';}
+        const dot=document.getElementById(`ldot-${z}`);
+        if(dot)dot.style.background=col;
+      });
+      const img=document.getElementById('twin-img');
+      if(img) img.style.filter='drop-shadow(0 0 12px rgba(0,200,255,0.4)) drop-shadow(0 0 30px rgba(0,200,255,0.15))';
+      return;
+    }
     Object.entries(ZONE_DEFS).forEach(([z,d])=>{
       const v   = s[d.score]||0;
       const c   = col(v, d.invert);
