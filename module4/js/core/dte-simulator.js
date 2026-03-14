@@ -34,9 +34,14 @@ class DTESimulator {
       const rec=isRest?D.RECOVERY_WE:D.RECOVERY;
       const over=Math.max(0,total-(D.BASE_JOUR+2))/4;
 
-      fat=Math.max(0,Math.min(1,fat+load*.12-rec));
-      str=Math.max(0,Math.min(1,str+over*.08-(isRest?.05:0)));
-      perf=Math.max(0,Math.min(1,1+fat*(-.7)+.5*.3));
+      // Fatigue : seulement les heures AU-DELÀ du contrat (7h base) font monter la fatigue
+      const baseLoad = D.BASE_JOUR/14; // charge normale = 0.5
+      const extraLoad = Math.max(0, load - baseLoad);
+      fat = Math.max(0, Math.min(1, fat + extraLoad*0.35 - (isRest ? 0.08 : 0.01)));
+      str = Math.max(0, Math.min(1, str + over*0.12 - (isRest ? 0.06 : 0.005)));
+      // Performance : utilise la motivation réelle du state
+      const motiv = this._engine && this._engine._lastNorm ? this._engine._lastNorm.motiv : 0.5;
+      perf = Math.max(0, Math.min(1, 1 + fat*(-.7) + motiv*.3));
 
       const fScore=Math.round(fat*100);
       let alert='OK';

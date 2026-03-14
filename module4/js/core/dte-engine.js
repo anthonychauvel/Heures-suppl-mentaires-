@@ -24,6 +24,7 @@ class DTEEngine {
     const raw   = this._readAll();
     const norm  = this._normalize(raw);
     const scores= this._scores(norm);
+    this._lastNorm = norm;
     this._cache = {raw, norm, scores};
     return {raw, norm, scores};
   }
