@@ -44,12 +44,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (DTE.radar) {
         const s = state.scores;
         DTE.radar.render([
-          { label:'Fatigue',   value: 100 - (s.fatigue||0),      max:100 },
-          { label:'Stress',    value: 100 - (s.stress||0),       max:100 },
-          { label:'Perf.',     value: s.performance||0,          max:100 },
-          { label:'Récup.',    value: s.recovery||0,             max:100 },
-          { label:'Cardio',    value: 100 - (s.cvRisk||0),       max:100 },
-          { label:'Cognitif',  value: 100 - (s.cogRisk||0),      max:100 },
+          { label:'Fatigue',  value: 100-(s.fatigue||0),   max:100, warn:40 },
+          { label:'Stress',   value: 100-(s.stress||0),    max:100, warn:40 },
+          { label:'Perf.',    value: s.performance||0,     max:100, warn:30 },
+          { label:'Récup.',   value: s.recovery||0,        max:100, warn:30 },
+          { label:'Cardio',   value: 100-(s.cvRisk||0),    max:100, warn:40 },
+          { label:'Cognitif', value: 100-(s.cogRisk||0),   max:100, warn:40 },
         ]);
       }
 
@@ -370,4 +370,16 @@ document.addEventListener('DOMContentLoaded', function () {
   wireButtons();
   runAnalysis();
   showWelcomeIfNeeded();
+
+  // ── LIVE SYNC — re-analyse toutes les 5s (capter les changements M1/M2/M3)
+  setInterval(() => {
+    try {
+      const s = DTE.engine.analyze();
+      const changed = !DTE._state
+        || s.scores._hasData !== DTE._state.scores._hasData
+        || Math.abs((s.scores.fatigue||0)-(DTE._state.scores.fatigue||0)) >= 1
+        || Math.abs((s.scores.performance||0)-(DTE._state.scores.performance||0)) >= 1;
+      if (changed) { DTE._state = s; DTE.dashboard.render(s); }
+    } catch(_) {}
+  }, 5000);
 });
