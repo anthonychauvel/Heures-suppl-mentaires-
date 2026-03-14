@@ -103,7 +103,9 @@ class TwinBody {
   }
 
   update(scores){
-    this._sc = scores || {};
+    this._sc      = scores || {};
+    // _hasData vient du moteur : false = pas de données M1/M2
+    this._hasData = scores && scores._hasData === true;
     this._apply();
   }
 

@@ -9,10 +9,40 @@ class RadarChart {
 
   render(axes){
     const cv=this._canvas, ctx=this._ctx;
-    const W=cv.width, H=cv.height, cx=W/2, cy=H/2;
+    if(!cv||!ctx) return;
+    const W=cv.width||cv.offsetWidth||200, H=cv.height||cv.offsetHeight||200;
+    const cx=W/2, cy=H/2;
     const r=Math.min(W,H)/2-36;
     const N=axes.length;
     ctx.clearRect(0,0,W,H);
+
+    // Pas de données : afficher un point central neutre + labels
+    const hasData = axes.some(a => (a.value||0) > 0);
+    if(!hasData) {
+      // Grille fantôme
+      for(let i=1;i<=4;i++){
+        ctx.beginPath(); ctx.arc(cx,cy,r*(i/4),0,Math.PI*2);
+        ctx.strokeStyle=`rgba(0,215,240,${.04+.02*i})`; ctx.lineWidth=1; ctx.stroke();
+      }
+      // Labels axes
+      for(let i=0;i<N;i++){
+        const angle=-Math.PI/2+(2*Math.PI/N)*i;
+        const lx=cx+(r+20)*Math.cos(angle), ly=cy+(r+20)*Math.sin(angle);
+        ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='9px Share Tech Mono,monospace';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText((axes[i].label||'').substring(0,8), lx, ly);
+      }
+      // Point central unique
+      ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,215,240,0.6)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx,cy,10,0,Math.PI*2);
+      ctx.strokeStyle='rgba(0,215,240,0.2)'; ctx.lineWidth=1; ctx.stroke();
+      // Texte "EN ATTENTE"
+      ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.font='8px Share Tech Mono,monospace';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('EN ATTENTE', cx, cy+r*0.55);
+      return;
+    }
 
     // Grid circles
     for(let i=1;i<=4;i++){
@@ -22,7 +52,7 @@ class RadarChart {
       ctx.lineWidth=1;
       ctx.stroke();
       // Label 25%,50%,75%,100%
-      ctx.fillStyle='rgba(0,215,240,0.3)';
+      ctx.fillStyle='rgba(255,255,255,0.4)';
       ctx.font='8px JetBrains Mono,monospace';
       ctx.textAlign='center';
       ctx.fillText((i*25)+'%',cx+r*(i/4)+6,cy-3);
@@ -40,7 +70,7 @@ class RadarChart {
       ctx.stroke();
       // Labels
       const lx=cx+(r+20)*Math.cos(angle), ly=cy+(r+20)*Math.sin(angle);
-      ctx.fillStyle='rgba(110,155,185,0.9)';
+      ctx.fillStyle='rgba(255,255,255,0.85)';
       ctx.font='9px JetBrains Mono,monospace';
       ctx.textAlign='center';
       ctx.textBaseline='middle';
