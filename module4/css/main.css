@@ -25,9 +25,9 @@
   --green:      #00ffcc;
   --orange:     #ff6600;
 
-  --text:       #c8e8ff;
-  --text-dim:   #4a7fa0;
-  --text-muted: #1a3a55;
+  --text:       #ffffff;
+  --text-dim:   #d0e8ff;
+  --text-muted: #8ab4d4;
 
   --font-hud:   'Orbitron', monospace;
   --font-mono:  'Share Tech Mono', monospace;
@@ -895,3 +895,20 @@ body {
   .panel          { padding: 10px; }
   .panel-label    { font-size: 9px; }
 }
+
+/* ── GLOBAL BASE SIZES — lisibilité PC et mobile ────────────────── */
+.panel-label      { font-size: 11px !important; letter-spacing: .10em; }
+.score-card-label { font-size: 11px !important; }
+.score-card-sub   { font-size: 10px !important; }
+.score-card-val   { font-size: 26px !important; }
+.risk-title       { font-size: 13px !important; }
+.risk-msg         { font-size: 12px !important; }
+.risk-article     { font-size: 10px !important; }
+.advice-title     { font-size: 12px !important; }
+.advice-msg       { font-size: 12px !important; }
+.twin-legend-item { font-size: 11px !important; }
+.hero-bar-label   { font-size: 12px !important; }
+.nav-btn          { font-size: 11px !important; letter-spacing: .06em; }
+.abtn-label       { font-size: 10px !important; }
+.abtn-sub         { font-size: 9px  !important; }
+/* GLOBAL BASE SIZES */
