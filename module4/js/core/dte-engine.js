@@ -233,8 +233,8 @@ class DTEEngine {
         }
       } catch(_) {}
       let raw = null;
-      for(const k of keys){ raw = localStorage.getItem(k); if(raw) break; }
-      if (!raw) return r;
+      for(const k of keys){ raw = localStorage.getItem(k); if(raw && raw !== '{}' && raw !== 'null') break; }
+      if (!raw || raw === '{}') return r;
       const d = JSON.parse(raw);
       // M1 stocke data['2026-03-14']={extra,recup,absent} à la racine
       let days = d.days || d.jours || {};
