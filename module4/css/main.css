@@ -747,3 +747,58 @@ body {
 @media (max-width: 480px) {
   .help-sections { grid-template-columns: 1fr; }
 }
+
+/* ── HEADER BUTTONS REDESIGN ────────────────────────────────────── */
+.header-actions {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.hdr-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 4px 10px;
+  background: rgba(0,200,255,0.06);
+  border: 1px solid rgba(0,200,255,0.18);
+  color: var(--text-dim);
+  cursor: crosshair;
+  transition: all .2s;
+  min-width: 48px;
+  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
+}
+.hdr-btn:hover {
+  background: rgba(0,200,255,0.16);
+  color: var(--animus);
+  box-shadow: 0 0 10px rgba(0,200,255,0.2);
+}
+.hdr-btn-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.hdr-btn-lbl {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.hdr-btn:hover .hdr-btn-lbl { color: var(--animus); }
+
+/* Couleurs par bouton */
+.hdr-btn--help:hover    { border-color: rgba(0,255,204,0.4); color: var(--sync); }
+.hdr-btn--checkin:hover { border-color: rgba(0,200,255,0.4); }
+.hdr-btn--ai:hover      { border-color: rgba(176,106,255,0.4); color: #b06aff; }
+.hdr-btn--pdf:hover     { border-color: rgba(255,179,0,0.4);  color: var(--amber); }
+.hdr-btn--refresh:hover { border-color: rgba(0,200,255,0.4);  }
+
+/* Sur mobile : icône seulement */
+@media (max-width: 600px) {
+  .hdr-btn-lbl { display: none; }
+  .hdr-btn { min-width: 34px; padding: 5px 8px; }
+  .hdr-btn-icon { font-size: 13px; }
+}
+
+.hdr-btn--glossary:hover { border-color: rgba(0,255,204,0.4); color: var(--sync); }
