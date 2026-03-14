@@ -67,9 +67,14 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       // Score global dans DTE.app
-      const dangers = risks.filter(r => r.level === 'CRITIQUE').length;
-      const alertes = risks.filter(r => r.level !== 'CRITIQUE').length;
-      DTE.app = { scoreGlobal: Math.max(0, Math.min(100, state.scores.performance - dangers * 15 - alertes * 5)) };
+      if(!state.scores._hasData) {
+        DTE.app = { scoreGlobal: null };
+      } else {
+        const dangers = risks.filter(r => r.level === 'CRITIQUE').length;
+        const alertes = risks.filter(r => r.level !== 'CRITIQUE').length;
+        const base = state.scores.performance || 50;
+        DTE.app = { scoreGlobal: Math.max(0, Math.min(100, base - dangers * 15 - alertes * 5)) };
+      }
 
       DTE.notifs.checkAndNotify(state, risks);
       DTE.checkin.checkIfNeeded();
