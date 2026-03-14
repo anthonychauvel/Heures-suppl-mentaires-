@@ -41,14 +41,23 @@ class Dashboard {
     const D=window.DTE&&window.DTE.engine?window.DTE.engine.getDefaults():{CONTINGENT_MAX:220,SEUIL_ALERTE:75};
     const el=document.getElementById('score-global-value');
     if(!el) return;
-    const sg=window.DTE&&window.DTE.app?window.DTE.app.scoreGlobal:this._calcGlobal(scores);
-    el.textContent=sg;
+    // Pas de données → afficher "--" et pas CRITIQUE
+    const hasData = scores && scores._hasData;
+    const sg = hasData ? (window.DTE&&window.DTE.app ? window.DTE.app.scoreGlobal : this._calcGlobal(scores)) : null;
+    el.textContent = sg !== null ? sg : '--';
     const levelMap={EXCELLENT:'excellent',BON:'bon',MOYEN:'moyen',FAIBLE:'faible',CRITIQUE:'critique'};
-    const level=sg>=80?'EXCELLENT':sg>=60?'BON':sg>=40?'MOYEN':sg>=20?'FAIBLE':'CRITIQUE';
+    const level = sg === null ? 'EN ATTENTE' : sg>=80?'EXCELLENT':sg>=60?'BON':sg>=40?'MOYEN':sg>=20?'FAIBLE':'CRITIQUE';
     const lel=document.getElementById('hero-level');
-    if(lel){lel.textContent=level;lel.className='hero-level '+levelMap[level];}
+    if(lel){
+      lel.textContent=level;
+      lel.className='hero-level '+(levelMap[level]||'bon');
+      if(sg===null){ lel.style.color='var(--text-muted)'; lel.style.borderColor='var(--text-muted)'; lel.style.background='transparent'; }
+    }
     const mel=document.getElementById('marge-securite');
-    if(mel){ const m=D.SEUIL_ALERTE-scores.fatigue; mel.textContent=(m>0?'+':'')+m; mel.style.color=m>0?'var(--green)':m>-10?'var(--amber)':'var(--red)';}
+    if(mel){
+      if(!hasData){ mel.textContent='—'; mel.style.color='var(--text-muted)'; }
+      else { const m=(D.SEUIL_ALERTE||75)-(scores.fatigue||0); mel.textContent=(m>0?'+':'')+m; mel.style.color=m>0?'var(--sync)':m>-10?'var(--amber)':'var(--red)'; }
+    }
     // Bars
     const container=document.querySelector('.panel--hero');
     if(container){
@@ -82,7 +91,7 @@ class Dashboard {
       {key:'musculoRisk',  label:'MUSCULO',       sub:'Lancet 2021 HR=1.15',        color:v=>v>=50?'var(--red)':v>=30?'var(--orange)':v>=15?'var(--amber)':'var(--sync)'},
     ];
     el.innerHTML=defs.map(d=>{
-      const v=scores[d.key]||0;
+      const v=Math.round(scores[d.key])||0;
       const c=d.color(v);
       return `<div class="score-card">
         <div class="score-card-label">${d.label}</div>
