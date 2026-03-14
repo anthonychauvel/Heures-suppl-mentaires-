@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
       DTE.dashboard.render(state, risks, advice);
 
       // Twin body
-      DTE.twin.render(state.scores);
+      DTE.twin.update(state.scores);
 
       // Notifications proactives
       DTE.notifs.checkAndNotify(state, risks);
@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Check-in matinal
       DTE.checkin.checkIfNeeded();
 
+      DTE._state = state;
       document.dispatchEvent(new CustomEvent('dte:analyzed', { detail: state }));
     } catch (err) {
       console.error('[DTE App] Analysis error:', err);
@@ -121,74 +122,87 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* ── 5. Vue Prédictions ─────────────────────────────────────── */
   function initPredictions() {
-    const state = DTE.engine.getState();
-    if (!state) return;
-    // Default timeline
-    const defaultSim = DTE.simulator.run({ days:30, hoursPerDay: state.norm._avgExtra7||0, restDays:[0] }, state.scores);
+    if (!DTE._state) return;
+    const state = DTE._state;
+
+    // ── Timeline ──────────────────────────────────────────────
     const canvas = document.getElementById('timeline-canvas');
     if (canvas) {
-      const w = canvas.parentElement.getBoundingClientRect().width || 600;
-      canvas.width = w; canvas.height = 220;
+      const r = canvas.parentElement.getBoundingClientRect();
+      canvas.width = r.width || 600; canvas.height = 240;
       DTE.timeline._canvas = canvas;
       DTE.timeline._ctx = canvas.getContext('2d');
-      DTE.timeline.render(defaultSim.timeline);
     }
 
-    // Controls
+    function runTimeline() {
+      const hs    = parseFloat(document.getElementById('timeline-hs')?.value || 0);
+      const days  = parseInt(document.getElementById('timeline-days')?.value || 30);
+      try {
+        const sim = DTE.simulator.run({ days, hoursPerDay: hs, restDays: [0] }, state.scores);
+        if (canvas) DTE.timeline.render(sim.timeline);
+        renderScenarios(days, state);
+        renderFutur(days, state);
+      } catch(e) { console.warn('[Predictions]', e); }
+    }
+
+    // Sliders
     const hsRange = document.getElementById('timeline-hs');
     const daysSelect = document.getElementById('timeline-days');
-    function updateTimeline() {
-      const hs = parseFloat(hsRange?.value || 0);
-      const days = parseInt(daysSelect?.value || 30);
-      document.getElementById('timeline-hs-val').textContent = hs;
-      const sim = DTE.simulator.run({ days, hoursPerDay: hs, restDays:[0] }, state.scores);
-      const cv = document.getElementById('timeline-canvas');
-      if (cv) {
-        cv.width = cv.parentElement.getBoundingClientRect().width || 600;
-        DTE.timeline._canvas = cv;
-        DTE.timeline._ctx = cv.getContext('2d');
-        DTE.timeline.render(sim.timeline);
-      }
+    if (hsRange) {
+      hsRange.removeEventListener('input', hsRange._dteCb);
+      hsRange._dteCb = e => {
+        const v = parseFloat(e.target.value);
+        const el = document.getElementById('timeline-hs-val');
+        if (el) el.textContent = v + 'H';
+        runTimeline();
+      };
+      hsRange.addEventListener('input', hsRange._dteCb);
     }
-    if (hsRange) hsRange.addEventListener('input', updateTimeline);
-    if (daysSelect) daysSelect.addEventListener('change', updateTimeline);
+    if (daysSelect) {
+      daysSelect.removeEventListener('change', daysSelect._dteCb);
+      daysSelect._dteCb = () => runTimeline();
+      daysSelect.addEventListener('change', daysSelect._dteCb);
+    }
 
-    // Scénarios
-    const scen = DTE.simulator.scenarios(14, state.norm);
+    runTimeline();
+  }
+
+  function renderScenarios(days, state) {
+    const scen = DTE.simulator.scenarios(days || 14, state.norm);
     const scenEl = document.getElementById('scenarios-container');
-    if (scenEl && scen) {
-      scenEl.innerHTML = scen.scenarios.map(sc => `
-        <div class="scenario-card ${sc.name === scen.best.name ? 'best' : ''}">
-          <div class="scenario-top">
-            <div class="scenario-name">${sc.emoji} ${sc.label}</div>
-            <div class="scenario-score">Score : ${sc.quality}</div>
-          </div>
-          <div class="scenario-desc">${sc.desc}</div>
-          <div class="scenario-stats">
-            <span>Fatigue moy. : ${sc.summary.avgFatigue}%</span>
-            <span>Performance : ${sc.summary.avgPerformance}%</span>
-            <span>Alertes : ${sc.summary.daysAlert+sc.summary.daysCrit}j</span>
-          </div>
-        </div>`).join('');
-    }
+    if (!scen || !scenEl) return;
+    const c = v => v >= 85 ? 'var(--red)' : v >= 70 ? 'var(--orange)' : v >= 50 ? 'var(--amber)' : 'var(--green)';
+    scenEl.innerHTML = scen.scenarios.map(sc => `
+      <div class="scenario-card ${sc === scen.best ? 'best' : ''}">
+        <div class="scenario-top">
+          <span class="scenario-name">${sc.emoji || ''} ${sc.label}</span>
+          <span class="scenario-score" style="color:${c(sc.summary.maxFatigue)}">Pic fat. ${sc.summary.maxFatigue}</span>
+        </div>
+        <div class="scenario-desc">${sc.desc}</div>
+        <div class="scenario-stats">
+          <span style="color:var(--text-muted)">Fatigue moy. <span style="color:${c(sc.summary.avgFatigue)}">${sc.summary.avgFatigue}</span></span>
+          <span style="color:var(--text-muted)">Perf. <span style="color:var(--animus)">${sc.summary.avgPerformance}</span></span>
+          <span style="color:var(--text-muted)">Alertes <span style="color:${sc.summary.daysAlert>0?'var(--amber)':'var(--green)'}">${sc.summary.daysAlert + sc.summary.daysCrit}j</span></span>
+        </div>
+        ${sc === scen.best ? '<div style="font-family:var(--font-mono);font-size:8px;color:var(--animus);margin-top:4px;letter-spacing:.1em;">▶ RECOMMANDÉ</div>' : ''}
+      </div>`).join('');
+  }
 
-    // Futur state
-    const fut = DTE.simulator.futurState(30, state.norm);
+  function renderFutur(days, state) {
+    const fut = DTE.simulator.futurState(days || 30, state.norm);
     const futEl = document.getElementById('futur-state-container');
-    if (futEl && fut) {
-      const c = v => v >= 75 ? 'var(--red)' : v >= 50 ? 'var(--amber)' : 'var(--green)';
-      futEl.innerHTML = `
-        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-bottom:var(--gap);">
-          Dans 30 jours (${fut.date})
-        </div>
-        <div class="futur-grid">
-          <div class="futur-item"><div class="futur-item-label">FATIGUE</div><div class="futur-item-val" style="color:${c(fut.fatigue)}">${fut.fatigue}</div></div>
-          <div class="futur-item"><div class="futur-item-label">STRESS</div><div class="futur-item-val" style="color:${c(fut.stress)}">${fut.stress}</div></div>
-          <div class="futur-item"><div class="futur-item-label">PERFORMANCE</div><div class="futur-item-val" style="color:${c(100-fut.performance)}">${fut.performance}</div></div>
-          <div class="futur-item"><div class="futur-item-label">JOURS ALERTE</div><div class="futur-item-val" style="color:${fut.alertDays.length>5?'var(--red)':'var(--green)'}">${fut.alertDays.length}</div></div>
-        </div>
-        ${fut.maxFatigueDay?`<div style="margin-top:var(--gap);font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">Pic fatigue : ${fut.maxFatigueDay.date} — ${fut.maxFatigueDay.fatigue}%</div>`:''}`;
-    }
+    if (!fut || !futEl) return;
+    const c = v => v >= 85 ? 'var(--red)' : v >= 70 ? 'var(--orange)' : v >= 50 ? 'var(--amber)' : 'var(--green)';
+    futEl.innerHTML = `
+      <div class="futur-grid">
+        <div class="futur-item"><div class="futur-item-label">FATIGUE J+${days||30}</div><div class="futur-item-val" style="color:${c(fut.fatigue)}">${fut.fatigue}</div></div>
+        <div class="futur-item"><div class="futur-item-label">STRESS J+${days||30}</div><div class="futur-item-val" style="color:${c(fut.stress)}">${fut.stress}</div></div>
+        <div class="futur-item"><div class="futur-item-label">PERFORMANCE</div><div class="futur-item-val" style="color:${c(100-fut.performance)}">${fut.performance}</div></div>
+        <div class="futur-item"><div class="futur-item-label">JOURS ALERTE</div><div class="futur-item-val" style="color:${fut.alertDays.length>5?'var(--red)':fut.alertDays.length>0?'var(--amber)':'var(--green)'}">${fut.alertDays.length}</div></div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);margin-top:8px;">
+        Prévision au ${fut.date} au rythme actuel
+      </div>`;
   }
 
   /* ── 6. Vue What-If ─────────────────────────────────────────── */
