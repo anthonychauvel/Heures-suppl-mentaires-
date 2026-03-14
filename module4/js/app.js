@@ -42,14 +42,45 @@ document.addEventListener('DOMContentLoaded', function () {
       DTE.twin.update(state.scores);
 
       if (DTE.radar) {
+        const raw  = state.raw;
+        const norm = state.norm;
+        const m1   = raw && raw.m1;
+        const D    = DTE.engine.getDefaults ? DTE.engine.getDefaults() : {};
+
+        // Axes de CONFORMITÉ LÉGALE réels (Code du travail FR)
+        // Chaque axe = % de conformité (100 = parfait, 0 = violation)
+
+        // 1. Heures hebdo vs max 48h (Art. L3121-20)
+        const weeklyH = (norm && norm._recentWeeklyH) || 35;
+        const confHebdo = Math.max(0, Math.min(100, Math.round((1 - Math.max(0, weeklyH - 35) / 13) * 100)));
+
+        // 2. Repos quotidien 11h (Art. L3131-1) — si >10h/j → risque
+        const dailyH = (norm && norm._avgH7) || 7;
+        const confRepos = Math.max(0, Math.min(100, dailyH <= 9 ? 100 : dailyH <= 10 ? 70 : 30));
+
+        // 3. Contingent HS 220h/an (Art. L3121-33)
+        const contingPct = (norm && norm._contingentPct) || 0;
+        const confCont = Math.max(0, Math.min(100, Math.round((1 - contingPct / 100) * 100)));
+
+        // 4. Jours consécutifs (repos hebdo 35h Art. L3132-1) — max 6j
+        const consec = (norm && norm._consec) || 0;
+        const confConsec = Math.max(0, Math.min(100, consec <= 5 ? 100 : consec <= 6 ? 60 : 20));
+
+        // 5. HS journalière — limite 3h/j recommandée INRS
+        const extraDay = (norm && norm._avgExtra7) || 0;
+        const confHS = Math.max(0, Math.min(100, extraDay <= 1 ? 100 : extraDay <= 2 ? 75 : extraDay <= 3 ? 50 : 20));
+
+        // 6. Récupération — capacité à récupérer (base santé)
         const s = state.scores;
+        const confRecup = Math.max(0, Math.min(100, s.recovery || (state.scores._hasData ? 70 : 100)));
+
         DTE.radar.render([
-          { label:'Fatigue',  value: 100-(s.fatigue||0),   max:100, warn:40 },
-          { label:'Stress',   value: 100-(s.stress||0),    max:100, warn:40 },
-          { label:'Perf.',    value: s.performance||0,     max:100, warn:30 },
-          { label:'Récup.',   value: s.recovery||0,        max:100, warn:30 },
-          { label:'Cardio',   value: 100-(s.cvRisk||0),    max:100, warn:40 },
-          { label:'Cognitif', value: 100-(s.cogRisk||0),   max:100, warn:40 },
+          { label:'Hebdo',   value: confHebdo,  max:100, warn:70, legal:'≤48h/sem' },
+          { label:'Repos/j', value: confRepos,  max:100, warn:70, legal:'11h min' },
+          { label:'Contingent', value: confCont, max:100, warn:50, legal:'220h/an' },
+          { label:'Jours cons.', value: confConsec, max:100, warn:60, legal:'≤6j' },
+          { label:'HS/jour', value: confHS,     max:100, warn:70, legal:'≤3h/j' },
+          { label:'Récup.',  value: confRecup,  max:100, warn:40, legal:'INRS' },
         ]);
       }
 
@@ -142,142 +173,186 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderTimeline(sim, days) {
     const wrap = document.getElementById('timeline-canvas')?.parentElement;
-    if (!wrap || !sim) return;
-    const tl = sim.timeline;
-    const c = v => v >= 80 ? '#ff2244' : v >= 60 ? '#ff6600' : v >= 35 ? '#ffb300' : '#00ffcc';
-    const milestones = [7, 14, 30, 60, 90].filter(d => d <= days);
-    if (!milestones.includes(days)) milestones.push(days);
-    const phases = DTE.simulator.getPhases ? DTE.simulator.getPhases() : [];
-    const phaseChanges = [];
-    let lastP = tl[0]?.phase;
-    tl.forEach((d, i) => {
-      if (d.phase !== lastP) { phaseChanges.push({ day:i+1, to:d.phase, color:d.phaseColor, label:d.phaseLabel }); lastP = d.phase; }
+    if (!wrap) return;
+
+    if (!sim || !sim.timeline) {
+      wrap.innerHTML = `<div style="padding:20px;text-align:center;font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,0.5);">
+        📋 Saisissez vos heures dans M1 pour voir votre évolution prévue
+      </div>`;
+      return;
+    }
+
+    const tl  = sim.timeline;
+    const s   = sim.summary;
+    const ph  = s.finalPhase || { id:1, label:'ADAPTATION', color:'#00ffcc' };
+    const c   = v => v >= 80 ? '#ff2244' : v >= 60 ? '#ff6600' : v >= 35 ? '#ffb300' : '#00ffcc';
+
+    // Message principal en langage clair
+    const fatFin  = s.finalFatigue || 0;
+    const trendMsg = fatFin < 30 ? '📈 Vous allez bien. Continuez à ce rythme.'
+                   : fatFin < 50 ? '⚠️ Fatigue qui s\'accumule progressivement.'
+                   : fatFin < 70 ? '🔶 Surmenage probable. Réduire les HS conseillé.'
+                   : '🔴 Risque élevé. Repos nécessaire urgemment.';
+    const weekH = tl[0]?.weeklyHours || 35;
+    const omsMsg = weekH >= 55 ? '⚠️ Au-delà de 55h/sem : +35% risque AVC (OMS 2021)'
+                 : weekH >= 48 ? '→ Au-delà du maximum légal 48h/sem (Art. L3121-20)'
+                 : weekH >= 40 ? '→ Zone de vigilance OCDE (>40h/sem)'
+                 : '✓ Zone optimale OMS (≤40h/sem)';
+
+    // Barres semaines (max 8)
+    const weeks = Array.from({length:Math.min(8,Math.ceil(tl.length/7))},(_,w)=>{
+      const wd  = tl.slice(w*7,(w+1)*7);
+      const af  = Math.round(wd.reduce((s,d)=>s+d.fatigue,0)/wd.length);
+      return { w:w+1, af, col:c(af), alert:wd.some(d=>d.alert!=='OK') };
     });
 
     wrap.innerHTML = `
-      <div style="padding:8px 0 4px;">
-        <div style="position:relative;height:3px;background:rgba(0,200,255,0.1);margin:0 16px;">
-          <div id="tl-progress" style="position:absolute;left:0;top:0;height:100%;width:0%;background:linear-gradient(90deg,var(--animus),var(--sync));box-shadow:var(--glow-a);transition:width 1.2s ease;"></div>
+      <!-- MESSAGE PRINCIPAL -->
+      <div style="padding:12px 14px;background:rgba(0,10,25,.9);border-left:3px solid ${c(fatFin)};margin-bottom:8px;">
+        <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">${trendMsg}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.7);">
+          Dans <b style="color:${c(fatFin)}">${days} jours</b> :
+          Fatigue estimée <b style="color:${c(fatFin)}">${fatFin}%</b> —
+          Phase <b style="color:${ph.color}">P${ph.id} ${ph.label}</b>
         </div>
-        <div style="display:flex;justify-content:space-between;margin:0 8px;margin-top:-5px;">
-          ${milestones.map(d => {
-            const idx = Math.min(d-1, tl.length-1);
-            const f = tl[idx]?.fatigue || 0;
-            const col = c(f);
-            return `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
-              <div style="width:12px;height:12px;border:2px solid ${col};transform:rotate(45deg);background:rgba(0,6,15,.9);${f>=80?'animation:zone-crit-pulse 1.2s ease-in-out infinite;':''}box-shadow:0 0 6px ${col}50;"></div>
-              <div style="font-family:var(--font-mono);font-size:8px;color:${col};">J+${d}</div>
-              <div style="font-family:var(--font-hud);font-size:14px;font-weight:700;color:${col};">${f}</div>
-              <div style="font-size:7px;color:var(--text-muted);">fat.</div>
-            </div>`;
-          }).join('')}
-        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px;">${omsMsg}</div>
       </div>
-      ${phaseChanges.length ? `
-      <div style="margin:4px 0;padding:5px 8px;background:rgba(0,10,25,0.6);border:1px solid rgba(0,200,255,0.06);">
-        <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);letter-spacing:.12em;margin-bottom:4px;">⟳ TRANSITIONS PRÉVUES</div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap;">
-          ${phaseChanges.map(p => `<span style="font-family:var(--font-mono);font-size:8px;border:1px solid ${p.color}50;padding:2px 7px;color:${p.color};">J+${p.day} → ${p.label}</span>`).join('')}
-        </div>
-      </div>` : ''}
-      <div style="margin-top:6px;">
-        <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);letter-spacing:.12em;margin-bottom:4px;">ÉVOLUTION SEMAINE PAR SEMAINE</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:2px;">
-          ${Array.from({length:Math.ceil(tl.length/7)},(_,w)=>{
-            const wd = tl.slice(w*7,(w+1)*7);
-            const af = Math.round(wd.reduce((s,d)=>s+d.fatigue,0)/wd.length);
-            const as_ = Math.round(wd.reduce((s,d)=>s+d.stress,0)/wd.length);
-            const col2 = c(af);
-            const alert = wd.some(d=>d.alert!=='OK');
-            return `<div style="background:rgba(0,10,25,.9);border:1px solid ${alert?col2+'60':'rgba(0,200,255,0.07)'};padding:3px;text-align:center;">
-              <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);">S${w+1}</div>
-              <div style="height:24px;display:flex;align-items:flex-end;gap:1px;justify-content:center;margin:2px 0;">
-                <div style="width:6px;background:${col2};height:${Math.max(2,af*.24)}px;"></div>
-                <div style="width:6px;background:var(--amber);height:${Math.max(2,as_*.24)}px;opacity:.7;"></div>
-              </div>
-              <div style="font-family:var(--font-hud);font-size:9px;color:${col2};">${af}</div>
-            </div>`;
-          }).join('')}
-        </div>
-        <div style="display:flex;gap:var(--gap);margin-top:4px;font-family:var(--font-mono);font-size:7px;color:var(--text-muted);">
-          <span>■ FATIGUE</span><span style="color:var(--amber);">■ STRESS</span>
-        </div>
-      </div>`;
-    setTimeout(()=>{const p=document.getElementById('tl-progress');if(p)p.style.width='100%';},80);
+
+      <!-- SEMAINES : barre simple avec explication -->
+      <div style="font-size:11px;color:rgba(255,255,255,0.6);font-family:var(--font-mono);margin-bottom:6px;">
+        ÉVOLUTION SEMAINE PAR SEMAINE (fatigue prévue)
+      </div>
+      <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:4px;">
+        ${weeks.map(w=>`
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;">
+            <div style="font-size:10px;font-weight:600;color:${w.col};">${w.af}%</div>
+            <div style="width:100%;background:${w.col};height:${Math.max(4,w.af*0.44)}px;
+              opacity:${w.alert?1:0.7};border-radius:1px;"></div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.5);">S${w.w}</div>
+          </div>`).join('')}
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">
+        🟢 vert = OK · 🟡 orange = vigilance · 🔴 rouge = alerte
+      </div>
+
+      ${s.daysAlert > 0 ? `<div style="margin-top:8px;padding:8px 12px;background:rgba(255,179,0,0.1);border:1px solid rgba(255,179,0,0.3);font-size:11px;color:rgba(255,255,255,0.8);">
+        ⚠️ <b>${s.daysAlert} jour(s)</b> en alerte prévus sur la période
+      </div>` : ''}`;
   }
 
   function renderScenarios(days, state, scen) {
     const el = document.getElementById('scenarios-container');
     if (!el) return;
-    const advisor = DTE.scenarioAdvisor;
-    const topAdvice = advisor ? advisor.match(state, 2) : [];
-    const c = v => v>=80?'#ff2244':v>=60?'#ff6600':v>=35?'#ffb300':'#00ffcc';
-    if (!scen) { el.innerHTML=`<div style="color:var(--text-muted);font-size:10px;font-family:var(--font-mono);padding:var(--gap);">Saisissez vos heures dans M1 pour activer les scénarios.</div>`; return; }
-    el.innerHTML = scen.scenarios.map(sc => {
-      const isBest = sc===scen.best;
-      const ph = sc.summary.finalPhase||{id:1,label:'ADAPT.',color:'#00ffcc'};
-      return `<div style="background:rgba(0,10,25,.85);border:1px solid ${isBest?'var(--animus)':'rgba(0,200,255,0.1)'};${isBest?'box-shadow:0 0 14px rgba(0,200,255,0.18);':''}margin-bottom:3px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border-bottom:1px solid rgba(0,200,255,0.07);${isBest?'background:rgba(0,200,255,0.05);':''}">
-          <span style="font-family:var(--font-hud);font-size:11px;color:${isBest?'var(--animus)':'var(--text)'};">${sc.emoji} ${sc.label}</span>
-          ${isBest?'<span style="font-family:var(--font-mono);font-size:7px;color:var(--animus);border:1px solid var(--animus);padding:1px 5px;">✓ OPTIMAL</span>':''}
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);">
-          ${[['FAT.MOY',sc.summary.avgFatigue,c(sc.summary.avgFatigue)],['PIC',sc.summary.maxFatigue,c(sc.summary.maxFatigue)],['PERF',sc.summary.avgPerformance,c(100-sc.summary.avgPerformance)],['P'+ph.id,ph.label.slice(0,5),ph.color]].map(([l,v,col])=>`
-            <div style="text-align:center;padding:4px;border-right:1px solid rgba(0,200,255,0.05);">
-              <div style="font-family:var(--font-hud);font-size:${typeof v==='number'?'14':'10'}px;font-weight:700;color:${col};">${v}</div>
-              <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);">${l}</div>
-            </div>`).join('')}
-        </div>
-        <div style="padding:3px 8px;font-family:var(--font-mono);font-size:7px;color:var(--text-muted);">${sc.oms}</div>
-      </div>`;
-    }).join('')+(topAdvice.length?`
-      <div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(0,200,255,0.1);">
-        <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);letter-spacing:.12em;margin-bottom:4px;">▶ CONSEILS ADAPTÉS</div>
-        ${topAdvice.map(a=>`<div style="background:rgba(0,10,25,.8);border-left:2px solid var(--animus);padding:4px 8px;margin-bottom:3px;">
-          <div style="font-family:var(--font-hud);font-size:10px;color:var(--text);">${a.titre}</div>
-          <div style="font-size:9px;color:var(--text-dim);">${a.message.substring(0,80)}…</div>
-        </div>`).join('')}
-      </div>`:'');
+    if (!scen) {
+      el.innerHTML = `<div style="padding:16px;font-size:12px;color:rgba(255,255,255,0.5);text-align:center;">
+        📋 Saisissez vos heures dans M1 pour comparer les scénarios
+      </div>`; return;
+    }
+    const c = v => v >= 80 ? '#ff2244' : v >= 60 ? '#ff6600' : v >= 35 ? '#ffb300' : '#00ffcc';
+
+    // Labels humains
+    const humanDesc = {
+      urgence:     { emoji:'🔥', what:'Si vous continuez + intensément', impact:'Fatigue maximale, sans bénéfice sur la prod.' },
+      actuel:      { emoji:'▶️', what:'Si vous continuez comme aujourd\'hui', impact:'Projection de votre trajectoire actuelle.' },
+      reduit:      { emoji:'⬇️', what:'Si vous réduisez un peu (-1h/j)', impact:'Récupération progressive, moins de stress.' },
+      optimise:    { emoji:'⚡', what:'Si vous optimisez (-2h/j)', impact:'Zone productive OCDE, meilleur équilibre.' },
+      equilibre:   { emoji:'⚖️', what:'Si vous repassez à 35h/sem', impact:'Zone optimale OMS. Productivité maximale.' },
+      recuperation:{ emoji:'🛡️', what:'Si vous prenez du recul', impact:'Récupération physiologique INRS recommandée.' },
+    };
+
+    el.innerHTML = `
+      <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);">
+        💡 <b>6 scénarios comparatifs</b> — Que se passe-t-il si vous changez de rythme ?
+      </div>
+      ${scen.scenarios.map((sc, i) => {
+        const isBest = sc === scen.best;
+        const hd    = humanDesc[sc.key] || { emoji:'▶', what:sc.label, impact:sc.desc };
+        const ph    = sc.summary.finalPhase || { color:'#00ffcc', label:'OK' };
+        const fat   = sc.summary.avgFatigue || 0;
+        return `<div style="padding:10px 12px;background:rgba(0,10,25,.85);
+          border:1px solid ${isBest?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'};
+          border-left:3px solid ${isBest?'var(--animus)':c(fat)};
+          margin-bottom:5px;${isBest?'box-shadow:0 0 12px rgba(0,200,255,0.15);':''}">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+            <span style="font-size:13px;font-weight:600;color:#fff;">${hd.emoji} ${sc.label}</span>
+            ${isBest ? '<span style="font-size:10px;color:var(--animus);border:1px solid var(--animus);padding:1px 7px;">✓ MEILLEURE OPTION</span>' : ''}
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:4px;">${hd.what}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:8px;">${hd.impact}</div>
+          <div style="display:flex;gap:12px;font-size:11px;">
+            <span>Fatigue moy : <b style="color:${c(fat)}">${fat}%</b></span>
+            <span>Performance : <b style="color:${c(100-sc.summary.avgPerformance)}">${sc.summary.avgPerformance}%</b></span>
+            <span style="color:${ph.color}">Phase finale : P${ph.id}</span>
+          </div>
+          <div style="margin-top:5px;font-size:10px;color:rgba(255,255,255,0.35);">${sc.oms}</div>
+        </div>`;
+      }).join('')}`;
   }
+
 
   function renderFutur(days, state, fut) {
     const el = document.getElementById('futur-state-container');
     if (!el) return;
-    if (!fut) { el.innerHTML=`<div style="color:var(--text-muted);font-size:10px;font-family:var(--font-mono);">Données M1 insuffisantes.</div>`; return; }
-    const c = v=>v>=80?'var(--red)':v>=60?'var(--orange)':v>=35?'var(--amber)':'var(--sync)';
-    const ph = fut.finalPhase||{id:1,label:'ADAPTATION',color:'#00ffcc',desc:'',symptoms:[]};
-    const h = days||30;
-    el.innerHTML=`
-      <div style="border:1px solid ${fut.omsRisk.color};border-left:3px solid ${fut.omsRisk.color};padding:6px 9px;margin-bottom:4px;background:rgba(0,10,25,.7);">
-        <div style="font-family:var(--font-mono);font-size:7px;letter-spacing:.1em;color:${fut.omsRisk.color};margin-bottom:2px;">■ RISQUE OMS — ${fut.omsRisk.level}</div>
-        <div style="font-size:9px;color:var(--text-dim);">${fut.omsRisk.txt}</div>
-      </div>
-      ${fut.brainRisk?`<div style="border:1px solid ${fut.brainRisk.color};border-left:3px solid ${fut.brainRisk.color};padding:6px 9px;margin-bottom:4px;background:rgba(0,10,25,.7);">
-        <div style="font-family:var(--font-mono);font-size:7px;color:${fut.brainRisk.color};margin-bottom:2px;">■ RISQUE CÉRÉBRAL — OEM 2025</div>
-        <div style="font-size:9px;color:var(--text-dim);">${fut.brainRisk.txt}</div>
-      </div>`:''}
-      <div style="border:1px solid ${ph.color}50;padding:7px 9px;margin-bottom:4px;background:rgba(0,10,25,.7);">
-        <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
-          <div style="width:20px;height:20px;border:2px solid ${ph.color};transform:rotate(45deg);background:${ph.color}20;flex-shrink:0;"></div>
-          <span style="font-family:var(--font-hud);font-size:12px;color:${ph.color};">P${ph.id} — ${ph.label}</span>
+    if (!fut || !fut.fatigue) {
+      el.innerHTML = `<div style="padding:16px;font-size:12px;color:rgba(255,255,255,0.5);text-align:center;">
+        📋 Complétez M1 pour voir votre état prédit dans ${days} jours
+      </div>`; return;
+    }
+    const c  = v => v >= 80 ? '#ff2244' : v >= 60 ? '#ff6600' : v >= 35 ? '#ffb300' : '#00ffcc';
+    const ph = fut.finalPhase || { id:1, label:'ADAPTATION', color:'#00ffcc', desc:'' };
+
+    // Message humain selon la phase
+    const msgs = {
+      1: '😊 Bonne nouvelle : vous restez en forme sur cette période.',
+      2: '⚠️ Attention : la fatigue s\'accumule. Pensez à récupérer.',
+      3: '🔶 Surmenage probable. Vos performances vont baisser.',
+      4: '🔴 Risque élevé de burn-out. Consultez votre médecin du travail.'
+    };
+    const advice = {
+      1: 'Maintenez ce rythme. Profitez des week-ends.',
+      2: 'Réduisez de 1h par jour. Dormez 8h minimum.',
+      3: 'Prenez du repos compensateur. Parlez-en à votre employeur.',
+      4: 'Activez votre droit au repos. Art. L4121-1 Code du travail.'
+    };
+
+    el.innerHTML = `
+      <!-- MESSAGE PRINCIPAL -->
+      <div style="padding:14px;background:rgba(0,10,25,.9);border-left:3px solid ${ph.color};margin-bottom:10px;">
+        <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;">${msgs[ph.id]||msgs[1]}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.6;">${ph.desc}</div>
+        <div style="margin-top:8px;padding:6px 10px;background:rgba(255,255,255,0.06);font-size:11px;color:rgba(255,255,255,0.8);">
+          💡 ${advice[ph.id]||advice[1]}
         </div>
-        <div style="font-size:9px;color:var(--text-dim);margin-bottom:4px;">${ph.desc}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:2px;">
-          ${(ph.symptoms||[]).slice(0,3).map(s=>`<span style="font-family:var(--font-mono);font-size:7px;color:${ph.color};border:1px solid ${ph.color}40;padding:1px 4px;">${s}</span>`).join('')}
-        </div>
       </div>
-      <div class="futur-grid" style="margin-bottom:4px;">
-        <div class="futur-item"><div class="futur-item-label">FAT J+${h}</div><div class="futur-item-val" style="color:${c(fut.fatigue)}">${fut.fatigue}</div></div>
-        <div class="futur-item"><div class="futur-item-label">STR J+${h}</div><div class="futur-item-val" style="color:${c(fut.stress)}">${fut.stress}</div></div>
-        <div class="futur-item"><div class="futur-item-label">PERF</div><div class="futur-item-val" style="color:${c(100-fut.performance)}">${fut.performance}</div></div>
-        <div class="futur-item"><div class="futur-item-label">CARDIO</div><div class="futur-item-val" style="color:${c(fut.cvRisk)}">${fut.cvRisk}</div></div>
+
+      <!-- 4 CHIFFRES CLÉS EXPLIQUÉS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+        ${[
+          ['Fatigue', fut.fatigue, 'Votre niveau d\'épuisement prévu', true],
+          ['Performance', fut.performance, 'Votre efficacité au travail', false],
+          ['Stress', fut.stress, 'Niveau de cortisol (tension)', true],
+          ['Risque cardio', fut.cvRisk, 'Basé sur OMS 2021', true],
+        ].map(([l,v,desc,bad])=>`
+          <div style="padding:10px 12px;background:rgba(0,10,25,.8);border:1px solid ${c(bad?v:100-v)}30;">
+            <div style="font-size:20px;font-weight:700;color:${c(bad?v:100-v)};margin-bottom:2px;">${v}%</div>
+            <div style="font-size:11px;font-weight:600;color:#fff;">${l}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;">${desc}</div>
+          </div>`).join('')}
       </div>
-      <div style="padding:5px 9px;background:rgba(0,255,204,.04);border:1px solid rgba(0,255,204,.15);margin-bottom:4px;">
-        <div style="font-family:var(--font-mono);font-size:7px;color:var(--sync);margin-bottom:2px;">★ NATURE HUM.BEHAV. 2025 (Fan, Schor — 2 896 personnes, 6 pays)</div>
-        <div style="font-size:9px;color:var(--text-dim);">−8h/sem maintient la productivité et réduit le burn-out de 8.8%. 90% des entreprises ont continué.</div>
-      </div>
-      <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);opacity:.5;">Sources : OMS 2021 · Lancet 2021 · OEM 2025 · Pencavel 2014 · Nature 2025 · INRS/ANACT</div>`;
+
+      <!-- RISQUE OMS SI ÉLEVÉ -->
+      ${fut.omsRisk && fut.omsRisk.level !== 'NOMINAL' ? `
+      <div style="padding:8px 12px;background:rgba(${fut.omsRisk.level==='ÉLEVÉ'?'255,34,68':'255,102,0'},.1);
+        border:1px solid rgba(${fut.omsRisk.level==='ÉLEVÉ'?'255,34,68':'255,102,0'},.3);
+        font-size:11px;color:rgba(255,255,255,0.8);margin-bottom:6px;">
+        📊 ${fut.omsRisk.txt}
+      </div>` : ''}
+
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);padding-top:6px;border-top:1px solid rgba(255,255,255,0.08);">
+        Sources : OMS/OIT 2021 · Lancet 2021 · OEM 2025 · Stanford 2014 · INRS/ANACT
+      </div>`;
   }
+
 
   function initWhatIf() {
     const container = document.getElementById('whatif-container');
