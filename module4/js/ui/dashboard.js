@@ -74,12 +74,12 @@ class Dashboard {
     const el=document.getElementById('scores-grid');
     if(!el) return;
     const defs=[
-      {key:'fatigue',     label:'FATIGUE',      sub:'Charge cumulée',       color:v=>v>=85?'var(--red)':v>=70?'var(--orange)':v>=50?'var(--amber)':'var(--green)'},
-      {key:'stress',      label:'STRESS',       sub:'Pression psychosociale',color:v=>v>=70?'var(--red)':v>=50?'var(--amber)':'var(--green)'},
-      {key:'performance', label:'PERFORMANCE',  sub:'Efficacité estimée',    color:v=>v>=70?'var(--green)':v>=50?'var(--amber)':'var(--red)'},
-      {key:'recovery',    label:'RÉCUPÉRATION', sub:'Taux de régénération',  color:v=>v>=15?'var(--green)':v>=8?'var(--amber)':'var(--red)'},
-      {key:'errorRisk',   label:'RISQUE ERREUR',sub:'Probabilité incident',  color:v=>v>=70?'var(--red)':v>=40?'var(--amber)':'var(--green)'},
-      {key:'overloadRisk',label:'SURCHARGE',    sub:'Intensité de la charge',color:v=>v>=70?'var(--red)':v>=50?'var(--amber)':'var(--green)'},
+      {key:'fatigue',      label:'FATIGUE',       sub:'INRS — cumul non-linéaire',   color:v=>v>=80?'var(--red)':v>=60?'var(--orange)':v>=35?'var(--amber)':'var(--sync)'},
+      {key:'stress',       label:'CORTISOL',      sub:'Thompson 2022 + ANACT',       color:v=>v>=70?'var(--red)':v>=50?'var(--orange)':v>=30?'var(--amber)':'var(--sync)'},
+      {key:'performance',  label:'PERFORMANCE',   sub:'Pencavel/Stanford 2014',      color:v=>v<40?'var(--red)':v<60?'var(--orange)':v<80?'var(--amber)':'var(--sync)'},
+      {key:'cvRisk',       label:'RISQUE CARDIO', sub:'OMS/OIT 2021 RR=1.35 AVC',  color:v=>v>=40?'var(--red)':v>=20?'var(--orange)':v>=8?'var(--amber)':'var(--sync)'},
+      {key:'cogRisk',      label:'RISQUE CÉRÉBRAL',sub:'OEM 2025 — >52h/sem',       color:v=>v>=50?'var(--red)':v>=25?'var(--orange)':v>=10?'var(--amber)':'var(--sync)'},
+      {key:'musculoRisk',  label:'MUSCULO',       sub:'Lancet 2021 HR=1.15',        color:v=>v>=50?'var(--red)':v>=30?'var(--orange)':v>=15?'var(--amber)':'var(--sync)'},
     ];
     el.innerHTML=defs.map(d=>{
       const v=scores[d.key]||0;
