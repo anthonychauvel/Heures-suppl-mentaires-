@@ -42,15 +42,15 @@ document.addEventListener('DOMContentLoaded', function () {
       DTE.twin.update(state.scores);
 
       if (DTE.radar) {
-        const vals = [
-          100 - state.scores.fatigue,
-          100 - state.scores.stress,
-          state.scores.performance,
-          state.scores.recovery,
-          100 - state.scores.errorRisk,
-          100 - state.scores.overloadRisk,
-        ];
-        DTE.radar.render(vals);
+        const s = state.scores;
+        DTE.radar.render([
+          { label:'Fatigue',   value: 100 - (s.fatigue||0),      max:100 },
+          { label:'Stress',    value: 100 - (s.stress||0),       max:100 },
+          { label:'Perf.',     value: s.performance||0,          max:100 },
+          { label:'Récup.',    value: s.recovery||0,             max:100 },
+          { label:'Cardio',    value: 100 - (s.cvRisk||0),       max:100 },
+          { label:'Cognitif',  value: 100 - (s.cogRisk||0),      max:100 },
+        ]);
       }
 
       // Footer
