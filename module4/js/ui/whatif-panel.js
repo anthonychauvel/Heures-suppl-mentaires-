@@ -1,138 +1,204 @@
 /**
- * WhatIf Panel — Simulation avancée What If
+ * WhatIfPanel — Simulation "Et si..." redesignée
+ * Affichage narratif par jalons, pas de canvas
  */
 (function(global){
 'use strict';
 
 class WhatIfPanel {
   constructor(container, simulator, chart){
-    this._container=container;
-    this._simulator=simulator;
-    this._chart=chart;
-    this._plan={days:14,hoursPerDay:0,restDays:[0]};
+    this._container = container;
+    this._simulator = simulator;
+    this._plan = { days:14, hoursPerDay:0, restDays:[0] };
   }
 
   render(){
-    this._container.innerHTML=`
-      <div class="whatif-controls">
+    this._container.innerHTML = `
+      <!-- COLONNE GAUCHE : contrôles -->
+      <div style="display:flex;flex-direction:column;gap:5px;">
         <div class="panel">
-          <div class="panel-label">Paramètres de simulation</div>
-          <div class="whatif-control">
-            <div class="whatif-control-label">HEURES SUPPLÉMENTAIRES / JOUR</div>
-            <div class="whatif-slider-row">
-              <label>HS/jour</label><span id="wi-hs-val">0h</span>
+          <div class="panel-label">PARAMÈTRES</div>
+          <div class="panel-corner-br"></div>
+
+          <div style="margin-bottom:10px;">
+            <div style="font-family:var(--font-mono);font-size:8px;color:var(--animus);letter-spacing:.12em;margin-bottom:6px;">HEURES SUPP. / JOUR</div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-bottom:4px;">
+              <span>0h</span><span id="wi-hs-val" style="color:var(--animus);font-size:14px;font-family:var(--font-hud);">0</span><span>5h</span>
             </div>
-            <input type="range" id="wi-hs" min="0" max="5" step="0.5" value="0" style="width:100%;accent-color:var(--cyan);">
+            <input type="range" id="wi-hs" min="0" max="5" step="0.5" value="0" style="width:100%;accent-color:var(--animus);">
           </div>
-          <div class="whatif-control" style="margin-top:var(--gap);">
-            <div class="whatif-control-label">HORIZON DE SIMULATION</div>
-            <div class="whatif-slider-row">
-              <label>Jours</label><span id="wi-days-val">14 jours</span>
+
+          <div style="margin-bottom:10px;">
+            <div style="font-family:var(--font-mono);font-size:8px;color:var(--animus);letter-spacing:.12em;margin-bottom:6px;">HORIZON</div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-bottom:4px;">
+              <span>7j</span><span id="wi-days-val" style="color:var(--animus);font-size:14px;font-family:var(--font-hud);">14</span><span>90j</span>
             </div>
-            <input type="range" id="wi-days" min="7" max="90" step="1" value="14" style="width:100%;accent-color:var(--cyan);">
+            <input type="range" id="wi-days" min="7" max="90" step="1" value="14" style="width:100%;accent-color:var(--animus);">
           </div>
-          <div class="whatif-control" style="margin-top:var(--gap);">
-            <div class="whatif-control-label">JOURS DE REPOS</div>
-            <div class="whatif-checkbox-row"><input type="checkbox" id="wi-sun" checked> Dimanche</div>
-            <div class="whatif-checkbox-row"><input type="checkbox" id="wi-sat"> Samedi</div>
-          </div>
-          <div class="whatif-control" style="margin-top:var(--gap);">
-            <div class="whatif-control-label">SCÉNARIOS PRÉDÉFINIS</div>
-            <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">
-              <button class="btn btn--ghost wi-preset" data-hs="0" data-days="30" data-sun="1" data-sat="1">🛡️ Récupération totale</button>
-              <button class="btn btn--ghost wi-preset" data-hs="1" data-days="14" data-sun="1" data-sat="0">⚡ Optimisé standard</button>
-              <button class="btn btn--ghost wi-preset" data-hs="2.5" data-days="14" data-sun="1" data-sat="0">📦 Rush projet</button>
-              <button class="btn btn--ghost wi-preset" data-hs="4" data-days="7"  data-sun="0" data-sat="0">🔥 Urgence max</button>
+
+          <div style="margin-bottom:10px;">
+            <div style="font-family:var(--font-mono);font-size:8px;color:var(--animus);letter-spacing:.12em;margin-bottom:6px;">JOURS DE REPOS</div>
+            <div style="display:flex;gap:10px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);cursor:crosshair;">
+                <input type="checkbox" id="wi-sun" checked style="accent-color:var(--animus);"> Dimanche
+              </label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);cursor:crosshair;">
+                <input type="checkbox" id="wi-sat" style="accent-color:var(--animus);"> Samedi
+              </label>
             </div>
+          </div>
+        </div>
+
+        <!-- PRESETS -->
+        <div class="panel">
+          <div class="panel-label">SCÉNARIOS RAPIDES</div>
+          <div class="panel-corner-br"></div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            ${[
+              {hs:0,   days:30, sun:1, sat:1, emoji:'🛡', label:'Récupération',  sub:'0 HS + WE complets'},
+              {hs:0,   days:14, sun:1, sat:0, emoji:'⚖', label:'Équilibre',      sub:'35h/sem OMS optimal'},
+              {hs:1,   days:14, sun:1, sat:0, emoji:'⚡', label:'Optimisé -1h',  sub:'OCDE productif'},
+              {hs:2.5, days:14, sun:1, sat:0, emoji:'📦', label:'Rush projet',   sub:'+2.5h/j, dim off'},
+              {hs:4,   days:7,  sun:0, sat:0, emoji:'🔥', label:'Urgence max',   sub:'+4h/j, 7j/7'},
+            ].map(p => `
+              <button class="wi-preset" data-hs="${p.hs}" data-days="${p.days}" data-sun="${p.sun}" data-sat="${p.sat}"
+                style="display:flex;align-items:center;gap:8px;background:rgba(0,10,25,.8);
+                border:1px solid rgba(0,200,255,0.1);padding:6px 9px;cursor:crosshair;
+                text-align:left;transition:all .15s;width:100%;">
+                <span style="font-size:16px;flex-shrink:0;">${p.emoji}</span>
+                <div>
+                  <div style="font-family:var(--font-hud);font-size:10px;color:var(--text);">${p.label}</div>
+                  <div style="font-size:9px;color:var(--text-muted);">${p.sub}</div>
+                </div>
+              </button>`).join('')}
           </div>
         </div>
       </div>
-      <div class="whatif-result">
-        <div class="panel">
-          <div class="panel-label">Évolution prédite</div>
-          <canvas id="whatif-canvas"></canvas>
-        </div>
-        <div class="panel" style="margin-top:var(--gap);">
-          <div class="panel-label">Résumé de simulation</div>
-          <div class="whatif-summary" id="wi-summary"></div>
+
+      <!-- COLONNE DROITE : résultats -->
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <div class="panel" style="flex:1;">
+          <div class="panel-label">RÉSULTAT DE LA SIMULATION</div>
+          <div class="panel-corner-br"></div>
+          <div id="wi-result" style="height:100%;"></div>
         </div>
       </div>`;
 
-    this._chart._canvas=document.getElementById('whatif-canvas');
-    this._chart._ctx=this._chart._canvas.getContext('2d');
     this._bindEvents();
     this._simulate();
   }
 
   _bindEvents(){
-    const run=()=>this._simulate();
-    const wiHs=document.getElementById('wi-hs');
-    const wiDays=document.getElementById('wi-days');
-    wiHs.addEventListener('input',e=>{document.getElementById('wi-hs-val').textContent=e.target.value+'h';this._plan.hoursPerDay=parseFloat(e.target.value);run();});
-    wiDays.addEventListener('input',e=>{document.getElementById('wi-days-val').textContent=e.target.value+' jours';this._plan.days=parseInt(e.target.value);run();});
-    document.getElementById('wi-sun').addEventListener('change',()=>{this._updateRest();run();});
-    document.getElementById('wi-sat').addEventListener('change',()=>{this._updateRest();run();});
-    document.querySelectorAll('.wi-preset').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        wiHs.value=btn.dataset.hs;
-        document.getElementById('wi-hs-val').textContent=btn.dataset.hs+'h';
-        this._plan.hoursPerDay=parseFloat(btn.dataset.hs);
-        wiDays.value=btn.dataset.days;
-        document.getElementById('wi-days-val').textContent=btn.dataset.days+' jours';
-        this._plan.days=parseInt(btn.dataset.days);
-        document.getElementById('wi-sun').checked=btn.dataset.sun==='1';
-        document.getElementById('wi-sat').checked=btn.dataset.sat==='1';
+    const run = () => this._simulate();
+    document.getElementById('wi-hs')?.addEventListener('input', e => {
+      this._plan.hoursPerDay = parseFloat(e.target.value);
+      document.getElementById('wi-hs-val').textContent = e.target.value;
+      run();
+    });
+    document.getElementById('wi-days')?.addEventListener('input', e => {
+      this._plan.days = parseInt(e.target.value);
+      document.getElementById('wi-days-val').textContent = e.target.value;
+      run();
+    });
+    document.getElementById('wi-sun')?.addEventListener('change', () => { this._updateRest(); run(); });
+    document.getElementById('wi-sat')?.addEventListener('change', () => { this._updateRest(); run(); });
+    document.querySelectorAll('.wi-preset').forEach(btn => {
+      btn.addEventListener('mouseenter', () => btn.style.borderColor='rgba(0,200,255,0.4)');
+      btn.addEventListener('mouseleave', () => btn.style.borderColor='rgba(0,200,255,0.1)');
+      btn.addEventListener('click', () => {
+        const hs = parseFloat(btn.dataset.hs), days = parseInt(btn.dataset.days);
+        document.getElementById('wi-hs').value    = hs;
+        document.getElementById('wi-hs-val').textContent = hs;
+        document.getElementById('wi-days').value  = days;
+        document.getElementById('wi-days-val').textContent = days;
+        document.getElementById('wi-sun').checked = btn.dataset.sun === '1';
+        document.getElementById('wi-sat').checked = btn.dataset.sat === '1';
+        this._plan = { days, hoursPerDay: hs, restDays:[] };
         this._updateRest(); run();
       });
     });
   }
 
   _updateRest(){
-    const rest=[];
-    if(document.getElementById('wi-sun').checked) rest.push(0);
-    if(document.getElementById('wi-sat').checked) rest.push(6);
-    this._plan.restDays=rest;
+    const rest = [];
+    if(document.getElementById('wi-sun')?.checked) rest.push(0);
+    if(document.getElementById('wi-sat')?.checked) rest.push(6);
+    this._plan.restDays = rest;
   }
 
   _simulate(){
-    try{
-      const result=this._simulator.run(this._plan);
-      const canvas=document.getElementById('whatif-canvas');
-      if(canvas){
-        canvas.style.height='240px';
-        const r=canvas.parentElement.getBoundingClientRect();
-        canvas.width=r.width||600; canvas.height=240;
-        this._chart._canvas=canvas;
-        this._chart._ctx=canvas.getContext('2d');
-        this._chart.render(result.timeline);
-      }
-      this._renderSummary(result.summary);
-    }catch(err){ console.warn('[WhatIf]',err); }
-  }
-
-  _renderSummary(s){
-    const el=document.getElementById('wi-summary');
+    const el = document.getElementById('wi-result');
     if(!el) return;
-    const colorFor=v=>v>=85?'var(--red)':v>=70?'var(--orange)':v>=50?'var(--amber)':'var(--green)';
-    el.innerHTML=`
-      <div class="whatif-stat">
-        <span class="whatif-stat-val" style="color:${colorFor(s.avgFatigue)}">${s.avgFatigue}</span>
-        <div class="whatif-stat-label">Fatigue moy.</div>
+    let result = null;
+    try { result = this._simulator.run(this._plan); } catch(e){ console.warn('[WhatIf]',e); }
+    if(!result){ el.innerHTML='<div style="color:var(--text-muted);font-size:10px;font-family:var(--font-mono);padding:var(--gap);">Saisissez vos heures dans M1 pour activer la simulation.</div>'; return; }
+
+    const s = result.summary;
+    const tl = result.timeline;
+    const c  = v => v>=80?'#ff2244':v>=60?'#ff6600':v>=35?'#ffb300':'#00ffcc';
+    const ph = s.finalPhase || {id:1,label:'ADAPTATION',color:'#00ffcc',desc:'',symptoms:[]};
+    const weeklyH = this._plan.hoursPerDay * 5 + 35;
+    const omsLabel = weeklyH>=55?`⚠ ${weeklyH}h/sem — RR=1.35 AVC (OMS 2021)`:
+                     weeklyH>=52?`⚠ ${weeklyH}h/sem — modifications cérébrales (OEM 2025)`:
+                     weeklyH>=50?`⚠ ${weeklyH}h/sem — productivité nulle (Pencavel)`:
+                     weeklyH>=48?`→ ${weeklyH}h/sem — légal mais fatigant`:
+                     `✓ ${weeklyH}h/sem — zone OMS optimale`;
+
+    // Jalons clés
+    const milestones = [7,14,21,30,60,90].filter(d=>d<=this._plan.days);
+    if(!milestones.includes(this._plan.days)) milestones.push(this._plan.days);
+
+    el.innerHTML = `
+      <!-- Stats résumé -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:10px;">
+        ${[
+          ['FAT.MOY', s.avgFatigue,     c(s.avgFatigue)],
+          ['FAT.MAX', s.maxFatigue,     c(s.maxFatigue)],
+          ['PERF',    s.avgPerformance, c(100-s.avgPerformance)],
+          ['ALERTES', s.daysAlert+s.daysCrit, s.daysCrit>0?'#ff2244':s.daysAlert>0?'#ffb300':'#00ffcc'],
+        ].map(([l,v,col]) => `<div style="background:rgba(0,10,25,.9);border:1px solid ${col}30;padding:7px;text-align:center;">
+          <div style="font-family:var(--font-hud);font-size:18px;font-weight:700;color:${col};">${v}</div>
+          <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);">${l}</div>
+        </div>`).join('')}
       </div>
-      <div class="whatif-stat">
-        <span class="whatif-stat-val" style="color:${colorFor(s.maxFatigue)}">${s.maxFatigue}</span>
-        <div class="whatif-stat-label">Pic fatigue</div>
+
+      <!-- Phase finale -->
+      <div style="border:1px solid ${ph.color}60;padding:8px 10px;margin-bottom:8px;background:rgba(0,10,25,.7);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+          <div style="width:18px;height:18px;border:2px solid ${ph.color};transform:rotate(45deg);background:${ph.color}20;flex-shrink:0;"></div>
+          <span style="font-family:var(--font-hud);font-size:12px;color:${ph.color};">P${ph.id} — ${ph.label} à J+${this._plan.days}</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);">${ph.desc}</div>
+        ${ph.symptoms?.length?`<div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;">${ph.symptoms.slice(0,3).map(s=>`<span style="font-family:var(--font-mono);font-size:7px;color:${ph.color};border:1px solid ${ph.color}40;padding:1px 4px;">${s}</span>`).join('')}</div>`:''}
       </div>
-      <div class="whatif-stat">
-        <span class="whatif-stat-val" style="color:${colorFor(100-s.avgPerformance)}">${s.avgPerformance}</span>
-        <div class="whatif-stat-label">Performance</div>
+
+      <!-- Indicateur OMS -->
+      <div style="font-family:var(--font-mono);font-size:9px;padding:5px 9px;margin-bottom:8px;
+        background:rgba(0,10,25,.6);border-left:2px solid ${weeklyH>=55?'#ff2244':weeklyH>=48?'#ffb300':'#00ffcc'};">
+        ${omsLabel}
       </div>
-      <div class="whatif-stat">
-        <span class="whatif-stat-val" style="color:${s.daysCrit>0?'var(--red)':s.daysAlert>0?'var(--amber)':'var(--green)'}">${s.daysAlert+s.daysCrit}</span>
-        <div class="whatif-stat-label">Jours alerte</div>
+
+      <!-- Jalons semaine par semaine -->
+      <div style="font-family:var(--font-mono);font-size:8px;color:var(--text-muted);letter-spacing:.1em;margin-bottom:5px;">ÉVOLUTION PAR SEMAINE</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:3px;">
+        ${Array.from({length:Math.ceil(tl.length/7)},(_,w)=>{
+          const wd=tl.slice(w*7,(w+1)*7);
+          const af=Math.round(wd.reduce((s,d)=>s+d.fatigue,0)/wd.length);
+          const as_=Math.round(wd.reduce((s,d)=>s+d.stress,0)/wd.length);
+          const col2=c(af);
+          const alert=wd.some(d=>d.alert!=='OK');
+          return `<div style="background:rgba(0,10,25,.9);border:1px solid ${alert?col2+'50':'rgba(0,200,255,0.07)'};padding:4px;text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);">S${w+1}</div>
+            <div style="height:22px;display:flex;align-items:flex-end;gap:1px;justify-content:center;margin:2px 0;">
+              <div style="width:6px;background:${col2};height:${Math.max(2,af*.22)}px;"></div>
+              <div style="width:6px;background:var(--amber);height:${Math.max(2,as_*.22)}px;opacity:.7;"></div>
+            </div>
+            <div style="font-family:var(--font-hud);font-size:9px;color:${col2};">${af}</div>
+          </div>`;
+        }).join('')}
       </div>`;
   }
 }
 
-global.WhatIfPanel=WhatIfPanel;
-}(typeof window!=='undefined'?window:global));
+global.WhatIfPanel = WhatIfPanel;
+}(typeof window !== 'undefined' ? window : global));
