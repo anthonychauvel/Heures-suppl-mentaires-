@@ -363,22 +363,40 @@ class DTEEngine {
     const today = new Date();
     const days  = m1.days;
 
-    // Heures moyennes 7 derniers jours
-    const recent7 = [];
-    for (let i = 0; i < 7; i++) {
+    // Fonction date locale (évite le bug toISOString/UTC+1)
+    const localDK = (dt) => {
+      const y = dt.getFullYear();
+      const m = String(dt.getMonth()+1).padStart(2,'0');
+      const d2= String(dt.getDate()).padStart(2,'0');
+      return y+'-'+m+'-'+d2;
+    };
+
+    // Heures moyennes : fenêtre 30 jours (pondérée, récentes × 2)
+    // Évite le bug "heures entrées hors 7j = score nul"
+    let sumExtra = 0, countDays = 0;
+    let sumExtra7 = 0, count7 = 0;
+    for (let i = 0; i < 30; i++) {
       const d = new Date(today); d.setDate(d.getDate() - i);
-      const k = d.toISOString().slice(0, 10);
-      if (days[k]) recent7.push(days[k]);
+      const k = localDK(d);
+      const e = days[k];
+      if (!e || e.absent > 0) continue;
+      const ex = e.extra || 0;
+      sumExtra += ex;
+      countDays++;
+      if (i < 7) { sumExtra7 += ex; count7++; }
     }
-    const avgExtra7  = recent7.length ? recent7.reduce((s, d) => s + d.extra, 0) / recent7.length : 0;
+    // Fallback total si aucune entrée récente
+    const avgExtra7  = count7 > 0 ? sumExtra7 / count7
+                     : countDays > 0 ? sumExtra / countDays
+                     : (m1.totalExtra > 0 ? m1.totalExtra / Math.max(1, Object.keys(days).length) : 0);
     const avgH7      = D.BASE_JOUR + avgExtra7;
     const weeklyH7   = avgH7 * 5;
 
-    // Jours consécutifs
+    // Jours consécutifs (date locale)
     let consec = 0;
     for (let i = 0; i < 30; i++) {
       const d = new Date(today); d.setDate(d.getDate() - i);
-      const k = d.toISOString().slice(0, 10);
+      const k = localDK(d);
       const e = days[k];
       if (!e || e.absent > 0 || e.recup > 0) break;
       consec++;
@@ -390,7 +408,7 @@ class DTEEngine {
       let weekH = 0, wd = 0;
       for (let dd = 0; dd < 5; dd++) {
         const dt = new Date(today); dt.setDate(dt.getDate() - w * 7 - dd);
-        const k  = dt.toISOString().slice(0, 10);
+        const k  = localDK(dt);
         const e  = days[k];
         if (e && !e.absent) { weekH += D.BASE_JOUR + (e.extra || 0); wd++; }
       }
@@ -405,7 +423,7 @@ class DTEEngine {
       let wt = 0;
       for (let dd = 0; dd < 7; dd++) {
         const dt = new Date(today); dt.setDate(dt.getDate() - w * 7 - dd);
-        const k  = dt.toISOString().slice(0, 10);
+        const k  = localDK(dt);
         const e  = days[k];
         if (e) wt += D.BASE_JOUR + (e.extra || 0);
       }
