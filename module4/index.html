@@ -124,11 +124,6 @@
       <button class="nav-btn" data-view="heatmap">CALENDRIER</button>
     </nav>
     <div class="header-actions">
-      <button class="hdr-btn hdr-btn--help"    id="btn-help">    <span class="hdr-btn-icon">?</span><span class="hdr-btn-lbl">AIDE</span></button>
-      <button class="hdr-btn hdr-btn--glossary" id="btn-glossary"> <span class="hdr-btn-icon">&#128218;</span><span class="hdr-btn-lbl">SOURCES</span></button>
-      <button class="hdr-btn hdr-btn--checkin" id="btn-checkin"> <span class="hdr-btn-icon">&#9788;</span><span class="hdr-btn-lbl">CHECK-IN</span></button>
-      <button class="hdr-btn hdr-btn--ai"      id="btn-ai">      <span class="hdr-btn-icon">&#9830;</span><span class="hdr-btn-lbl">CONSEILS</span></button>
-      <button class="hdr-btn hdr-btn--pdf"     id="btn-pdf">     <span class="hdr-btn-icon">&#8659;</span><span class="hdr-btn-lbl">PDF</span></button>
       <button class="hdr-btn hdr-btn--refresh" id="btn-refresh"> <span class="hdr-btn-icon">&#8635;</span><span class="hdr-btn-lbl">SYNC</span></button>
     </div>
   </header>
@@ -138,6 +133,34 @@
     <!-- DASHBOARD -->
     <section id="view-dashboard" class="view active">
       <div class="dashboard-grid">
+
+        <!-- BLOC ACTIONS — au-dessus du score global -->
+        <div class="panel panel--actions" id="panel-actions">
+          <div class="panel-label">ACTIONS</div>
+          <div class="panel-corner-br"></div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <button class="action-block-btn" id="btn-help">
+              <span class="abtn-icon">?</span>
+              <div class="abtn-text"><div class="abtn-label">AIDE</div><div class="abtn-sub">Comment ça marche</div></div>
+            </button>
+            <button class="action-block-btn" id="btn-glossary">
+              <span class="abtn-icon">&#128218;</span>
+              <div class="abtn-text"><div class="abtn-label">SOURCES</div><div class="abtn-sub">18 études scientifiques</div></div>
+            </button>
+            <button class="action-block-btn" id="btn-checkin">
+              <span class="abtn-icon">&#9788;</span>
+              <div class="abtn-text"><div class="abtn-label">CHECK-IN</div><div class="abtn-sub">Mon état du jour</div></div>
+            </button>
+            <button class="action-block-btn" id="btn-ai">
+              <span class="abtn-icon">&#9830;</span>
+              <div class="abtn-text"><div class="abtn-label">CONSEILS</div><div class="abtn-sub">1000 scénarios locaux</div></div>
+            </button>
+            <button class="action-block-btn" id="btn-pdf">
+              <span class="abtn-icon">&#8659;</span>
+              <div class="abtn-text"><div class="abtn-label">EXPORT PDF</div><div class="abtn-sub">Rapport légal</div></div>
+            </button>
+          </div>
+        </div>
 
         <div class="panel panel--hero">
           <div class="panel-label">SCORE GLOBAL</div>
