@@ -207,7 +207,14 @@ class DTEEngine {
   }
 
   _year() {
-    try { const s = localStorage.getItem('ACTIVE_YEAR_SUFFIX'); if (s) return s; } catch(_) {}
+    try {
+      const s1 = localStorage.getItem('ACTIVE_YEAR_SUFFIX');
+      if (s1) return s1;
+      const s2 = localStorage.getItem('CA_HS_TRACKER_V1_ACTIVE_YEAR');
+      if (s2) return s2;
+    } catch(_) {}
+    return String(new Date().getFullYear());
+  } catch(_) {}
     return String(new Date().getFullYear());
   }
 
@@ -231,10 +238,12 @@ class DTEEngine {
       for(const k of keys){ raw = localStorage.getItem(k); if(raw) break; }
       if (!raw) return r;
       const d = JSON.parse(raw);
-      const days = d.days || d.jours || {};
-      for (const [date, e] of Object.entries(days)) {
-        const extra  = parseFloat(e.extra || e.hs || 0);
-        const recup  = parseFloat(e.recup || e.repos || 0);
+      // M1 stocke data['2026-03-14']={extra,recup,absent} à la racine
+      let days = d.days || d.jours || {};
+      if (!Object.keys(days).length && typeof d === 'object') {
+        const fk = Object.keys(d)[0] || '';
+        if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(fk)) days = d;
+      }
         const absent = parseFloat(e.absent || 0);
         r.days[date] = { extra, recup, absent };
         r.totalExtra += extra;
@@ -249,11 +258,9 @@ class DTEEngine {
   _m2(year) {
     const r = { months: {}, contract: D.BASE_HEBDO, totalWorked: 0, totalDaysOff: 0 };
     try {
-      const keys = [
-        'CA_HS_TRACKER_V1_DATA_' + year,
-        'CA_HS_TRACKER_V1_DATA_' + new Date().getFullYear(),
-        'CA_HS_TRACKER_V1_DATA_' + (new Date().getFullYear() - 1),
-      ];
+      // M2 stocke CA_HS_TRACKER_V1_DATA_{year}
+      // Structure : { "2026-03": { days:{"14":2.5,"15":1}, paid:0, carry:0, closing:28 }, ... }
+      const keys = [ 'CA_HS_TRACKER_V1_DATA_' + year ];
       try {
         for(let i=0; i<localStorage.length; i++){
           const k=localStorage.key(i);
@@ -261,17 +268,30 @@ class DTEEngine {
         }
       } catch(_) {}
       let raw = null;
-      for(const k of keys){ raw = localStorage.getItem(k); if(raw) break; }
-      if (!raw) return r;
+      for(const k of keys){ raw = localStorage.getItem(k); if(raw && raw !== '{}') break; }
+      if (!raw || raw === '{}') return r;
       const d = JSON.parse(raw);
-      r.contract = parseFloat(d.contractHours || d.heuresContrat || D.BASE_HEBDO);
-      const months = d.months || d.mois || {};
-      for (const [m, e] of Object.entries(months)) {
-        const worked = parseFloat(e.worked || e.travaillees || 0);
-        const off    = parseFloat(e.daysOff || e.conges || 0);
-        r.months[m]  = { worked, daysOff: off };
-        r.totalWorked  += worked;
-        r.totalDaysOff += off;
+      // M2 n'a pas contractHours dans le stockage, utiliser SETTINGS
+      try {
+        const sets = JSON.parse(localStorage.getItem('CA_HS_TRACKER_V1_SETTINGS') || '{}');
+        if (sets.contractHours) r.contract = parseFloat(sets.contractHours);
+      } catch(_) {}
+      // d = { "2026-03": { days:{"14":2.5}, paid:0, carry:0, closing:28 }, ... }
+      for (const [mk, monthData] of Object.entries(d)) {
+        if (!/^\d{4}-\d{2}$/.test(mk)) continue; // ignorer les clés non-mois
+        const days = monthData.days || {};
+        // Calculer total heures travaillées dans ce mois
+        const totalHours = Object.values(days).reduce((s, h) => s + (parseFloat(h) || 0), 0);
+        const worked = totalHours + (r.contract / 4.33); // heures base + HS
+        const daysCount = Object.keys(days).length;
+        r.months[mk] = {
+          worked:  parseFloat(totalHours.toFixed(2)),
+          daysOff: 0,
+          paid:    monthData.paid || 0,
+          carry:   monthData.carry || 0,
+          rawDays: days,
+        };
+        r.totalWorked += totalHours;
       }
     } catch(e) { console.warn('[DTE-E] m2:', e); }
     return r;
@@ -280,17 +300,56 @@ class DTEEngine {
   _rpg() {
     const r = { xp: 0, level: 1, badges: [], burnout: 0, violations: [], motivation: 0.5, stress: 0 };
     try {
-      r.xp    = parseInt(localStorage.getItem('rpg_xp') || 0);
-      r.level = parseInt(localStorage.getItem('rpg_level') || 1);
-      const b  = localStorage.getItem('rpg_badges');   if (b)  r.badges    = JSON.parse(b);
-      const bu = localStorage.getItem('rpg_burnout');  if (bu) { const bv = JSON.parse(bu); r.burnout = parseFloat(bv.score || bv.value || bv || 0); }
-      const v  = localStorage.getItem('rpg_violations'); if (v) r.violations = JSON.parse(v);
+      // M3 (fox) stocke tout dans FOX_GAME_STATE
+      // { xp, level, burnout, badges:["id1",...], player:{xp,level}, hours:{total} }
+      const gs = localStorage.getItem('FOX_GAME_STATE');
+      if (gs) {
+        const g = JSON.parse(gs);
+        r.xp      = parseInt(g.xp || (g.player && g.player.xp) || 0);
+        r.level   = parseInt(g.level || (g.player && g.player.level) || 1);
+        r.burnout = parseFloat(g.burnout || 0);
+        if (Array.isArray(g.badges)) r.badges = g.badges;
+      }
+      // Fallback : anciennes clés séparées (rpg_xp etc.)
+      if (r.xp === 0) {
+        const x = localStorage.getItem('rpg_xp');
+        if (x) r.xp = parseInt(x);
+      }
+      if (r.level === 1) {
+        const l = localStorage.getItem('rpg_level');
+        if (l) r.level = parseInt(l);
+      }
+      if (r.badges.length === 0) {
+        const b = localStorage.getItem('rpg_badges');
+        if (b) r.badges = JSON.parse(b);
+      }
+      if (r.burnout === 0) {
+        const bu = localStorage.getItem('rpg_burnout');
+        if (bu) {
+          try { const bv = JSON.parse(bu); r.burnout = parseFloat(bv.score || bv.value || bv || 0); }
+          catch(_) { r.burnout = parseFloat(bu) || 0; }
+        }
+      }
+
+      // M3 violations : FOX_VIOLATIONS_HISTORY = [{date, rule, hours, ...}]
+      const vkey = localStorage.getItem('FOX_VIOLATIONS_HISTORY')
+                || localStorage.getItem('rpg_violations');
+      if (vkey) {
+        try { r.violations = JSON.parse(vkey); } catch(_) {}
+      }
+
+      // Calcul motivation et stress
       const lf = Math.min(r.level / 50, 1);
       const bf = Math.min(r.badges.length / 20, 1);
       r.motivation = lf * 0.6 + bf * 0.4;
-      const now    = Date.now();
-      const recent = r.violations.filter(vv => (now - new Date(vv.date || vv.timestamp || 0).getTime()) < 30 * 864e5);
+      const now = Date.now();
+      const recent = r.violations.filter(vv => {
+        const ts = new Date(vv.date || vv.timestamp || vv.ts || 0).getTime();
+        return (now - ts) < 30 * 864e5;
+      });
       r.stress = Math.min(recent.length / 10, 1);
+      // Burn-out de M3 directement en motivation inverse
+      if (r.burnout > 50) r.motivation = Math.max(0, r.motivation - (r.burnout - 50) / 100);
     } catch(e) { console.warn('[DTE-E] rpg:', e); }
     return r;
   }
