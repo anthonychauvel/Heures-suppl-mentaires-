@@ -6,16 +6,17 @@
 
 class TimelineChart {
   constructor(canvas){
-    this._canvas=canvas;
-    this._ctx=canvas.getContext('2d');
-    this._tooltip=null;
-    this._data=null;
-    this._resize();
-    window.addEventListener('resize',()=>this._resize());
+    // canvas peut être null ou un <div> (affichage narratif désormais)
+    this._canvas = (canvas && canvas.tagName === 'CANVAS') ? canvas : null;
+    this._ctx    = this._canvas ? this._canvas.getContext('2d') : null;
+    this._tooltip= null;
+    this._data   = null;
+    if(this._canvas) { this._resize(); window.addEventListener('resize',()=>this._resize()); }
   }
 
   _resize(){
     const cv=this._canvas;
+    if(!cv) return;
     const rect=cv.parentElement.getBoundingClientRect();
     cv.width=rect.width||600;
     cv.height=parseInt(cv.style.height)||220;
@@ -24,6 +25,7 @@ class TimelineChart {
 
   render(timeline){
     this._data=timeline;
+    if(!this._canvas || !this._ctx) return;
     const cv=this._canvas, ctx=this._ctx;
     const W=cv.width, H=cv.height;
     const pad={t:20,r:20,b:40,l:45};
