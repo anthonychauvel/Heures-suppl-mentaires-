@@ -50,7 +50,12 @@
 
 /* ── RESET ─────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; overflow: hidden; cursor: crosshair; }
+html, body {
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  cursor: crosshair;
+}
 
 body {
   background: var(--void);
@@ -245,6 +250,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   position: relative;
 }
@@ -596,4 +602,148 @@ body {
   .view { position: relative !important; opacity: 1 !important; pointer-events: auto !important; display: none; }
   .view.active { display: block; }
   .view.hidden { display: none !important; }
+}
+
+/* ── iOS SAFE AREA (barre URL + encoche) ────────────────────── */
+@supports (height: 100dvh) {
+  html, body { height: 100dvh; }
+  #app { height: 100dvh; }
+}
+
+.app-header {
+  padding-top: env(safe-area-inset-top, 0);
+}
+.app-footer {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* ── BOUTON RETOUR ──────────────────────────────────────────────── */
+.back-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,200,255,0.08);
+  border: 1px solid rgba(0,200,255,0.25);
+  color: var(--animus);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  padding: 5px 12px;
+  cursor: crosshair;
+  transition: all .2s;
+  white-space: nowrap;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+.back-btn:hover {
+  background: rgba(0,200,255,0.18);
+  box-shadow: var(--glow-a);
+}
+
+/* ── AIDE MODAL ─────────────────────────────────────────────────── */
+.help-intro {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  padding: var(--gap);
+  background: var(--animus-dim);
+  border-left: 2px solid var(--animus);
+  margin-bottom: var(--gap-l);
+}
+
+.help-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  margin-bottom: var(--gap-l);
+}
+
+.help-card {
+  background: rgba(0,10,25,0.8);
+  border: 1px solid rgba(0,200,255,0.12);
+  padding: var(--gap);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
+}
+.help-card-icon {
+  font-size: 18px;
+  color: var(--animus);
+  margin-bottom: 6px;
+}
+.help-card-title {
+  font-family: var(--font-hud);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--animus);
+  margin-bottom: 6px;
+}
+.help-card-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.55;
+}
+
+.help-legal-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(0,200,255,0.1);
+  padding-top: var(--gap);
+}
+
+/* ── WELCOME OVERLAY (1ère visite) ─────────────────────────────── */
+#welcome-overlay {
+  position: fixed; inset: 0; z-index: 8000;
+  background: rgba(0,6,15,0.97);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: var(--gap-l);
+  animation: fade-in .4s ease;
+}
+#welcome-overlay.hide {
+  animation: boot-hide .5s ease forwards;
+}
+.welcome-box {
+  max-width: 460px; width: 100%;
+  text-align: center;
+}
+.welcome-logo {
+  font-family: var(--font-hud);
+  font-size: 28px; font-weight: 900;
+  letter-spacing: .25em;
+  color: var(--animus);
+  text-shadow: var(--glow-a);
+  margin-bottom: 6px;
+}
+.welcome-sub {
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .15em;
+  color: var(--text-muted);
+  margin-bottom: var(--gap-l);
+}
+.welcome-desc {
+  font-size: 14px; line-height: 1.65;
+  color: var(--text-dim);
+  margin-bottom: var(--gap-l);
+}
+.welcome-steps {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: var(--gap-l);
+  text-align: left;
+}
+.welcome-step {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(0,10,25,0.8);
+  border: 1px solid rgba(0,200,255,0.12);
+  border-left: 2px solid var(--animus);
+  padding: 10px 14px;
+  font-size: 12px; color: var(--text-dim);
+}
+.welcome-step-num {
+  font-family: var(--font-hud);
+  font-size: 18px; font-weight: 900;
+  color: var(--animus);
+  flex-shrink: 0;
+  width: 24px;
+}
+
+@media (max-width: 480px) {
+  .help-sections { grid-template-columns: 1fr; }
 }

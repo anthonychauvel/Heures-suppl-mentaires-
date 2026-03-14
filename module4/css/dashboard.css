@@ -11,7 +11,7 @@
     "hero twin advice radar";
 }
 .panel--hero   { grid-area: hero;   display: flex; flex-direction: column; }
-.panel--twin   { grid-area: twin;   padding: 8px; }
+.panel--twin   { grid-area: twin;   padding: 8px; overflow: hidden; }
 .panel--scores { grid-area: scores; }
 .panel--radar  { grid-area: radar;  display: flex; flex-direction: column; align-items: center; }
 .panel--risks  { grid-area: risks;  overflow-y: auto; }
