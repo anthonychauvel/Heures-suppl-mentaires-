@@ -60,10 +60,21 @@ class AIAdvisor {
         <div class="ai-suggestions" id="ai-suggestions">
           ${top5.slice(0,4).map(s=>`<span class="ai-suggestion" data-id="${s.id}">${s.titre.substring(0,42)}...</span>`).join('')}
         </div>
+        <!-- Mots-clés cliquables -->
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;padding:6px 0;
+          border-top:1px solid rgba(255,255,255,0.08);">
+          <span style="font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,0.4);
+            align-self:center;margin-right:3px;">RECHERCHER :</span>
+          ${(()=>{
+            const kws=['repos','contingent','stress','fatigue','HS nuit','arrêt','droit de retrait','burn-out','urgence','RCO','48h','pause','semaine'];
+            return kws.map(kw=>'<span class="ai-kw-tag" data-kw="'+kw+'" style="font-family:var(--font-mono);font-size:9px;cursor:crosshair;border:1px solid rgba(0,200,255,0.2);padding:2px 7px;color:rgba(200,232,255,0.8);background:rgba(0,200,255,0.05);transition:all .15s;">'+kw+'</span>').join('');
+          })()}
+        </div>
         <!-- Barre de recherche -->
         <div class="ai-input-wrap">
           <input type="text" class="ai-input" id="ai-input"
-            placeholder="Ex: heures supplémentaires, contingent, récupération..." maxlength="200">
+            placeholder="Ex: repos compensateur, droit de retrait, HS nuit, burn-out..."
+            maxlength="200" autocomplete="off">
           <button class="ai-send" id="ai-send">&#x27A4;</button>
         </div>
       </div>`;
@@ -73,6 +84,15 @@ class AIAdvisor {
 
   _bindEvents(state){
     const input = document.getElementById('ai-input');
+    // Tags mots-clés cliquables
+    document.querySelectorAll('.ai-kw-tag').forEach(tag => {
+      tag.addEventListener('mouseover', () => tag.style.background='rgba(0,200,255,0.14)');
+      tag.addEventListener('mouseout',  () => tag.style.background='rgba(0,200,255,0.05)');
+      tag.addEventListener('click', () => {
+        if(input) input.value = tag.dataset.kw;
+        this._query(tag.dataset.kw, state);
+      });
+    });
     const send  = document.getElementById('ai-send');
     if(send)  send.addEventListener('click', ()=>this._query(input ? input.value : '', state));
     if(input) input.addEventListener('keydown', e=>{ if(e.key==='Enter') this._query(input.value, state); });

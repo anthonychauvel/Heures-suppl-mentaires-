@@ -20303,20 +20303,80 @@ class ScenarioAdvisor {
    */
   search(query, state, n = 5) {
     if (!query || query.length < 2) return this.match(state, n);
-    const q = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const hits = this._db.filter(s => {
-      const text = (s.titre + ' ' + s.message + ' ' + s.conseils.join(' ') + ' ' + s.refs.join(' '))
-        .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      return text.includes(q);
-    });
-    if (!hits.length) return this.match(state, n);
-    // Re-score par pertinence état
-    if (state && state.scores) {
-      const fatBucket = this._fatBucket(state.scores.fatigue);
-      hits.forEach(s => { s._score = (3 - Math.abs(s.fat - fatBucket)) * 2 + Math.random() * 0.3; });
-      hits.sort((a, b) => b._score - a._score);
+
+    const norm = t => (t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    // Synonymes & expansions pour meilleure couverture
+    const SYNONYMS = {
+      'repos':       ['recuperation','recup','conges','arret'],
+      'fatigue':     ['epuisement','burnout','burn out','surnmenage'],
+      'stress':      ['anxiete','pression','cortisol','rps'],
+      'hs':          ['heures sup','heures supplementaires','overtime'],
+      'contingent':  ['220h','quota','compteur'],
+      'repos hebdo': ['35h','dimanche','week-end'],
+      'nuit':        ['travail de nuit','horaire decale'],
+      'arret':       ['maladie','it','arret maladie'],
+      'legal':       ['loi','article','code travail','droit'],
+      'performance': ['productivite','efficacite','rendement'],
+    };
+
+    // Découper la requête en mots, appliquer synonymes
+    const qNorm = norm(query);
+    const baseWords = qNorm.split(/\s+/).filter(w => w.length >= 2);
+    const allWords = [...baseWords];
+    for (const [key, syns] of Object.entries(SYNONYMS)) {
+      if (norm(key).split(/\s+/).some(k => baseWords.some(w => w.includes(k) || k.includes(w)))) {
+        syns.forEach(s => allWords.push(...norm(s).split(/\s+/)));
+      }
     }
-    return hits.slice(0, n);
+
+    // Scorer chaque scénario
+    const scored = this._db.map(sc => {
+      const text = norm([sc.titre, sc.message, sc.conseils.join(' '), sc.refs.join(' ')].join(' '));
+      let score = 0;
+
+      for (const w of allWords) {
+        if (!w) continue;
+        // Boost titre × 3
+        const titleNorm = norm(sc.titre);
+        if (titleNorm.includes(w)) score += 3;
+        // Occurrence dans message × 1 (compter les occurrences)
+        let pos = 0, occ = 0;
+        while ((pos = text.indexOf(w, pos)) !== -1) { occ++; pos += w.length; }
+        score += Math.min(occ, 5);
+      }
+
+      // Bonus urgence : mots d'alerte → remonter urgent
+      const urgWords = ['urgent','critique','danger','risque','interdit','violation','depasse'];
+      if (urgWords.some(u => qNorm.includes(u))) score += sc.urgence * 2;
+
+      // Bonus cohérence avec l'état actuel
+      if (state && state.scores) {
+        const fatBucket = this._fatBucket(state.scores.fatigue || 0);
+        score += (3 - Math.abs(sc.fat - fatBucket)) * 1.5;
+      }
+
+      return { ...sc, _score: score };
+    }).filter(sc => sc._score > 0);
+
+    if (!scored.length) {
+      // Fallback : essayer chaque mot séparément
+      for (const w of baseWords) {
+        const partial = this._db.filter(sc =>
+          norm(sc.titre + sc.message).includes(w)
+        );
+        if (partial.length) return partial.slice(0, n);
+      }
+      return this.match(state, n);
+    }
+
+    scored.sort((a, b) => b._score - a._score);
+    // Dédupliquer
+    const seen = new Set();
+    return scored.filter(sc => {
+      if (seen.has(sc.id)) return false;
+      seen.add(sc.id); return true;
+    }).slice(0, n);
   }
 
   /**
