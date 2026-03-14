@@ -1,197 +1,185 @@
 /**
- * Twin Body — Corps humain SVG interactif
+ * TwinBody — Corps humain wireframe Animus
+ * SVG externe chargé + zones colorées dynamiquement selon les scores
  */
 (function(global){
 'use strict';
 
-const ZONES=[
-  {id:'brain',  label:'Cerveau',  score:'stress',      desc:'Charge cognitive et stress mental'},
-  {id:'eyes',   label:'Yeux',     score:'errorRisk',   desc:'Fatigue visuelle et risque erreur'},
-  {id:'heart',  label:'Coeur',    score:'overloadRisk',desc:'Surcharge cardio-vasculaire'},
-  {id:'lungs',  label:'Poumons',  score:'recovery',    desc:'Capacité de récupération', invert:true},
-  {id:'spine',  label:'Colonne',  score:'fatigue',     desc:'Fatigue physique générale'},
-  {id:'arms',   label:'Bras',     score:'performance', desc:'Performance motrice', invert:true},
-  {id:'legs',   label:'Jambes',   score:'fatigue',     desc:'Récupération physique', invert:true},
-];
+const ZONE_MAP = {
+  brain:  { score:'stress',      label:'Cerveau',   desc:'Charge cognitive & stress' },
+  heart:  { score:'overloadRisk',label:'Cœur',      desc:'Risque de surcharge cardiaque' },
+  lungs:  { score:'recovery',    label:'Poumons',   desc:'Capacité de récupération', invert:true },
+  spine:  { score:'fatigue',     label:'Colonne',   desc:'Fatigue structurelle' },
+  arms:   { score:'performance', label:'Bras',      desc:'Performance motrice', invert:true },
+  legs:   { score:'fatigue',     label:'Jambes',    desc:'Endurance & mobilité', invert:true },
+};
 
-function scoreToClass(val, invert=false){
-  const v=invert?(100-val):val;
-  if(v>=85) return 'crit';
-  if(v>=70) return 'risk';
-  if(v>=50) return 'warn';
-  return 'ok';
+const COLORS = {
+  ok:   '#00ffcc',
+  warn: '#ffb300',
+  risk: '#ff6600',
+  crit: '#ff2244',
+};
+
+function scoreToColor(v, invert){
+  const val = invert ? 100 - v : v;
+  if(val < 40) return COLORS.ok;
+  if(val < 60) return COLORS.warn;
+  if(val < 80) return COLORS.risk;
+  return COLORS.crit;
 }
 
-function scoreToColor(val, invert=false){
-  const v=invert?(100-val):val;
-  if(v>=85) return '#f5355d';
-  if(v>=70) return '#ff7c00';
-  if(v>=50) return '#f5a623';
-  return '#00e87a';
+function scoreToLevel(v, invert){
+  const val = invert ? 100 - v : v;
+  if(val < 40) return 'ok';
+  if(val < 60) return 'warn';
+  if(val < 80) return 'risk';
+  return 'crit';
 }
 
 class TwinBody {
   constructor(container, tooltipEl){
-    this._container=container;
-    this._tooltip=tooltipEl;
-    this._scores=null;
+    this._container = container;
+    this._tooltip   = tooltipEl;
+    this._scores    = {};
+    this._svgLoaded = false;
+    this._load();
   }
 
-  render(scores){
-    this._scores=scores;
-    this._container.innerHTML=`
-      <div class="twin-body-wrap">
-        <div class="twin-svg-container">
-          ${this._buildSVG(scores)}
-        </div>
-        <div class="twin-legend">${this._buildLegend(scores)}</div>
-      </div>`;
-    this._bindEvents();
+  _load(){
+    fetch('assets/wireframe-body.svg')
+      .then(r => r.text())
+      .then(svgText => {
+        this._container.innerHTML = `
+          <div style="position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+            <div id="twin-svg-inner" style="height:100%;max-height:320px;position:relative;">${svgText}</div>
+          </div>`;
+        this._svgLoaded = true;
+        this._bindEvents();
+        if(Object.keys(this._scores).length) this._apply();
+      })
+      .catch(() => {
+        // Fallback inline minimal
+        this._container.innerHTML = this._fallback();
+        this._svgLoaded = true;
+        this._bindEvents();
+      });
   }
 
   update(scores){
-    this._scores=scores;
-    ZONES.forEach(z=>{
-      const el=this._container.querySelector('#bz-'+z.id);
-      if(!el) return;
-      const val=scores[z.score]||0;
-      const cls=scoreToClass(val,z.invert);
-      el.setAttribute('class','body-zone zone-'+cls);
-      const circle=this._container.querySelector('#bz-'+z.id+'-core');
-      if(circle) circle.setAttribute('class','body-zone zone-'+cls+'-c');
-    });
-    const legendItems=this._container.querySelectorAll('.twin-legend-item');
-    legendItems.forEach((el,i)=>{
-      if(!ZONES[i]) return;
-      const z=ZONES[i];
-      const val=scores[z.score]||0;
-      el.querySelector('.twin-legend-dot').style.background=scoreToColor(val,z.invert);
-      el.querySelector('.twin-legend-val').textContent=z.invert?(100-val):val;
-    });
+    this._scores = scores || {};
+    if(this._svgLoaded) this._apply();
   }
 
-  _buildSVG(scores){
-    const c=s=>scoreToClass(scores[s]||0);
-    const ci=s=>scoreToClass(scores[s]||0, true);
-    return `
-    <svg viewBox="0 0 160 380" xmlns="http://www.w3.org/2000/svg" style="height:320px;width:auto;">
-      <defs>
-        <radialGradient id="bg-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="rgba(0,215,240,0.08)"/>
-          <stop offset="100%" stop-color="rgba(0,215,240,0)"/>
-        </radialGradient>
-        <filter id="glow-f">
-          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <!-- Aura -->
-      <ellipse cx="80" cy="190" rx="70" ry="180" fill="url(#bg-glow)"/>
-      <!-- Head zone (brain) -->
-      <ellipse id="bz-brain" class="body-zone zone-${c('stress')}" cx="80" cy="38" rx="26" ry="28"
-        filter="url(#glow-f)" data-zone="brain"/>
-      <!-- Eyes -->
-      <g id="bz-eyes" class="body-zone zone-${c('errorRisk')}" data-zone="eyes">
-        <ellipse cx="69" cy="34" rx="7" ry="5"/>
-        <ellipse cx="91" cy="34" rx="7" ry="5"/>
-      </g>
-      <!-- Outline head -->
-      <ellipse cx="80" cy="38" rx="26" ry="28" fill="none" stroke="rgba(0,215,240,0.3)" stroke-width=".8"/>
-      <!-- Neck -->
-      <rect x="72" y="64" width="16" height="14" rx="5" fill="rgba(29,60,95,0.8)"
-        stroke="rgba(0,215,240,0.2)" stroke-width=".6"/>
-      <!-- Torso (heart + lungs + spine) -->
-      <rect x="42" y="78" width="76" height="88" rx="14" class="body-zone zone-base"
-        stroke="rgba(0,215,240,0.2)" stroke-width=".8"/>
-      <!-- Heart zone (left chest) -->
-      <ellipse id="bz-heart" class="body-zone zone-${c('overloadRisk')}" cx="66" cy="108" rx="18" ry="16"
-        filter="url(#glow-f)" data-zone="heart"/>
-      <!-- Lungs zone (right chest — recovery) -->
-      <ellipse id="bz-lungs" class="body-zone zone-${ci('recovery')}" cx="94" cy="108" rx="18" ry="16"
-        filter="url(#glow-f)" data-zone="lungs"/>
-      <!-- Spine zone -->
-      <rect id="bz-spine" class="body-zone zone-${c('fatigue')}" x="72" y="82" width="16" height="80" rx="6"
-        filter="url(#glow-f)" data-zone="spine"/>
-      <!-- Torso outline -->
-      <rect x="42" y="78" width="76" height="88" rx="14" fill="none"
-        stroke="rgba(0,215,240,0.25)" stroke-width=".8"/>
-      <!-- Arms -->
-      <rect id="bz-arms" class="body-zone zone-${ci('performance')}" x="12" y="82" width="26" height="76" rx="12"
-        data-zone="arms"/>
-      <rect class="body-zone zone-${ci('performance')}" x="122" y="82" width="26" height="76" rx="12"/>
-      <!-- Hips -->
-      <rect x="44" y="166" width="72" height="26" rx="10" fill="rgba(29,60,95,0.85)"
-        stroke="rgba(0,215,240,0.2)" stroke-width=".8"/>
-      <!-- Legs -->
-      <rect id="bz-legs" class="body-zone zone-${ci('fatigue')}" x="46" y="192" width="28" height="116" rx="13"
-        data-zone="legs"/>
-      <rect class="body-zone zone-${ci('fatigue')}" x="86" y="192" width="28" height="116" rx="13"/>
-      <!-- Feet -->
-      <ellipse cx="60" cy="314" rx="18" ry="9" fill="rgba(29,60,95,0.8)"
-        stroke="rgba(0,215,240,0.2)" stroke-width=".8"/>
-      <ellipse cx="100" cy="314" rx="18" ry="9" fill="rgba(29,60,95,0.8)"
-        stroke="rgba(0,215,240,0.2)" stroke-width=".8"/>
-      <!-- Center line decoration -->
-      <line x1="80" y1="78" x2="80" y2="192" stroke="rgba(0,215,240,0.15)" stroke-width=".5" stroke-dasharray="3,4"/>
-    </svg>`;
-  }
+  _apply(){
+    const s = this._scores;
+    if(!s || !Object.keys(s).length) return;
 
-  _buildLegend(scores){
-    return ZONES.map((z,i)=>{
-      const val=scores[z.score]||0;
-      const disp=z.invert?(100-val):val;
-      const color=scoreToColor(val,z.invert);
-      return `<span class="twin-legend-item" data-zone="${z.id}">
-        <span class="twin-legend-dot" style="background:${color};width:7px;height:7px;border-radius:50%;display:inline-block;"></span>
-        <span class="twin-legend-val" style="font-family:var(--font-mono);font-size:9px;color:${color};">${disp}</span>
-        <span style="font-size:9px;color:var(--text-muted);">${z.label}</span>
-      </span>`;
-    }).join('');
+    Object.entries(ZONE_MAP).forEach(([zone, cfg]) => {
+      const raw = s[cfg.score] || 0;
+      const col = scoreToColor(raw, cfg.invert);
+      const lvl = scoreToLevel(raw, cfg.invert);
+
+      // Color gradient stops
+      const grad = document.getElementById('zone-' + zone);
+      if(grad){
+        grad.querySelector('stop').setAttribute('stop-color', col);
+      }
+
+      // Node dots
+      const nodes = document.querySelectorAll(`.zone-node[data-zone="${zone}"]`);
+      nodes.forEach(n => {
+        n.setAttribute('fill', col);
+        n.style.filter = lvl === 'crit' ? `drop-shadow(0 0 6px ${col})` : `drop-shadow(0 0 3px ${col})`;
+      });
+
+      // Fill overlays
+      const fills = document.querySelectorAll(`[data-zone="${zone}"]`);
+      fills.forEach(el => {
+        el.style.setProperty(`--zone-${zone}-c`, col);
+        if(lvl === 'crit'){
+          el.style.animation = 'zone-crit-pulse 1.2s ease-in-out infinite';
+        } else {
+          el.style.animation = '';
+        }
+      });
+
+      // Stroke on outline paths via CSS var
+      const svgEl = this._container.querySelector('svg');
+      if(svgEl) svgEl.style.setProperty(`--zone-${zone}-col`, col);
+    });
   }
 
   _bindEvents(){
-    const zones=this._container.querySelectorAll('[data-zone]');
-    zones.forEach(el=>{
-      el.addEventListener('mouseenter', e=>this._showTooltip(e));
-      el.addEventListener('mouseleave', ()=>this._hideTooltip());
+    const container = this._container;
+    const tooltip   = this._tooltip;
+    if(!container || !tooltip) return;
+
+    container.addEventListener('mousemove', e => {
+      const target = e.target.closest('.zone-node, .body-zone');
+      if(!target) { tooltip.classList.add('hidden'); return; }
+      const zone = target.dataset.zone;
+      if(!zone) return;
+      const cfg = ZONE_MAP[zone];
+      if(!cfg) return;
+      const raw = this._scores[cfg.score] || 0;
+      const col = scoreToColor(raw, cfg.invert);
+      const lvl = scoreToLevel(raw, cfg.invert);
+      const labels = { ok:'NOMINAL', warn:'VIGILANCE', risk:'ALERTE', crit:'CRITIQUE' };
+
+      tooltip.innerHTML = `
+        <div class="twin-tooltip-title" style="color:${col}">${cfg.label.toUpperCase()}</div>
+        <div class="twin-tooltip-val" style="color:${col}">${raw}<span style="font-size:11px;color:var(--text-muted)">/100</span></div>
+        <div class="twin-tooltip-desc">${cfg.desc}</div>
+        <div style="font-family:var(--font-mono);font-size:8px;color:${col};margin-top:4px;letter-spacing:.1em;">${labels[lvl]||lvl}</div>`;
+      tooltip.classList.remove('hidden');
+
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      tooltip.style.left = (x < rect.width/2 ? x + 12 : x - tooltip.offsetWidth - 12) + 'px';
+      tooltip.style.top  = Math.max(0, y - 40) + 'px';
+      tooltip.style.transform = 'none';
     });
-    const legendItems=this._container.querySelectorAll('.twin-legend-item');
-    legendItems.forEach(el=>{
-      el.addEventListener('mouseenter', e=>{
-        const z=ZONES.find(z=>z.id===el.dataset.zone);
-        if(z) this._showTooltipForZone(z, e);
-      });
-      el.addEventListener('mouseleave', ()=>this._hideTooltip());
+
+    container.addEventListener('mouseleave', () => {
+      if(tooltip) tooltip.classList.add('hidden');
     });
+
+    // Touch support
+    container.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      const target = document.elementFromPoint(t.clientX, t.clientY);
+      const zoneEl = target && target.closest('.zone-node, .body-zone');
+      if(!zoneEl){ tooltip.classList.add('hidden'); return; }
+      const zone = zoneEl.dataset.zone;
+      if(!zone || !ZONE_MAP[zone]) return;
+      const cfg = ZONE_MAP[zone];
+      const raw = this._scores[cfg.score] || 0;
+      const col = scoreToColor(raw, cfg.invert);
+      tooltip.innerHTML = `
+        <div class="twin-tooltip-title" style="color:${col}">${cfg.label.toUpperCase()}</div>
+        <div class="twin-tooltip-val" style="color:${col}">${raw}/100</div>
+        <div class="twin-tooltip-desc">${cfg.desc}</div>`;
+      tooltip.classList.remove('hidden');
+      setTimeout(() => tooltip.classList.add('hidden'), 2500);
+    }, {passive:true});
   }
 
-  _showTooltip(e){
-    const zoneId=e.currentTarget.dataset.zone;
-    if(!zoneId) return;
-    const z=ZONES.find(z=>z.id===zoneId);
-    if(!z) return;
-    this._showTooltipForZone(z, e);
-  }
-
-  _showTooltipForZone(z, e){
-    if(!this._scores) return;
-    const val=this._scores[z.score]||0;
-    const disp=z.invert?(100-val):val;
-    const color=scoreToColor(val,z.invert);
-    this._tooltip.innerHTML=`
-      <div class="twin-tooltip-title">${z.label}</div>
-      <div class="twin-tooltip-val" style="color:${color};">${disp}<span style="font-size:11px;color:var(--text-muted)">/100</span></div>
-      <div class="twin-tooltip-desc">${z.desc}</div>`;
-    this._tooltip.classList.remove('hidden');
-    this._tooltip.style.left='50%';
-    this._tooltip.style.top='0';
-    this._tooltip.style.transform='translate(-50%, calc(-100% - 8px))';
-  }
-
-  _hideTooltip(){
-    this._tooltip.classList.add('hidden');
+  _fallback(){
+    return `<svg viewBox="0 0 200 380" style="height:100%;opacity:.7">
+      <ellipse cx="100" cy="35" rx="25" ry="28" fill="none" stroke="#00c8ff" stroke-width="1.2"/>
+      <rect x="75" y="63" width="50" height="65" rx="8" fill="none" stroke="#00c8ff" stroke-width="1.2"/>
+      <rect x="75" y="128" width="50" height="45" rx="6" fill="none" stroke="#00c8ff" stroke-width="1"/>
+      <rect x="30" y="70" width="42" height="22" rx="10" fill="none" stroke="#00c8ff" stroke-width="1"/>
+      <rect x="128" y="70" width="42" height="22" rx="10" fill="none" stroke="#00c8ff" stroke-width="1"/>
+      <rect x="30" y="92" width="18" height="80" rx="9" fill="none" stroke="#00c8ff" stroke-width="1"/>
+      <rect x="152" y="92" width="18" height="80" rx="9" fill="none" stroke="#00c8ff" stroke-width="1"/>
+      <rect x="76" y="173" width="22" height="110" rx="11" fill="none" stroke="#00c8ff" stroke-width="1"/>
+      <rect x="102" y="173" width="22" height="110" rx="11" fill="none" stroke="#00c8ff" stroke-width="1"/>
+    </svg>`;
   }
 }
 
-global.TwinBody=TwinBody;
-}(typeof window!=='undefined'?window:global));
+global.TwinBody = TwinBody;
+}(typeof window !== 'undefined' ? window : global));
