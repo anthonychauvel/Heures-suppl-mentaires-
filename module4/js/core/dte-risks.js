@@ -59,7 +59,7 @@ const RISK_DEFS=[
     condition:(sc,n)=>n._contingentPct>=100,
     message:(sc,n)=>`${Math.round(n._contingentPct)}% du contingent (220h) utilisé.`,
     article:'Art. L3121-33 C. trav. — Repos compensateur obligatoire',
-    actions:['Les HS au-delà du contingent ouvrent droit au repos compensateur obligatoire','Accord de l'inspecteur du travail requis pour continuer'],
+    actions:['Les HS au-delà du contingent ouvrent droit au repos compensateur obligatoire','Accord de l\'inspecteur du travail requis pour continuer'],
   },
   {
     id:'CONTINGENT_ALERTE', level:'ALERTE', emoji:'📅',
