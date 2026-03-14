@@ -15,9 +15,9 @@ const RISK_DEFS=[
   },
   {
     id:'FATIGUE_RISQUE', level:'DANGER', emoji:'⚠️',
-    titre:'Fatigue élevée — Risque d'erreur',
+    titre:'Fatigue élevée — Risque d\'erreur',
     condition:(sc,n)=>sc.fatigue>=85&&sc.fatigue<95,
-    message:(sc)=>`Fatigue ${sc.fatigue}/100. Risque d'erreur professionnel important.`,
+    message:(sc)=>`Fatigue ${sc.fatigue}/100. Risque d\'erreur professionnel important.`,
     article:'Art. L3121-18 C. trav. — Durée quotidienne max (10h)',
     actions:['Réduire les HS immédiatement','Prendre 2 jours de récupération consécutifs','Vérifier le repos quotidien de 11h'],
   },
@@ -43,7 +43,7 @@ const RISK_DEFS=[
     condition:(sc,n)=>sc.overloadRisk>=70,
     message:(sc)=>`Surcharge ${sc.overloadRisk}/100. Trop de jours au-delà du seuil.`,
     article:'Art. L3121-22 C. trav. — Contingent annuel HS',
-    actions:['Planifier une période de récupération','Analyser la charge avec l'employeur'],
+    actions:['Planifier une période de récupération','Analyser la charge avec l\'employeur'],
   },
   {
     id:'PERF_DEGRADEE', level:'ALERTE', emoji:'📉',
