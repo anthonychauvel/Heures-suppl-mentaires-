@@ -124,11 +124,12 @@
       <button class="nav-btn" data-view="heatmap">CALENDRIER</button>
     </nav>
     <div class="header-actions">
-      <button class="action-btn" id="btn-help" title="Comment ça marche ?">&#63;</button>
-      <button class="action-btn" id="btn-checkin" title="Check-in quotidien">&#128203;</button>
-      <button class="action-btn" id="btn-ai" title="Conseils & prévention">&#9830;</button>
-      <button class="action-btn" id="btn-pdf" title="Exporter PDF">&#128196;</button>
-      <button class="action-btn" id="btn-refresh" title="Actualiser">&#8635;</button>
+      <button class="hdr-btn hdr-btn--help"    id="btn-help">    <span class="hdr-btn-icon">?</span><span class="hdr-btn-lbl">AIDE</span></button>
+      <button class="hdr-btn hdr-btn--glossary" id="btn-glossary"> <span class="hdr-btn-icon">&#128218;</span><span class="hdr-btn-lbl">SOURCES</span></button>
+      <button class="hdr-btn hdr-btn--checkin" id="btn-checkin"> <span class="hdr-btn-icon">&#9788;</span><span class="hdr-btn-lbl">CHECK-IN</span></button>
+      <button class="hdr-btn hdr-btn--ai"      id="btn-ai">      <span class="hdr-btn-icon">&#9830;</span><span class="hdr-btn-lbl">CONSEILS</span></button>
+      <button class="hdr-btn hdr-btn--pdf"     id="btn-pdf">     <span class="hdr-btn-icon">&#8659;</span><span class="hdr-btn-lbl">PDF</span></button>
+      <button class="hdr-btn hdr-btn--refresh" id="btn-refresh"> <span class="hdr-btn-icon">&#8635;</span><span class="hdr-btn-lbl">SYNC</span></button>
     </div>
   </header>
 
@@ -209,11 +210,40 @@
               </select>
             </label>
           </div>
-          <canvas id="timeline-canvas" style="height:220px;"></canvas>
-          <div class="timeline-legend">
-            <span class="timeline-legend-item"><span style="background:var(--red);height:2px;display:inline-block;width:14px;"></span>&nbsp;FATIGUE</span>
-            <span class="timeline-legend-item"><span style="background:var(--amber);height:2px;display:inline-block;width:14px;"></span>&nbsp;STRESS</span>
-            <span class="timeline-legend-item"><span style="background:var(--animus);height:2px;display:inline-block;width:14px;"></span>&nbsp;PERFORMANCE</span>
+          <div id="timeline-canvas" style="min-height:180px;"></div>
+          <!-- CHARTE DE LECTURE BIOMÉDICALE -->
+          <div style="margin-top:8px;background:rgba(0,6,15,0.8);border:1px solid rgba(0,200,255,0.1);">
+            <div style="padding:6px 10px;border-bottom:1px solid rgba(0,200,255,0.08);font-family:var(--font-mono);font-size:8px;letter-spacing:.15em;color:var(--animus);">
+              CHARTE DE PRÉDICTION — MODÈLE BIOMÉDICAL (OMS/OIT · OCDE · ANACT)
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+              <div style="padding:6px 10px;border-right:1px solid rgba(0,200,255,0.06);border-bottom:1px solid rgba(0,200,255,0.06);">
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--sync);margin-bottom:2px;">● PHASE 1 — ADAPTATION (0-35%)</div>
+                <div style="font-size:9px;color:var(--text-dim);">≤40h/sem · Récupération efficace · Zone OMS optimale</div>
+              </div>
+              <div style="padding:6px 10px;border-bottom:1px solid rgba(0,200,255,0.06);">
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--amber);margin-bottom:2px;">● PHASE 2 — FATIGUE CHRONIQUE (35-60%)</div>
+                <div style="font-size:9px;color:var(--text-dim);">40-52h/sem · Troubles sommeil · Cortisol élevé</div>
+              </div>
+              <div style="padding:6px 10px;border-right:1px solid rgba(0,200,255,0.06);">
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--orange);margin-bottom:2px;">● PHASE 3 — SURMENAGE (60-80%)</div>
+                <div style="font-size:9px;color:var(--text-dim);">52-55h/sem · Baisse performance · Risque cardio</div>
+              </div>
+              <div style="padding:6px 10px;">
+                <div style="font-family:var(--font-mono);font-size:8px;color:var(--red);margin-bottom:2px;">● PHASE 4 — BURN-OUT (>80%)</div>
+                <div style="font-size:9px;color:var(--text-dim);">>55h/sem · +35% AVC · +17% cardio (OMS 2021)</div>
+              </div>
+            </div>
+            <div style="padding:5px 10px;border-top:1px solid rgba(0,200,255,0.06);display:flex;gap:var(--gap-l);flex-wrap:wrap;">
+              <span style="display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:8px;color:var(--text-muted);">
+                <span style="background:var(--red);height:1.5px;width:14px;display:inline-block;"></span>FATIGUE</span>
+              <span style="display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:8px;color:var(--text-muted);">
+                <span style="background:var(--amber);height:1.5px;width:14px;display:inline-block;"></span>STRESS (cortisol)</span>
+              <span style="display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:8px;color:var(--text-muted);">
+                <span style="background:var(--animus);height:1.5px;width:14px;display:inline-block;"></span>PERFORMANCE</span>
+              <span style="display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:8px;color:rgba(245,166,35,0.4);">
+                <span style="border-top:1px dashed rgba(245,166,35,0.5);width:14px;display:inline-block;"></span>Seuils légaux 75/85/95%</span>
+            </div>
           </div>
         </div>
         <div class="panel panel--scenarios">
@@ -278,6 +308,7 @@
 <script src="js/features/pdf-report.js"></script>
 <script src="js/features/notifications.js"></script>
 <!-- APP -->
+<script src="js/features/dte-glossary.js"></script>
 <script src="js/app.js"></script>
 
 <!-- BOOT INIT -->
