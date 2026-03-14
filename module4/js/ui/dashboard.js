@@ -8,6 +8,25 @@ class Dashboard {
   constructor(){}
 
   render(state, risks, advice){
+    // Pas de données M1 → bandeau info
+    const noData = state && state.scores && !state.scores._hasData;
+    const noDataBanner = document.getElementById('no-data-banner');
+    if(noData){
+      if(!noDataBanner){
+        const b = document.createElement('div');
+        b.id = 'no-data-banner';
+        b.style.cssText = 'background:rgba(255,179,0,0.08);border:1px solid rgba(255,179,0,0.3);border-left:3px solid var(--amber);padding:8px 14px;margin-bottom:6px;font-family:var(--font-mono);font-size:10px;color:var(--amber);letter-spacing:.08em;';
+        const m1ok = state.scores._hasM1, m2ok = state.scores._hasM2;
+        const missing = [];
+        if(!m1ok) missing.push('M1 (suivi des heures)');
+        if(!m2ok) missing.push('M2 (données de paie)');
+        b.innerHTML = '&#9888;&nbsp; DONNÉES MANQUANTES — Saisissez vos données dans : ' + missing.join(' et ') + ' pour activer l\'analyse complète';
+        const grid = document.querySelector('.dashboard-grid');
+        if(grid) grid.parentNode.insertBefore(b, grid);
+      }
+    } else {
+      if(noDataBanner) noDataBanner.remove();
+    }
     if(!state||!state.scores) return;
     const {scores, norm, raw}=state;
     this._renderHero(scores, norm, raw);
