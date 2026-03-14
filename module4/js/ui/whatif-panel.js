@@ -148,55 +148,54 @@ class WhatIfPanel {
     const milestones = [7,14,21,30,60,90].filter(d=>d<=this._plan.days);
     if(!milestones.includes(this._plan.days)) milestones.push(this._plan.days);
 
+    const trendMsg = s.finalFatigue < 30 ? '😊 Vous restez en bonne santé sur cette période.'
+                   : s.finalFatigue < 50 ? '⚠️ Fatigue modérée qui s\'accumule progressivement.'
+                   : s.finalFatigue < 70 ? '🔶 Surmenage probable. Réduire les HS recommandé.'
+                   : '🔴 Risque élevé. Repos nécessaire d\'urgence.';
+
     el.innerHTML = `
-      <!-- Stats résumé -->
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:10px;">
-        ${[
-          ['FAT.MOY', s.avgFatigue,     c(s.avgFatigue)],
-          ['FAT.MAX', s.maxFatigue,     c(s.maxFatigue)],
-          ['PERF',    s.avgPerformance, c(100-s.avgPerformance)],
-          ['ALERTES', s.daysAlert+s.daysCrit, s.daysCrit>0?'#ff2244':s.daysAlert>0?'#ffb300':'#00ffcc'],
-        ].map(([l,v,col]) => `<div style="background:rgba(0,10,25,.9);border:1px solid ${col}30;padding:7px;text-align:center;">
-          <div style="font-family:var(--font-hud);font-size:18px;font-weight:700;color:${col};">${v}</div>
-          <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);">${l}</div>
-        </div>`).join('')}
-      </div>
-
-      <!-- Phase finale -->
-      <div style="border:1px solid ${ph.color}60;padding:8px 10px;margin-bottom:8px;background:rgba(0,10,25,.7);">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
-          <div style="width:18px;height:18px;border:2px solid ${ph.color};transform:rotate(45deg);background:${ph.color}20;flex-shrink:0;"></div>
-          <span style="font-family:var(--font-hud);font-size:12px;color:${ph.color};">P${ph.id} — ${ph.label} à J+${this._plan.days}</span>
+      <div style="padding:14px;background:rgba(0,10,25,.9);border-left:3px solid ${c(s.finalFatigue)};margin-bottom:10px;">
+        <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:5px;">${trendMsg}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.7);">
+          Après <b>${this._plan.days} jours</b> à <b>${weeklyH}h/sem</b> :
+          fatigue estimée <b style="color:${c(s.finalFatigue)}">${s.finalFatigue}%</b>
+          — Phase <b style="color:${ph.color}">P${ph.id} ${ph.label}</b>
         </div>
-        <div style="font-size:10px;color:var(--text-dim);">${ph.desc}</div>
-        ${ph.symptoms?.length?`<div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;">${ph.symptoms.slice(0,3).map(s=>`<span style="font-family:var(--font-mono);font-size:7px;color:${ph.color};border:1px solid ${ph.color}40;padding:1px 4px;">${s}</span>`).join('')}</div>`:''}
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:5px;">${omsLabel}</div>
       </div>
 
-      <!-- Indicateur OMS -->
-      <div style="font-family:var(--font-mono);font-size:9px;padding:5px 9px;margin-bottom:8px;
-        background:rgba(0,10,25,.6);border-left:2px solid ${weeklyH>=55?'#ff2244':weeklyH>=48?'#ffb300':'#00ffcc'};">
-        ${omsLabel}
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;">
+        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${c(s.avgFatigue)}30;text-align:center;">
+          <div style="font-size:22px;font-weight:700;color:${c(s.avgFatigue)};">${s.avgFatigue}%</div>
+          <div style="font-size:11px;color:#fff;margin-top:2px;">Fatigue moy.</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);">sur la période</div>
+        </div>
+        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${c(100-s.avgPerformance)}30;text-align:center;">
+          <div style="font-size:22px;font-weight:700;color:${c(100-s.avgPerformance)};">${s.avgPerformance}%</div>
+          <div style="font-size:11px;color:#fff;margin-top:2px;">Performance</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);">efficacité moy.</div>
+        </div>
+        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${s.daysAlert>0?'#ffb300':'#00ffcc'}30;text-align:center;">
+          <div style="font-size:22px;font-weight:700;color:${s.daysAlert>0?'#ffb300':'#00ffcc'};">${s.daysAlert}</div>
+          <div style="font-size:11px;color:#fff;margin-top:2px;">Jours alerte</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);">sur ${this._plan.days}j</div>
+        </div>
       </div>
 
-      <!-- Jalons semaine par semaine -->
-      <div style="font-family:var(--font-mono);font-size:8px;color:var(--text-muted);letter-spacing:.1em;margin-bottom:5px;">ÉVOLUTION PAR SEMAINE</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:3px;">
-        ${Array.from({length:Math.ceil(tl.length/7)},(_,w)=>{
+      <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:6px;">Évolution de la fatigue semaine par semaine :</div>
+      <div style="display:flex;gap:4px;align-items:flex-end;height:56px;margin-bottom:6px;">
+        ${Array.from({length:Math.min(8,Math.ceil(tl.length/7))},(_,w)=>{
           const wd=tl.slice(w*7,(w+1)*7);
           const af=Math.round(wd.reduce((s,d)=>s+d.fatigue,0)/wd.length);
-          const as_=Math.round(wd.reduce((s,d)=>s+d.stress,0)/wd.length);
           const col2=c(af);
-          const alert=wd.some(d=>d.alert!=='OK');
-          return `<div style="background:rgba(0,10,25,.9);border:1px solid ${alert?col2+'50':'rgba(0,200,255,0.07)'};padding:4px;text-align:center;">
-            <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);">S${w+1}</div>
-            <div style="height:22px;display:flex;align-items:flex-end;gap:1px;justify-content:center;margin:2px 0;">
-              <div style="width:6px;background:${col2};height:${Math.max(2,af*.22)}px;"></div>
-              <div style="width:6px;background:var(--amber);height:${Math.max(2,as_*.22)}px;opacity:.7;"></div>
-            </div>
-            <div style="font-family:var(--font-hud);font-size:9px;color:${col2};">${af}</div>
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;">
+            <div style="font-size:9px;color:${col2};font-weight:600;">${af}%</div>
+            <div style="width:100%;background:${col2};height:${Math.max(4,af*.4)}px;border-radius:1px;"></div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.4);">S${w+1}</div>
           </div>`;
         }).join('')}
-      </div>`;
+      </div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.35);">🟢 vert = OK &nbsp;·&nbsp; 🟡 orange = vigilance &nbsp;·&nbsp; 🔴 rouge = alerte</div>`;
   }
 }
 

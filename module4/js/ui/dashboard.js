@@ -75,13 +75,31 @@ class Dashboard {
     if(container){
       const old=container.querySelector('.hero-bars');
       if(old) old.remove();
+      const hasDat = scores._hasData;
+      const fatV   = scores.fatigue || 0;
+      const perfV  = scores.performance || 0;
+      const strV   = scores.stress || 0;
+      const fatLbl = fatV<35?'Vous êtes en forme':fatV<60?'Fatigue modérée':fatV<80?'Surmenage':' Épuisement critique';
+      const perfLbl= perfV>80?'Très efficace':perfV>60?'Efficacité correcte':perfV>40?'Baisse de performance':'Efficacité très réduite';
+      const strLbl = strV<30?'Peu stressé':strV<60?'Stress modéré':strV<80?'Stress élevé':'Stress critique';
       const barHtml=`<div class="hero-bars" style="margin-top:auto;">
-        ${[['Fatigue','fatigue','red'],['Stress','stress','amber'],['Performance','performance','cyan']].map(([l,k,c])=>`
-          <div class="hero-bar-label" style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-top:8px;">
-            <span>${l}</span><span style="color:var(--${c})">${scores[k]}</span>
-          </div>
-          <div class="hero-bar"><div class="hero-bar-fill" style="width:${scores[k]}%;background:var(--${c});box-shadow:0 0 6px var(--${c})40;"></div></div>
-        `).join('')}
+        ${!hasDat ? `<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:12px;line-height:1.7;">
+            📋 Saisissez des heures dans<br><b style="color:#fff">M1 (Suivi annuel)</b><br>pour activer l'analyse complète.
+          </div>` :
+          [
+            ['🧠 Fatigue','fatigue','red', fatV, fatLbl],
+            ['⚡ Performance','performance','cyan', perfV, perfLbl],
+            ['💊 Stress','stress','amber', strV, strLbl],
+          ].map(([l,k,col,v,desc])=>`
+            <div style="margin-top:10px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                <span style="font-size:11px;color:#fff;">${l}</span>
+                <span style="font-size:12px;font-weight:700;color:var(--${col});">${v}%</span>
+              </div>
+              <div class="hero-bar"><div class="hero-bar-fill" style="width:${v}%;background:var(--${col});box-shadow:0 0 6px var(--${col})40;"></div></div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;">${desc}</div>
+            </div>`).join('')
+          }
       </div>`;
       container.insertAdjacentHTML('beforeend',barHtml);
     }
@@ -95,12 +113,12 @@ class Dashboard {
     const el=document.getElementById('scores-grid');
     if(!el) return;
     const defs=[
-      {key:'fatigue',      label:'FATIGUE',       sub:'INRS — cumul non-linéaire',   color:v=>v>=80?'var(--red)':v>=60?'var(--orange)':v>=35?'var(--amber)':'var(--sync)'},
-      {key:'stress',       label:'CORTISOL',      sub:'Thompson 2022 + ANACT',       color:v=>v>=70?'var(--red)':v>=50?'var(--orange)':v>=30?'var(--amber)':'var(--sync)'},
-      {key:'performance',  label:'PERFORMANCE',   sub:'Pencavel/Stanford 2014',      color:v=>v<40?'var(--red)':v<60?'var(--orange)':v<80?'var(--amber)':'var(--sync)'},
-      {key:'cvRisk',       label:'RISQUE CARDIO', sub:'OMS/OIT 2021 RR=1.35 AVC',  color:v=>v>=40?'var(--red)':v>=20?'var(--orange)':v>=8?'var(--amber)':'var(--sync)'},
-      {key:'cogRisk',      label:'RISQUE CÉRÉBRAL',sub:'OEM 2025 — >52h/sem',       color:v=>v>=50?'var(--red)':v>=25?'var(--orange)':v>=10?'var(--amber)':'var(--sync)'},
-      {key:'musculoRisk',  label:'MUSCULO',       sub:'Lancet 2021 HR=1.15',        color:v=>v>=50?'var(--red)':v>=30?'var(--orange)':v>=15?'var(--amber)':'var(--sync)'},
+      {key:'fatigue',     label:'FATIGUE',       sub:'Votre niveau d\'épuisement cumulé',      color:v=>v>=80?'var(--red)':v>=60?'var(--orange)':v>=35?'var(--amber)':'var(--sync)', inv:false},
+      {key:'stress',      label:'STRESS',        sub:'Tension nerveuse & cortisol',            color:v=>v>=70?'var(--red)':v>=50?'var(--orange)':v>=30?'var(--amber)':'var(--sync)', inv:false},
+      {key:'performance', label:'PERFORMANCE',   sub:'Votre efficacité au travail',            color:v=>v<40?'var(--red)':v<60?'var(--orange)':v<80?'var(--amber)':'var(--sync)',  inv:true},
+      {key:'cvRisk',      label:'CŒUR',          sub:'Risque cardiovasculaire (OMS 2021)',     color:v=>v>=40?'var(--red)':v>=20?'var(--orange)':v>=8?'var(--amber)':'var(--sync)',  inv:false},
+      {key:'cogRisk',     label:'CERVEAU',       sub:'Risque cognitif si ≥52h/sem (OEM 2025)',color:v=>v>=50?'var(--red)':v>=25?'var(--orange)':v>=10?'var(--amber)':'var(--sync)', inv:false},
+      {key:'recovery',    label:'RÉCUPÉRATION',  sub:'Capacité à récupérer le week-end',       color:v=>v<20?'var(--red)':v<40?'var(--orange)':v<60?'var(--amber)':'var(--sync)',   inv:true},
     ];
     el.innerHTML=defs.map(d=>{
       const v=Math.round(scores[d.key])||0;
