@@ -385,12 +385,15 @@ class DTEEngine {
       countDays++;
       if (i < 7) { sumExtra7 += ex; count7++; }
     }
-    // Fallback total si aucune entrée récente
-    const avgExtra7  = count7 > 0 ? sumExtra7 / count7
-                     : countDays > 0 ? sumExtra / countDays
-                     : (m1.totalExtra > 0 ? m1.totalExtra / Math.max(1, Object.keys(days).length) : 0);
-    const avgH7      = D.BASE_JOUR + avgExtra7;
-    const weeklyH7   = avgH7 * 5;
+    // avgExtra7 = moyenne sur la SEMAINE (7 jours), pas sur les jours saisis
+    // Ex: 2h le samedi → 2/7 = 0.29h/j de moyenne → weeklyH = 35 + 2 = 37h/sem
+    // On divise TOUJOURS par 7 pour une moyenne journalière hebdomadaire réelle
+    const avgExtra7  = sumExtra7 / 7;                          // vraie moyenne sur 7j
+    const avgExtra30 = countDays > 0 ? sumExtra / 30 : 0;      // moyenne sur 30j
+    // Pour le weeklyH : somme hebdo réelle (pas ×5 qui suppose 5j de surcharge)
+    const weeklyExtra = sumExtra7;                              // total HS sur 7j
+    const avgH7       = D.BASE_JOUR + avgExtra7;               // h/j moyenne
+    const weeklyH7    = 35 + weeklyExtra;                      // 35h base + HS réelles de la semaine
 
     // Jours consécutifs (date locale)
     let consec = 0;
@@ -441,7 +444,7 @@ class DTEEngine {
     const contingentPct = (m1.totalExtra / D.CONTINGENT_MAX) * 100;
 
     // Moyenne pondérée semaines (poids plus fort sur les récentes)
-    const recentWeeklyH = mean > 0 ? mean : weeklyH7;
+    const recentWeeklyH = mean > 0 ? mean : weeklyH7; // weeklyH = 35 + HS réelles semaine
 
     return {
       heures:         clamp(avgH7, 0, 14),
