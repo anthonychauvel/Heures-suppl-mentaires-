@@ -552,12 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (satCb) satCb.checked = _savedRest.sat !== false;
     if (sunCb) sunCb.checked = _savedRest.sun !== false;
 
-    // PDF
-    document.getElementById('btn-pdf')?.addEventListener('click', () => {
-      const state = DTE._state;
-      const fut   = state ? DTE.simulator.futurState(30, state.norm) : null;
-      DTE.pdf.generate(state, DTE.lastRisks||[], DTE.lastAdvice||[], fut);
-    });
+    // PDF désactivé
   }
 
   /* ── 8. Écran bienvenue (1ère visite) ────────────────────────── */
@@ -570,12 +565,12 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="welcome-logo">DIGITAL TWIN</div>
         <div class="welcome-sub">MODULE 4 — ANALYSE PRÉDICTIVE</div>
         <div class="welcome-desc">
-          Votre jumeau numérique analyse vos heures travaillées pour calculer votre état de santé et anticiper les risques légaux.
+          Votre jumeau numérique analyse vos heures travaillées pour calculer votre état de santé et anticiper la fatigue, le stress et les risques biologiques.
         </div>
         <div class="welcome-steps">
           <div class="welcome-step"><span class="welcome-step-num">1</span><span>Ce module lit automatiquement vos données de M1 (heures) et M2 (paie). Aucune saisie supplémentaire.</span></div>
           <div class="welcome-step"><span class="welcome-step-num">2</span><span>Il calcule votre fatigue, stress et performance, et prédit votre état dans 30 jours.</span></div>
-          <div class="welcome-step"><span class="welcome-step-num">3</span><span>Simulez des scénarios, consultez 1000 conseils juridiques, exportez un rapport PDF.</span></div>
+          <div class="welcome-step"><span class="welcome-step-num">3</span><span>Simulez des scénarios, consultez 1000 conseils juridiques et de prévention.</span></div>
         </div>
         <button class="btn btn--animus" id="welcome-start" style="width:100%;justify-content:center;padding:12px;">
           &#9654;&nbsp; VOIR MON ANALYSE
@@ -587,8 +582,21 @@ document.addEventListener('DOMContentLoaded', function () {
       ov.classList.add('hide');
       setTimeout(() => {
         ov.remove();
-        // Proposer le check-in après le welcome (pas avant)
-        if (DTE.checkin) DTE.checkin.checkIfNeeded();
+        // Ouvrir l'aide en premier, puis check-in ensuite
+        const helpM = document.getElementById('help-modal');
+        if (helpM) {
+          helpM.classList.remove('hidden');
+          // Quand l'aide est fermée, proposer le check-in
+          const onHelpClose = () => {
+            helpM.removeEventListener('click', onHelpClose);
+            setTimeout(() => { if (DTE.checkin) DTE.checkin.checkIfNeeded(); }, 400);
+          };
+          helpM.querySelector('#help-ok')?.addEventListener('click', onHelpClose, { once:true });
+          helpM.querySelector('#help-close')?.addEventListener('click', onHelpClose, { once:true });
+          helpM.querySelector('.modal-overlay')?.addEventListener('click', onHelpClose, { once:true });
+        } else {
+          if (DTE.checkin) DTE.checkin.checkIfNeeded();
+        }
       }, 600);
     });
   }
