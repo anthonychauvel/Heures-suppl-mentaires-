@@ -337,45 +337,109 @@ document.addEventListener('DOMContentLoaded', function () {
         📋 Saisissez vos heures dans M1 pour comparer les scénarios
       </div>`; return;
     }
-    const c = v => v >= 80 ? '#ff2244' : v >= 60 ? '#ff6600' : v >= 35 ? '#ffb300' : '#00ffcc';
 
-    // Labels humains
+    const c  = v => v >= 80 ? '#c83040' : v >= 60 ? '#c8601a' : v >= 35 ? '#b88a18' : '#00aa88';
     const humanDesc = {
-      urgence:     { emoji:'🔥', what:'Si vous continuez + intensément', impact:'Fatigue maximale, sans bénéfice sur la prod.' },
-      actuel:      { emoji:'▶️', what:'Si vous continuez comme aujourd\'hui', impact:'Projection de votre trajectoire actuelle.' },
-      reduit:      { emoji:'⬇️', what:'Si vous réduisez un peu (-1h/j)', impact:'Récupération progressive, moins de stress.' },
-      optimise:    { emoji:'⚡', what:'Si vous optimisez (-2h/j)', impact:'Zone productive OCDE, meilleur équilibre.' },
-      equilibre:   { emoji:'⚖️', what:'Si vous repassez à 35h/sem', impact:'Zone optimale OMS. Productivité maximale.' },
-      recuperation:{ emoji:'🛡️', what:'Si vous prenez du recul', impact:'Récupération physiologique INRS recommandée.' },
+      urgence:     { emoji:'🔥', what:'+ intensément (rush)' },
+      actuel:      { emoji:'▶️', what:'Rythme actuel' },
+      reduit:      { emoji:'⬇️', what:'Réduire légèrement' },
+      optimise:    { emoji:'⚡', what:'Optimiser (-2h/j)' },
+      equilibre:   { emoji:'⚖️', what:'35h/sem (OMS)' },
+      recuperation:{ emoji:'🛡️', what:'Récupération active' },
     };
 
-    el.innerHTML = `
-      <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);">
-        💡 <b>6 scénarios comparatifs</b> — Que se passe-t-il si vous changez de rythme ?
-      </div>
-      ${scen.scenarios.map((sc, i) => {
-        const isBest = sc === scen.best;
-        const hd    = humanDesc[sc.key] || { emoji:'▶', what:sc.label, impact:sc.desc };
-        const ph    = sc.summary.finalPhase || { color:'#00ffcc', label:'OK' };
-        const fat   = sc.summary.avgFatigue || 0;
-        return `<div style="padding:10px 12px;background:rgba(0,10,25,.85);
-          border:1px solid ${isBest?'rgba(0,200,255,0.5)':'rgba(255,255,255,0.08)'};
-          border-left:3px solid ${isBest?'var(--animus)':c(fat)};
-          margin-bottom:5px;${isBest?'box-shadow:0 0 12px rgba(0,200,255,0.15);':''}">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-            <span style="font-size:13px;font-weight:600;color:#fff;">${hd.emoji} ${sc.label}</span>
-            ${isBest ? '<span style="font-size:10px;color:var(--animus);border:1px solid var(--animus);padding:1px 7px;">✓ MEILLEURE OPTION</span>' : ''}
-          </div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:4px;">${hd.what}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:8px;">${hd.impact}</div>
-          <div style="display:flex;gap:12px;font-size:11px;">
-            <span>Fatigue moy : <b style="color:${c(fat)}">${fat}%</b></span>
-            <span>Performance : <b style="color:${c(100-sc.summary.avgPerformance)}">${sc.summary.avgPerformance}%</b></span>
-            <span style="color:${ph.color}">Phase finale : P${ph.id}</span>
-          </div>
-          <div style="margin-top:5px;font-size:10px;color:rgba(255,255,255,0.35);">${sc.oms}</div>
-        </div>`;
-      }).join('')}`;
+    let _selectedKey = scen.best ? scen.best.key : 'actuel';
+
+    const render = () => {
+      const sel = scen.scenarios.find(s=>s.key===_selectedKey) || scen.best;
+      const actuel = scen.scenarios.find(s=>s.key==='actuel');
+
+      el.innerHTML = `
+        <!-- 6 boutons scénarios -->
+        <div style="font-size:11px;color:rgba(255,255,255,0.55);margin-bottom:8px;">
+          Cliquez sur un scénario pour voir son impact :
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px;">
+          ${scen.scenarios.map(sc=>{
+            const hd  = humanDesc[sc.key]||{emoji:'▶',what:sc.label};
+            const isSel = sc.key === _selectedKey;
+            const isBest = sc.key === (scen.best||{}).key;
+            const fat = sc.summary.avgFatigue||0;
+            return `<button onclick="window._scen_select('${sc.key}')"
+              style="display:flex;flex-direction:column;align-items:center;gap:3px;
+              padding:8px 4px;background:rgba(0,10,25,${isSel?'.95':'.7'});
+              border:${isSel?'2px':'1px'} solid ${isSel?'rgba(0,200,255,0.6)':c(fat)+'40'};
+              cursor:pointer;transition:all .15s;${isBest&&!isSel?'outline:1px dashed rgba(0,255,204,0.3);outline-offset:1px;':''}">
+              <span style="font-size:18px;">${hd.emoji}</span>
+              <span style="font-size:9px;color:${isSel?'#fff':'rgba(255,255,255,0.65)'};text-align:center;line-height:1.2;">${hd.what}</span>
+              <span style="font-size:12px;font-weight:700;color:${c(fat)};">${fat}%</span>
+              ${isBest?'<span style="font-size:8px;color:#00aa88;">✓ optimal</span>':''}
+            </button>`;
+          }).join('')}
+        </div>
+
+        <!-- Détail du scénario sélectionné vs actuel -->
+        ${sel ? (()=>{
+          const ph   = sel.summary.finalPhase||{color:'#00ccaa',label:'EN FORME',id:1};
+          const act  = actuel ? actuel.summary : null;
+          const diffFat  = act ? sel.summary.avgFatigue  - act.avgFatigue  : 0;
+          const diffPerf = act ? sel.summary.avgPerformance - act.avgPerformance : 0;
+          const diffAlert= act ? sel.summary.daysAlert   - act.daysAlert   : 0;
+
+          const arrow = (diff,invert=false)=>{
+            const bad = invert ? diff > 0 : diff < 0;
+            const neutral = Math.abs(diff)<2;
+            return neutral ? '<span style="color:rgba(255,255,255,0.4)">= stable</span>'
+              : `<span style="color:${bad?'#c83040':'#00aa88'}">${diff>0?'+':''}${diff}% ${bad?'▲':'▼'}</span>`;
+          };
+
+          return `<div style="background:rgba(0,10,25,.92);border:1px solid rgba(0,200,255,0.18);padding:12px 14px;">
+            <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:10px;">
+              ${humanDesc[sel.key]?.emoji||'▶'} ${humanDesc[sel.key]?.what||sel.label}
+              ${sel.key===(scen.best||{}).key?'<span style="font-size:10px;color:#00aa88;border:1px solid #00aa88;padding:1px 6px;margin-left:6px;">✓ MEILLEURE OPTION</span>':''}
+            </div>
+
+            <!-- Comparatif vs actuel -->
+            ${act && sel.key!=='actuel' ? `
+            <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:8px;">
+              Comparé à votre rythme actuel :
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;">
+              <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.04);">
+                <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:3px;">Fatigue moy.</div>
+                <div style="font-size:16px;font-weight:700;color:${c(sel.summary.avgFatigue)};">${sel.summary.avgFatigue}%</div>
+                <div style="font-size:10px;">${arrow(diffFat,true)}</div>
+              </div>
+              <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.04);">
+                <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:3px;">Performance</div>
+                <div style="font-size:16px;font-weight:700;color:${c(100-sel.summary.avgPerformance)};">${sel.summary.avgPerformance}%</div>
+                <div style="font-size:10px;">${arrow(diffPerf)}</div>
+              </div>
+              <div style="text-align:center;padding:8px;background:rgba(255,255,255,0.04);">
+                <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:3px;">Jours alerte</div>
+                <div style="font-size:16px;font-weight:700;color:${sel.summary.daysAlert>0?'#b88a18':'#00aa88'};">${sel.summary.daysAlert}</div>
+                <div style="font-size:10px;">${arrow(diffAlert,true)}</div>
+              </div>
+            </div>` : ''}
+
+            <!-- Phase finale + OMS -->
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;
+              background:rgba(${ph.color==='#c82838'?'200,40,56':ph.color==='#c8601a'?'200,96,26':ph.color==='#c89a18'?'200,154,24':'0,204,170'},.08);
+              border-left:3px solid ${ph.color};">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:#fff;">Phase finale : ${ph.label}</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:2px;">${ph.desc||''}</div>
+              </div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:6px;padding-top:6px;
+              border-top:1px solid rgba(255,255,255,0.06);">${sel.oms}</div>
+          </div>`;
+        })() : ''}`;
+    };
+
+    // Exposer la sélection et rendre
+    window._scen_select = key => { _selectedKey = key; render(); };
+    render();
   }
 
 
