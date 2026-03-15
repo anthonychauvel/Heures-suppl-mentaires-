@@ -31,8 +31,9 @@ class Checkin {
   checkIfNeeded(){
     const today=new Date().toISOString().slice(0,10);
     const last=localStorage.getItem('DTE_CHECKIN_DATE');
-    if(last!==today && new Date().getHours()>=6 && new Date().getHours()<=10){
-      setTimeout(()=>this.open(),1200);
+    // Ouvrir à l'ouverture du module si pas encore fait aujourd'hui (toute la journée)
+    if(last!==today){
+      setTimeout(()=>this.open(),800);
     }
   }
 
