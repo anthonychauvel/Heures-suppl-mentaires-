@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderFutur(days, state, fut) {
     const el = document.getElementById('futur-state-container');
     if (!el) return;
-    if (!fut || !fut.fatigue) {
+    if (!fut || fut.fatigue === undefined || fut.fatigue === null) {
       el.innerHTML = `<div style="padding:16px;font-size:12px;color:rgba(255,255,255,0.5);text-align:center;">
         📋 Complétez M1 pour voir votre état prédit dans ${days} jours
       </div>`; return;
