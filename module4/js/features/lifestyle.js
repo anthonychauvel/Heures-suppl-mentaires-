@@ -325,19 +325,12 @@ class LifestylePanel {
 
     document.getElementById('ls-done')?.addEventListener('click', () => {
       this.close();
-      // Déclencher re-analyse complète
-      if (window.DTE && window.DTE.engine) {
-        try {
-          const s  = window.DTE.engine.analyze();
-          window.DTE._state = s;
-          const r2 = window.DTE.risks.detect(s.scores, s.norm);
-          const a2 = typeof buildAdvice === 'function' ? buildAdvice(s.scores, r2, s.norm) : [];
-          window.DTE.lastRisks  = r2;
-          window.DTE.lastAdvice = a2;
-          window.DTE.dashboard.render(s, r2, a2);
-          if (window.DTE.twin) window.DTE.twin.update(s.scores);
-        } catch(e) { if (window._forcSync) window._forcSync(); }
-      }
+      // Mise à jour subtitle du bouton
+      const sub = document.getElementById('lifestyle-sub');
+      if (sub) sub.textContent = '✓ Profil enregistré — cliquer pour modifier';
+      // Re-analyse complète
+      if (window._fullSync) window._fullSync();
+      else if (window._forcSync) window._forcSync();
     });
     document.getElementById('ls-close2')?.addEventListener('click', () => this.close());
     this._modal.querySelector('.modal-overlay')?.addEventListener('click', () => this.close());

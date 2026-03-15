@@ -136,26 +136,9 @@ class Checkin {
         <button class="btn btn--cyan" style="margin-top:var(--gap-l);" id="ci-done">Fermer</button>
       </div>`;
     document.getElementById('ci-done').addEventListener('click',()=>this.close());
-    // Forcer re-analyse complète avec risks+advice (pas juste _forcSync)
-    try {
-      if(window.DTE && window.DTE.engine) {
-        const s  = window.DTE.engine.analyze();
-        window.DTE._state = s;
-        if(window.DTE.risks && window.DTE.dashboard) {
-          const r2 = window.DTE.risks.detect(s.scores, s.norm);
-          // buildAdvice accessible depuis app.js via window
-          const a2 = typeof buildAdvice === 'function' ? buildAdvice(s.scores, r2) : [];
-          window.DTE.lastRisks  = r2;
-          window.DTE.lastAdvice = a2;
-          window.DTE.dashboard.render(s, r2, a2);
-        }
-        if(window.DTE.twin) window.DTE.twin.update(s.scores);
-        // Reset du hash pour forcer le prochain sync automatique
-        if(typeof _syncHash !== 'undefined') { /* handled by interval */ }
-      } else if(window._forcSync) {
-        window._forcSync();
-      }
-    } catch(e) { if(window._forcSync) window._forcSync(); }
+    // Re-analyse complète
+    if (window._fullSync) window._fullSync();
+    else if (window._forcSync) window._forcSync();
     window.DTE&&window.DTE.notifications&&window.DTE.notifications.show(
       'Check-in enregistré','ok','🦊','Analyse mise à jour avec votre ressenti du jour.');
   }
