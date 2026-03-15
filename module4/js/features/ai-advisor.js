@@ -33,7 +33,7 @@ class AIAdvisor {
     const stats = advisor ? advisor.stats() : null;
 
     this._content.innerHTML = `
-      <div class="ai-chat">
+      <div class="ai-chat" id="ai-chat-container" style="height:55vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;">
         <!-- Info bandeau -->
         <div style="background:var(--cyan-dim);border:1px solid var(--border2);border-radius:var(--r);padding:8px 12px;margin-bottom:10px;font-family:var(--font-mono);font-size:10px;color:var(--cyan);">
           &#9670; ${stats ? stats.total : 0} scénarios locaux — Fonctionne hors ligne — Personnalisé sur votre état actuel
