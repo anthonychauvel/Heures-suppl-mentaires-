@@ -437,8 +437,9 @@ class DTEEngine {
     const mean  = nonZeroWeeks.length > 0
       ? nonZeroWeeks.reduce((a, b) => a + b, 0) / nonZeroWeeks.length
       : 0;
-    const sigma = weekTotals.length > 1
-      ? Math.sqrt(weekTotals.reduce((s, v) => s + Math.pow(v - mean, 2), 0) / weekTotals.length)
+    // Sigma calculé sur semaines non-nulles uniquement (évite l'inflation par semaines vides)
+    const sigma = nonZeroWeeks.length > 1
+      ? Math.sqrt(nonZeroWeeks.reduce((s, v) => s + Math.pow(v - mean, 2), 0) / nonZeroWeeks.length)
       : 0;
 
     // Taux de surcharge (jours >BASE+2h)
