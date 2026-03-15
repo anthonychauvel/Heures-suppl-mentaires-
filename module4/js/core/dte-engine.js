@@ -295,11 +295,11 @@ class DTEEngine {
         if (!/^\d{4}-\d{2}$/.test(mk)) continue; // ignorer les clés non-mois
         const days = monthData.days || {};
         // Calculer total heures travaillées dans ce mois
-        const totalHours = Object.values(days).reduce((s, h) => s + (parseFloat(h) || 0), 0);
+        const totalHours = Object.values(days).reduce((s, h) => s + parseHours(h), 0);
         const worked = totalHours + (r.contract / 4.33); // heures base + HS
         const daysCount = Object.keys(days).length;
         r.months[mk] = {
-          worked:  parseFloat(totalHours.toFixed(2)),
+          worked:  Math.round(totalHours * 100) / 100,
           daysOff: 0,
           paid:    monthData.paid || 0,
           carry:   monthData.carry || 0,
