@@ -152,14 +152,26 @@ class Dashboard {
   _renderAdvice(advice){
     const el=document.getElementById('advice-list');
     if(!el) return;
-    el.innerHTML=advice.map(a=>`
-      <div class="advice-item ${a.type||'info'} anim-fade">
-        <div class="advice-emoji">${a.emoji||'💡'}</div>
-        <div>
-          <div class="advice-title">${a.titre}</div>
-          <div class="advice-msg">${a.message}</div>
+    el.innerHTML = advice.length ? advice.map(a=>`
+      <div class="advice-item ${a.type||'info'} anim-fade" style="
+        padding:10px 12px;margin-bottom:6px;
+        border-left:3px solid ${a.type==='danger'?'#ff6644':a.type==='warning'?'#ffb300':a.type==='success'?'#00ffcc':'#00c8ff'};
+        background:rgba(0,10,25,.85);">
+        <div style="display:flex;align-items:flex-start;gap:8px;">
+          <span style="font-size:16px;flex-shrink:0;">${a.emoji||'💡'}</span>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px;">
+              ${a.titre||a.title||'Conseil'}
+            </div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.75);line-height:1.55;">
+              ${a.message||a.msg||''}
+            </div>
+            ${(a.source) ? `<div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:5px;font-style:italic;">
+              📚 ${a.source}</div>` : ''}
+          </div>
         </div>
-      </div>`).join('');
+      </div>`).join('') :
+      '<div style="padding:12px;font-size:12px;color:rgba(255,255,255,0.5);">Aucun conseil disponible</div>';
   }
 
   _renderRadar(scores, norm){
