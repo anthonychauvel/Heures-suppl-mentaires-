@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
   DTE.risks       = new DTERisks();
   DTE.learning    = new DTELearning(DTE.engine);
   DTE.dashboard   = new Dashboard();
-  DTE.radar       = new RadarChart(document.getElementById('radar-canvas'));
+  const _rc = document.getElementById('radar-canvas');
+  DTE.radar = _rc ? new RadarChart(_rc) : null;
   DTE.twin        = new TwinBody(
     document.getElementById('twin-body-container'),
     document.getElementById('twin-body-tooltip')
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
       DTE.dashboard.render(state, risks, advice);
       DTE.twin.update(state.scores);
 
-      if (DTE.radar) {
+      if (DTE.radar && DTE.radar._ctx) {
         const raw  = state.raw;
         const norm = state.norm;
         const m1   = raw && raw.m1;
