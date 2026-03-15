@@ -125,7 +125,8 @@ const PHASES = [
 ];
 
 function getPhase(fat) {
-  return PHASES.find(p => fat >= p.fatMin && fat < p.fatMax) || PHASES[3];
+  const f = Math.max(0, fat);
+  return PHASES.find(p => f >= p.fatMin && f < p.fatMax) || PHASES[0];
 }
 
 /* ── COURBE PENCAVEL (réutilisée depuis engine si disponible) ─── */
@@ -235,7 +236,7 @@ class DTESimulator {
 
       // Phase + alertes
       const phase  = getPhase(fat);
-      const fScore = Math.round(fat * 100);
+      const fScore = Math.round(Math.max(0, fat) * 100);
       let alert    = 'OK';
       if      (fScore >= BIO.URGENCE)  { alert = 'URGENCE';  daysBurnout++; daysCrit++; }
       else if (fScore >= BIO.CRITIQUE) { alert = 'CRITIQUE'; daysCrit++; }
@@ -243,7 +244,7 @@ class DTESimulator {
       else if (fScore >= BIO.ALERTE)   { alert = 'ALERTE';   daysAlert++; }
 
       if (fat > maxFat) maxFat = fat;
-      totFat += fat; totStr += str; totPerf += perf;
+      totFat += Math.max(0,fat); totStr += Math.max(0,str); totPerf += perf;
 
       timeline.push({
         date:        dt.toISOString().slice(0, 10),
@@ -270,12 +271,12 @@ class DTESimulator {
     return {
       timeline,
       summary: {
-        avgFatigue:    avg(totFat),
+        avgFatigue:    Math.max(0, avg(totFat)),
         maxFatigue:    Math.round(maxFat * 100),
-        avgStress:     avg(totStr),
+        avgStress:     Math.max(0, avg(totStr)),
         avgPerformance:avg(totPerf),
-        finalFatigue:  Math.round(fat * 100),
-        finalStress:   Math.round(str * 100),
+        finalFatigue:  Math.round(Math.max(0, fat) * 100),
+        finalStress:   Math.round(Math.max(0, str) * 100),
         finalPerf:     Math.round(perf * 100),
         finalCvRisk:   Math.round(Math.min(BIO.CV_MAX, cvAcc + fat * 0.12) * 100),
         daysAlert, daysCrit, daysBurnout,
@@ -302,22 +303,22 @@ class DTESimulator {
       {
         key:'urgence',    emoji:'🔥', label:'Rush extrême +4h/j',
         desc:`${(base+avg+4).toFixed(1)}h/j — Territoire Pencavel : 0% de productivité supplémentaire`,
-        hs: avg+4, rest:[0], oms: this._omsLabel((base+avg+4)*5),
+        hs: avg+4, rest:[0,6], oms: this._omsLabel((base+avg+4)*5),
       },
       {
         key:'actuel',     emoji:'▶', label:'Rythme actuel',
         desc:`${(base+avg).toFixed(1)}h/j — Continuation exacte de la semaine écoulée`,
-        hs: avg, rest:[0], oms: this._omsLabel((base+avg)*5),
+        hs: avg, rest:[0,6], oms: this._omsLabel((base+avg)*5),
       },
       {
         key:'reduit',     emoji:'⬇', label:'Réduction légère -1h/j',
         desc:`${(base+Math.max(0,avg-1)).toFixed(1)}h/j — Amélioration progressive`,
-        hs: Math.max(0,avg-1), rest:[0], oms: this._omsLabel((base+Math.max(0,avg-1))*5),
+        hs: Math.max(0,avg-1), rest:[0,6], oms: this._omsLabel((base+Math.max(0,avg-1))*5),
       },
       {
         key:'optimise',   emoji:'⚡', label:'Optimisé -2h/j (OCDE)',
         desc:`${(base+Math.max(0,avg-2)).toFixed(1)}h/j — Zone productive selon OCDE`,
-        hs: Math.max(0,avg-2), rest:[0], oms: this._omsLabel((base+Math.max(0,avg-2))*5),
+        hs: Math.max(0,avg-2), rest:[0,6], oms: this._omsLabel((base+Math.max(0,avg-2))*5),
       },
       {
         key:'equilibre',  emoji:'⚖', label:'Équilibre 35h/sem (OMS)',
