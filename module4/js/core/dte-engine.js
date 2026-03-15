@@ -481,6 +481,41 @@ class DTEEngine {
   _scores(norm, raw) {
     const c       = this._coefs;
     const weeklyH = norm._recentWeeklyH || (D.BASE_JOUR * 5);
+
+    // ── CHECK-IN du jour — intégré directement dans les scores ──
+    let checkinBoost = { fatigue:0, stress:0, performance:0, recovery:0 };
+    try {
+      const today    = (() => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); })();
+      const history  = JSON.parse(localStorage.getItem('DTE_CHECKIN_HISTORY')||'[]');
+      const ci       = history.find(h=>h.date===today) || history[history.length-1];
+      if (ci) {
+        // Sommeil court → fatigue +, performance −
+        if (ci.sleep !== undefined) {
+          const sleepDef = (4 - ci.sleep) / 4;  // 0=bien, 1=très mal
+          checkinBoost.fatigue    += sleepDef * 0.20;  // Thompson 2022: 24h privation → +14% cortisol
+          checkinBoost.performance -= sleepDef * 0.18;
+          checkinBoost.recovery   -= sleepDef * 0.15;
+        }
+        // Énergie basse → fatigue +
+        if (ci.energy !== undefined) {
+          const energyDef = (4 - ci.energy) / 4;
+          checkinBoost.fatigue    += energyDef * 0.15;
+          checkinBoost.performance -= energyDef * 0.12;
+        }
+        // Stress ressenti → stress +
+        if (ci.stress !== undefined) {
+          checkinBoost.stress += (ci.stress / 4) * 0.30;  // ANACT: stress ressenti corrèle 0.65 avec cortisol
+        }
+        // Douleurs → fatigue musculo +
+        if (ci.pain !== undefined && ci.pain > 0) {
+          checkinBoost.fatigue += (ci.pain / 4) * 0.10;
+        }
+        // Motivation → performance +
+        if (ci.motiv !== undefined) {
+          checkinBoost.performance += ((ci.motiv - 2) / 4) * 0.12;  // Nature 2025: sens au travail atténue fatigue perçue
+        }
+      }
+    } catch(_) {}
     const cumW    = norm._cumulWeeks    || 0;
     const cumM    = norm._cumulMonths   || 0;
     const hasM1   = raw.m1 && (raw.m1.totalExtra > 0 || Object.keys(raw.m1.days || {}).length > 0);
@@ -500,8 +535,8 @@ class DTEEngine {
 
     // ── FATIGUE (INRS — non-linéaire, J.Occup.Health 2021) ──────
     // Composantes : HS + jours consécutifs + dette sommeil + burnout RPG
-    const fatHS      = norm._avgExtra7 * 0.030 * c.fh; // HS/jour → fatigue
-    const fatConsec  = norm.consec * 0.20 * c.fc;       // jours consécutifs
+    const fatHS      = norm._avgExtra7 * 0.090 * c.fh; // HS/jour → fatigue (recalibré OMS phases)
+    const fatConsec  = norm.consec * 0.12 * c.fc;       // jours consécutifs (6 jours = 8.6%)
     const fatSommeil = norm.sleepDebt * 0.35;            // dette sommeil Thompson 2022
     const fatSurchar = norm.surcharge * 0.12;
     const fatBurnout = norm.burnout * 0.22;
@@ -543,18 +578,24 @@ class DTEEngine {
     const diabR     = metabolicRisk(weeklyH, cumM); // Lancet 2021 HR=1.18
     const muscR     = musculoRisk(weeklyH, cumM, norm._consec || 0); // Lancet 2021 HR=1.15
 
+    // Appliquer les boosts check-in (capped pour rester cohérent)
+    const fatFinal  = Math.max(0, Math.min(1, fatigue  + checkinBoost.fatigue));
+    const strFinal  = Math.max(0, Math.min(1, stress   + checkinBoost.stress));
+    const perfFinal = Math.max(0.05, Math.min(1, perf  + checkinBoost.performance));
+    const recFinal  = Math.max(0.02, Math.min(1, recovery + checkinBoost.recovery));
+
     return {
-      fatigue:      Math.round(fatigue * 100),
-      stress:       Math.round(stress * 100),
-      performance:  Math.round(perf * 100),
-      recovery:     Math.round(recovery * 100),
+      fatigue:      Math.round(fatFinal * 100),
+      stress:       Math.round(strFinal * 100),
+      performance:  Math.round(perfFinal * 100),
+      recovery:     Math.round(recFinal * 100),
       errorRisk:    Math.round(errRisk * 100),
       overloadRisk: Math.round(overRisk * 100),
       cvRisk:       Math.round(Math.min(cvR + fatigue * 0.10 + stress * 0.08, 1) * 100),
       cogRisk:      Math.round(Math.min(cogR + fatigue * 0.15, 1) * 100),
       diabetesRisk: Math.round(diabR * 100),
       musculoRisk:  Math.round(muscR * 100),
-      _f: fatigue, _s: stress, _p: perf, _r: recovery,
+      _f: fatFinal, _s: strFinal, _p: perfFinal, _r: recFinal,
       _hasData: true, _hasM1: hasM1, _hasM2: hasM2,
       _weeklyH: weeklyH, _cumulWeeks: cumW,
     };
