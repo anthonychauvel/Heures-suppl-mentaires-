@@ -152,26 +152,34 @@ class Dashboard {
   _renderAdvice(advice){
     const el=document.getElementById('advice-list');
     if(!el) return;
+    const borderCol = t => t==='danger'?'#c83040':t==='warning'?'#b88a18':t==='success'?'#00aa88':'#2090b8';
     el.innerHTML = advice.length ? advice.map(a=>`
-      <div class="advice-item ${a.type||'info'} anim-fade" style="
+      <div class="advice-item anim-fade" style="
         padding:10px 12px;margin-bottom:6px;
-        border-left:3px solid ${a.type==='danger'?'#ff6644':a.type==='warning'?'#ffb300':a.type==='success'?'#00ffcc':'#00c8ff'};
-        background:rgba(0,10,25,.85);">
+        border-left:3px solid ${borderCol(a.type||'info')};
+        background:rgba(0,10,25,.88);cursor:pointer;"
+        onclick="this.querySelector('.advice-detail').style.display=this.querySelector('.advice-detail').style.display==='none'?'block':'none'">
         <div style="display:flex;align-items:flex-start;gap:8px;">
-          <span style="font-size:16px;flex-shrink:0;">${a.emoji||'💡'}</span>
+          <span style="font-size:15px;flex-shrink:0;">${a.emoji||'💡'}</span>
           <div style="flex:1;">
-            <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:4px;">
+            <div style="font-size:13px;font-weight:600;color:#ffffff;margin-bottom:3px;">
               ${a.titre||a.title||'Conseil'}
             </div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.75);line-height:1.55;">
+            <div style="font-size:12px;color:rgba(255,255,255,0.80);line-height:1.55;">
               ${a.message||a.msg||''}
             </div>
-            ${(a.source) ? `<div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:5px;font-style:italic;">
-              📚 ${a.source}</div>` : ''}
+            <div class="advice-detail" style="display:none;margin-top:6px;padding-top:6px;
+              border-top:1px solid rgba(255,255,255,0.08);">
+              ${(a.source)?`<div style="font-size:10px;color:rgba(255,255,255,0.45);font-style:italic;">
+                📚 Source : ${a.source}</div>`:''}
+            </div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.30);margin-top:4px;">
+              Toucher pour ${a.source?'voir la source':'plus d\'info'}
+            </div>
           </div>
         </div>
       </div>`).join('') :
-      '<div style="padding:12px;font-size:12px;color:rgba(255,255,255,0.5);">Aucun conseil disponible</div>';
+      '<div style="padding:14px;font-size:12px;color:rgba(255,255,255,0.5);text-align:center;">Analysez vos heures dans M1 pour voir les recommandations.</div>';
   }
 
   _renderRadar(scores, norm){
