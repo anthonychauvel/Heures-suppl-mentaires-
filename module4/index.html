@@ -124,7 +124,15 @@
       <button class="nav-btn" data-view="heatmap">CALENDRIER</button>
     </nav>
     <div class="header-actions">
-      <button class="hdr-btn hdr-btn--refresh" id="btn-refresh"> <span class="hdr-btn-icon">&#8635;</span><span class="hdr-btn-lbl">SYNC</span></button>
+      <button id="btn-sync-visible" onclick="window._forcSync&&window._forcSync()" style="
+  display:flex;align-items:center;gap:6px;
+  background:rgba(0,255,204,0.12);border:1px solid rgba(0,255,204,0.4);
+  color:#00ffcc;font-family:'Share Tech Mono',monospace;font-size:11px;
+  padding:6px 14px;cursor:crosshair;letter-spacing:.06em;
+  transition:all .2s;">
+  <span style="font-size:14px;">↻</span> SYNC
+</button>
+<button class="hdr-btn hdr-btn--refresh" id="btn-refresh"> <span class="hdr-btn-icon">&#8635;</span><span class="hdr-btn-lbl">SYNC</span></button>
     </div>
   </header>
 
@@ -147,9 +155,14 @@
               <span class="abtn-icon">&#128218;</span>
               <div class="abtn-text"><div class="abtn-label">SOURCES</div><div class="abtn-sub">18 études scientifiques</div></div>
             </button>
-            <button class="action-block-btn" id="btn-checkin">
-              <span class="abtn-icon">&#9788;</span>
-              <div class="abtn-text"><div class="abtn-label">CHECK-IN</div><div class="abtn-sub">Mon état du jour</div></div>
+            <button class="action-block-btn" id="btn-checkin" style="
+              background:rgba(0,255,204,0.08);border:1px solid rgba(0,255,204,0.3);
+              padding:10px 9px;">
+              <span class="abtn-icon" style="font-size:20px;">☀</span>
+              <div class="abtn-text">
+                <div class="abtn-label" style="font-size:12px;color:var(--sync);">CHECK-IN</div>
+                <div class="abtn-sub" style="font-size:10px;">Comment vous sentez-vous ?</div>
+              </div>
             </button>
             <button class="action-block-btn" id="btn-ai">
               <span class="abtn-icon">&#9830;</span>
@@ -188,12 +201,7 @@
           <div id="scores-grid"></div>
         </div>
 
-        <div class="panel panel--radar">
-          <div class="panel-label">CONFORMITE LEGALE</div>
-          <div class="panel-corner-br"></div>
-          <canvas id="radar-canvas" width="250" height="250"></canvas>
-          <div class="radar-legend" id="radar-legend"></div>
-        </div>
+        
 
         <div class="panel panel--risks">
           <div class="panel-label">RISQUES DETECTES</div>
