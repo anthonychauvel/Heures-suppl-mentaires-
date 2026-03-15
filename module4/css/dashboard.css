@@ -184,15 +184,13 @@
 
 /* ── PREDICTIONS ─────────────────────────────────────────────────── */
 .predictions-grid {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  grid-template-rows: auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
   min-height: calc(100vh - 70px);
 }
-.panel--timeline { grid-column: 1/2; }
-.panel--scenarios{ grid-column: 2/3; grid-row: 1/2; }
-.panel--futur    { grid-column: 2/3; grid-row: 2/3; }
+.panel--scenarios { flex: 1; }
+.panel--futur     { flex: 1; }
 
 .timeline-controls {
   display: flex; align-items: center; gap: var(--gap-l);
