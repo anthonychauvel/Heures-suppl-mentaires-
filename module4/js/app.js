@@ -287,9 +287,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let sim = null, fut = null, scen = null;
     const _rdNow = window._getRestDays ? window._getRestDays() : [0,6];
-    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: _rdNow }); } catch(e) {}
     try { fut  = DTE.simulator.futurState(days, freshState.norm); } catch(e) {}
     try { scen = DTE.simulator.scenarios(days, freshState.norm); } catch(e) {}
+    // Timeline : utilise le scénario "actuel" depuis scen si dispo (garanti cohérent)
+    // Sinon recalcule directement avec les HS réelles
+    if (sliderAdj === 0 && scen) {
+      const actuelSc = scen.scenarios.find(s => s.key === 'actuel');
+      if (actuelSc && actuelSc._sim) { sim = actuelSc._sim; }
+    }
+    if (!sim) {
+      // Passer les scores engine pour un état initial correct (comme WhatIf)
+      const engScores = DTE.engine.getState() && DTE.engine.getState().scores;
+      try { sim = DTE.simulator.run({ days, hoursPerDay: hs, restDays: _rdNow }, engScores); } catch(e) {}
+    }
     renderTimeline(sim, days);
     renderScenarios(days, freshState, scen);
     renderFutur(days, freshState, fut);
