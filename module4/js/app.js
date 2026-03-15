@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       DTE.notifs.checkAndNotify(state, risks);
-      DTE.checkin.checkIfNeeded();
       document.dispatchEvent(new CustomEvent('dte:analyzed', { detail: state }));
     } catch (err) {
       console.error('[DTE App] Analysis error:', err);
@@ -219,6 +218,14 @@ document.addEventListener('DOMContentLoaded', function () {
       const r2 = DTE.risks.detect(s.scores, s.norm);
       const a2 = buildAdvice(s.scores, r2, s.norm);
       DTE.lastRisks = r2; DTE.lastAdvice = a2;
+      // Recalculer le scoreGlobal
+      if (!s.scores._hasData) {
+        DTE.app = { scoreGlobal: null };
+      } else {
+        const d2 = r2.filter(r => r.level === 'CRITIQUE').length;
+        const al = r2.filter(r => r.level !== 'CRITIQUE').length;
+        DTE.app = { scoreGlobal: Math.max(0, Math.min(100, (s.scores.performance||50) - d2*15 - al*5)) };
+      }
       DTE.dashboard.render(s, r2, a2);
       if (DTE.twin) DTE.twin.update(s.scores);
       const av = document.querySelector('.view:not(.hidden)');
@@ -578,7 +585,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('welcome-start')?.addEventListener('click', () => {
       localStorage.setItem('DTE_WELCOMED', '1');
       ov.classList.add('hide');
-      setTimeout(() => ov.remove(), 500);
+      setTimeout(() => {
+        ov.remove();
+        // Proposer le check-in après le welcome (pas avant)
+        if (DTE.checkin) DTE.checkin.checkIfNeeded();
+      }, 600);
     });
   }
 
