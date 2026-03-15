@@ -65,7 +65,7 @@ const D = {
   SLEEP_OPTIMAL:     8,    // sommeil optimal (h)
   SLEEP_MIN:         6,    // seuil critique sommeil (J.Occup.Health 2021)
   CONTINGENT_MAX:  220,    // contingent HS annuel légal (Art. L3121-33)
-  RECOVERY:       0.012,   // récupération journalière de base
+  RECOVERY:       0.011,   // récupération journalière de base
   RECOVERY_WE:    0.045,   // récupération week-end
   LR:             0.05,    // learning rate adaptatif
   // Seuils alertes (concordance phases + légal)

@@ -34,31 +34,32 @@ const BIO = {
   H_CEREBRAL:  52,   // OEM 2025 : +19% gyrus frontal
   H_CV:        55,   // OMS 2021 : +35% AVC, +17% cardio
 
-  // Fatigue — INRS + J.Occup.Health 2021
-  // Calibré : 3h HS/j pendant 8 sem → phase 3 (fat ~70%)
-  FAT_PER_HS:     0.026,  // par heure HS/j
-  FAT_NONLINEAR:  0.65,   // amplification si déjà fatigué
-  FAT_BASE:       0.005,  // résidu quotidien même à 7h/j
-  FAT_CONSEC:     0.006,  // par jour consécutif (douleurs musculo)
+  // Fatigue — INRS + J.Occup.Health 2021 + OMS/OIT
+  // Calibration validée : 35h→0%, 45h→8%/J+30 44%/J+90 (Phase 2), 55h→alerte rapide
+  // Coefficient dynamique selon charge : fatPerHS(hs) = 0.013/0.017/0.019
+  FAT_PER_HS_BASE:  0.013,  // ≤40h/sem : quasi stable
+  FAT_PER_HS_MID:   0.017,  // 40-48h/sem : accumulation modérée
+  FAT_PER_HS_HIGH:  0.019,  // >48h/sem : accumulation forte (OMS seuil AVC)
+  FAT_NONLINEAR:    0.08,   // amplification légère si déjà fatigué (réduit de 0.65)
+  FAT_BASE:         0.000,  // supprimé — inclus dans RECOVERY
+  FAT_CONSEC:       0.000,  // supprimé — muscle recovery déjà dans REC_WEEKEND
 
-  // Récupération (INRS + Nature Hum.Behav. 2025)
-  // Fan 2025 : réduction 8h/sem → burnout -8.8% sur 6 mois = ~0.047/sem
-  REC_REST:       0.070,  // jour de repos complet
-  REC_WEEKEND:    0.052,  // par jour week-end (2j = 0.104)
-  REC_VACANCES:   0.130,  // jour de vacances
-  // Bonus récupération 4 jours/sem (Nature 2025 — calibré sur 0.44/5 burnout)
-  REC_4DAY_BONUS: 0.018,  // gain supplémentaire si 4j/sem vs 5j
-  // Facteurs cumulatifs (J.Occup.Health : 6 mois décisifs)
-  CUMUL_4W:       1.22,   // 4 semaines de surcharge → récup -22%
-  CUMUL_8W:       1.38,   // 8 semaines (2 mois)
-  CUMUL_16W:      1.55,   // 16 semaines (4 mois)
-  CUMUL_24W:      1.70,   // 24 semaines (6 mois) — seuil J.Occup.Health
+  // Récupération (INRS + Nature Hum.Behav. 2025 Fan et al.)
+  REC_REST:         0.075,  // jour de repos complet
+  REC_WEEKEND:      0.055,  // par jour week-end (2j = 0.110/sem)
+  REC_VACANCES:     0.130,  // jour de vacances
+  REC_4DAY_BONUS:   0.018,  // bonus 4j/sem (Nature 2025)
+  // Facteurs cumulatifs (J.Occup.Health : 6 mois décisifs) — réduits vs ancien
+  CUMUL_4W:         1.10,   // 4 semaines
+  CUMUL_8W:         1.20,   // 2 mois
+  CUMUL_16W:        1.35,   // 4 mois
+  CUMUL_24W:        1.52,   // 6 mois — seuil J.Occup.Health 2021
 
-  // Stress/Cortisol — Thompson 2022 + ANACT
-  STR_PER_HS:     0.020,  // cortisol par heure HS
-  STR_FAT_AMP:    0.022,  // fatigue amplifie le stress
-  STR_REC_REST:   0.060,  // décroissance repos
-  STR_REC_DAY:    0.003,  // légère décroissance en travaillant
+  // Stress/Cortisol — Thompson 2022 + ANACT (recalibré)
+  STR_PER_HS:     0.010,  // cortisol par heure HS (réduit)
+  STR_FAT_AMP:    0.009,  // fatigue amplifie le stress (réduit)
+  STR_REC_REST:   0.055,  // décroissance repos
+  STR_REC_DAY:    0.008,  // décroissance quotidienne en travaillant
 
   // Performance — Pencavel 2014 (non-linéaire)
   // Implémenté via la fonction pencavelPerf() de l'engine
@@ -192,18 +193,19 @@ class DTESimulator {
       // ── FATIGUE (INRS — dose-réponse non-linéaire) ──────────────
       if (isRest || isVacance) {
         // Nature Hum.Behav. 2025 : repos supplémentaire amplifie la récupération
-        const isExtraDay = (dow === 5 && restDays.includes(6)); // vendredi si sam repos aussi
-        const rec4day    = (restDays.includes(5) || restDays.includes(6)) ? BIO.REC_4DAY_BONUS : 0;
-        const rec        = isVacance ? BIO.REC_VACANCES : BIO.REC_WEEKEND + rec4day;
-        fat              = Math.max(0, fat - rec / cumulF);
-        consecDays = 0;
+        const rec4day = (restDays.includes(5) || restDays.includes(6)) ? BIO.REC_4DAY_BONUS : 0;
+        const rec     = isVacance ? BIO.REC_VACANCES : BIO.REC_WEEKEND + rec4day;
+        fat           = Math.max(0, fat - rec / Math.max(1, cumulF * 0.92));
+        consecDays    = 0;
       } else {
         consecDays++;
-        // Non-linéaire : fatigue s'emballe quand elle est déjà haute
-        const nonLinear  = 1 + fat * BIO.FAT_NONLINEAR;
-        const fatLoad    = hsH * BIO.FAT_PER_HS * nonLinear * cumulF;
-        const consecLoad = consecDays * BIO.FAT_CONSEC * (consecDays >= 6 ? 1.5 : 1.0);
-        fat = Math.min(1, fat + fatLoad + BIO.FAT_BASE + consecLoad - D.RECOVERY);
+        // Coefficient dynamique selon charge (3 paliers calibrés OMS/INRS/J.Occup.Health)
+        const fatCoef   = hsH <= 1 ? BIO.FAT_PER_HS_BASE
+                        : hsH <= 3 ? BIO.FAT_PER_HS_MID
+                        :            BIO.FAT_PER_HS_HIGH;
+        const nonLinear = 1 + fat * BIO.FAT_NONLINEAR;
+        const fatLoad   = hsH * fatCoef * nonLinear * cumulF;
+        fat = Math.min(1, fat + fatLoad - D.RECOVERY);
       }
 
       // ── STRESS/CORTISOL (Thompson 2022 + ANACT) ─────────────────
@@ -350,7 +352,7 @@ class DTESimulator {
     const scores = this._engine.getState() && this._engine.getState().scores;
     if (!n || !scores) return null;
     const D   = this._engine.getDefaults();
-    const sim = this.run({ days, hoursPerDay: n._avgExtra7 || 0, restDays: [0] }, scores);
+    const sim = this.run({ days, hoursPerDay: n._avgExtra7 || 0, restDays: [0,6] }, scores);
     const future = new Date(); future.setDate(future.getDate() + days);
 
     // Transitions de phase
