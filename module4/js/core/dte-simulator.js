@@ -267,7 +267,8 @@ class DTESimulator {
     }
 
     const avg        = v => Math.round(v / nb * 100);
-    const finalPhase = getPhase(fat);
+    const avgFatVal  = Math.max(0, avg(totFat)) / 100;  // phase basée sur la moyenne
+    const finalPhase = getPhase(avgFatVal);  // plus cohérent que fat du dernier jour
     return {
       timeline,
       summary: {
@@ -392,8 +393,9 @@ class DTESimulator {
     if (h >= BIO.H_CV)       return `⚠ ${h.toFixed(0)}h/sem — RR=1.35 AVC, RR=1.17 cardio (OMS 2021)`;
     if (h >= BIO.H_CEREBRAL) return `⚠ ${h.toFixed(0)}h/sem — +19% gyrus frontal (OEM 2025)`;
     if (h >= BIO.H_OCDE)     return `⚠ ${h.toFixed(0)}h/sem — productivité nulle (Pencavel 2014)`;
-    if (h >= BIO.H_LEGAL)    return `→ ${h.toFixed(0)}h/sem — légal FR, fatigue progressive`;
-    return `✓ ${h.toFixed(0)}h/sem — zone OMS/Pencavel optimale`;
+    if (h >= BIO.H_LEGAL)    return `→ ${h.toFixed(0)}h/sem — dépasse le légal 48h (Art. L3121-20)`;
+    if (h > 40)              return `⚠ ${h.toFixed(0)}h/sem — vigilance OCDE (>40h)`;
+    return `✓ ${h.toFixed(0)}h/sem — zone OMS optimale (≤40h)`;
   }
 
   _omsRisk(h, cumulW) {
