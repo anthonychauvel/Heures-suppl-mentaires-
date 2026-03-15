@@ -301,26 +301,27 @@ class DTESimulator {
     const avg  = Math.max(0, (weeklyHcur - 35) / 5);  // HS/jour travaillé
     const base = D.BASE_JOUR;
 
+    const _rdSc = (typeof window !== 'undefined' && window._getRestDays) ? window._getRestDays() : [0,6];
     const plans = [
       {
         key:'urgence',    emoji:'🔥', label:'Rush extrême +4h/j',
         desc:`${(base+avg+4).toFixed(1)}h/j — Territoire Pencavel : 0% de productivité supplémentaire`,
-        hs: avg+4, rest:[0,6], oms: this._omsLabel((base+avg+4)*5),
+        hs: avg+4, rest:_rdSc, oms: this._omsLabel((base+avg+4)*5),
       },
       {
         key:'actuel',     emoji:'▶', label:'Rythme actuel',
         desc:`${(base+avg).toFixed(1)}h/j — Continuation exacte de la semaine écoulée`,
-        hs: avg, rest:[0,6], oms: this._omsLabel((base+avg)*5),
+        hs: avg, rest:_rdSc, oms: this._omsLabel((base+avg)*5),
       },
       {
         key:'reduit',     emoji:'⬇', label:'Réduction légère -1h/j',
         desc:`${(base+Math.max(0,avg-1)).toFixed(1)}h/j — Amélioration progressive`,
-        hs: Math.max(0,avg-1), rest:[0,6], oms: this._omsLabel((base+Math.max(0,avg-1))*5),
+        hs: Math.max(0,avg-1), rest:_rdSc, oms: this._omsLabel((base+Math.max(0,avg-1))*5),
       },
       {
         key:'optimise',   emoji:'⚡', label:'Optimisé -2h/j (OCDE)',
         desc:`${(base+Math.max(0,avg-2)).toFixed(1)}h/j — Zone productive selon OCDE`,
-        hs: Math.max(0,avg-2), rest:[0,6], oms: this._omsLabel((base+Math.max(0,avg-2))*5),
+        hs: Math.max(0,avg-2), rest:_rdSc, oms: this._omsLabel((base+Math.max(0,avg-2))*5),
       },
       {
         key:'equilibre',  emoji:'⚖', label:'Équilibre 35h/sem (OMS)',
@@ -355,7 +356,9 @@ class DTESimulator {
     const scores = this._engine.getState() && this._engine.getState().scores;
     if (!n || !scores) return null;
     const D   = this._engine.getDefaults();
-    const sim = this.run({ days, hoursPerDay: n._avgExtra7 || 0, restDays: [0,6] }, scores);
+    // Lire les jours de repos configurés par l'utilisateur
+    const _rd = (typeof window !== 'undefined' && window._getRestDays) ? window._getRestDays() : [0,6];
+    const sim = this.run({ days, hoursPerDay: Math.max(0, ((n._recentWeeklyH||35)-35)/5), restDays: _rd }, scores);
     const future = new Date(); future.setDate(future.getDate() + days);
 
     // Transitions de phase
