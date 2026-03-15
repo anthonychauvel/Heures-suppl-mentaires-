@@ -698,24 +698,24 @@ class GlossaryUI {
     return `<div style="background:rgba(0,10,25,.9);border:1px solid ${s.couleur}35;border-left:3px solid ${s.couleur};margin-bottom:5px;">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 10px;border-bottom:1px solid rgba(0,200,255,0.06);">
         <div style="flex:1;">
-          <div style="font-family:var(--font-hud);font-size:11px;color:${s.couleur};margin-bottom:3px;line-height:1.3;">${s.titre}</div>
-          <div style="font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.65);">${s.auteurs}</div>
-          <div style="font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,0.40);margin-top:1px;">${s.journal} · ${s.annee}${s.doi?' · DOI: '+s.doi:''}</div>
+          <div style="font-family:var(--font-hud);font-size:11px;color:#22b8e8;margin-bottom:3px;line-height:1.3;">${s.titre}</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.80);">${s.auteurs}</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,0.55);margin-top:1px;">${s.journal} · ${s.annee}${s.doi?' · DOI: '+s.doi:''}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;">
-          <span style="font-family:var(--font-mono);font-size:8px;color:${s.couleur};border:1px solid ${s.couleur}50;padding:1px 5px;white-space:nowrap;">${s.cat}</span>
-          <span style="font-family:var(--font-mono);font-size:9px;color:var(--amber);">${stars}</span>
+          <span style="font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,0.75);border:1px solid ${s.couleur}60;background:${s.couleur}15;padding:1px 5px;white-space:nowrap;">${s.cat}</span>
+          <span style="font-family:var(--font-mono);font-size:9px;color:rgba(255,200,50,0.8);">${stars}</span>
           ${s.nouveaute?'<span style="font-family:var(--font-mono);font-size:7px;color:var(--sync);border:1px solid var(--sync);padding:1px 4px;">NOUVEAU 2024-25</span>':''}
         </div>
       </div>
       ${s.population?`<div style="padding:3px 10px;background:rgba(0,200,255,0.03);font-size:9px;color:var(--text-muted);font-family:var(--font-mono);border-bottom:1px solid rgba(0,200,255,0.04);">&#128101; ${s.population}</div>`:''}
-      ${s.seuil?`<div style="padding:3px 10px;background:rgba(255,179,0,0.03);font-size:9px;color:var(--amber);font-family:var(--font-mono);border-bottom:1px solid rgba(0,200,255,0.04);">&#9656; SEUIL CLÉ : ${s.seuil}</div>`:''}
+      ${s.seuil?`<div style="padding:3px 10px;background:rgba(255,179,0,0.03);font-size:9px;color:rgba(255,255,255,0.70);font-family:var(--font-mono);border-bottom:1px solid rgba(0,200,255,0.04);">&#9656; SEUIL CLÉ : ${s.seuil}</div>`:''}
       <div style="padding:6px 10px;">
-        <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);letter-spacing:.1em;margin-bottom:4px;">RÉSULTATS</div>
+        <div style="font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,0.45);letter-spacing:.1em;margin-bottom:4px;">RÉSULTATS</div>
         ${s.resultats.map(r=>`<div style="font-size:10px;color:rgba(255,255,255,0.78);padding:1px 0;display:flex;gap:5px;"><span style="color:rgba(255,255,255,0.35);flex-shrink:0;">›</span>${r}</div>`).join('')}
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:rgba(0,10,25,.5);border-top:1px solid rgba(0,200,255,0.05);">
-        <span style="font-family:var(--font-mono);font-size:8px;color:var(--text-muted);">&#9650; DTE : ${s.dte||'calibrage général'}</span>
+        <span style="font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,0.40);">⬆ DTE : ${s.dte||'calibrage général'}</span>
         ${s.lien?`<a href="${s.lien}" target="_blank" rel="noopener" style="font-family:var(--font-mono);font-size:8px;color:var(--animus);text-decoration:none;border:1px solid rgba(0,200,255,0.2);padding:1px 6px;">&#8599; SOURCE</a>`:''}
       </div>
     </div>`;
