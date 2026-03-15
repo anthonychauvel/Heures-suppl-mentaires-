@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
       DTE.learning.autoAdapt();
       const risks  = DTE.risks.detect(state.scores, state.norm);
       let advice = [];
-      try { advice = buildAdvice(state.scores, risks); } catch(e) { console.warn('[DTE] buildAdvice error:', e); }
+      try { advice = buildAdvice(state.scores, risks, state.norm); } catch(e) { console.warn('[DTE] buildAdvice error:', e); }
       DTE.lastRisks  = risks;
       DTE.lastAdvice = advice;
       DTE._state     = state;
@@ -118,12 +118,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ── 3. Conseils ─────────────────────────────────────────────── */
-  function buildAdvice(scores, risks) {
+  function buildAdvice(scores, risks, norm) {
     const advice = [];
-    const state  = DTE._state;
-    const norm   = state && state.norm;
-    const weekH  = (norm && norm._recentWeeklyH) || 35;
-    const cumW   = (norm && norm._cumulWeeks) || 0;
+    // norm passé directement pour éviter la dépendance à DTE._state non encore défini
+    const _norm  = norm || (DTE._state && DTE._state.norm);
+    const weekH  = (_norm && _norm._recentWeeklyH) || 35;
+    const cumW   = (_norm && _norm._cumulWeeks) || 0;
 
     // ─ FATIGUE ─────────────────────────────────────────────────────
     if (!scores._hasData) {
@@ -151,11 +151,16 @@ document.addEventListener('DOMContentLoaded', function () {
           'vous pouvez maintenir ce rythme à court terme. Surveillez la durée.',
         source:'Thompson 2022 · Nature Hum.Behav. 2025 (Fan et al.)' });
     } else {
-      advice.push({ type:'success', emoji:'🟢',
-        titre:'Bonne forme — Phase 1',
-        message:'Votre niveau de fatigue est faible. Continuez à vous hydrater, dormir 7-8h et prendre vos pauses. ' +
-          'La prévention est le meilleur investissement.',
-        source:'OMS — Zone optimale ≤40h/sem · INRS' });
+      const p1weekMsg = weekH > 48 ? 'Fatigue faible MAIS vous dépassez le maximum légal ('+weekH.toFixed(0)+'h/sem > 48h). Attention à la durée.'
+        : weekH > 40 ? 'Fatigue faible pour l\'instant. À '+weekH.toFixed(0)+'h/sem, surveillez l\'accumulation sur plusieurs semaines.'
+        : 'Votre niveau de fatigue est faible. Continuez à vous hydrater, dormir 7-8h et prendre vos pauses.';
+      const p1src = weekH > 48 ? 'Art. L3121-20 Code du travail · OMS — seuil AVC 55h'
+        : weekH > 40 ? 'INRS — vigilance dès 40h/sem · J.Occup.Health 2021'
+        : 'OMS — Zone optimale ≤40h/sem · INRS';
+      advice.push({ type: weekH > 48 ? 'warning' : 'success', emoji: weekH > 40 ? '⚠️' : '🟢',
+        titre: weekH > 48 ? 'Attention : dépassement légal ('+weekH.toFixed(0)+'h/sem)' : 'Bonne forme — Phase 1',
+        message: p1weekMsg + ' La prévention est le meilleur investissement.',
+        source: p1src });
     }
 
     // ─ HEURES HEBDO vs LÉGAL ────────────────────────────────────────
@@ -226,7 +231,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ── 5. Vue Prévisions ───────────────────────────────────────── */
   function initPredictions() {
-    if (!DTE._state) { setTimeout(initPredictions, 300); return; }
+    if (!DTE._state || !DTE._state.norm) {
+      // Forcer une analyse si pas encore de state
+      try { runAnalysis(); } catch(_) {}
+      setTimeout(initPredictions, 400);
+      return;
+    }
     const state = DTE._state;
     const hsEl   = document.getElementById('timeline-hs');
     const daysEl = document.getElementById('timeline-days');
@@ -257,7 +267,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let sim = null, fut = null, scen = null;
-    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: window._getRestDays ? window._getRestDays() : [0,6] }, freshState.scores); } catch(e) {}
+    const _rdNow = window._getRestDays ? window._getRestDays() : [0,6];
+    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: _rdNow }, freshState.scores); } catch(e) {}
     try { fut  = DTE.simulator.futurState(days, freshState.norm); } catch(e) {}
     try { scen = DTE.simulator.scenarios(days, freshState.norm); } catch(e) {}
     renderTimeline(sim, days);
@@ -627,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const s = DTE.engine.analyze();
       DTE._state = s;
       const _risks  = DTE.risks.detect(s.scores, s.norm);
-      const _advice = buildAdvice(s.scores, _risks);
+      const _advice = buildAdvice(s.scores, _risks, s.norm);
       DTE.lastRisks  = _risks;
       DTE.lastAdvice = _advice;
 
@@ -678,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const s = DTE.engine.analyze();
       DTE._state = s;
       const _r2 = DTE.risks.detect(s.scores, s.norm);
-      const _a2 = buildAdvice(s.scores, _r2);
+      const _a2 = buildAdvice(s.scores, _r2, s.norm);
       DTE.lastRisks  = _r2;
       DTE.lastAdvice = _a2;
       DTE.dashboard.render(s, _r2, _a2);
