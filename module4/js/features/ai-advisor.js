@@ -30,7 +30,7 @@ class AIAdvisor {
     m.className = 'modal'; m.id = 'ai-modal-new';
     m.innerHTML = `
       <div class="modal-overlay"></div>
-      <div class="modal-box" style="max-width:700px;max-height:92vh;">
+      <div class="modal-box" style="max-width:700px;max-height:calc(88vh - env(safe-area-inset-top));margin-top:calc(env(safe-area-inset-top) + 8px);">
         <div class="modal-header">
           <h2>&#9670; CONSEILLER JURIDIQUE &amp; PRÉVENTION</h2>
           <span class="modal-close" id="ai-close-new">&#x2715;</span>
@@ -51,7 +51,7 @@ class AIAdvisor {
         </div>
 
         <!-- Contenu scrollable -->
-        <div id="ai-content-new" style="overflow-y:auto;max-height:56vh;"></div>
+        <div id="ai-content-new" style="overflow-y:auto;max-height:50vh;"></div>
 
         <!-- Footer état -->
         <div id="ai-footer-state" style="margin-top:8px;padding-top:8px;
