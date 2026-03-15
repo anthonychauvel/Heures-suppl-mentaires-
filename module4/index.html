@@ -266,40 +266,7 @@
     <!-- PREDICTIONS -->
     <section id="view-predictions" class="view hidden">
       <div class="predictions-grid">
-        <div class="panel panel--timeline">
-          <div class="panel-label">COURBE PREDICTIVE</div>
-          <div class="panel-corner-br"></div>
-          <div class="timeline-controls" style="font-size:11px;">
-            <div style="margin-bottom:6px;color:rgba(255,255,255,0.5);font-size:10px;">
-              ℹ️ Ces prévisions sont basées sur <b style="color:#fff">votre rythme actuel</b> (données M1)
-            </div>
-            <label style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-              <span style="white-space:nowrap;color:rgba(255,255,255,0.8);">Simulation HS supp. :</span>
-              <input type="range" id="timeline-hs" min="-2" max="4" step="0.5" value="0" style="flex:1">
-              <span id="timeline-hs-val" style="min-width:32px;text-align:right;font-weight:700;color:var(--animus);">0H</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:8px;">
-              <span style="white-space:nowrap;color:rgba(255,255,255,0.8);">Horizon :</span>
-              <select id="timeline-days" style="flex:1;background:rgba(0,10,25,.8);color:#fff;border:1px solid rgba(0,200,255,0.2);padding:3px 6px;">
-                <option value="7">7 jours</option>
-                <option value="14">14 jours</option>
-                <option value="30" selected>30 jours</option>
-                <option value="60">60 jours</option>
-                <option value="90">90 jours</option>
-              </select>
-            </label>
-          </div>
-          <div id="timeline-canvas" style="min-height:180px;"></div>
-          <!-- CHARTE DE LECTURE BIOMÉDICALE -->
-          <div style="margin-top:8px;background:rgba(0,6,15,0.8);border:1px solid rgba(0,200,255,0.1);">
-            <div style="padding:6px 10px;border-bottom:1px solid rgba(0,200,255,0.08);font-family:var(--font-mono);font-size:8px;letter-spacing:.15em;color:var(--animus);">
-              CHARTE DE PRÉDICTION — MODÈLE BIOMÉDICAL (OMS/OIT · OCDE · ANACT)
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
-              <div style="padding:6px 10px;border-right:1px solid rgba(0,200,255,0.06);border-bottom:1px solid rgba(0,200,255,0.06);">
-                <div style="font-family:var(--font-mono);font-size:8px;color:var(--sync);margin-bottom:2px;">● PHASE 1 — ADAPTATION (0-35%)</div>
-                <div style="font-size:9px;color:var(--text-dim);">≤40h/sem · Récupération efficace · Zone OMS optimale</div>
-              </div>
+        
               <div style="padding:6px 10px;border-bottom:1px solid rgba(0,200,255,0.06);">
                 <div style="font-family:var(--font-mono);font-size:8px;color:var(--amber);margin-bottom:2px;">● PHASE 2 — FATIGUE CHRONIQUE (35-60%)</div>
                 <div style="font-size:9px;color:var(--text-dim);">40-52h/sem · Troubles sommeil · Cortisol élevé</div>
