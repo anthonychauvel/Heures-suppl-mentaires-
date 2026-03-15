@@ -132,22 +132,16 @@
     <section id="view-dashboard" class="view active">
       <div class="dashboard-grid">
 
-        <!-- BLOC ACTIONS — au-dessus du score global -->
+        <!-- BLOC ACTIONS -->
         <div class="panel panel--actions" id="panel-actions">
           <div class="panel-label">ACTIONS</div>
           <div class="panel-corner-br"></div>
           <div style="display:flex;flex-direction:column;gap:5px;">
-            <button class="action-block-btn" id="btn-help">
-              <span class="abtn-icon">?</span>
-              <div class="abtn-text"><div class="abtn-label">AIDE</div><div class="abtn-sub">Comment ça marche</div></div>
-            </button>
-            <button class="action-block-btn" id="btn-glossary">
-              <span class="abtn-icon">&#128218;</span>
-              <div class="abtn-text"><div class="abtn-label">SOURCES</div><div class="abtn-sub">18 études scientifiques</div></div>
-            </button>
+
+            <!-- CHECK-IN en premier, plus grand -->
             <button class="action-block-btn" id="btn-checkin" style="
               background:rgba(0,255,204,0.10);border:2px solid rgba(0,255,204,0.45);
-              padding:14px 9px;margin:4px 0;flex-direction:column;align-items:center;
+              padding:14px 9px;flex-direction:column;align-items:center;
               text-align:center;gap:5px;">
               <span style="font-size:26px;line-height:1;">☀</span>
               <div>
@@ -159,6 +153,7 @@
               </div>
             </button>
 
+            <!-- SYNC -->
             <button class="action-block-btn" id="btn-sync-visible"
               onclick="window._forcSync&&window._forcSync()">
               <span class="abtn-icon">&#8635;</span>
@@ -168,24 +163,49 @@
               </div>
             </button>
 
-            <!-- Checkbox jours de repos -->
+            <!-- Jours de repos -->
             <div style="padding:8px 9px;background:rgba(0,10,25,.8);
-              border:1px solid rgba(255,255,255,0.1);margin-top:2px;">
+              border:1px solid rgba(255,255,255,0.1);">
               <div style="font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.5);
                 letter-spacing:.08em;margin-bottom:6px;">⏰ MES JOURS DE REPOS</div>
               <label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin-bottom:5px;">
                 <input type="checkbox" id="dte-rest-sat" onchange="window._updateRestDays()"
                   style="width:14px;height:14px;accent-color:var(--sync);">
-                <span style="font-size:11px;color:#fff;">Samedi</span>
-                <span style="font-size:9px;color:rgba(255,255,255,0.4);">repos</span>
+                <span style="font-size:11px;color:#fff;">Samedi repos</span>
               </label>
               <label style="display:flex;align-items:center;gap:7px;cursor:pointer;">
                 <input type="checkbox" id="dte-rest-sun" onchange="window._updateRestDays()"
                   style="width:14px;height:14px;accent-color:var(--sync);">
-                <span style="font-size:11px;color:#fff;">Dimanche</span>
-                <span style="font-size:9px;color:rgba(255,255,255,0.4);">repos</span>
+                <span style="font-size:11px;color:#fff;">Dimanche repos</span>
               </label>
             </div>
+
+            <!-- SOURCES -->
+            <button class="action-block-btn" id="btn-glossary">
+              <span class="abtn-icon">&#128218;</span>
+              <div class="abtn-text"><div class="abtn-label">SOURCES</div><div class="abtn-sub">20 études scientifiques</div></div>
+            </button>
+
+            <!-- CONSEILS -->
+            <button class="action-block-btn" id="btn-ai">
+              <span class="abtn-icon">&#9830;</span>
+              <div class="abtn-text"><div class="abtn-label">CONSEILS</div><div class="abtn-sub">1000 scénarios locaux</div></div>
+            </button>
+
+            <!-- PDF -->
+            <button class="action-block-btn" id="btn-pdf">
+              <span class="abtn-icon">&#8659;</span>
+              <div class="abtn-text"><div class="abtn-label">EXPORT PDF</div><div class="abtn-sub">Rapport légal</div></div>
+            </button>
+
+            <!-- AIDE en dernier -->
+            <button class="action-block-btn" id="btn-help">
+              <span class="abtn-icon">?</span>
+              <div class="abtn-text"><div class="abtn-label">AIDE</div><div class="abtn-sub">Comment ça marche</div></div>
+            </button>
+
+          </div>
+        </div>
 
             <button class="action-block-btn" id="btn-ai">
               <span class="abtn-icon">&#9830;</span>
