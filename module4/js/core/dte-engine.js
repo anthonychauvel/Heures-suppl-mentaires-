@@ -361,7 +361,24 @@ class DTEEngine {
     const { m1, m2, rpg } = raw;
     const clamp = (v, min, max) => max === min ? 0 : Math.max(0, Math.min(1, (v - min) / (max - min)));
     const today = new Date();
-    const days  = m1.days;
+
+    // Si M1 vide mais M2 disponible : reconstruire les jours depuis M2.months[mk].rawDays
+    let days = m1.days;
+    if (!Object.keys(days).length && m2 && m2.months && Object.keys(m2.months).length) {
+      const synth = {};
+      for (const [mk, monthData] of Object.entries(m2.months)) {
+        if (!/^\d{4}-\d{2}$/.test(mk)) continue;
+        const rawDays = monthData.rawDays || {};
+        for (const [day, hs] of Object.entries(rawDays)) {
+          const h = parseFloat(hs) || 0;
+          if (h > 0) {
+            const dateKey = mk + '-' + String(day).padStart(2, '0');
+            synth[dateKey] = { extra: h, recup: 0, absent: 0 };
+          }
+        }
+      }
+      if (Object.keys(synth).length) days = synth;
+    }
 
     // Fonction date locale (évite le bug toISOString/UTC+1)
     const localDK = (dt) => {
