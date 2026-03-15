@@ -166,24 +166,27 @@ class WhatIfPanel {
       </div>
 
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;">
-        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${c(s.avgFatigue)}30;text-align:center;cursor:pointer;" onclick="window._showScoreDetail&&window._showScoreDetail('fatigue')">
+        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${c(s.avgFatigue)}30;text-align:center;cursor:pointer;"
+          onclick="window._showScoreDetail&&window._showScoreDetail('fatigue')">
+          <div style="font-size:22px;font-weight:700;color:${c(s.avgFatigue)};">${s.avgFatigue}%</div>
           <div style="font-size:11px;color:#fff;margin-top:2px;">Fatigue moy.</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.5);">sur la période</div>
           <div style="font-size:10px;color:rgba(255,255,255,0.5);">sur la période ›</div>
-        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${c(100-s.avgPerformance)}30;text-align:center;cursor:pointer;" onclick="window._showScoreDetail&&window._showScoreDetail('performance')">
+        </div>
+        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${c(100-s.avgPerformance)}30;text-align:center;cursor:pointer;"
+          onclick="window._showScoreDetail&&window._showScoreDetail('performance')">
           <div style="font-size:22px;font-weight:700;color:${c(100-s.avgPerformance)};">${s.avgPerformance}%</div>
           <div style="font-size:11px;color:#fff;margin-top:2px;">Performance</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.5);">efficacité moy.</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.5);">efficacité moy. ›</div>
         </div>
-        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${s.daysAlert>0?'#ffb300':'#00ffcc'}30;text-align:center;">
-          <div style="font-size:22px;font-weight:700;color:${s.daysAlert>0?'#ffb300':'#00ffcc'};">${s.daysAlert}</div> cursor:pointer;" onclick="window._showScoreDetail&&window._showScoreDetail('recovery')">
+        <div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid ${s.daysAlert>0?'#ffb300':'#00ffcc'}30;text-align:center;cursor:pointer;"
+          onclick="window._showScoreDetail&&window._showScoreDetail('recovery')">
+          <div style="font-size:22px;font-weight:700;color:${s.daysAlert>0?'#ffb300':'#00ffcc'};">${s.daysAlert}</div>
           <div style="font-size:11px;color:#fff;margin-top:2px;">Jours alerte</div>
           <div style="font-size:10px;color:rgba(255,255,255,0.5);">sur ${this._plan.days}j ›</div>
         </div>
       </div>
 
-      <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:6px;">Évolution de la fatigue semaine par semaine :</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:6px;">Évolution de la fatigue semaine par semaine :</div>
       <div style="display:flex;gap:4px;align-items:flex-end;height:56px;margin-bottom:6px;">
         ${Array.from({length:Math.min(8,Math.ceil(tl.length/7))},(_,w)=>{
           const wd=tl.slice(w*7,(w+1)*7);
