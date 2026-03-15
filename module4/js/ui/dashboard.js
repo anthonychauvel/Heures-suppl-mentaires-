@@ -247,6 +247,22 @@ class Dashboard {
         const today = new Date().toISOString().slice(0,10);
         ci = hist.find(h=>h.date===today) || hist[hist.length-1] || {};
       } catch(_) {}
+
+      // Lire le profil rythme de vie
+      let ls = {};
+      try { ls = JSON.parse(localStorage.getItem('DTE_LIFESTYLE')||'{}'); } catch(_) {}
+      const lsLabels = {
+        sport:        ['Jamais','1×/sem','2-3×/sem','4×+'],
+        nutrition:    ['Mal équilibrée','Passable','Équilibrée','Très soignée'],
+        sleep_quality:['Très mal','Mal','Correct','Très bien'],
+        sens:         ['Aucun sens','Peu','Moyennement','Très motivant'],
+        social:       ['Isolé(e)','Peu de soutien','Correct','Très entouré(e)'],
+        stress_extra: ['Calme','Peu','Modéré','Intense'],
+        pauses:       ['Jamais','1 pause','Régulières','+ déconnexion'],
+        ecrans_soir:  ['Jusqu\'au coucher','Parfois','Rarement','Arrêt 1h avant'],
+      };
+      // Boosts actuels
+      const lsBoosts = (typeof LifestylePanel !== 'undefined') ? LifestylePanel.getBoosts() : {};
       const normVal = (k) => {
         if(k.startsWith('ci_')) return ci[k.replace('ci_','')];
         if(k==='_cumulMonths') return norm ? (norm._cumulWeeks||0)/4.33 : 0;
@@ -306,6 +322,18 @@ class Dashboard {
                 border-top:1px solid rgba(255,255,255,0.08);">
                 Faire un check-in quotidien améliore la précision
               </div>
+
+              ${(()=>{
+                const lsNames = {sport:'Sport',nutrition:'Alimentation',sleep_quality:'Sommeil habituel',sens:'Sens au travail',stress_extra:'Stress extérieur'};
+                if(Object.keys(ls).length >= 4){
+                  const items = ['sport','nutrition','sleep_quality','sens','stress_extra']
+                    .filter(k=>ls[k]!==undefined)
+                    .map(k=>'<div style="margin-bottom:4px;"><div style="font-size:9px;color:rgba(255,255,255,0.4);">'+(lsNames[k]||k)+'</div><div style="font-size:11px;color:#fff;font-weight:600;">'+((lsLabels[k]||[])[ls[k]]||'—')+'</div></div>')
+                    .join('');
+                  return '<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(0,255,204,0.15);"><div style="font-size:9px;color:#00ccaa;letter-spacing:.08em;margin-bottom:5px;">🌿 PROFIL VIE</div>'+items+'</div>';
+                }
+                return '<div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(0,255,204,0.15);font-size:9px;color:rgba(255,255,255,0.35);">Complétez <b style=\"color:#00ccaa\">🌿 Rythme de vie</b> pour voir l\'impact.</div>';
+              })()}
             </div>
           </div>
 
