@@ -50,41 +50,58 @@ class Checkin {
   _render(){
     const q=QUESTIONS[this._step];
     const n=QUESTIONS.length;
-    const dots=QUESTIONS.map((qq,i)=>`<span class="checkin-dot ${i<this._step?'done':i===this._step?'active':''}"></span>`).join('');
+    const pct=Math.round((this._step/n)*100);
+
     this._content.innerHTML=`
-      <div class="checkin-step">
-        <div class="checkin-progress">${dots}</div>
-        <div style="text-align:center;font-size:28px;margin-bottom:8px;">${q.emoji}</div>
-        <div class="checkin-question">${q.text}</div>
-        <div class="checkin-options">
-          ${q.opts.map(o=>`
-            <div class="checkin-option ${this._answers[q.id]===o.v?'selected':''}" data-val="${o.v}">
-              <span class="checkin-option-emoji">${o.e}</span>
-              <span>${o.l}</span>
-            </div>`).join('')}
+      <div style="padding:0 4px;">
+        <!-- Barre de progression -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <span style="font-size:10px;color:rgba(255,255,255,0.4);font-family:var(--font-mono);">
+            ${this._step+1} / ${n}
+          </span>
+          <div style="flex:1;height:3px;background:rgba(255,255,255,0.1);margin:0 10px;">
+            <div style="height:100%;width:${pct}%;background:var(--sync);transition:width .3s;"></div>
+          </div>
+          ${this._step>0?`<button id="ci-prev" style="font-size:11px;color:rgba(255,255,255,0.4);
+            background:none;border:none;cursor:pointer;padding:2px 6px;">← Retour</button>`:'<span></span>'}
         </div>
-        <div class="checkin-nav">
-          ${this._step>0?`<button class="btn btn--ghost" id="ci-prev">← Précédent</button>`:'<span></span>'}
-          <button class="btn btn--cyan" id="ci-next" ${this._answers[q.id]===undefined?'disabled style="opacity:.5;cursor:not-allowed;"':''}>
-            ${this._step===n-1?'✅ Terminer':'Suivant →'}
-          </button>
+
+        <!-- Emoji + Question -->
+        <div style="text-align:center;font-size:36px;margin-bottom:10px;">${q.emoji}</div>
+        <div style="font-size:15px;font-weight:600;color:#fff;text-align:center;
+          margin-bottom:18px;line-height:1.4;">${q.text}</div>
+
+        <!-- Options — 1 clic = réponse + avancer -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          ${q.opts.map(o=>`
+            <button data-val="${o.v}" style="
+              display:flex;align-items:center;gap:12px;
+              padding:12px 16px;background:rgba(0,10,25,.85);
+              border:1px solid ${this._answers[q.id]===o.v?'rgba(0,255,204,0.6)':'rgba(255,255,255,0.12)'};
+              cursor:pointer;transition:all .15s;text-align:left;width:100%;
+              ${this._answers[q.id]===o.v?'background:rgba(0,255,204,0.1);':''}"
+              onmouseover="this.style.borderColor='rgba(0,255,204,0.4)'"
+              onmouseout="this.style.borderColor='${this._answers[q.id]===o.v?'rgba(0,255,204,0.6)':'rgba(255,255,255,0.12)'}'">
+              <span style="font-size:22px;flex-shrink:0;">${o.e}</span>
+              <span style="font-size:13px;color:#fff;">${o.l}</span>
+            </button>`).join('')}
         </div>
       </div>`;
 
-    this._content.querySelectorAll('.checkin-option').forEach(el=>{
+    // Un clic → réponse enregistrée + question suivante automatique
+    this._content.querySelectorAll('button[data-val]').forEach(el=>{
       el.addEventListener('click',()=>{
         this._answers[q.id]=parseInt(el.dataset.val);
-        this._render();
+        // Délai court pour voir la sélection
+        setTimeout(()=>{
+          if(this._step<n-1){ this._step++; this._render(); }
+          else { this._submit(); }
+        }, 220);
       });
     });
+
     const prev=document.getElementById('ci-prev');
-    if(prev) prev.addEventListener('click',()=>{ this._step--; this._render(); });
-    const next=document.getElementById('ci-next');
-    if(next) next.addEventListener('click',()=>{
-      if(this._answers[q.id]===undefined) return;
-      if(this._step<n-1){ this._step++; this._render(); }
-      else { this._submit(); }
-    });
+    if(prev) prev.addEventListener('click',()=>{ this._step=Math.max(0,this._step-1); this._render(); });
   }
 
   _submit(){
@@ -118,7 +135,10 @@ class Checkin {
         <button class="btn btn--cyan" style="margin-top:var(--gap-l);" id="ci-done">Fermer</button>
       </div>`;
     document.getElementById('ci-done').addEventListener('click',()=>this.close());
-    window.DTE&&window.DTE.notifications&&window.DTE.notifications.show('Check-in enregistré','ok','🦊',`Précision du modèle : ${window.DTE.learning?window.DTE.learning.accuracyScore():'-'}%`);
+    // Forcer re-analyse avec les nouvelles données check-in
+    if(window._forcSync) window._forcSync();
+    window.DTE&&window.DTE.notifications&&window.DTE.notifications.show(
+      'Check-in enregistré','ok','🦊','Analyse mise à jour avec votre ressenti du jour.');
   }
 
   getLatest(){
