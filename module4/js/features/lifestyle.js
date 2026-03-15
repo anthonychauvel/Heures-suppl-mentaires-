@@ -129,81 +129,92 @@ class LifestylePanel {
     this._data = data;
   }
 
-  // Retourne les boosts calculés depuis les réponses lifestyle
-  // Appelé depuis dte-engine.js pour modifier les scores
+  // Retourne les modificateurs lifestyle
+  // fatigueMult = multiplicateur sur la fatigue (0.7 = -30%, 1.2 = +20%)
+  // stress/performance/recovery = additifs modérés (max ±0.10)
   static getBoosts() {
     let d = {};
     try { d = JSON.parse(localStorage.getItem('DTE_LIFESTYLE') || '{}'); }
     catch(_) {}
-    if (!Object.keys(d).length) return { fatigue:0, stress:0, performance:0, recovery:0, cvRisk:0 };
+    if (!Object.keys(d).length) {
+      return { fatigueMult:1.0, stress:0, performance:0, recovery:0, cvRisk:0 };
+    }
 
-    const b = { fatigue:0, stress:0, performance:0, recovery:0, cvRisk:0 };
+    // Multiplicateur fatigue : produit de chaque facteur
+    // Jamais additif pour éviter de ramener la fatigue à 0
+    let fatMult = 1.0;
 
-    // Sport (0=jamais → 3=très actif)
+    // Sport — INRS : exercice régulier réduit fatigue chronique de 15-20%
     if (d.sport !== undefined) {
-      const s = d.sport / 3;  // 0-1
-      b.fatigue    -= s * 0.08;   // sport réduit fatigue (INRS)
-      b.recovery   += s * 0.10;   // meilleure récup
-      b.stress     -= s * 0.06;   // cortisol réduit
-      b.cvRisk     -= s * 0.05;   // cardio protection
-      if (d.sport === 3) b.fatigue += 0.04;  // sur-entraînement possible
+      const sportMult = [1.10, 1.03, 0.87, 0.80][d.sport] || 1.0;  // jamais→+10%, 2-3×→-13%, 4×+→-20%
+      fatMult *= sportMult;
     }
 
-    // Nutrition
+    // Nutrition — INRS : alimentation équilibrée réduit fatigue de 5-8%
     if (d.nutrition !== undefined) {
-      const n = d.nutrition / 3;
-      b.fatigue  -= n * 0.05;
-      b.recovery += n * 0.06;
+      const nutMult = [1.08, 1.02, 0.97, 0.93][d.nutrition] || 1.0;
+      fatMult *= nutMult;
     }
 
-    // Qualité du sommeil habituell (≠ check-in du jour)
+    // Qualité du sommeil — Thompson 2022 : mauvais sommeil +20% fatigue, bon -10%
     if (d.sleep_quality !== undefined) {
-      const sl = (d.sleep_quality - 2) / 2;  // -1 à +1
-      b.fatigue    -= sl * 0.12;   // Thompson 2022
-      b.performance += sl * 0.10;
-      b.recovery   += sl * 0.08;
+      const slMult = [1.20, 1.10, 1.00, 0.90][d.sleep_quality] || 1.0;
+      fatMult *= slMult;
     }
 
-    // Sens au travail — Nature 2025 (Fan et al.)
+    // Sens au travail — Nature 2025 (Fan) : sens fort réduit fatigue PERÇUE de 30-40%
     if (d.sens !== undefined) {
-      const se = (d.sens - 1.5) / 1.5;  // -1 à +1
-      b.fatigue    -= se * 0.15;  // perception fatigue réduite
-      b.performance += se * 0.08;
-      b.stress     -= se * 0.06;
+      const sensMult = [1.15, 1.05, 1.00, 0.72][d.sens] || 1.0;
+      fatMult *= sensMult;
     }
 
-    // Soutien social
-    if (d.social !== undefined) {
-      const so = (d.social - 1) / 2;
-      b.stress  -= so * 0.08;   // ANACT RPS
-      b.recovery += so * 0.04;
-    }
-
-    // Stress extérieur
-    if (d.stress_extra !== undefined) {
-      b.stress  += (d.stress_extra / 3) * 0.15;   // ANACT
-      b.recovery -= (d.stress_extra / 3) * 0.08;
-    }
-
-    // Pauses
+    // Pauses — Sonnentag 2003 : pauses réduisent fatigue de 8-10%
     if (d.pauses !== undefined) {
-      const p = d.pauses / 3;
-      b.fatigue    -= p * 0.06;   // Sonnentag 2003
-      b.performance += p * 0.07;
+      const pausMult = [1.08, 1.02, 0.97, 0.92][d.pauses] || 1.0;
+      fatMult *= pausMult;
     }
 
-    // Écrans le soir (inversé : 0=mauvais, 3=bon)
+    // Écrans soir — sommeil dégradé si écrans (jusqu'à +8% fatigue)
     if (d.ecrans_soir !== undefined) {
-      const ec = d.ecrans_soir / 3;
-      b.fatigue    -= ec * 0.05;
-      b.recovery   += ec * 0.06;
+      const ecMult = [1.08, 1.03, 1.00, 0.97][d.ecrans_soir] || 1.0;
+      fatMult *= ecMult;
     }
 
-    // Clamp chaque boost
-    for (const k of Object.keys(b)) {
-      b[k] = Math.max(-0.30, Math.min(0.30, b[k]));
+    // Clamp multiplicateur : jamais en dessous de 0.55 (profil parfait = max -45%)
+    // Jamais au dessus de 1.60 (profil très négatif = max +60%)
+    fatMult = Math.max(0.55, Math.min(1.60, fatMult));
+
+    // Boosts additifs modérés pour stress/perf/recovery (±0.10 max)
+    let stress = 0, perf = 0, rec = 0, cvRisk = 0;
+
+    if (d.social !== undefined) {
+      stress -= (d.social / 3) * 0.06;  // ANACT : soutien réduit stress
+      rec    += (d.social / 3) * 0.04;
     }
-    return b;
+    if (d.stress_extra !== undefined) {
+      stress += (d.stress_extra / 3) * 0.10;  // ANACT : stress externe
+      rec    -= (d.stress_extra / 3) * 0.05;
+    }
+    if (d.sens !== undefined) {
+      perf   += ((d.sens - 1) / 3) * 0.08;  // Nature 2025 : motivation → perf
+      stress -= ((d.sens - 1) / 3) * 0.04;
+    }
+    if (d.sport !== undefined) {
+      cvRisk -= (d.sport / 3) * 0.04;  // Protection cardio (OMS)
+      rec    += (d.sport / 3) * 0.06;
+    }
+    if (d.sleep_quality !== undefined) {
+      perf   += ((d.sleep_quality - 1.5) / 1.5) * 0.07;
+      rec    += ((d.sleep_quality - 1.5) / 1.5) * 0.05;
+    }
+
+    // Clamp additifs
+    stress  = Math.max(-0.10, Math.min(0.10, stress));
+    perf    = Math.max(-0.10, Math.min(0.10, perf));
+    rec     = Math.max(-0.10, Math.min(0.10, rec));
+    cvRisk  = Math.max(-0.05, Math.min(0.05, cvRisk));
+
+    return { fatigueMult, stress, performance: perf, recovery: rec, cvRisk };
   }
 
   open() {
