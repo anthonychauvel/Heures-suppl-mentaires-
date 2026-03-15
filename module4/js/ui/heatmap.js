@@ -12,7 +12,22 @@ class Heatmap {
     if(!this._container) return;
     const scores = state && state.scores;
     const norm   = state && state.norm;
-    const days   = state && state.raw && state.raw.m1 && state.raw.m1.days || {};
+    // Fusionner m1.days + données M2 (pour afficher les HS même si seulement M2 renseigné)
+    const m1days = (state && state.raw && state.raw.m1 && state.raw.m1.days) || {};
+    const m2raw  = (state && state.raw && state.raw.m2 && state.raw.m2.months) || {};
+    const days   = Object.assign({}, ...Object.entries(m2raw).map(([mk, md]) => {
+      const out = {};
+      Object.entries(md.rawDays || {}).forEach(([d, hs]) => {
+        const key = mk + '-' + String(d).padStart(2, '0');
+        if (!m1days[key]) {  // M1 prioritaire
+          const h = parseFloat(String(hs).includes(':')
+            ? parseFloat(hs.split(':')[0]) + parseFloat(hs.split(':')[1]||0)/60
+            : hs) || 0;
+          if (h > 0) out[key] = { extra: h, recup: 0, absent: 0 };
+        }
+      });
+      return out;
+    }), m1days);
     const year   = (state && state.raw && state.raw.year) || new Date().getFullYear();
 
     const riskLevel = (extra, absent) => {
