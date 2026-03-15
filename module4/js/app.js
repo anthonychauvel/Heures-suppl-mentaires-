@@ -118,14 +118,88 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ── 3. Conseils ─────────────────────────────────────────────── */
   function buildAdvice(scores, risks) {
     const advice = [];
-    if (scores.fatigue >= 85)        advice.push({ type:'danger',  emoji:'🚨', title:'Fatigue critique', msg:'Réduisez vos heures immédiatement.' });
-    else if (scores.fatigue >= 70)   advice.push({ type:'warning', emoji:'⚠️', title:'Fatigue élevée',   msg:'Limitez les heures supplémentaires cette semaine.' });
-    else                             advice.push({ type:'success', emoji:'✓',  title:'Fatigue maîtrisée', msg:'Votre niveau de fatigue est dans les normes.' });
-    if (scores.stress >= 70)         advice.push({ type:'warning', emoji:'😰', title:'Stress élevé',      msg:'Planifiez des pauses de récupération.' });
-    if (scores.overloadRisk >= 70)   advice.push({ type:'danger',  emoji:'⚡', title:'Surcharge',         msg:'Vérifiez votre contingent HS annuel (Art. L3121-33).' });
-    if (scores.performance < 45)     advice.push({ type:'info',    emoji:'📉', title:'Performance basse', msg:'Votre concentration est réduite — report des décisions importantes.' });
-    if (scores.errorRisk >= 70)      advice.push({ type:'warning', emoji:'🔍', title:'Risque erreur',      msg:'Faites vérifier vos travaux importants par un collègue.' });
-    if (advice.length === 0)         advice.push({ type:'success', emoji:'✅', title:'Situation saine',    msg:'Tous vos indicateurs sont dans les normes légales.' });
+    const state  = DTE._state;
+    const norm   = state && state.norm;
+    const weekH  = (norm && norm._recentWeeklyH) || 35;
+    const cumW   = (norm && norm._cumulWeeks) || 0;
+
+    // ─ FATIGUE ─────────────────────────────────────────────────────
+    if (!scores._hasData) {
+      advice.push({ type:'info', emoji:'📋',
+        titre:'Aucune donnée disponible',
+        message:'Saisissez vos heures dans M1 (Suivi annuel) pour activer l\'analyse.',
+        source:'' });
+    } else if (scores.fatigue >= 85) {
+      advice.push({ type:'danger', emoji:'🔴',
+        titre:'Épuisement critique — Phase 4',
+        message:'Votre corps envoie des signaux d\'alarme. ' +
+          (cumW >= 4 ? 'Après ' + cumW + ' semaines de surcharge, la récupération sera longue.' : 'Réduisez vos heures immédiatement.') +
+          ' Le sens que vous donnez à votre travail peut atténuer la perception, mais pas les risques biologiques réels.',
+        source:'OMS/OIT 2021 · INRS · HAS 2017 · Art. L4121-1 Code du travail' });
+    } else if (scores.fatigue >= 60) {
+      advice.push({ type:'warning', emoji:'🟠',
+        titre:'Fatigue chronique — Phase 3',
+        message:'À ' + weekH.toFixed(0) + 'h/sem sur ' + (cumW||1) + ' semaine(s), la fatigue s\'accumule. ' +
+          'Votre hygiène de vie (sport, alimentation, sommeil) peut réduire l\'impact de 20 à 30% selon les études INRS.',
+        source:'J.Occup.Health 2021 · INRS · Sonnentag 2003' });
+    } else if (scores.fatigue >= 35) {
+      advice.push({ type:'warning', emoji:'🟡',
+        titre:'Fatigue modérée — Phase 2',
+        message:'Niveau gérable si vous récupérez bien le week-end. Si vous aimez votre travail et dormez ≥7h, ' +
+          'vous pouvez maintenir ce rythme à court terme. Surveillez la durée.',
+        source:'Thompson 2022 · Nature Hum.Behav. 2025 (Fan et al.)' });
+    } else {
+      advice.push({ type:'success', emoji:'🟢',
+        titre:'Bonne forme — Phase 1',
+        message:'Votre niveau de fatigue est faible. Continuez à vous hydrater, dormir 7-8h et prendre vos pauses. ' +
+          'La prévention est le meilleur investissement.',
+        source:'OMS — Zone optimale ≤40h/sem · INRS' });
+    }
+
+    // ─ HEURES HEBDO vs LÉGAL ────────────────────────────────────────
+    if (weekH > 55) {
+      advice.push({ type:'danger', emoji:'⚖️',
+        titre:'Au-delà du seuil OMS (+35% risque AVC)',
+        message: weekH.toFixed(0) + 'h/sem dépasse le seuil OMS 2021. ' +
+          'Le risque cardiovasculaire augmente avec la durée d\'exposition. ' +
+          'Parlez-en à votre médecin du travail.',
+        source:'OMS/OIT 2021 — Pega F. et al., Env. International · Art. L4131-1' });
+    } else if (weekH > 48) {
+      advice.push({ type:'warning', emoji:'⚖️',
+        titre:'Dépassement du maximum légal (48h)',
+        message: weekH.toFixed(0) + 'h/sem dépasse la limite absolue (Art. L3121-20). ' +
+          'Vérifiez votre accord collectif ou demandez un repos compensateur.',
+        source:'Art. L3121-20 Code du travail · Art. L3121-33 (RCO)' });
+    }
+
+    // ─ RÉSILIENCE : facteurs humains ────────────────────────────────
+    if (scores.fatigue >= 50 && scores.fatigue < 85) {
+      advice.push({ type:'info', emoji:'💡',
+        titre:'Note : vous n\'êtes pas une batterie',
+        message:'Ces données sont des signaux statistiques basés sur des populations. ' +
+          'Le sens que vous donnez à votre travail, votre activité physique et votre alimentation ' +
+          'peuvent modifier significativement votre vécu. Mais la répétition sur plusieurs semaines finit par impacter tout le monde.',
+        source:'Nature Hum.Behav. 2025 (Fan et al.) · ANACT — facteurs de protection' });
+    }
+
+    // ─ PERFORMANCE ──────────────────────────────────────────────────
+    if (scores.performance < 50) {
+      advice.push({ type:'info', emoji:'📉',
+        titre:'Efficacité réduite',
+        message:'Au-delà de 50h/sem, la productivité par heure chute (Stanford/Pencavel 2014). ' +
+          'Les heures supplémentaires au-delà de 55h ne produisent rien de plus.',
+        source:'Pencavel J. 2014 — Stanford University' });
+    }
+
+    // ─ RÉCUPÉRATION ─────────────────────────────────────────────────
+    if (cumW >= 6) {
+      advice.push({ type:'warning', emoji:'🛡️',
+        titre:'Récupération longue après ' + cumW + ' semaines',
+        message:'Plus la surcharge dure, plus le retour à la normale est lent. ' +
+          '6 mois de surcharge réduisent la capacité de récupération de 45% (INRS).',
+        source:'J.Occup.Health 2021 · INRS — fatigue cumulative' });
+    }
+
     return advice;
   }
 
@@ -495,4 +569,33 @@ document.addEventListener('DOMContentLoaded', function () {
       if(el('footer-status'))  el('footer-status').textContent  = s.scores._hasData ? '■ SYNCHRONISÉ' : '○ EN ATTENTE';
     } catch(_) {}
   }, 3000);
+
+  // Exposer le forçage de sync (bouton visible)
+  window._forcSync = () => {
+    try {
+      _syncHash = ''; // forcer la re-analyse
+      const s = DTE.engine.analyze();
+      DTE._state = s;
+      DTE.dashboard.render(s);
+      if (DTE.twin) DTE.twin.update(s.scores);
+      const activeView = document.querySelector('.view:not(.hidden)');
+      if (activeView) {
+        const vid = activeView.id;
+        if (vid === 'view-predictions') renderPredictions(s);
+      }
+      // Feedback visuel
+      const btn = document.getElementById('btn-sync-visible');
+      if (btn) {
+        btn.style.background = 'rgba(0,255,204,0.3)';
+        btn.innerHTML = '<span style="font-size:14px;">✓</span> SYNCHRONISÉ';
+        setTimeout(() => {
+          btn.style.background = 'rgba(0,255,204,0.12)';
+          btn.innerHTML = '<span style="font-size:14px;">↻</span> SYNC';
+        }, 1500);
+      }
+    } catch(e) { console.warn('sync error', e); }
+  };
+
+  // Aussi câbler btn-refresh
+  document.getElementById('btn-refresh')?.addEventListener('click', window._forcSync);
 });
