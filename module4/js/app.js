@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let sim = null, fut = null, scen = null;
-    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: [0] }, state.scores); } catch(e) {}
+    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: [0,6] }, state.scores); } catch(e) {}
     try { fut  = DTE.simulator.futurState(days, state.norm); } catch(e) {}
     try { scen = DTE.simulator.scenarios(days, state.norm); } catch(e) {}
     renderTimeline(sim, days);
@@ -545,8 +545,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // CONSEILLER
     document.getElementById('btn-ai')?.addEventListener('click', () => DTE.ai.open());
 
-    // REFRESH
+    // REFRESH (ancien bouton header)
     document.getElementById('btn-refresh')?.addEventListener('click', () => {
+      runAnalysis();
+      DTE.notifs.show('Analyse actualisée', 'info', '↺');
+    });
+
+    // SYNC (bouton dans le panel actions) — mêmes fonctions exactes que btn-refresh
+    document.getElementById('btn-sync-visible')?.addEventListener('click', () => {
       runAnalysis();
       DTE.notifs.show('Analyse actualisée', 'info', '↺');
     });
