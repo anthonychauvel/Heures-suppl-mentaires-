@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
   DTE.notifications = DTE.notifs;
   if (typeof ScenarioAdvisor !== 'undefined') DTE.scenarioAdvisor = new ScenarioAdvisor();
   if (typeof GlossaryUI !== 'undefined') DTE.glossary = new GlossaryUI();
+  if (typeof LifestylePanel !== 'undefined') DTE.lifestyle = new LifestylePanel();
 
   /* ── 2. Analyse ──────────────────────────────────────────────── */
   function runAnalysis() {
@@ -535,6 +536,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // CHECK-IN
     document.getElementById('btn-checkin')?.addEventListener('click', () => DTE.checkin.open());
+
+    // RYTHME DE VIE
+    document.getElementById('btn-lifestyle')?.addEventListener('click', () => {
+      DTE.lifestyle ? DTE.lifestyle.open() : console.warn('Lifestyle not loaded');
+    });
+    // Mettre à jour le sous-titre si profil existe
+    if (LifestylePanel && LifestylePanel.hasData()) {
+      const sub = document.getElementById('lifestyle-sub');
+      if (sub) sub.textContent = '✓ Profil enregistré — cliquer pour modifier';
+    }
 
     // CONSEILLER
     document.getElementById('btn-ai')?.addEventListener('click', () => DTE.ai.open());
