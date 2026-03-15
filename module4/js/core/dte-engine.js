@@ -180,6 +180,18 @@ function sleepDebtScore(avgDailyH) {
 }
 
 /* ── MOTEUR ─────────────────────────────────────────────────────── */
+// Convertit n'importe quel format d'heures en décimal
+// "8:15" → 8.25 | "8.25" → 8.25 | 8.25 → 8.25 | "8,25" → 8.25
+function parseHours(v) {
+  if (v === null || v === undefined) return 0;
+  const s = String(v).trim();
+  if (s.includes(':')) {
+    const p = s.split(':');
+    return (parseFloat(p[0]) || 0) + (parseFloat(p[1]) || 0) / 60;
+  }
+  return parseFloat(s.replace(',', '.')) || 0;
+}
+
 class DTEEngine {
   constructor() {
     this._coefs    = this._loadCoefs();
@@ -244,8 +256,8 @@ class DTEEngine {
       }
       for (const [date, e] of Object.entries(days)) {
         if (!e || typeof e !== 'object') continue;
-        const extra  = parseFloat(e.extra || e.hs || 0);
-        const recup  = parseFloat(e.recup || e.repos || 0);
+        const extra  = parseHours(e.extra ?? e.hs ?? 0);
+        const recup  = parseHours(e.recup ?? e.repos ?? 0);
         const absent = parseFloat(e.absent || 0);
         r.days[date] = { extra, recup, absent };
         r.totalExtra += extra;
@@ -370,7 +382,7 @@ class DTEEngine {
         if (!/^\d{4}-\d{2}$/.test(mk)) continue;
         const rawDays = monthData.rawDays || {};
         for (const [day, hs] of Object.entries(rawDays)) {
-          const h = parseFloat(hs) || 0;
+          const h = parseHours(hs);
           if (h > 0) {
             const dateKey = mk + '-' + String(day).padStart(2, '0');
             synth[dateKey] = { extra: h, recup: 0, absent: 0 };
