@@ -168,6 +168,25 @@
               </div>
             </button>
 
+            <!-- Checkbox jours de repos -->
+            <div style="padding:8px 9px;background:rgba(0,10,25,.8);
+              border:1px solid rgba(255,255,255,0.1);margin-top:2px;">
+              <div style="font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.5);
+                letter-spacing:.08em;margin-bottom:6px;">⏰ MES JOURS DE REPOS</div>
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;margin-bottom:5px;">
+                <input type="checkbox" id="dte-rest-sat" onchange="window._updateRestDays()"
+                  style="width:14px;height:14px;accent-color:var(--sync);">
+                <span style="font-size:11px;color:#fff;">Samedi</span>
+                <span style="font-size:9px;color:rgba(255,255,255,0.4);">repos</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:7px;cursor:pointer;">
+                <input type="checkbox" id="dte-rest-sun" onchange="window._updateRestDays()"
+                  style="width:14px;height:14px;accent-color:var(--sync);">
+                <span style="font-size:11px;color:#fff;">Dimanche</span>
+                <span style="font-size:9px;color:rgba(255,255,255,0.4);">repos</span>
+              </label>
+            </div>
+
             <button class="action-block-btn" id="btn-ai">
               <span class="abtn-icon">&#9830;</span>
               <div class="abtn-text"><div class="abtn-label">CONSEILS</div><div class="abtn-sub">1000 scénarios locaux</div></div>
