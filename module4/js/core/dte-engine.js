@@ -518,6 +518,14 @@ class DTEEngine {
     } catch(_) {}
     const cumW    = norm._cumulWeeks    || 0;
     const cumM    = norm._cumulMonths   || 0;
+
+    // ── LIFESTYLE BOOSTS (profil rythme de vie) ────────────────
+    let lifestyleBoost = { fatigue:0, stress:0, performance:0, recovery:0, cvRisk:0 };
+    try {
+      if (typeof LifestylePanel !== 'undefined') {
+        lifestyleBoost = LifestylePanel.getBoosts();
+      }
+    } catch(_) {}
     const hasM1   = raw.m1 && (raw.m1.totalExtra > 0 || Object.keys(raw.m1.days || {}).length > 0);
     const hasM2   = raw.m2 && raw.m2.months && Object.keys(raw.m2.months).length > 0;
     const hasData = hasM1 || hasM2;
@@ -579,10 +587,11 @@ class DTEEngine {
     const muscR     = musculoRisk(weeklyH, cumM, norm._consec || 0); // Lancet 2021 HR=1.15
 
     // Appliquer les boosts check-in (capped pour rester cohérent)
-    const fatFinal  = Math.max(0, Math.min(1, fatigue  + checkinBoost.fatigue));
-    const strFinal  = Math.max(0, Math.min(1, stress   + checkinBoost.stress));
-    const perfFinal = Math.max(0.05, Math.min(1, perf  + checkinBoost.performance));
-    const recFinal  = Math.max(0.02, Math.min(1, recovery + checkinBoost.recovery));
+    const fatFinal  = Math.max(0, Math.min(1, fatigue  + checkinBoost.fatigue  + lifestyleBoost.fatigue));
+    const strFinal  = Math.max(0, Math.min(1, stress   + checkinBoost.stress   + lifestyleBoost.stress));
+    const perfFinal = Math.max(0.05, Math.min(1, perf  + checkinBoost.performance + lifestyleBoost.performance));
+    const recFinal  = Math.max(0.02, Math.min(1, recovery + checkinBoost.recovery  + lifestyleBoost.recovery));
+    const cvRiskFinal = Math.max(0, lifestyleBoost.cvRisk); // protection sport
 
     return {
       fatigue:      Math.round(fatFinal * 100),
@@ -591,7 +600,7 @@ class DTEEngine {
       recovery:     Math.round(recFinal * 100),
       errorRisk:    Math.round(errRisk * 100),
       overloadRisk: Math.round(overRisk * 100),
-      cvRisk:       Math.round(Math.min(cvR + fatigue * 0.10 + stress * 0.08, 1) * 100),
+      cvRisk:       Math.round(Math.min(Math.max(0, cvR + fatigue * 0.10 + stress * 0.08 + lifestyleBoost.cvRisk), 1) * 100),
       cogRisk:      Math.round(Math.min(cogR + fatigue * 0.15, 1) * 100),
       diabetesRisk: Math.round(diabR * 100),
       musculoRisk:  Math.round(muscR * 100),
