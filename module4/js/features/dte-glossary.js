@@ -699,8 +699,8 @@ class GlossaryUI {
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 10px;border-bottom:1px solid rgba(0,200,255,0.06);">
         <div style="flex:1;">
           <div style="font-family:var(--font-hud);font-size:11px;color:${s.couleur};margin-bottom:3px;line-height:1.3;">${s.titre}</div>
-          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">${s.auteurs}</div>
-          <div style="font-family:var(--font-mono);font-size:8px;color:var(--text-muted);margin-top:1px;">${s.journal} · ${s.annee}${s.doi?' · DOI: '+s.doi:''}</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,0.65);">${s.auteurs}</div>
+          <div style="font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,0.40);margin-top:1px;">${s.journal} · ${s.annee}${s.doi?' · DOI: '+s.doi:''}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;">
           <span style="font-family:var(--font-mono);font-size:8px;color:${s.couleur};border:1px solid ${s.couleur}50;padding:1px 5px;white-space:nowrap;">${s.cat}</span>
@@ -712,7 +712,7 @@ class GlossaryUI {
       ${s.seuil?`<div style="padding:3px 10px;background:rgba(255,179,0,0.03);font-size:9px;color:var(--amber);font-family:var(--font-mono);border-bottom:1px solid rgba(0,200,255,0.04);">&#9656; SEUIL CLÉ : ${s.seuil}</div>`:''}
       <div style="padding:6px 10px;">
         <div style="font-family:var(--font-mono);font-size:7px;color:var(--text-muted);letter-spacing:.1em;margin-bottom:4px;">RÉSULTATS</div>
-        ${s.resultats.map(r=>`<div style="font-size:10px;color:var(--text-dim);padding:1px 0;display:flex;gap:5px;"><span style="color:${s.couleur};flex-shrink:0;">›</span>${r}</div>`).join('')}
+        ${s.resultats.map(r=>`<div style="font-size:10px;color:rgba(255,255,255,0.78);padding:1px 0;display:flex;gap:5px;"><span style="color:rgba(255,255,255,0.35);flex-shrink:0;">›</span>${r}</div>`).join('')}
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 10px;background:rgba(0,10,25,.5);border-top:1px solid rgba(0,200,255,0.05);">
         <span style="font-family:var(--font-mono);font-size:8px;color:var(--text-muted);">&#9650; DTE : ${s.dte||'calibrage général'}</span>
