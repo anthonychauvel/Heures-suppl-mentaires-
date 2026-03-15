@@ -492,8 +492,8 @@ class DTEEngine {
         // Sommeil court → fatigue +, performance −
         if (ci.sleep !== undefined) {
           const sleepDef = (4 - ci.sleep) / 4;  // 0=bien, 1=très mal
-          checkinBoost.fatigue    += sleepDef * 0.20;  // Thompson 2022: 24h privation → +14% cortisol
-          checkinBoost.performance -= sleepDef * 0.18;
+          checkinBoost.fatigue    += sleepDef * 0.14;  // Thompson 2022: +14% cortisol après privation
+          checkinBoost.performance -= sleepDef * 0.15;  // Thomson 2022 + OMS: perf −15% nuit courte
           checkinBoost.recovery   -= sleepDef * 0.15;
         }
         // Énergie basse → fatigue +
