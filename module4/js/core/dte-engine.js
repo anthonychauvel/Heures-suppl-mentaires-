@@ -432,8 +432,14 @@ class DTEEngine {
       }
       weekTotals.push(wt);
     }
-    const mean  = weekTotals.reduce((a, b) => a + b, 0) / weekTotals.length;
-    const sigma = Math.sqrt(weekTotals.reduce((s, v) => s + Math.pow(v - mean, 2), 0) / weekTotals.length);
+    // mean : calculé seulement sur les semaines avec des données (évite dilution)
+    const nonZeroWeeks = weekTotals.filter(w => w > 0);
+    const mean  = nonZeroWeeks.length > 0
+      ? nonZeroWeeks.reduce((a, b) => a + b, 0) / nonZeroWeeks.length
+      : 0;
+    const sigma = weekTotals.length > 1
+      ? Math.sqrt(weekTotals.reduce((s, v) => s + Math.pow(v - mean, 2), 0) / weekTotals.length)
+      : 0;
 
     // Taux de surcharge (jours >BASE+2h)
     const allDays   = Object.values(days);
@@ -444,7 +450,8 @@ class DTEEngine {
     const contingentPct = (m1.totalExtra / D.CONTINGENT_MAX) * 100;
 
     // Moyenne pondérée semaines (poids plus fort sur les récentes)
-    const recentWeeklyH = mean > 0 ? mean : weeklyH7; // weeklyH = 35 + HS réelles semaine
+    // recentWeeklyH : semaine courante si elle a des données, sinon moyenne historique
+    const recentWeeklyH = weeklyH7 > 35 ? weeklyH7 : (mean > 35 ? mean : weeklyH7);
 
     return {
       heures:         clamp(avgH7, 0, 14),
