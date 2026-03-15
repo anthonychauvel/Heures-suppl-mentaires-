@@ -9,7 +9,7 @@
   --surface2:   #002550;
   --surface3:   #003068;
 
-  --animus:     #00c8ff;
+  --animus:     #22b8e8;
   --animus-dim: rgba(0,200,255,0.08);
   --animus-mid: rgba(0,200,255,0.18);
   --animus-hot: rgba(0,200,255,0.35);
@@ -18,12 +18,12 @@
   --sync-dim:   rgba(0,255,204,0.08);
   --sync-mid:   rgba(0,255,204,0.18);
 
-  --amber:      #ffb300;
+  --amber:      #e8a820;
   --amber-dim:  rgba(255,179,0,0.1);
-  --red:        #ff2244;
+  --red:        #e8334a;
   --red-dim:    rgba(255,34,68,0.1);
   --green:      #00ffcc;
-  --orange:     #ff6600;
+  --orange:     #e8682a;
 
   --text:       #ffffff;
   --text-dim:   #d0e8ff;
@@ -912,3 +912,9 @@ body {
 .abtn-label       { font-size: 10px !important; }
 .abtn-sub         { font-size: 9px  !important; }
 /* GLOBAL BASE SIZES */
+
+/* Adoucir les couleurs de catégories dans les fiches sources */
+.gloss-cat-cardio    { color: #c85060; }
+.gloss-cat-neuro     { color: #c86830; }
+.gloss-cat-burnout   { color: #c88020; }
+.gloss-cat-prod      { color: #2090b8; }
