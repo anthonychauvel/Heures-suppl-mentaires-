@@ -291,9 +291,9 @@ class DTESimulator {
   /**
    * 6 scénarios comparatifs — seuils OMS/OCDE/Pencavel
    */
-  scenarios(days = 30, norm = null) {
+  scenarios(days = 30, norm = null, initialScores = null) {
     const n      = norm || (this._engine.getState() && this._engine.getState().norm);
-    const scores = this._engine.getState() && this._engine.getState().scores;
+    const scores = initialScores || (this._engine.getState() && this._engine.getState().scores);
     if (!n || !scores) return null;
     const D   = this._engine.getDefaults();
     // hs = HS par jour TRAVAILLÉ (lun-ven) basé sur la semaine courante
@@ -351,9 +351,9 @@ class DTESimulator {
   /**
    * Prédiction état futur avec phases, risques OMS, changements cérébraux
    */
-  futurState(days = 30, norm = null) {
+  futurState(days = 30, norm = null, initialScores = null) {
     const n      = norm || (this._engine.getState() && this._engine.getState().norm);
-    const scores = this._engine.getState() && this._engine.getState().scores;
+    const scores = initialScores || (this._engine.getState() && this._engine.getState().scores);
     if (!n || !scores) return null;
     const D   = this._engine.getDefaults();
     // Lire les jours de repos configurés par l'utilisateur
