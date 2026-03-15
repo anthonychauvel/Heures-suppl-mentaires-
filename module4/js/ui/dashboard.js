@@ -112,24 +112,238 @@ class Dashboard {
   _renderScores(scores){
     const el=document.getElementById('scores-grid');
     if(!el) return;
+    
+  // Décomposition de chaque score : facteur heures vs rythme de vie
+  const SCORE_META = {
+    fatigue: {
+      titre: 'FATIGUE',
+      desc: 'Votre niveau d\'épuisement cumulé, calculé selon INRS et J.Occup.Health 2021.',
+      source: 'INRS · J.Occup.Health 2021 (Taiwan, 6 mois) · Thompson 2022',
+      facteurs_heures: [
+        { label:'Heures supplémentaires/sem', key:'_avgExtra7', fmt: v => v>0 ? '+'+v.toFixed(1)+'h/j × 0.09' : '0h supp.' },
+        { label:'Jours consécutifs',          key:'_consec',    fmt: v => v+'j consécutifs' },
+        { label:'Semaines de surcharge',       key:'_cumulWeeks',fmt: v => v>0 ? v+' sem. cumulées (×'+( v>=24?'1.55':v>=16?'1.40':v>=8?'1.25':v>=4?'1.12':'1.00')+')' : 'Pas de cumul' },
+      ],
+      facteurs_vie: [
+        { label:'Sommeil (check-in)',   key:'ci_sleep',  fmt: v => v!==undefined ? ['< 4h','4-5h','6h','7h','8h+'][v]||'—' : 'Non renseigné' },
+        { label:'Énergie (check-in)',   key:'ci_energy', fmt: v => v!==undefined ? ['Épuisé','Fatigué','Neutre','Énergique','Excellent'][v]||'—' : 'Non renseigné' },
+        { label:'Douleurs (check-in)',  key:'ci_pain',   fmt: v => v!==undefined ? ['Aucune','Légère','Modérée','Forte','Intense'][v]||'—' : 'Non renseigné' },
+      ],
+      seuils: [
+        { pct:35, label:'Phase EN FORME',   color:'#00ccaa' },
+        { pct:60, label:'Phase VIGILANCE',  color:'#c89a18' },
+        { pct:80, label:'Phase SURMENAGE',  color:'#c8601a' },
+        { pct:100,label:'Phase ÉPUISEMENT', color:'#c82838' },
+      ],
+    },
+    stress: {
+      titre: 'STRESS / CORTISOL',
+      desc: 'Niveau de tension nerveuse et de cortisol estimé. Thompson 2022 : le cortisol monte +14% dès la 1ère nuit courte.',
+      source: 'Thompson 2022 (Frontiers) · ANACT/INRS · ANI 2008',
+      facteurs_heures: [
+        { label:'Heures hebdo vs optimal', key:'_recentWeeklyH', fmt: v => v.toFixed(0)+'h/sem (optimal : 35h)' },
+        { label:'Variabilité des horaires', key:'_sigma',         fmt: v => v>3?'Élevée ('+v.toFixed(1)+'h écart-type)':'Faible ('+v.toFixed(1)+'h)' },
+        { label:'Durée d\'exposition',     key:'_cumulWeeks',   fmt: v => v>0 ? v+' semaines de surcharge' : 'Première semaine' },
+      ],
+      facteurs_vie: [
+        { label:'Stress ressenti (check-in)',     key:'ci_stress', fmt: v => v!==undefined ? ['Aucun','Léger','Modéré','Élevé','Critique'][v]||'—' : 'Non renseigné' },
+        { label:'Motivation (check-in)',          key:'ci_motiv',  fmt: v => v!==undefined ? ['Inexistante','Basse','Normale','Bonne','Maximale'][v]||'—' : 'Non renseigné' },
+      ],
+      seuils: [
+        { pct:30, label:'Stress faible', color:'#00ccaa' },
+        { pct:60, label:'Stress modéré', color:'#c89a18' },
+        { pct:80, label:'Stress élevé',  color:'#c8601a' },
+        { pct:100,label:'Critique',      color:'#c82838' },
+      ],
+    },
+    performance: {
+      titre: 'PERFORMANCE',
+      desc: 'Votre efficacité estimée. Pencavel/Stanford 2014 : chute après 50h/sem, falaise à 55h.',
+      source: 'Pencavel 2014 (Stanford) · OEM 2025 (Jang) · Nature 2025 (Fan)',
+      facteurs_heures: [
+        { label:'Heures hebdo (courbe Pencavel)', key:'_recentWeeklyH', fmt: v => v.toFixed(0)+'h/sem — perf. Pencavel '+( v<=35?'100%':v<=40?'~99%':v<=48?'~82%':v<=50?'~80%':v<=55?'~60%':'~52%' ) },
+        { label:'Risque cognitif (≥52h)', key:'_recentWeeklyH', fmt: v => v>=52?'Actif : +19% gyrus frontal (OEM 2025)':'Non actif (<52h)' },
+      ],
+      facteurs_vie: [
+        { label:'Énergie (check-in)',    key:'ci_energy', fmt: v => v!==undefined ? ['Épuisé','Fatigué','Neutre','Énergique','Excellent'][v]||'—' : 'Non renseigné' },
+        { label:'Motivation (check-in)', key:'ci_motiv',  fmt: v => v!==undefined ? ['Inexistante','Basse','Normale','Bonne','Maximale'][v]||'—' : 'Non renseigné (impact +12%)' },
+        { label:'Sommeil',               key:'ci_sleep',  fmt: v => v!==undefined ? ['< 4h → −18% perf.','4-5h → −10% perf.','6h → −5% perf.','7h → OK','8h+ → +2% perf.'][v]||'—' : 'Non renseigné' },
+      ],
+      seuils: [
+        { pct:60, label:'Efficace',       color:'#00ccaa' },
+        { pct:45, label:'Réduite',        color:'#c89a18' },
+        { pct:25, label:'Très réduite',   color:'#c8601a' },
+        { pct:0,  label:'Critique',       color:'#c82838' },
+      ],
+    },
+    cvRisk: {
+      titre: 'RISQUE CARDIOVASCULAIRE',
+      desc: 'Risque relatif d\'AVC et cardiopathie basé sur OMS/OIT 2021. S\'accumule avec la durée d\'exposition.',
+      source: 'OMS/OIT 2021 (Pega et al.) · Lancet 2021 (Ervasti) · Kivimäki 2015',
+      facteurs_heures: [
+        { label:'Heures hebdo vs seuil OMS (48h)', key:'_recentWeeklyH', fmt: v => v>=55?'≥55h : RR=1.35 AVC, RR=1.17 cardio':v>=48?v.toFixed(0)+'h : au-delà du légal (48h)':'Dans les normes (<48h)' },
+        { label:'Durée d\'exposition (dose-temps)', key:'_cumulMonths', fmt: v => v>0 ? v.toFixed(1)+' mois cumulés (risque ×'+Math.min(1.8,(1+v*0.08)).toFixed(2)+')' : 'Court terme (<1 mois)' },
+      ],
+      facteurs_vie: [
+        { label:'Sport régulier',    key:'ci_motiv', fmt: v => 'Non mesuré dans le check-in' },
+        { label:'Note',              key:'_note',    fmt: v => 'Le risque cvRisk est biologique, pas atténuable par le ressenti' },
+      ],
+      seuils: [
+        { pct:8,  label:'Faible',   color:'#00ccaa' },
+        { pct:20, label:'Modéré',   color:'#c89a18' },
+        { pct:40, label:'Élevé',    color:'#c8601a' },
+        { pct:100,label:'Critique', color:'#c82838' },
+      ],
+    },
+    cogRisk: {
+      titre: 'RISQUE CÉRÉBRAL',
+      desc: 'Modifications structurelles cérébrales détectées par IRM à ≥52h/sem (Jang/Yonsei 2025). 17 régions affectées.',
+      source: 'OEM 2025 — Jang W. et al., Yonsei University',
+      facteurs_heures: [
+        { label:'Seuil ≥52h/sem', key:'_recentWeeklyH', fmt: v => v>=52?'Actif : '+v.toFixed(0)+'h/sem':'Sous le seuil ('+v.toFixed(0)+'h < 52h)' },
+        { label:'Durée exposition', key:'_cumulWeeks',   fmt: v => v>0 ? v+' sem. → risque ×'+Math.min(2.0,(1+v*0.05)).toFixed(2) : 'Sous le seuil' },
+      ],
+      facteurs_vie: [
+        { label:'Sommeil (protecteur)', key:'ci_sleep', fmt: v => v!==undefined && v>=3 ? 'Bon sommeil — facteur protecteur' : v!==undefined ? 'Sommeil insuffisant — facteur aggravant' : 'Non mesuré' },
+      ],
+      seuils: [
+        { pct:10, label:'Sous le seuil',    color:'#00ccaa' },
+        { pct:25, label:'Émergent',         color:'#c89a18' },
+        { pct:50, label:'Significatif',     color:'#c8601a' },
+        { pct:100,label:'Élevé',            color:'#c82838' },
+      ],
+    },
+    recovery: {
+      titre: 'RÉCUPÉRATION',
+      desc: 'Capacité à récupérer. Diminue avec l\'accumulation. Sonnentag 2003 : le détachement psychologique est clé.',
+      source: 'INRS · Sonnentag 2003 (J.Applied Psychology) · Nature 2025 (Fan)',
+      facteurs_heures: [
+        { label:'Fatigue accumulée',    key:'_cumulWeeks', fmt: v => v>0 ? 'Réduite : '+v+' sem. de surcharge' : 'Normale : pas de surcharge' },
+        { label:'Base de récupération', key:'_recentWeeklyH', fmt: v => v>48?'Faible (>48h/sem)':v>40?'Moyenne (40-48h)':'Bonne (≤40h)' },
+      ],
+      facteurs_vie: [
+        { label:'Sommeil (check-in)',  key:'ci_sleep',  fmt: v => v!==undefined ? ['Très perturbé','Perturbé','Moyen','Bon','Excellent'][v]||'—' : 'Non renseigné' },
+        { label:'Énergie (check-in)', key:'ci_energy', fmt: v => v!==undefined ? ['Épuisé','Fatigué','Neutre','Énergique','Excellent'][v]||'—' : 'Non renseigné' },
+      ],
+      seuils: [
+        { pct:60, label:'Bonne récup.',   color:'#00ccaa' },
+        { pct:40, label:'Faible',         color:'#c89a18' },
+        { pct:20, label:'Très faible',    color:'#c8601a' },
+        { pct:0,  label:'Épuisée',        color:'#c82838' },
+      ],
+    },
+  };
+
+    const colFn=(inv)=>inv
+      ? v=>v<40?'var(--red)':v<60?'var(--orange)':v<80?'var(--amber)':'var(--sync)'
+      : v=>v>=80?'var(--red)':v>=60?'var(--orange)':v>=35?'var(--amber)':'var(--sync)';
     const defs=[
-      {key:'fatigue',     label:'FATIGUE',       sub:'Votre niveau d\'épuisement cumulé',      color:v=>v>=80?'var(--red)':v>=60?'var(--orange)':v>=35?'var(--amber)':'var(--sync)', inv:false},
-      {key:'stress',      label:'STRESS',        sub:'Tension nerveuse & cortisol',            color:v=>v>=70?'var(--red)':v>=50?'var(--orange)':v>=30?'var(--amber)':'var(--sync)', inv:false},
-      {key:'performance', label:'PERFORMANCE',   sub:'Votre efficacité au travail',            color:v=>v<40?'var(--red)':v<60?'var(--orange)':v<80?'var(--amber)':'var(--sync)',  inv:true},
-      {key:'cvRisk',      label:'CŒUR',          sub:'Risque cardiovasculaire (OMS 2021)',     color:v=>v>=40?'var(--red)':v>=20?'var(--orange)':v>=8?'var(--amber)':'var(--sync)',  inv:false},
-      {key:'cogRisk',     label:'CERVEAU',       sub:'Risque cognitif si ≥52h/sem (OEM 2025)',color:v=>v>=50?'var(--red)':v>=25?'var(--orange)':v>=10?'var(--amber)':'var(--sync)', inv:false},
-      {key:'recovery',    label:'RÉCUPÉRATION',  sub:'Capacité à récupérer le week-end',       color:v=>v<20?'var(--red)':v<40?'var(--orange)':v<60?'var(--amber)':'var(--sync)',   inv:true},
+      {key:'fatigue',    label:'FATIGUE',       sub:'Niveau d\'épuisement', inv:false},
+      {key:'stress',     label:'STRESS',        sub:'Cortisol & tension',   inv:false},
+      {key:'performance',label:'PERFORMANCE',   sub:'Efficacité au travail', inv:true},
+      {key:'cvRisk',     label:'CŒUR',          sub:'Risque cardio OMS',    inv:false},
+      {key:'cogRisk',    label:'CERVEAU',        sub:'Risque cérébral OEM',  inv:false},
+      {key:'recovery',   label:'RÉCUPÉRATION',  sub:'Capacité de récup.',   inv:true},
     ];
     el.innerHTML=defs.map(d=>{
       const v=Math.round(scores[d.key])||0;
-      const c=d.color(v);
-      return `<div class="score-card">
+      const c=colFn(d.inv)(v);
+      return `<div class="score-card" style="cursor:pointer;transition:border-color .15s;"
+        onclick="window._showScoreDetail('${d.key}')"
+        onmouseover="this.style.borderColor='rgba(0,200,255,0.4)'"
+        onmouseout="this.style.borderColor=''">
         <div class="score-card-label">${d.label}</div>
         <div class="score-card-val" style="color:${c};">${v}</div>
         <div class="score-card-bar"><div class="score-card-bar-fill" style="width:${v}%;background:${c};"></div></div>
         <div class="score-card-sub">${d.sub}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px;">Toucher pour détails ›</div>
       </div>`;
     }).join('');
+
+    // Exposer la fonction d'ouverture du détail
+    window._showScoreDetail = (key) => {
+      const meta = SCORE_META[key];
+      if(!meta) return;
+      const state = window.DTE && window.DTE._state;
+      const norm  = state && state.norm;
+      const scores2 = state && state.scores;
+      // Lire le dernier check-in
+      let ci = {};
+      try {
+        const hist = JSON.parse(localStorage.getItem('DTE_CHECKIN_HISTORY')||'[]');
+        const today = new Date().toISOString().slice(0,10);
+        ci = hist.find(h=>h.date===today) || hist[hist.length-1] || {};
+      } catch(_) {}
+      const normVal = (k) => {
+        if(k.startsWith('ci_')) return ci[k.replace('ci_','')];
+        if(k==='_cumulMonths') return norm ? (norm._cumulWeeks||0)/4.33 : 0;
+        return norm ? norm[k] : 0;
+      };
+
+      const v = (scores2 && scores2[key]) || 0;
+      const colFn2 = (key==='performance'||key==='recovery')
+        ? v=>v<40?'#c82838':v<60?'#c8601a':v<80?'#c89a18':'#00ccaa'
+        : v=>v>=80?'#c82838':v>=60?'#c8601a':v>=35?'#c89a18':'#00ccaa';
+      const col = colFn2(v);
+
+      let modal = document.getElementById('score-detail-modal');
+      if(!modal){
+        modal = document.createElement('div');
+        modal.id = 'score-detail-modal';
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+      }
+      modal.className = 'modal';
+      modal.innerHTML = `
+        <div class="modal-overlay"></div>
+        <div class="modal-box" style="max-width:520px;max-height:85vh;">
+          <div class="modal-header">
+            <h2 style="font-size:14px;">${meta.titre}</h2>
+            <span class="modal-close" onclick="document.getElementById('score-detail-modal').classList.add('hidden')">✕</span>
+          </div>
+
+          <!-- Score central -->
+          <div style="text-align:center;padding:16px 0 12px;">
+            <div style="font-size:52px;font-weight:900;color:${col};font-family:var(--font-hud);">${v}</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:4px;">${meta.desc}</div>
+          </div>
+
+          <!-- Deux colonnes -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <!-- Colonne gauche : Facteur HEURES -->
+            <div style="background:rgba(0,200,255,0.06);border:1px solid rgba(0,200,255,0.2);padding:10px;">
+              <div style="font-size:10px;font-family:var(--font-mono);color:var(--animus);
+                letter-spacing:.1em;margin-bottom:8px;">⏱ FACTEUR HEURES</div>
+              ${meta.facteurs_heures.map(f=>`
+                <div style="margin-bottom:7px;">
+                  <div style="font-size:10px;color:rgba(255,255,255,0.5);">${f.label}</div>
+                  <div style="font-size:12px;color:#fff;font-weight:600;margin-top:1px;">${f.fmt(normVal(f.key))}</div>
+                </div>`).join('')}
+            </div>
+            <!-- Colonne droite : Facteur RYTHME DE VIE -->
+            <div style="background:rgba(0,255,204,0.05);border:1px solid rgba(0,255,204,0.2);padding:10px;">
+              <div style="font-size:10px;font-family:var(--font-mono);color:var(--sync);
+                letter-spacing:.1em;margin-bottom:8px;">🌿 RYTHME DE VIE</div>
+              ${meta.facteurs_vie.map(f=>`
+                <div style="margin-bottom:7px;">
+                  <div style="font-size:10px;color:rgba(255,255,255,0.5);">${f.label}</div>
+                  <div style="font-size:12px;color:#fff;font-weight:600;margin-top:1px;">${f.fmt(normVal(f.key))}</div>
+                </div>`).join('')}
+              <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:8px;padding-top:6px;
+                border-top:1px solid rgba(255,255,255,0.08);">
+                Faire un check-in quotidien améliore la précision
+              </div>
+            </div>
+          </div>
+
+          <!-- Source -->
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);padding:6px 0;font-style:italic;">
+            📚 ${meta.source}
+          </div>
+        </div>`;
+      modal.querySelector('.modal-overlay').addEventListener('click',()=>modal.classList.add('hidden'));
+      modal.classList.remove('hidden');
+    };
   }
 
   _renderRisks(risks){
