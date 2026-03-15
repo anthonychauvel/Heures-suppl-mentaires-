@@ -341,7 +341,7 @@ class DTESimulator {
                 - sim.summary.avgFatigue    * 0.30
                 - sim.summary.avgStress     * 0.18
                 - sim.summary.finalCvRisk   * 0.12;
-      return { ...p, summary: sim.summary, quality: Math.round(q) };
+      return { ...p, summary: sim.summary, _sim: sim, quality: Math.round(q) };
     });
 
     results.sort((a, b) => b.quality - a.quality);
