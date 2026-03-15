@@ -236,7 +236,7 @@ class LifestylePanel {
 
     // ── ÂGE (INRS — vieillissement et récupération) ──────────────
     if (d.age !== undefined) {
-      const ageMult = [0.95, 1.00, 1.12, 1.25][d.age] || 1.0;
+      const ageMult = [0.95, 1.00, 1.18, 1.28][d.age] || 1.0;  // INRS: 45-54→+18%, 55+→+28%
       fatigueMult *= ageMult;
     }
 
@@ -265,7 +265,7 @@ class LifestylePanel {
     // ── ENFANTS / CHARGE FAMILIALE (ANACT) ───────────────────────
     if (d.enfants !== undefined) {
       // Réduit récupération nocturne + augmente stress
-      const enfMult = [1.00, 1.05, 1.12, 1.20][d.enfants] || 1.0;
+      const enfMult = [1.00, 1.08, 1.15, 1.22][d.enfants] || 1.0;  // ANACT: 1-2→+8%, aidant→+22%
       fatigueMult *= enfMult;
     }
 
