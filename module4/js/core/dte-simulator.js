@@ -38,8 +38,8 @@ const BIO = {
   // Calibration validée : 35h→0%, 45h→8%/J+30 44%/J+90 (Phase 2), 55h→alerte rapide
   // Coefficient dynamique selon charge : fatPerHS(hs) = 0.013/0.017/0.019
   FAT_PER_HS_BASE:  0.013,  // ≤40h/sem : quasi stable
-  FAT_PER_HS_MID:   0.017,  // 40-48h/sem : accumulation modérée
-  FAT_PER_HS_HIGH:  0.019,  // >48h/sem : accumulation forte (OMS seuil AVC)
+  FAT_PER_HS_MID:   0.020,  // 40-48h/sem : 45h→15%/J+30, 48h→50%/J+30 (INRS)
+  FAT_PER_HS_HIGH:  0.017,  // >48h/sem : nonlinear + cumul font le reste
   FAT_NONLINEAR:    0.08,   // amplification légère si déjà fatigué (réduit de 0.65)
   FAT_BASE:         0.000,  // supprimé — inclus dans RECOVERY
   FAT_CONSEC:       0.000,  // supprimé — muscle recovery déjà dans REC_WEEKEND
