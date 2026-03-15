@@ -208,6 +208,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     return advice;
   }
+  // Exposer buildAdvice globalement pour checkin.js et lifestyle.js
+  window._buildAdvice = buildAdvice;
+
+  // Helper sync complet réutilisable par toutes les features
+  window._fullSync = () => {
+    try {
+      const s  = DTE.engine.analyze();
+      DTE._state = s;
+      const r2 = DTE.risks.detect(s.scores, s.norm);
+      const a2 = buildAdvice(s.scores, r2, s.norm);
+      DTE.lastRisks = r2; DTE.lastAdvice = a2;
+      DTE.dashboard.render(s, r2, a2);
+      if (DTE.twin) DTE.twin.update(s.scores);
+      const av = document.querySelector('.view:not(.hidden)');
+      if (av) {
+        if (av.id === 'view-predictions') renderPredictions(s);
+        if (av.id === 'view-whatif' && DTE.whatif) DTE.whatif.render();
+      }
+    } catch(e) { console.warn('[DTE] fullSync:', e); }
+  };
 
   /* ── 4. Navigation ───────────────────────────────────────────── */
   let _predictionsInited = false;
