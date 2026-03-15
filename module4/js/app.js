@@ -572,6 +572,15 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="welcome-step"><span class="welcome-step-num">2</span><span>Il calcule votre fatigue, stress et performance, et prédit votre état dans 30 jours.</span></div>
           <div class="welcome-step"><span class="welcome-step-num">3</span><span>Simulez des scénarios, consultez 1000 conseils juridiques et de prévention.</span></div>
         </div>
+        <div style="margin:14px 0 12px;padding:10px 12px;background:rgba(255,179,0,0.06);
+          border:1px solid rgba(255,179,0,0.25);border-left:3px solid rgba(255,179,0,0.6);
+          font-size:10px;color:rgba(255,255,255,0.6);line-height:1.6;">
+          <b style="color:rgba(255,179,0,0.9);">⚠ Outil d'aide à la prévention</b><br>
+          Les calculs sont des <b>estimations statistiques</b> basées sur des études scientifiques.
+          Ils peuvent ne pas refléter exactement votre situation personnelle.<br>
+          <b style="color:rgba(0,255,204,0.8);">🔒 Confidentialité :</b> toutes vos données restent sur votre appareil.
+          Rien n'est envoyé à un serveur.
+        </div>
         <button class="btn btn--animus" id="welcome-start" style="width:100%;justify-content:center;padding:12px;">
           &#9654;&nbsp; VOIR MON ANALYSE
         </button>
