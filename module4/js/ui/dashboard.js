@@ -11,35 +11,8 @@ class Dashboard {
     // Pas de données M1 → bandeau info
     const noData = state && state.scores && !state.scores._hasData;
     const noDataBanner = document.getElementById('no-data-banner');
-    if(noData){
-      if(!noDataBanner){
-        const b = document.createElement('div');
-        b.id = 'no-data-banner';
-        b.style.cssText = 'background:rgba(255,179,0,0.08);border:1px solid rgba(255,179,0,0.3);border-left:3px solid var(--amber);padding:8px 14px;margin-bottom:6px;font-family:var(--font-mono);font-size:10px;color:var(--amber);letter-spacing:.08em;';
-        const m1ok = state.scores._hasM1, m2ok = state.scores._hasM2;
-        // Scanner les clés localStorage pour diagnostic
-        const foundKeys = [];
-        try {
-          for(let i=0;i<localStorage.length;i++){
-            const k=localStorage.key(i);
-            if(k&&(k.startsWith('DATA_REPORT_')||k.startsWith('CA_HS_TRACKER')))
-              foundKeys.push(k);
-          }
-        } catch(_){}
-        const keyTxt = foundKeys.length
-          ? ' · Clés détectées : <b style="color:var(--sync)">' + foundKeys.join(', ') + '</b>'
-          : ' · <b style="color:var(--red)">Aucune clé M1/M2 dans localStorage</b> — vérifiez que M1 est bien sur le même domaine';
-        const missing = [];
-        if(!m1ok) missing.push('M1 heures');
-        if(!m2ok) missing.push('M2 paie (optionnel)');
-        b.innerHTML = '&#9888;&nbsp; ANALYSE EN ATTENTE' + (missing.length ? ' — données manquantes : ' + missing.join(', ') : '') + keyTxt;
-        const grid = document.querySelector('.dashboard-grid');
-        if(grid) grid.parentNode.insertBefore(b, grid);
-      }
-    } else {
-      if(noDataBanner) noDataBanner.remove();
-    }
-    if(!state||!state.scores) return;
+    if(noDataBanner) noDataBanner.remove();
+        if(!state||!state.scores) return;
     const {scores, norm, raw}=state;
     this._renderHero(scores, norm, raw);
     this._renderScores(scores);
@@ -393,7 +366,7 @@ class Dashboard {
           </div>
         </div>
       </div>`).join('') :
-      '<div style="padding:14px;font-size:12px;color:rgba(255,255,255,0.5);text-align:center;">Analysez vos heures dans M1 pour voir les recommandations.</div>';
+      '<div style="padding:14px;font-size:12px;color:rgba(255,255,255,0.6);text-align:center;">📋 Saisissez des heures dans <b style="color:#fff">M1</b> pour activer les recommandations personnalisées.</div>';
   }
 
   _renderRadar(scores, norm){
