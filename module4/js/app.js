@@ -238,7 +238,9 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderPredictions(state) {
     const sliderAdj = parseFloat(document.getElementById('timeline-hs')?.value || 0);
     const days      = parseInt(document.getElementById('timeline-days')?.value || 30);
-    const norm      = state && state.norm;
+    // Toujours utiliser le state le plus frais (pas le state figé de initPredictions)
+    const freshState = DTE._state || state;
+    const norm      = freshState && freshState.norm;
     // hs = heures HS par jour TRAVAILLÉ (lun-ven) + ajustement slider
     // On utilise _recentWeeklyH pour avoir les HS réelles de la semaine courante
     const weeklyH   = (norm && norm._recentWeeklyH) || 35;
@@ -255,12 +257,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let sim = null, fut = null, scen = null;
-    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: [0,6] }, state.scores); } catch(e) {}
-    try { fut  = DTE.simulator.futurState(days, state.norm); } catch(e) {}
-    try { scen = DTE.simulator.scenarios(days, state.norm); } catch(e) {}
+    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: window._getRestDays ? window._getRestDays() : [0,6] }, freshState.scores); } catch(e) {}
+    try { fut  = DTE.simulator.futurState(days, freshState.norm); } catch(e) {}
+    try { scen = DTE.simulator.scenarios(days, freshState.norm); } catch(e) {}
     renderTimeline(sim, days);
-    renderScenarios(days, state, scen);
-    renderFutur(days, state, fut);
+    renderScenarios(days, freshState, scen);
+    renderFutur(days, freshState, fut);
   }
 
   function renderTimeline(sim, days) {
@@ -555,6 +557,13 @@ document.addEventListener('DOMContentLoaded', function () {
       DTE.notifs.show('Analyse actualisée', 'info', '↺');
     });
 
+    // Jours de repos — charger l'état sauvegardé
+    const _savedRest = JSON.parse(localStorage.getItem('DTE_REST_DAYS') || '{"sat":true,"sun":true}');
+    const satCb = document.getElementById('dte-rest-sat');
+    const sunCb = document.getElementById('dte-rest-sun');
+    if (satCb) satCb.checked = _savedRest.sat !== false;
+    if (sunCb) sunCb.checked = _savedRest.sun !== false;
+
     // PDF
     document.getElementById('btn-pdf')?.addEventListener('click', () => {
       const state = DTE._state;
@@ -617,9 +626,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const s = DTE.engine.analyze();
       DTE._state = s;
+      const _risks  = DTE.risks.detect(s.scores, s.norm);
+      const _advice = buildAdvice(s.scores, _risks);
+      DTE.lastRisks  = _risks;
+      DTE.lastAdvice = _advice;
 
       // Mettre à jour TOUT : dashboard + twin + footer
-      DTE.dashboard.render(s);
+      DTE.dashboard.render(s, _risks, _advice);
       if (DTE.twin) DTE.twin.update(s.scores);
 
       // Mettre à jour la vue active si prédictions/simulation
@@ -640,12 +653,35 @@ document.addEventListener('DOMContentLoaded', function () {
   }, 3000);
 
   // Exposer le forçage de sync (bouton visible)
+  // Helper : retourner les jours de repos selon les checkboxes
+  window._getRestDays = () => {
+    const sat = document.getElementById('dte-rest-sat')?.checked !== false;
+    const sun = document.getElementById('dte-rest-sun')?.checked !== false;
+    const days = [];
+    if (sun) days.push(0);   // 0 = dimanche en JS
+    if (sat) days.push(6);   // 6 = samedi en JS
+    return days.length ? days : [0]; // au minimum dimanche
+  };
+
+  window._updateRestDays = () => {
+    const sat = document.getElementById('dte-rest-sat')?.checked;
+    const sun = document.getElementById('dte-rest-sun')?.checked;
+    localStorage.setItem('DTE_REST_DAYS', JSON.stringify({sat:!!sat, sun:!!sun}));
+    // Re-lancer les prédictions avec les nouveaux jours de repos
+    if (DTE._state) renderPredictions(DTE._state);
+    DTE.notifs.show('Jours de repos mis à jour', 'info', '📅');
+  };
+
   window._forcSync = () => {
     try {
       _syncHash = ''; // forcer la re-analyse
       const s = DTE.engine.analyze();
       DTE._state = s;
-      DTE.dashboard.render(s);
+      const _r2 = DTE.risks.detect(s.scores, s.norm);
+      const _a2 = buildAdvice(s.scores, _r2);
+      DTE.lastRisks  = _r2;
+      DTE.lastAdvice = _a2;
+      DTE.dashboard.render(s, _r2, _a2);
       if (DTE.twin) DTE.twin.update(s.scores);
       const activeView = document.querySelector('.view:not(.hidden)');
       if (activeView) {
