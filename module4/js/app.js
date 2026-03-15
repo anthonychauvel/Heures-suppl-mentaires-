@@ -127,10 +127,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ─ FATIGUE ─────────────────────────────────────────────────────
     if (!scores._hasData) {
-      advice.push({ type:'info', emoji:'📋',
-        titre:'Aucune donnée disponible',
-        message:'Saisissez vos heures dans M1 (Suivi annuel) pour activer l\'analyse.',
-        source:'' });
+      // Pas d'avertissement — attendre que l'utilisateur saisisse des heures
+      return advice; // vide
     } else if (scores.fatigue >= 85) {
       advice.push({ type:'danger', emoji:'🔴',
         titre:'Épuisement critique — Phase 4',
@@ -268,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let sim = null, fut = null, scen = null;
     const _rdNow = window._getRestDays ? window._getRestDays() : [0,6];
-    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: _rdNow }, freshState.scores); } catch(e) {}
+    try { sim  = DTE.simulator.run({ days, hoursPerDay: hs, restDays: _rdNow }); } catch(e) {}
     try { fut  = DTE.simulator.futurState(days, freshState.norm); } catch(e) {}
     try { scen = DTE.simulator.scenarios(days, freshState.norm); } catch(e) {}
     renderTimeline(sim, days);
@@ -281,69 +279,54 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!wrap) return;
 
     if (!sim || !sim.timeline) {
-      wrap.innerHTML = `<div style="padding:20px;text-align:center;font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,0.5);">
-        📋 Saisissez vos heures dans M1 pour voir votre évolution prévue
-      </div>`;
+      wrap.innerHTML = '<div style="padding:20px;text-align:center;font-size:12px;color:rgba(255,255,255,0.5);">Chargement...</div>';
       return;
     }
 
-    const tl  = sim.timeline;
-    const s   = sim.summary;
-    const ph  = s.finalPhase || { id:1, label:'ADAPTATION', color:'#00ffcc' };
-    const c   = v => v >= 80 ? '#ff2244' : v >= 60 ? '#ff6600' : v >= 35 ? '#ffb300' : '#00ffcc';
+    const s  = sim.summary;
+    const tl = sim.timeline;
+    const c  = v => v>=80?'#c82838':v>=60?'#c8601a':v>=35?'#c89a18':'#00aa88';
+    const ph = s.finalPhase || {id:1, label:'EN FORME', color:'#00aa88'};
+    const fatFin = s.finalFatigue || 0;
 
-    // Message principal en langage clair
-    const fatFin  = s.finalFatigue || 0;
-    const trendMsg = fatFin < 30 ? '📈 Vous allez bien. Continuez à ce rythme.'
-                   : fatFin < 50 ? '⚠️ Fatigue qui s\'accumule progressivement.'
-                   : fatFin < 70 ? '🔶 Surmenage probable. Réduire les HS conseillé.'
+    const trendMsg = fatFin < 10 ? '😊 Rythme stable. Continuez à ce rythme.'
+                   : fatFin < 35 ? '📈 Légère accumulation. Restez attentif.'
+                   : fatFin < 60 ? '⚠️ Fatigue qui s\'accumule. Récupération conseillée.'
+                   : fatFin < 80 ? '🔶 Surmenage probable. Réduire les HS.'
                    : '🔴 Risque élevé. Repos nécessaire urgemment.';
+
     const weekH = tl[0]?.weeklyHours || 35;
-    const omsMsg = weekH >= 55 ? '⚠️ Au-delà de 55h/sem : +35% risque AVC (OMS 2021)'
-                 : weekH >= 48 ? '→ Au-delà du maximum légal 48h/sem (Art. L3121-20)'
+    const omsMsg = weekH >= 55 ? '⚠️ +35% risque AVC au-delà de 55h/sem (OMS 2021)'
+                 : weekH >= 48 ? '→ Dépasse le maximum légal 48h/sem (Art. L3121-20)'
                  : weekH >= 40 ? '→ Zone de vigilance OCDE (>40h/sem)'
                  : '✓ Zone optimale OMS (≤40h/sem)';
 
-    // Barres semaines (max 8)
-    const weeks = Array.from({length:Math.min(8,Math.ceil(tl.length/7))},(_,w)=>{
-      const wd  = tl.slice(w*7,(w+1)*7);
-      const af  = Math.round(wd.reduce((s,d)=>s+d.fatigue,0)/wd.length);
-      return { w:w+1, af, col:c(af), alert:wd.some(d=>d.alert!=='OK') };
-    });
+    // Barres semaines — exactement comme WhatIf
+    const nbWeeks = Math.min(8, Math.ceil(tl.length/7));
+    const weekBars = Array.from({length: nbWeeks}, (_, w) => {
+      const wd = tl.slice(w*7, (w+1)*7);
+      const af = Math.round(wd.reduce((acc,d) => acc + d.fatigue, 0) / wd.length);
+      const col = c(af);
+      const h = Math.max(4, af * 0.4);
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;">'
+        + '<div style="font-size:9px;color:' + col + ';font-weight:600;">' + af + '%</div>'
+        + '<div style="width:100%;background:' + col + ';height:' + h + 'px;border-radius:1px;"></div>'
+        + '<div style="font-size:9px;color:rgba(255,255,255,0.4);">S' + (w+1) + '</div>'
+        + '</div>';
+    }).join('');
 
-    wrap.innerHTML = `
-      <!-- MESSAGE PRINCIPAL -->
-      <div style="padding:12px 14px;background:rgba(0,10,25,.9);border-left:3px solid ${c(fatFin)};margin-bottom:8px;">
-        <div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">${trendMsg}</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.7);">
-          Dans <b style="color:${c(fatFin)}">${days} jours</b> :
-          Fatigue estimée <b style="color:${c(fatFin)}">${fatFin}%</b> —
-          Phase <b style="color:${ph.color}">P${ph.id} ${ph.label}</b>
-        </div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px;">${omsMsg}</div>
-      </div>
-
-      <!-- SEMAINES : barre simple avec explication -->
-      <div style="font-size:11px;color:rgba(255,255,255,0.6);font-family:var(--font-mono);margin-bottom:6px;">
-        ÉVOLUTION SEMAINE PAR SEMAINE (fatigue prévue)
-      </div>
-      <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:4px;">
-        ${weeks.map(w=>`
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;">
-            <div style="font-size:10px;font-weight:600;color:${w.col};">${w.af}%</div>
-            <div style="width:100%;background:${w.col};height:${Math.max(4,w.af*0.44)}px;
-              opacity:${w.alert?1:0.7};border-radius:1px;"></div>
-            <div style="font-size:9px;color:rgba(255,255,255,0.5);">S${w.w}</div>
-          </div>`).join('')}
-      </div>
-      <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;">
-        🟢 vert = OK · 🟡 orange = vigilance · 🔴 rouge = alerte
-      </div>
-
-      ${s.daysAlert > 0 ? `<div style="margin-top:8px;padding:8px 12px;background:rgba(255,179,0,0.1);border:1px solid rgba(255,179,0,0.3);font-size:11px;color:rgba(255,255,255,0.8);">
-        ⚠️ <b>${s.daysAlert} jour(s)</b> en alerte prévus sur la période
-      </div>` : ''}`;
+    wrap.innerHTML = ''
+      + '<div style="padding:12px 14px;background:rgba(0,10,25,.9);border-left:3px solid ' + c(fatFin) + ';margin-bottom:10px;">'
+      + '<div style="font-size:14px;font-weight:600;color:#fff;margin-bottom:4px;">' + trendMsg + '</div>'
+      + '<div style="font-size:12px;color:rgba(255,255,255,0.7);">Dans <b style="color:' + c(fatFin) + '">' + days + ' jours</b> : Fatigue estimée <b style="color:' + c(fatFin) + '">' + fatFin + '%</b> — Phase <b style="color:' + ph.color + '">' + ph.label + '</b></div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px;">' + omsMsg + '</div>'
+      + '</div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,0.6);font-family:var(--font-mono);margin-bottom:6px;">ÉVOLUTION SEMAINE PAR SEMAINE (fatigue prévue)</div>'
+      + '<div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:4px;">' + weekBars + '</div>'
+      + '<div style="font-size:10px;color:rgba(255,255,255,0.4);">🟢 vert = OK · 🟡 orange = vigilance · 🔴 rouge = alerte</div>'
+      + (s.daysAlert > 0 ? '<div style="margin-top:8px;padding:8px 12px;background:rgba(255,179,0,0.1);border:1px solid rgba(255,179,0,0.3);font-size:11px;color:rgba(255,255,255,0.8);">⚠️ <b>' + s.daysAlert + ' jour(s)</b> en alerte prévus sur la période</div>' : '');
   }
+
 
   function renderScenarios(days, state, scen) {
     const el = document.getElementById('scenarios-container');
