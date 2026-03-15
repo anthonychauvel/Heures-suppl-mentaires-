@@ -134,28 +134,51 @@
 
   // ── Graphique barres CSS (lisible, pas SVG) ─────────────────────
   function renderBarChart(months, yr) {
-    var MOIS = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
-    var max  = Math.max.apply(null, months.concat([10]));
+    var MOIS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+    var max   = Math.max.apply(null, months.concat([10]));
     var nowMo = (String(new Date().getFullYear()) === yr) ? new Date().getMonth() : -1;
-    var html = '<div style="display:flex;align-items:flex-end;gap:3px;height:90px;padding-bottom:22px;position:relative;">';
-    // Ligne de référence 44h
+    var H = 80; // hauteur zone barres
+    var LABEL_H = 16; // hauteur zone label mois en bas
+    var VAL_H   = 12; // hauteur zone valeur en haut
+
+    var html = '<div style="position:relative;height:' + (H + LABEL_H + VAL_H) + 'px;">';
+
+    // Ligne 44h
     if (max > 44) {
-      var pct44 = Math.round(44 / max * 90);
-      html += '<div style="position:absolute;bottom:' + (22 + pct44) + 'px;left:0;right:0;border-top:1px dashed rgba(229,57,53,0.25);font-size:0;"></div>';
+      var y44 = VAL_H + H - Math.round(44 / max * H);
+      html += '<div style="position:absolute;top:' + y44 + 'px;left:0;right:0;border-top:1px dashed rgba(229,57,53,0.2);"></div>';
     }
+
+    // Barres
     months.forEach(function(val, i) {
-      var h = val > 0 ? Math.max(4, Math.round(val / max * 90)) : 2;
-      var col = i === nowMo ? '#90A4AE' : val > 44 ? '#EF5350' : val > 0 ? '#455A64' : '#1C2B35';
+      var pct  = (100 / 12);
+      var left = pct * i;
+      var bh   = val > 0 ? Math.max(3, Math.round(val / max * H)) : 2;
+      var barTop = VAL_H + H - bh;
+      var col  = i === nowMo ? '#90A4AE' : val > 44 ? '#EF5350' : val > 0 ? '#455A64' : '#1C2B35';
       var isNow = i === nowMo;
-      html += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0;position:relative;">';
-      // Valeur au dessus
-      if (val > 0) html += '<div style="position:absolute;top:' + (90 - h - 14) + 'px;font-size:6.5px;color:#546E7A;white-space:nowrap;">' + (val % 1 ? val.toFixed(1) : val) + 'h</div>';
+
+      // Conteneur colonne
+      html += '<div style="position:absolute;left:' + left.toFixed(2) + '%;width:' + (pct - 0.5).toFixed(2) + '%;top:0;bottom:0;">';
+
+      // Valeur — seulement si la barre est assez haute pour ne pas déborder
+      if (val > 0) {
+        var valLabel = val % 1 ? val.toFixed(1) : String(val);
+        // Afficher seulement si la barre est suffisamment haute (>15px) sinon trop serré
+        if (bh >= 15) {
+          html += '<div style="position:absolute;top:' + (VAL_H + H - bh - 11) + 'px;left:0;right:0;text-align:center;font-size:6px;color:#546E7A;overflow:hidden;">' + valLabel + 'h</div>';
+        }
+      }
+
       // Barre
-      html += '<div style="width:100%;background:' + col + ';height:' + h + 'px;position:absolute;bottom:22px;border-radius:2px 2px 0 0;' + (isNow ? 'outline:1px solid rgba(255,255,255,0.15);' : '') + '"></div>';
+      html += '<div style="position:absolute;left:1px;right:1px;top:' + barTop + 'px;height:' + bh + 'px;background:' + col + ';border-radius:2px 2px 0 0;' + (isNow ? 'box-shadow:0 0 0 1px rgba(255,255,255,0.15);' : '') + '"></div>';
+
       // Label mois
-      html += '<div style="position:absolute;bottom:4px;font-size:7px;color:' + (isNow ? '#90A4AE' : '#37474F') + ';font-weight:' + (isNow ? '700' : '400') + ';">' + MOIS[i].slice(0,1) + '</div>';
+      html += '<div style="position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:7px;color:' + (isNow ? '#90A4AE' : '#37474F') + ';font-weight:' + (isNow ? '700' : '400') + ';">' + MOIS[i] + '</div>';
+
       html += '</div>';
     });
+
     html += '</div>';
     // Légende
     html += '<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;">';
@@ -240,7 +263,7 @@
     var html = ''
 
       // ══ HEADER ════════════════════════════════════════════════
-      + '<div style="position:sticky;top:0;z-index:5;background:rgba(6,8,15,0.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.05);">'
+      + '<div style="position:sticky;top:0;z-index:5;background:rgba(6,8,15,0.97);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.05);padding-top:env(safe-area-inset-top,0px);">'
       +   '<div style="padding:12px 18px;display:flex;align-items:center;justify-content:space-between;">'
       +     '<div><div style="font-size:0.82rem;font-weight:700;color:#78909C;letter-spacing:0.8px;text-transform:uppercase;">Tableau de bord</div>'
       +     '<div style="font-size:0.63rem;color:#263238;margin-top:1px;">' + ds + '</div></div>'
