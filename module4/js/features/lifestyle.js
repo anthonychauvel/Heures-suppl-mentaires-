@@ -294,10 +294,11 @@ class LifestylePanel {
 
     // Calcul du résumé des impacts
     const b = LifestylePanel.getBoosts();
-    const fatImpact  = Math.round(b.fatigue  * 100);
-    const perfImpact = Math.round(b.performance * 100);
-    const strImpact  = Math.round(b.stress   * 100);
-    const recImpact  = Math.round(b.recovery  * 100);
+    // fatigueMult = multiplicateur (0.87 = -13%, 1.10 = +10%)
+    const fatImpact  = Math.round((b.fatigueMult - 1) * 100); // mult<1 = négatif = bonne nouvelle
+    const perfImpact = Math.round((b.performance || 0) * 100);
+    const strImpact  = Math.round((b.stress     || 0) * 100);
+    const recImpact  = Math.round((b.recovery   || 0) * 100);
 
     const fmt = (v, inv) => {
       if (Math.abs(v) < 1) return '<span style="color:rgba(255,255,255,0.4)">= stable</span>';
@@ -319,7 +320,7 @@ class LifestylePanel {
       + '<div style="font-size:12px;color:rgba(255,255,255,0.6);text-align:center;margin-bottom:16px;">Vos scores ont été ajustés selon votre rythme de vie.</div>'
 
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px;">'
-      + [['Fatigue', fatImpact, true], ['Stress', strImpact, true], ['Performance', perfImpact, false], ['Récupération', recImpact, false]].map(([l, v, inv]) =>
+      + [['Fatigue', fatImpact, false], ['Stress', strImpact, true], ['Performance', perfImpact, false], ['Récupération', recImpact, false]].map(([l, v, inv]) =>
           '<div style="padding:10px;background:rgba(0,10,25,.8);border:1px solid rgba(255,255,255,0.08);text-align:center;">'
           + '<div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:4px;">' + l + '</div>'
           + '<div style="font-size:18px;font-weight:700;">' + fmt(v, inv) + '</div>'
@@ -336,12 +337,13 @@ class LifestylePanel {
 
     document.getElementById('ls-done')?.addEventListener('click', () => {
       this.close();
-      // Mise à jour subtitle du bouton
       const sub = document.getElementById('lifestyle-sub');
       if (sub) sub.textContent = '✓ Profil enregistré — cliquer pour modifier';
-      // Re-analyse complète
-      if (window._fullSync) window._fullSync();
-      else if (window._forcSync) window._forcSync();
+      // Sync complète avec lifestyle pris en compte
+      setTimeout(() => {
+        if (window._fullSync) window._fullSync();
+        else if (window._forcSync) window._forcSync();
+      }, 100);
     });
     document.getElementById('ls-close2')?.addEventListener('click', () => this.close());
     this._modal.querySelector('.modal-overlay')?.addEventListener('click', () => this.close());
