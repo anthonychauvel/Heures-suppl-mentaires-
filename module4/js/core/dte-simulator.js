@@ -296,7 +296,9 @@ class DTESimulator {
     const scores = this._engine.getState() && this._engine.getState().scores;
     if (!n || !scores) return null;
     const D   = this._engine.getDefaults();
-    const avg = n._avgExtra7 || 0;
+    // hs = HS par jour TRAVAILLÉ (lun-ven) basé sur la semaine courante
+    const weeklyHcur = n._recentWeeklyH || 35;
+    const avg  = Math.max(0, (weeklyHcur - 35) / 5);  // HS/jour travaillé
     const base = D.BASE_JOUR;
 
     const plans = [
