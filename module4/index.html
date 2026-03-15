@@ -123,16 +123,7 @@
       <button class="nav-btn" data-view="whatif">SIMULATION</button>
       <button class="nav-btn" data-view="heatmap">CALENDRIER</button>
     </nav>
-    <div class="header-actions">
-      <button id="btn-sync-visible" onclick="window._forcSync&&window._forcSync()" style="
-  display:flex;align-items:center;gap:6px;
-  background:rgba(0,255,204,0.12);border:1px solid rgba(0,255,204,0.4);
-  color:#00ffcc;font-family:'Share Tech Mono',monospace;font-size:11px;
-  padding:6px 14px;cursor:crosshair;letter-spacing:.06em;
-  transition:all .2s;">
-  <span style="font-size:14px;">↻</span> SYNC
-</button>
-    </div>
+    <div class="header-actions"></div>
   </header>
 
   <main class="app-main">
@@ -167,6 +158,16 @@
                 </div>
               </div>
             </button>
+
+            <button class="action-block-btn" id="btn-sync-visible"
+              onclick="window._forcSync&&window._forcSync()">
+              <span class="abtn-icon">&#8635;</span>
+              <div class="abtn-text">
+                <div class="abtn-label">SYNCHRONISER</div>
+                <div class="abtn-sub">Forcer la mise à jour</div>
+              </div>
+            </button>
+
             <button class="action-block-btn" id="btn-ai">
               <span class="abtn-icon">&#9830;</span>
               <div class="abtn-text"><div class="abtn-label">CONSEILS</div><div class="abtn-sub">1000 scénarios locaux</div></div>
