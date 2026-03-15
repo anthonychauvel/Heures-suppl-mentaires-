@@ -142,47 +142,47 @@ class LifestylePanel {
 
     // Multiplicateur fatigue : produit de chaque facteur
     // Jamais additif pour éviter de ramener la fatigue à 0
-    let fatMult = 1.0;
+    let fatigueMult = 1.0;
 
     // Sport — INRS : exercice régulier réduit fatigue chronique de 15-20%
     if (d.sport !== undefined) {
       const sportMult = [1.10, 1.03, 0.87, 0.80][d.sport] || 1.0;  // jamais→+10%, 2-3×→-13%, 4×+→-20%
-      fatMult *= sportMult;
+      fatigueMult *= sportMult;
     }
 
     // Nutrition — INRS : alimentation équilibrée réduit fatigue de 5-8%
     if (d.nutrition !== undefined) {
       const nutMult = [1.08, 1.02, 0.97, 0.93][d.nutrition] || 1.0;
-      fatMult *= nutMult;
+      fatigueMult *= nutMult;
     }
 
     // Qualité du sommeil — Thompson 2022 : mauvais sommeil +20% fatigue, bon -10%
     if (d.sleep_quality !== undefined) {
       const slMult = [1.20, 1.10, 1.00, 0.90][d.sleep_quality] || 1.0;
-      fatMult *= slMult;
+      fatigueMult *= slMult;
     }
 
     // Sens au travail — Nature 2025 (Fan) : sens fort réduit fatigue PERÇUE de 30-40%
     if (d.sens !== undefined) {
       const sensMult = [1.15, 1.05, 1.00, 0.72][d.sens] || 1.0;
-      fatMult *= sensMult;
+      fatigueMult *= sensMult;
     }
 
     // Pauses — Sonnentag 2003 : pauses réduisent fatigue de 8-10%
     if (d.pauses !== undefined) {
       const pausMult = [1.08, 1.02, 0.97, 0.92][d.pauses] || 1.0;
-      fatMult *= pausMult;
+      fatigueMult *= pausMult;
     }
 
     // Écrans soir — sommeil dégradé si écrans (jusqu'à +8% fatigue)
     if (d.ecrans_soir !== undefined) {
       const ecMult = [1.08, 1.03, 1.00, 0.97][d.ecrans_soir] || 1.0;
-      fatMult *= ecMult;
+      fatigueMult *= ecMult;
     }
 
     // Clamp multiplicateur : jamais en dessous de 0.55 (profil parfait = max -45%)
     // Jamais au dessus de 1.60 (profil très négatif = max +60%)
-    fatMult = Math.max(0.55, Math.min(1.60, fatMult));
+    fatigueMult = Math.max(0.55, Math.min(1.60, fatigueMult));
 
     // Boosts additifs modérés pour stress/perf/recovery (±0.10 max)
     let stress = 0, perf = 0, rec = 0, cvRisk = 0;
