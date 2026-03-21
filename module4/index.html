@@ -6,12 +6,97 @@
   <title>Digital Twin Engine — Module 4</title>
   <meta name="theme-color" content="#00060f">
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <script src="../ccn/conventions-collectives.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/twin-body.css">
   <link rel="stylesheet" href="css/charts.css">
   <link rel="stylesheet" href="css/components.css">
+<style>
+/* == TOOLTIPS SIMULHEURES == */
+/* ═══════════════════════════════════════════════
+   TOOLTIP SYSTEM — Simulheures
+   Usage: data-tooltip="..." sur n'importe quel élément
+   Positions: data-tooltip-pos="top|bottom|left|right"
+   ═══════════════════════════════════════════════ */
+[data-tooltip]{position:relative;}
+[data-tooltip]::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:calc(100% + 9px);
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(20,22,30,0.96);
+  color:#e8eaf0;
+  font-size:11.5px;
+  line-height:1.45;
+  padding:7px 11px;
+  border-radius:7px;
+  white-space:normal;
+  width:210px;
+  max-width:210px;
+  text-align:left;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .16s ease;
+  z-index:99999;
+  font-weight:400;
+  font-family:inherit;
+  box-shadow:0 4px 16px rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.08);
+  letter-spacing:.01em;
+}
+[data-tooltip]::before{
+  content:'';
+  position:absolute;
+  bottom:calc(100% + 4px);
+  left:50%;
+  transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:rgba(20,22,30,0.96);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .16s ease;
+  z-index:99999;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before,
+[data-tooltip]:focus::after,
+[data-tooltip]:focus::before{opacity:1;}
+/* — bottom — */
+[data-tooltip-pos="bottom"]::after{top:calc(100% + 9px);bottom:auto;}
+[data-tooltip-pos="bottom"]::before{top:calc(100% + 4px);bottom:auto;border-top-color:transparent;border-bottom-color:rgba(20,22,30,0.96);}
+/* — right — */
+[data-tooltip-pos="right"]::after{left:calc(100% + 9px);bottom:50%;transform:translateY(50%);width:190px;}
+[data-tooltip-pos="right"]::before{left:calc(100% + 4px);bottom:50%;transform:translateY(50%);border-top-color:transparent;border-right-color:rgba(20,22,30,0.96);}
+/* — left — */
+[data-tooltip-pos="left"]::after{right:calc(100% + 9px);left:auto;bottom:50%;transform:translateY(50%);width:190px;}
+[data-tooltip-pos="left"]::before{right:calc(100% + 4px);left:auto;bottom:50%;transform:translateY(50%);border-top-color:transparent;border-left-color:rgba(20,22,30,0.96);}
+/* icône ? inline */
+.tt-icon{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:rgba(130,140,160,.35);color:#9aa6b8;font-size:9.5px;font-weight:700;cursor:help;vertical-align:middle;margin-left:4px;flex-shrink:0;}
+
+
+/* ── TOOLTIP TOGGLE BUTTON ── */
+#tt-toggle-btn{
+  position:fixed;bottom:18px;right:18px;z-index:99998;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(30,35,48,.9);border:1.5px solid rgba(255,255,255,.15);
+  color:#e8eaf0;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 14px rgba(0,0,0,.45);
+  transition:transform .15s,opacity .2s,background .2s;
+  opacity:.75;line-height:1;
+}
+#tt-toggle-btn:hover{opacity:1;transform:scale(1.12);}
+#tt-toggle-btn.tt-off{opacity:.35;filter:grayscale(.9);}
+body.no-tooltips [data-tooltip]::after,
+body.no-tooltips [data-tooltip]::before{display:none!important;}
+@supports(bottom:env(safe-area-inset-bottom)){
+  #tt-toggle-btn{bottom:calc(18px + env(safe-area-inset-bottom));}
+}
+
+</style>
 </head>
 <body>
 
@@ -109,10 +194,11 @@
       <button class="back-btn" id="btn-back" title="Retourner au module précédent">&#8592; RETOUR</button>
     </div>
     <nav class="header-nav">
-      <button class="nav-btn active" data-view="dashboard">MON ÉTAT</button>
-      <button class="nav-btn" data-view="predictions">PRÉVISIONS</button>
-      <button class="nav-btn" data-view="whatif">SIMULATION</button>
-      <button class="nav-btn" data-view="heatmap">CALENDRIER</button>
+      <button class="nav-btn active" data-view="dashboard" data-tooltip="Votre tableau de bord santé : score global, fatigue, stress, performance — calculés depuis vos vraies heures travaillées." data-tooltip-pos="bottom">MON ÉTAT</button>
+      <button class="nav-btn" data-view="predictions" data-tooltip="Si vous continuez à ce rythme : où serez-vous dans 30 jours ? Jouez sur le curseur HS/jour pour tester." data-tooltip-pos="bottom">PRÉVISIONS</button>
+      <button class="nav-btn" data-view="schedule" data-tooltip="Vos plannings et horaires saisis, semaine par semaine." data-tooltip-pos="bottom">HORAIRES</button>
+      <button class="nav-btn" data-view="whatif" data-tooltip="Simulez des scénarios : 2 jours de repos, semaine chargée… et voyez l'impact sur votre santé." data-tooltip-pos="bottom">SIMULATION</button>
+      <button class="nav-btn" data-view="heatmap" data-tooltip="Vue thermique annuelle de vos heures : repérez d'un coup d'œil vos semaines les plus chargées." data-tooltip-pos="bottom">CALENDRIER</button>
     </nav>
     <div class="header-actions"></div>
   </header>
@@ -284,6 +370,15 @@
       </div>
     </section>
 
+    <!-- SCHEDULE -->
+    <section id="view-schedule" class="view hidden">
+      <div class="panel" style="max-width:480px;margin:0 auto;">
+        <div class="panel-label">HORAIRES &amp; RÉGIME DE TRAVAIL</div>
+        <div class="panel-corner-br"></div>
+        <div id="schedule-container"></div>
+      </div>
+    </section>
+
     <!-- WHAT IF -->
     <section id="view-whatif" class="view hidden">
       <div id="whatif-container" style="display:grid;grid-template-columns:300px 1fr;gap:6px;min-height:calc(100vh - 70px);"></div>
@@ -331,6 +426,7 @@
 <script src="js/ui/twin-body.js"></script>
 <script src="js/ui/radar-chart.js"></script>
 <script src="js/ui/timeline-chart.js"></script>
+<script src="js/features/schedule.js"></script>
 <script src="js/ui/heatmap.js"></script>
 <script src="js/ui/whatif-panel.js"></script>
 <script src="js/ui/dashboard.js"></script>
@@ -380,5 +476,36 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
+
+<script>
+/* ── TOOLTIP TOGGLE ── */
+(function(){
+  var K='SH_TOOLTIPS_OFF';
+  function apply(off){
+    document.body.classList.toggle('no-tooltips',!!off);
+    var b=document.getElementById('tt-toggle-btn');
+    if(!b)return;
+    b.classList.toggle('tt-off',!!off);
+    b.title=off?'Afficher les infobulles (aide)':'Masquer les infobulles';
+    b.setAttribute('aria-pressed',off?'false':'true');
+  }
+  function init(){
+    var off=localStorage.getItem(K)==='1';
+    apply(off);
+    var b=document.createElement('button');
+    b.id='tt-toggle-btn';b.innerHTML='💡';
+    b.title=off?'Afficher les infobulles':'Masquer les infobulles';
+    b.setAttribute('aria-label','Infobulles');
+    b.setAttribute('aria-pressed',off?'false':'true');
+    b.onclick=function(){
+      var next=!document.body.classList.contains('no-tooltips');
+      localStorage.setItem(K,next?'1':'0');apply(next);
+    };
+    document.body.appendChild(b);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
 </body>
 </html>
