@@ -9,6 +9,7 @@
   <link rel="apple-touch-icon" href="/hs/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Compteur Heures & Paie">
+  <script src="ccn/conventions-collectives.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -223,6 +224,155 @@
     }
     .info-btn:hover { background: rgba(255,255,255,0.15); }
     hr { border: 0; border-top: 1px solid #eee; margin: 15px 0; }
+
+    /* === CCN BADGE === */
+    #ccn-badge {
+      display:flex; align-items:center; gap:8px;
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.3);
+      border-radius:22px; padding:8px 16px;
+      cursor:pointer; transition:background .15s;
+      font-size:13px; color:#fff; margin-bottom:6px;
+    }
+    #ccn-badge:hover { background:rgba(255,255,255,0.2); }
+    #ccn-badge .ccn-name { font-weight:600; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    #ccn-badge .ccn-edit { font-size:11px; color:rgba(255,255,255,0.6); }
+
+    /* === CCN MODAL === */
+    #ccnModal {
+      display:none; position:fixed; inset:0; z-index:9999;
+      background:rgba(0,0,0,0.55); align-items:center; justify-content:center;
+    }
+    #ccnModal.open { display:flex; }
+    .ccn-box {
+      background:#fff; border-radius:16px; padding:20px;
+      width:min(520px, 96vw); max-height:88vh;
+      display:flex; flex-direction:column; gap:12px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.3);
+    }
+    .ccn-box h2 { margin:0; font-size:16px; color:#2196a6; }
+    #ccn-search {
+      width:100%; padding:10px 12px; border:1px solid #ddd;
+      border-radius:10px; font-size:14px; box-sizing:border-box;
+    }
+    #ccn-results {
+      overflow-y:auto; flex:1; max-height:320px;
+      border:1px solid #eee; border-radius:10px;
+    }
+    .ccn-item {
+      padding:10px 14px; cursor:pointer; border-bottom:1px solid #f5f5f5;
+      font-size:13px; transition:background .1s;
+    }
+    .ccn-item:hover { background:#f0fbfc; }
+    .ccn-item.active { background:#e0f4f7; font-weight:600; }
+    .ccn-item .ccn-item-idcc { color:#999; font-size:11px; }
+    .ccn-item-custom {
+      padding:10px 14px; cursor:pointer;
+      font-size:13px; color:#2196a6; font-weight:600;
+      border-top:2px solid #e0f4f7;
+      background:#f8fdfe;
+    }
+    .ccn-item-custom:hover { background:#e0f4f7; }
+    .ccn-custom-form { display:none; flex-direction:column; gap:8px; }
+    .ccn-custom-form.open { display:flex; }
+    .ccn-custom-form label { font-size:12px; color:#555; margin-bottom:2px; }
+    .ccn-custom-form input, .ccn-custom-form select {
+      padding:8px 10px; border:1px solid #ddd; border-radius:8px;
+      font-size:13px; width:100%; box-sizing:border-box;
+    }
+    .ccn-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .ccn-save-btn {
+      background:linear-gradient(135deg,#4FB3C2,#2196a6);
+      color:#fff; border:none; border-radius:10px;
+      padding:11px; font-size:14px; font-weight:600;
+      cursor:pointer; margin-top:4px;
+    }
+    .ccn-cancel-btn {
+      background:transparent; border:1px solid #ddd; border-radius:10px;
+      padding:10px; font-size:13px; cursor:pointer; color:#555;
+    }
+/* == TOOLTIPS SIMULHEURES == */
+/* ═══════════════════════════════════════════════
+   TOOLTIP SYSTEM — Simulheures
+   Usage: data-tooltip="..." sur n'importe quel élément
+   Positions: data-tooltip-pos="top|bottom|left|right"
+   ═══════════════════════════════════════════════ */
+[data-tooltip]{position:relative;}
+[data-tooltip]::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:calc(100% + 9px);
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(20,22,30,0.96);
+  color:#e8eaf0;
+  font-size:11.5px;
+  line-height:1.45;
+  padding:7px 11px;
+  border-radius:7px;
+  white-space:normal;
+  width:210px;
+  max-width:210px;
+  text-align:left;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .16s ease;
+  z-index:99999;
+  font-weight:400;
+  font-family:inherit;
+  box-shadow:0 4px 16px rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.08);
+  letter-spacing:.01em;
+}
+[data-tooltip]::before{
+  content:'';
+  position:absolute;
+  bottom:calc(100% + 4px);
+  left:50%;
+  transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:rgba(20,22,30,0.96);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .16s ease;
+  z-index:99999;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before,
+[data-tooltip]:focus::after,
+[data-tooltip]:focus::before{opacity:1;}
+/* — bottom — */
+[data-tooltip-pos="bottom"]::after{top:calc(100% + 9px);bottom:auto;}
+[data-tooltip-pos="bottom"]::before{top:calc(100% + 4px);bottom:auto;border-top-color:transparent;border-bottom-color:rgba(20,22,30,0.96);}
+/* — right — */
+[data-tooltip-pos="right"]::after{left:calc(100% + 9px);bottom:50%;transform:translateY(50%);width:190px;}
+[data-tooltip-pos="right"]::before{left:calc(100% + 4px);bottom:50%;transform:translateY(50%);border-top-color:transparent;border-right-color:rgba(20,22,30,0.96);}
+/* — left — */
+[data-tooltip-pos="left"]::after{right:calc(100% + 9px);left:auto;bottom:50%;transform:translateY(50%);width:190px;}
+[data-tooltip-pos="left"]::before{right:calc(100% + 4px);left:auto;bottom:50%;transform:translateY(50%);border-top-color:transparent;border-left-color:rgba(20,22,30,0.96);}
+/* icône ? inline */
+.tt-icon{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:rgba(130,140,160,.35);color:#9aa6b8;font-size:9.5px;font-weight:700;cursor:help;vertical-align:middle;margin-left:4px;flex-shrink:0;}
+
+
+/* ── TOOLTIP TOGGLE BUTTON ── */
+#tt-toggle-btn{
+  position:fixed;bottom:18px;right:18px;z-index:99998;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(30,35,48,.9);border:1.5px solid rgba(255,255,255,.15);
+  color:#e8eaf0;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 14px rgba(0,0,0,.45);
+  transition:transform .15s,opacity .2s,background .2s;
+  opacity:.75;line-height:1;
+}
+#tt-toggle-btn:hover{opacity:1;transform:scale(1.12);}
+#tt-toggle-btn.tt-off{opacity:.35;filter:grayscale(.9);}
+body.no-tooltips [data-tooltip]::after,
+body.no-tooltips [data-tooltip]::before{display:none!important;}
+@supports(bottom:env(safe-area-inset-bottom)){
+  #tt-toggle-btn{bottom:calc(18px + env(safe-area-inset-bottom));}
+}
+
   </style>
 </head>
 
@@ -351,23 +501,79 @@
 <!-- =====================
      MENU PRINCIPAL
 ===================== -->
-<div class="btn" onclick="go('heures')">
+<div class="btn" onclick="go('heures')" data-tooltip="Suivi annuel heure par heure — idéal si votre entreprise solde les HS en fin d'année ou en cours d'exercice." data-tooltip-pos="bottom">
   <img src="images/renard-annuel.png.jpg" loading="lazy" alt="Compteur annuel">
   <div class="title">Simulateur de compteur annuel</div>
 </div>
 
-<div class="btn" onclick="go('paye')">
+<div class="btn" onclick="go('paye')" data-tooltip="Vérifiez vos majorations avant de recevoir votre bulletin de paie. Clôture automatique chaque mois." data-tooltip-pos="bottom">
   <img src="images/renard-mensuel.png.jpg" loading="lazy" alt="Paye mensuelle">
   <div class="title">Simulateur d'heures mensualisées</div>
 </div>
 
-<div class="btn" onclick="go('fox')">
+<div class="btn" onclick="go('fox')" data-tooltip="Détecte les infractions au Code du travail dans vos heures et suit votre risque de burn-out." data-tooltip-pos="bottom">
   <img src="images/renard-central.png.jpg" loading="lazy" alt="Module central">
   <div class="title">Fox player</div>
 </div>
 
-<button class="info-btn" onclick="openPresentation()">📄 Présentation du projet</button>
-<button class="info-btn" onclick="reopenWizard()">🔁 Revoir l'aide au choix</button>
+<button class="info-btn" onclick="openPresentation()" data-tooltip="Présentation des 4 modules et du fonctionnement de l'application">📄 Présentation du projet</button>
+<button class="info-btn" onclick="reopenWizard()" data-tooltip="Relancer l'aide au choix du module — utile si vous n'êtes pas sûr par où commencer">🔁 Revoir l'aide au choix</button>
+
+<!-- CCN BADGE -->
+<div id="ccn-badge" onclick="openCCNModal()" title="Changer de convention collective">
+  <span>⚖️</span>
+  <span class="ccn-name" id="ccn-badge-name">Convention collective</span>
+  <span class="ccn-edit">✎ modifier</span>
+</div>
+
+<!-- MODAL CCN -->
+<div id="ccnModal">
+  <div class="ccn-box">
+    <h2>⚖️ Convention collective applicable</h2>
+    <input id="ccn-search" type="text" placeholder="🔍 Rechercher par nom ou N° IDCC..." oninput="ccnSearch(this.value)" autocomplete="off">
+    <div id="ccn-results"></div>
+
+    <!-- Formulaire accord personnalisé -->
+    <div class="ccn-custom-form" id="ccnCustomForm">
+      <hr style="margin:0">
+      <div style="font-size:13px;font-weight:600;color:#2196a6">⚙️ Accord d'entreprise / de branche</div>
+      <div class="ccn-row">
+        <div><label>Nom de l'accord</label><input id="cc-nom" placeholder="Ex: Accord Sodise 2024"></div>
+        <div><label>Seuil HS (h/sem)</label><input id="cc-seuil" type="number" value="35" min="35" max="48"></div>
+      </div>
+      <div class="ccn-row">
+        <div><label>Taux palier 1 (%)</label><input id="cc-taux1" type="number" value="25" min="10" max="100"></div>
+        <div><label>Durée palier 1 (h)</label><input id="cc-palier1" type="number" value="8" min="1" max="16"></div>
+      </div>
+      <div class="ccn-row">
+        <div><label>Taux inter. (% ou vide)</label><input id="cc-taux-inter" type="number" placeholder="Vide = pas de palier inter." min="10" max="100"></div>
+        <div><label>Durée palier inter. (h)</label><input id="cc-palier-inter" type="number" placeholder="Ex: 4" min="1" max="16"></div>
+      </div>
+      <div class="ccn-row">
+        <div><label>Taux final (%)</label><input id="cc-taux2" type="number" value="50" min="25" max="100"></div>
+        <div><label>Contingent annuel (h)</label><input id="cc-contingent" type="number" value="220" min="90" max="360"></div>
+      </div>
+      <div>
+        <label>Début de semaine HS</label>
+        <select id="cc-debut">
+          <option value="1">Lundi (défaut légal)</option>
+          <option value="2">Mardi</option>
+          <option value="3">Mercredi</option>
+          <option value="4">Jeudi</option>
+          <option value="5">Vendredi</option>
+          <option value="6">Samedi</option>
+          <option value="7">Dimanche</option>
+        </select>
+      </div>
+      <p style="font-size:11px;color:#888;margin:0">Art. L3121-32 C.trav. — Un accord peut fixer n'importe quelle période de 7 jours consécutifs comme semaine HS.</p>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="ccn-cancel-btn" style="flex:1" onclick="closeCCNModal()">Annuler</button>
+      <button class="ccn-save-btn" style="flex:2" onclick="saveCCN()">✅ Appliquer</button>
+    </div>
+  </div>
+</div>
 
 <div class="backup-advice">
   💾 <strong>Conseil sauvegarde</strong><br>
@@ -460,7 +666,157 @@
     localStorage.setItem("lastApp", app);
     window.location.href = app + "/index.html";
   }
+
+  /* ===================== CCN ===================== */
+  let _ccnSelected = null;
+  let _ccnCustom = false;
+
+  function initCCNBadge() {
+    const idcc   = localStorage.getItem('CCN_IDCC');
+    const nom    = localStorage.getItem('CCN_NOM');
+    const custom = localStorage.getItem('CCN_CUSTOM');
+    let label = 'Convention collective — cliquer pour choisir';
+    if (custom) {
+      try { const c = JSON.parse(custom); label = '⚙️ ' + (c.nom || 'Accord personnalisé'); } catch(e){}
+    } else if (idcc && nom) {
+      label = nom + ' · IDCC ' + idcc;
+    }
+    document.getElementById('ccn-badge-name').textContent = label;
+  }
+
+  function openCCNModal() {
+    _ccnSelected = null;
+    _ccnCustom = false;
+    document.getElementById('ccnCustomForm').classList.remove('open');
+    document.getElementById('ccn-search').value = '';
+    ccnSearch('');
+    const idcc = localStorage.getItem('CCN_IDCC');
+    if (idcc) _ccnSelected = { idcc: parseInt(idcc), nom: localStorage.getItem('CCN_NOM') || '' };
+    document.getElementById('ccnModal').classList.add('open');
+  }
+
+  function closeCCNModal() {
+    document.getElementById('ccnModal').classList.remove('open');
+  }
+
+  function ccnSearch(q) {
+    const results = document.getElementById('ccn-results');
+    if (typeof CCN_API === 'undefined') {
+      results.innerHTML = '<div style="padding:12px;color:#c00;font-size:13px">❌ Fichier CCN non chargé</div>';
+      return;
+    }
+    const items = CCN_API.search(q, 60);
+    const activeIdcc = _ccnSelected ? _ccnSelected.idcc : parseInt(localStorage.getItem('CCN_IDCC') || '0');
+    let html = items.map(it => {
+      const isActive = it.idcc === activeIdcc;
+      return `<div class="ccn-item${isActive?' active':''}" onclick="selectCCN(${it.idcc},this)">
+        <div>${it.nom}</div>
+        <div class="ccn-item-idcc">IDCC ${it.idcc} · ${it.groupe}</div>
+      </div>`;
+    }).join('');
+    html += `<div class="ccn-item-custom" onclick="toggleCustomForm()">⚙️ Accord d'entreprise / personnalisé…</div>`;
+    results.innerHTML = html;
+    // Récupérer nom depuis DOM
+    results.querySelectorAll('.ccn-item').forEach(el => {
+      el.addEventListener('click', function() {
+        const idccVal = parseInt(this.querySelector('.ccn-item-idcc').textContent.split(' ')[1]);
+        const nomVal  = this.querySelector('div:first-child').textContent;
+        _ccnSelected = { idcc: idccVal, nom: nomVal };
+        _ccnCustom = false;
+        document.getElementById('ccnCustomForm').classList.remove('open');
+        results.querySelectorAll('.ccn-item').forEach(e => e.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  }
+
+  function selectCCN(idcc, el) { /* handled above via addEventListener */ }
+
+  function toggleCustomForm() {
+    _ccnCustom = true;
+    _ccnSelected = null;
+    document.getElementById('ccnCustomForm').classList.toggle('open');
+    const saved = localStorage.getItem('CCN_CUSTOM');
+    if (saved) {
+      try {
+        const c = JSON.parse(saved);
+        document.getElementById('cc-nom').value         = c.nom || '';
+        document.getElementById('cc-seuil').value       = c.seuil || 35;
+        document.getElementById('cc-taux1').value       = c.taux1 || 25;
+        document.getElementById('cc-palier1').value     = c.palier1 || 8;
+        document.getElementById('cc-taux-inter').value  = c.taux_inter || '';
+        document.getElementById('cc-palier-inter').value= c.palier_inter || '';
+        document.getElementById('cc-taux2').value       = c.taux2 || 50;
+        document.getElementById('cc-contingent').value  = c.contingent || 220;
+        document.getElementById('cc-debut').value       = c.debutSemaine || 1;
+      } catch(e){}
+    }
+  }
+
+  function saveCCN() {
+    if (_ccnCustom) {
+      const nom          = document.getElementById('cc-nom').value.trim() || 'Accord personnalisé';
+      const seuil        = parseInt(document.getElementById('cc-seuil').value) || 35;
+      const taux1        = parseInt(document.getElementById('cc-taux1').value) || 25;
+      const palier1      = parseInt(document.getElementById('cc-palier1').value) || 8;
+      const tiRaw        = document.getElementById('cc-taux-inter').value;
+      const piRaw        = document.getElementById('cc-palier-inter').value;
+      const taux_inter   = tiRaw ? parseInt(tiRaw) : null;
+      const palier_inter = piRaw ? parseInt(piRaw) : null;
+      const taux2        = parseInt(document.getElementById('cc-taux2').value) || 50;
+      const contingent   = parseInt(document.getElementById('cc-contingent').value) || 220;
+      const debutSemaine = parseInt(document.getElementById('cc-debut').value) || 1;
+      if (seuil < 35)  { alert('⚠️ Le seuil ne peut pas être inférieur à 35h'); return; }
+      if (taux1 < 10)  { alert('⚠️ Taux minimum légal : 10% (Art. L3121-33)'); return; }
+      CCN_API.setCustom({ nom, seuil, taux1, palier1, taux_inter, palier_inter, taux2, contingent, debutSemaine });
+      localStorage.removeItem('CCN_IDCC');
+      localStorage.setItem('CCN_NOM', nom);
+    } else if (_ccnSelected) {
+      CCN_API.resetCustom();
+      localStorage.setItem('CCN_IDCC', _ccnSelected.idcc);
+      localStorage.setItem('CCN_NOM', _ccnSelected.nom);
+    } else {
+      closeCCNModal();
+      return;
+    }
+    initCCNBadge();
+    closeCCNModal();
+  }
+
+  window.addEventListener('DOMContentLoaded', initCCNBadge);
 </script>
 
+
+<script>
+/* ── TOOLTIP TOGGLE ── */
+(function(){
+  var K='SH_TOOLTIPS_OFF';
+  function apply(off){
+    document.body.classList.toggle('no-tooltips',!!off);
+    var b=document.getElementById('tt-toggle-btn');
+    if(!b)return;
+    b.classList.toggle('tt-off',!!off);
+    b.title=off?'Afficher les infobulles (aide)':'Masquer les infobulles';
+    b.setAttribute('aria-pressed',off?'false':'true');
+  }
+  function init(){
+    var off=localStorage.getItem(K)==='1';
+    apply(off);
+    var b=document.createElement('button');
+    b.id='tt-toggle-btn';b.innerHTML='💡';
+    b.title=off?'Afficher les infobulles':'Masquer les infobulles';
+    b.setAttribute('aria-label','Infobulles');
+    b.setAttribute('aria-pressed',off?'false':'true');
+    b.onclick=function(){
+      var next=!document.body.classList.contains('no-tooltips');
+      localStorage.setItem(K,next?'1':'0');apply(next);
+    };
+    document.body.appendChild(b);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
+</body>
 </body>
 </html>
