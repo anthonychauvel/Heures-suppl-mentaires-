@@ -1,3 +1,22 @@
+
+/* ── CCN : seuil dynamique ── */
+function _legalGetSeuil() {
+  if (typeof CCN_API !== 'undefined') {
+    const idcc = parseInt((typeof localStorage !== 'undefined' && localStorage.getItem('CCN_IDCC')) || '0');
+    const r = CCN_API.getGroupeForCCN(idcc);
+    if (r) return r.seuil;
+  }
+  return 35;
+}
+function _legalGetContingent() {
+  if (typeof CCN_API !== 'undefined') {
+    const idcc = parseInt((typeof localStorage !== 'undefined' && localStorage.getItem('CCN_IDCC')) || '0');
+    const r = CCN_API.getGroupeForCCN(idcc);
+    if (r) return r.contingent;
+  }
+  return 220;
+}
+
 // ===== LEGAL ENGINE =====
 // FOX_SCENARIOS est chargé par ../../js/scenarios-fox-data.js
 // Ce fichier fournit les fonctions d'analyse juridique
@@ -34,12 +53,12 @@ function foxScenarioEngine(gameState) {
   const hasSunday   = gameState.hasSundayWork      || false;
   const hasSaturday = gameState.hasSaturdayWork    || false;
 
-  if (totalHours <= 35)                 triggered.push(foxFindScenario(1));
+  if (totalHours <= _legalGetSeuil())                 triggered.push(foxFindScenario(1));
   else if (totalHours <= 40)            triggered.push(foxFindScenario(2));
   else if (totalHours <= 45)            triggered.push(foxFindScenario(3));
   else if (totalHours >= 48)            triggered.push(foxFindScenario(4));
 
-  if (hasNight && totalHours <= 35)     triggered.push(foxFindScenario(11));
+  if (hasNight && totalHours <= _legalGetSeuil())     triggered.push(foxFindScenario(11));
   if (hasSunday)                        triggered.push(foxFindScenario(22));
   if (hasSaturday && !hasSunday)        triggered.push(foxFindScenario(21));
   if (hasSaturday && hasSunday)         triggered.push(foxFindScenario(23));
@@ -65,7 +84,14 @@ const FOX_LEGAL_LIMITS = {
   DAILY_MAX_DERO        : 12,    // Dérogation accord collectif
   REST_DAILY_MIN        : 11,    // Art. L3131-1 : repos quotidien
   REST_WEEKLY_MIN       : 35,    // Art. L3132-2 : repos hebdomadaire
-  CONTINGENT_ANNUEL     : 220,   // Art. D3121-24 : seuil légal
+  get CONTINGENT_ANNUEL() {      // Dynamique selon CCN active
+    if (typeof CCN_API !== 'undefined') {
+      const idcc = parseInt((typeof localStorage !== 'undefined' && localStorage.getItem('CCN_IDCC')) || '0');
+      const r = CCN_API.getGroupeForCCN(idcc);
+      if (r) return r.contingent;
+    }
+    return 220;
+  },
   NIGHT_THRESHOLD_START : 21,    // Début travail de nuit (heure)
   NIGHT_THRESHOLD_END   : 6,     // Fin travail de nuit (heure)
   NIGHT_ANNUAL_THRESHOLD: 270,   // Heures nuit/an → statut travailleur nuit
@@ -80,7 +106,10 @@ const FOX_VIOLATIONS = {
   V03: { code: 'V03', label: 'Repos quotidien < 11h',     severity: 'critique', article: 'L3131-1'  },
   V04: { code: 'V04', label: 'Repos hebdo < 35h',         severity: 'élevé',   article: 'L3132-2'  },
   V05: { code: 'V05', label: 'Journée > 10h',             severity: 'moyen',   article: 'L3121-19' },
-  V06: { code: 'V06', label: 'Contingent annuel > 220h',  severity: 'élevé',   article: 'D3121-24' },
+  get V06() {
+    const limit = FOX_LEGAL_LIMITS.CONTINGENT_ANNUEL;
+    return { code: 'V06', label: `Contingent annuel > ${limit}h`, severity: 'élevé', article: 'D3121-24' };
+  },
   V07: { code: 'V07', label: 'Travail nuit non déclaré',  severity: 'moyen',   article: 'L3122-2'  },
   V08: { code: 'V08', label: 'Dimanche sans compensation', severity: 'élevé',  article: 'L3132-3'  },
   V09: { code: 'V09', label: '6 jours consécutifs+',      severity: 'moyen',   article: 'L3132-1'  },
@@ -139,7 +168,7 @@ function foxScenarioEngineExpert(gameState) {
 function _buildContext(gs) {
   const rolling = (typeof moduleReader !== 'undefined' && moduleReader.getRollingAnalysis)
     ? moduleReader.getRollingAnalysis(12)
-    : { avgTotal: gs.weeklyHours || 35, violations: { over48: 0 }, trend: 'stable', weeks: [] };
+    : { avgTotal: gs.weeklyHours || _legalGetSeuil(), violations: { over48: 0 }, trend: 'stable', weeks: [] };
 
   const burnout = (typeof moduleReader !== 'undefined' && moduleReader.getBurnoutScore)
     ? moduleReader.getBurnoutScore()
@@ -176,7 +205,7 @@ function _analyzeCurrentWeek(ctx, v, sc) {
     sc.push(foxFindScenario(4));
   } else if (h >= 45) {
     sc.push(foxFindScenario(3));
-  } else if (h > 35) {
+  } else if (h > _legalGetSeuil()) {
     sc.push(foxFindScenario(h <= 40 ? 2 : 3));
   } else {
     sc.push(foxFindScenario(1));
@@ -225,7 +254,7 @@ function _analyzeNightWork(ctx, v, sc) {
     sc.push(foxFindScenario(16)); // semaine nuit complète → statut travailleur nuit
   }
 
-  if (ctx.weeklyHours > 35 && ctx.hasNight) {
+  if (ctx.weeklyHours > _legalGetSeuil() && ctx.hasNight) {
     sc.push(foxFindScenario(15)); // alternance jour/nuit
   }
 }
@@ -289,8 +318,9 @@ function _analyzeBurnout(ctx, v, sc) {
 
 // ─── Contingent annuel ────────────────────────────────────────────
 function _analyzeContingent(ctx, v, sc) {
+  const limit = FOX_LEGAL_LIMITS.CONTINGENT_ANNUEL;
   if (ctx.contingentPct >= 100) {
-    v.push({ ...FOX_VIOLATIONS.V06, value: `${ctx.annualHours}h` });
+    v.push({ ...FOX_VIOLATIONS.V06, value: `${ctx.annualHours}h / ${limit}h` });
     sc.push(foxFindScenario(4));
   } else if (ctx.contingentPct >= 80) {
     sc.push(foxFindScenario(3));
@@ -315,10 +345,16 @@ function _riskLevel(score) {
 }
 
 function _buildSummary(violations, score, ctx) {
-  if (violations.length === 0) return '✅ Situation conforme — aucune violation détectée.';
+  // Nom de la CCN active pour contextualiser le rapport
+  let ccnLabel = '';
+  if (typeof CCN_API !== 'undefined') {
+    const nom = (typeof localStorage !== 'undefined' && localStorage.getItem('CCN_NOM')) || '';
+    if (nom) ccnLabel = ` [${nom}]`;
+  }
+  if (violations.length === 0) return `✅ Situation conforme${ccnLabel} — aucune violation détectée.`;
   const top = violations.slice(0, 3).map(v => `${v.label} (art. ${v.article})`).join(' · ');
   const suffix = violations.length > 3 ? ` + ${violations.length - 3} autre(s)` : '';
-  return `⚠️ ${violations.length} violation(s) — ${top}${suffix}`;
+  return `⚠️ ${violations.length} violation(s)${ccnLabel} — ${top}${suffix}`;
 }
 
 function _emptyEngineResult() {
