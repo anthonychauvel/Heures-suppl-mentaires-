@@ -1,4 +1,3 @@
-<!-- Copyright (c) 2024-2026 Anthony Chauvel — Licence propriétaire — Voir LICENSE.txt -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -72,7 +71,7 @@ window._fox_pre = (function() {
 <!-- HUD -->
 <div id="gaming-hud">
   <div class="hud-logo" id="hud-logo-btn" onclick="demoLogoClick()" style="cursor:pointer;user-select:none;">🦊 FOX</div>
-  <div class="hud-xp-section" onclick="openPopup('popup-leagues')" style="cursor:pointer;" title="Voir ma ligue">
+  <div class="hud-xp-section" onclick="openPopup('popup-leagues')" style="cursor:pointer;" title="Voir ma ligue" data-tooltip="Votre niveau XP — progressez en saisissant vos heures chaque semaine." data-tooltip-pos="bottom">
     <div class="hud-xp-label">
       <span style="display:flex;align-items:center;gap:5px;">
         <span style="background:linear-gradient(135deg,rgba(255,140,66,0.4),rgba(255,107,53,0.3));border:1px solid rgba(255,140,66,0.7);border-radius:6px;padding:2px 8px;font-weight:900;font-size:0.85rem;text-shadow:0 0 8px rgba(255,140,66,0.6);">NIV <span id="hud-level"><script>document.write(window._fox_pre.lvl)</script></span></span>
@@ -84,10 +83,10 @@ window._fox_pre = (function() {
     <div style="display:none;"><span id="hud-xp-percent"></span><span id="hud-next-league"></span></div>
   </div>
   <div class="hud-stats">
-    <div class="hud-stat" onclick="openPopup('popup-modules')" title="Voir les données heures sup" style="cursor:pointer;"><div class="hud-stat-icon">⏱️</div><div class="hud-stat-val" id="hud-hours"><script>document.write(window._fox_pre.hrs||0)</script></div><div class="hud-stat-lbl">H.SUP</div></div>
+    <div class="hud-stat" onclick="openPopup('popup-modules')" title="Voir les données heures sup" data-tooltip="Heures sup cette semaine — lu depuis M1. Cliquez pour le détail." data-tooltip-pos="bottom" style="cursor:pointer;"><div class="hud-stat-icon">⏱️</div><div class="hud-stat-val" id="hud-hours"><script>document.write(window._fox_pre.hrs||0)</script></div><div class="hud-stat-lbl">H.SUP</div></div>
     <div class="hud-stat" onclick="openPopup('popup-burnout')" title="Voir l'énergie et burn-out" style="cursor:pointer;"><div class="hud-stat-icon">❤️</div><div class="hud-stat-val" id="hud-energy">100</div><div class="hud-stat-lbl">ÉNERGIE</div></div>
-    <div class="hud-stat" onclick="openPopup('popup-burnout')" title="Voir le risque burn-out" style="cursor:pointer;"><div class="hud-stat-icon">🔥</div><div class="hud-stat-val" id="hud-burnout"><script>document.write(window._fox_pre.bo||0)</script></div><div class="hud-stat-lbl">RISQUE</div></div>
-    <div class="hud-stat" onclick="openPopup('popup-badges')" title="Voir mes badges" style="cursor:pointer;"><div class="hud-stat-icon">🏅</div><div class="hud-stat-val" id="hud-badges"><script>document.write(window._fox_pre.rwds||0)</script></div><div class="hud-stat-lbl">BADGES</div></div>
+    <div class="hud-stat" onclick="openPopup('popup-burnout')" title="Voir le risque burn-out" data-tooltip="Score de risque épuisement (0-100%). Au-delà de 70% : signaux d'alarme. Cliquez pour comprendre." data-tooltip-pos="bottom" style="cursor:pointer;"><div class="hud-stat-icon">🔥</div><div class="hud-stat-val" id="hud-burnout"><script>document.write(window._fox_pre.bo||0)</script></div><div class="hud-stat-lbl">RISQUE</div></div>
+    <div class="hud-stat" onclick="openPopup('popup-badges')" title="Voir mes badges" data-tooltip="Badges débloqués pour vos actions de suivi et votre régularité." data-tooltip-pos="bottom" style="cursor:pointer;"><div class="hud-stat-icon">🏅</div><div class="hud-stat-val" id="hud-badges"><script>document.write(window._fox_pre.rwds||0)</script></div><div class="hud-stat-lbl">BADGES</div></div>
   </div>
   <div id="hud-buttons">
     <a href="../heures/index.html" class="hud-menu-btn hud-nav-btn" style="text-decoration:none;border-color:rgba(80,180,220,0.4);color:#50B4DC;" title="Module 1 — Suivi annuel">📅 Annuel</a>
@@ -130,14 +129,14 @@ window._fox_pre = (function() {
   <!-- Dock de boutons en bas -->
   <!-- Sous-menus dépliables au-dessus du dock -->
   <div id="subdock-docs" class="subdock" style="display:none;">
-    <button class="dock-btn" onclick="openPopup('popup-modules');closeSubs()"><span class="dock-icon">📊</span><span class="dock-label">Données</span></button>
-    <button class="dock-btn" onclick="openPopup('popup-rapport');closeSubs()"><span class="dock-icon">📋</span><span class="dock-label">Rapport</span></button>
+    <button class="dock-btn" onclick="openPopup('popup-modules');closeSubs()"><span class="dock-icon">📊</span><span class="dock-label" data-tooltip="Voir vos heures sup et données de paie (lues depuis M1 et M2)">Données</span></button>
+    <button class="dock-btn" onclick="openPopup('popup-rapport');closeSubs()"><span class="dock-icon">📋</span><span class="dock-label" data-tooltip="Générer un rapport PDF de votre situation juridique">Rapport</span></button>
     <button class="dock-btn" onclick="openPopup('popup-heatmap');closeSubs()"><span class="dock-icon">🗓</span><span class="dock-label">Calendrier</span></button>
-    <button class="dock-btn" onclick="openPopup('popup-glossaire');closeSubs()"><span class="dock-icon">📚</span><span class="dock-label">Glossaire</span></button>
+    <button class="dock-btn" onclick="openPopup('popup-glossaire');closeSubs()"><span class="dock-icon">📚</span><span class="dock-label" data-tooltip="Définitions juridiques : HS, RCO, contingent, modulation, amplitude…">Glossaire</span></button>
   </div>
   <div id="subdock-suivi" class="subdock" style="display:none;">
-    <button class="dock-btn" onclick="openPopup('popup-burnout');closeSubs()"><span class="dock-icon">🔥</span><span class="dock-label">Burn-Out</span></button>
-    <button class="dock-btn" onclick="openPopup('popup-violations');closeSubs()"><span class="dock-icon">⚠️</span><span class="dock-label">Violations</span></button>
+    <button class="dock-btn" onclick="openPopup('popup-burnout');closeSubs()"><span class="dock-icon">🔥</span><span class="dock-label" data-tooltip="Votre score de risque burn-out et d'épuisement professionnel — calculé sur vos vrais horaires">Burn-Out</span></button>
+    <button class="dock-btn" onclick="openPopup('popup-violations');closeSubs()"><span class="dock-icon">⚠️</span><span class="dock-label" data-tooltip="Infractions détectées : durées légales dépassées, repos insuffisants, contingent dépassé…">Violations</span></button>
     <button class="dock-btn" onclick="openPopup('popup-xp-history');closeSubs()"><span class="dock-icon">📊</span><span class="dock-label">XP</span></button>
   </div>
 
@@ -155,7 +154,7 @@ window._fox_pre = (function() {
     <!-- Seul : Trophées -->
     <button class="dock-btn" onclick="openPopup('popup-quetes');closeSubs()">
       <span class="dock-icon">🏆</span>
-      <span class="dock-label">Trophées</span>
+      <span class="dock-label" data-tooltip="Badges et quêtes débloqués — récompenses pour votre régularité de suivi">Trophées</span>
     </button>
   </div>
 
@@ -808,6 +807,89 @@ body {
   font-size: clamp(0.7rem, 2vw, 1rem) !important;
 }
 
+
+/* == TOOLTIPS SIMULHEURES == */
+/* ═══════════════════════════════════════════════
+   TOOLTIP SYSTEM — Simulheures
+   Usage: data-tooltip="..." sur n'importe quel élément
+   Positions: data-tooltip-pos="top|bottom|left|right"
+   ═══════════════════════════════════════════════ */
+[data-tooltip]{position:relative;}
+[data-tooltip]::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:calc(100% + 9px);
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(20,22,30,0.96);
+  color:#e8eaf0;
+  font-size:11.5px;
+  line-height:1.45;
+  padding:7px 11px;
+  border-radius:7px;
+  white-space:normal;
+  width:210px;
+  max-width:210px;
+  text-align:left;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .16s ease;
+  z-index:99999;
+  font-weight:400;
+  font-family:inherit;
+  box-shadow:0 4px 16px rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.08);
+  letter-spacing:.01em;
+}
+[data-tooltip]::before{
+  content:'';
+  position:absolute;
+  bottom:calc(100% + 4px);
+  left:50%;
+  transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:rgba(20,22,30,0.96);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .16s ease;
+  z-index:99999;
+}
+[data-tooltip]:hover::after,
+[data-tooltip]:hover::before,
+[data-tooltip]:focus::after,
+[data-tooltip]:focus::before{opacity:1;}
+/* — bottom — */
+[data-tooltip-pos="bottom"]::after{top:calc(100% + 9px);bottom:auto;}
+[data-tooltip-pos="bottom"]::before{top:calc(100% + 4px);bottom:auto;border-top-color:transparent;border-bottom-color:rgba(20,22,30,0.96);}
+/* — right — */
+[data-tooltip-pos="right"]::after{left:calc(100% + 9px);bottom:50%;transform:translateY(50%);width:190px;}
+[data-tooltip-pos="right"]::before{left:calc(100% + 4px);bottom:50%;transform:translateY(50%);border-top-color:transparent;border-right-color:rgba(20,22,30,0.96);}
+/* — left — */
+[data-tooltip-pos="left"]::after{right:calc(100% + 9px);left:auto;bottom:50%;transform:translateY(50%);width:190px;}
+[data-tooltip-pos="left"]::before{right:calc(100% + 4px);left:auto;bottom:50%;transform:translateY(50%);border-top-color:transparent;border-left-color:rgba(20,22,30,0.96);}
+/* icône ? inline */
+.tt-icon{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:rgba(130,140,160,.35);color:#9aa6b8;font-size:9.5px;font-weight:700;cursor:help;vertical-align:middle;margin-left:4px;flex-shrink:0;}
+
+
+/* ── TOOLTIP TOGGLE BUTTON ── */
+#tt-toggle-btn{
+  position:fixed;bottom:18px;right:18px;z-index:99998;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(30,35,48,.9);border:1.5px solid rgba(255,255,255,.15);
+  color:#e8eaf0;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 14px rgba(0,0,0,.45);
+  transition:transform .15s,opacity .2s,background .2s;
+  opacity:.75;line-height:1;
+}
+#tt-toggle-btn:hover{opacity:1;transform:scale(1.12);}
+#tt-toggle-btn.tt-off{opacity:.35;filter:grayscale(.9);}
+body.no-tooltips [data-tooltip]::after,
+body.no-tooltips [data-tooltip]::before{display:none!important;}
+@supports(bottom:env(safe-area-inset-bottom)){
+  #tt-toggle-btn{bottom:calc(18px + env(safe-area-inset-bottom));}
+}
+
 </style>
 <style>
 .day-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:6px;padding:7px 2px;text-align:center;font-size:1rem;-moz-appearance:textfield;-webkit-text-size-adjust:100%;}
@@ -823,6 +905,7 @@ body {
 </style>
 
 <!-- Scripts (ordre inchangé) -->
+<script src="../ccn/conventions-collectives.js"></script>
 <script src="js/articles-loi.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/config.js"></script>
@@ -913,6 +996,27 @@ function _getKitsuneHistoryContext() {
 //  Sélection aléatoire par reload + contexte jour/situation/saison
 // ══════════════════════════════════════════════════════════════
 
+// ── Helper CCN pour messages dynamiques ──────────────────────
+function _kitsuneGetCCN() {
+  if (typeof CCN_API === 'undefined') return { contingent: 220, seuil: 35, taux1: 25, palier1: 8, taux2: 50, nom: null };
+  const idcc = parseInt((localStorage.getItem('CCN_IDCC') || '0'));
+  return CCN_API.getGroupeForCCN(idcc) || { contingent: 220, seuil: 35, taux1: 25, palier1: 8, taux2: 50, nom: null };
+}
+function _kitsuneFormatMsg(msg, h) {
+  const r = _kitsuneGetCCN();
+  const nom = localStorage.getItem('CCN_NOM') || '';
+  const seuil75 = Math.round(r.contingent * 0.75);
+  return msg
+    .replace(/{h}/g, h)
+    .replace(/{contingent}/g, r.contingent)
+    .replace(/{taux1}/g, r.taux1)
+    .replace(/{palier1}/g, r.palier1)
+    .replace(/{taux2}/g, r.taux2)
+    .replace(/{seuil}/g, r.seuil)
+    .replace(/{seuil75}/g, seuil75)
+    .replace(/{ccn}/g, nom ? `(${nom})` : '');
+}
+
 // ── Messages selon delta d'heures sup détectées ──────────────
 const _kitsuneMessages = [
   // ── Moins de 2h ──
@@ -952,7 +1056,7 @@ const _kitsuneMessages = [
   { min: 5, max: 10, msg: '🦊 {h}h sup : ouvre le détail pour voir l\'analyse complète de la semaine — violations, majorations, contingent.' },
 
   // ── 10 à 20h ──
-  { min: 10, max: 20, msg: '🦊 {h}h sup — c\'est significatif. Vérifie ton contingent annuel (220h maximum, Art. L3121-33).' },
+  { min: 10, max: 20, msg: '🦊 {h}h sup — c\'est significatif. Vérifie ton contingent annuel ({contingent}h {ccn} Art. L3121-33).' },
   { min: 10, max: 20, msg: '🦊 {h}h en plus sur ce relevé. Au-delà du contingent, des repos compensateurs obligatoires s\'appliquent.' },
   { min: 10, max: 20, msg: '🦊 {h}h sup. Ta fiche de paie doit refléter ces heures avec la majoration correspondante — compare à réception.' },
   { min: 10, max: 20, msg: '🦊 {h}h supplémentaires, c\'est beaucoup sur une période. Ton score santé est impacté — surveille-le dans FOX.' },
@@ -961,14 +1065,14 @@ const _kitsuneMessages = [
   { min: 10, max: 20, msg: '🦊 {h}h sup : une charge élevée. Demande un bilan de tes compteurs à ton employeur si tu n\'as pas de visibilité.' },
   { min: 10, max: 20, msg: '🦊 {h}h sur ce relevé. As-tu vérifié que ton repos hebdomadaire de 35h consécutives a bien été respecté ? (Art. L3132-2)' },
   { min: 10, max: 20, msg: '🦊 {h}h sup — ton droit à la déconnexion est total pendant ton temps de repos. Aucune obligation de répondre (Art. L2242-17).' },
-  { min: 10, max: 20, msg: '🦊 {h}h en plus. Si le contingent approche 220h, exige le planning de tes repos compensateurs à l\'avance.' },
+  { min: 10, max: 20, msg: '🦊 {h}h en plus. Si le contingent approche {contingent}h, exige le planning de tes repos compensateurs à l\'avance.' },
 
   // ── 20h et plus ──
-  { min: 20, max: 999, msg: '🦊 {h}h sup en une fois — ton droit à repos compensateur s\'applique automatiquement si tu dépasses le contingent annuel (220h). Vérifie ton cumul dans FOX.' },
+  { min: 20, max: 999, msg: '🦊 {h}h sup en une fois — ton droit à repos compensateur s\'applique automatiquement si tu dépasses le contingent annuel ({contingent}h). Vérifie ton cumul dans FOX.' },
   { min: 20, max: 999, msg: '🦊 {h}h, c\'est beaucoup. Si c\'est régulier, ton organisme finit par en payer le prix. Surveille ton score santé.' },
   { min: 20, max: 999, msg: '🦊 {h}h sup enregistrées. Ça dépasse deux semaines de travail normal. Parles-en à ton représentant si c\'est récurrent.' },
   { min: 20, max: 999, msg: '🦊 {h}h sur ce relevé — situation très chargée. Ouvre l\'analyse complète pour voir si les seuils légaux sont franchis.' },
-  { min: 20, max: 999, msg: '🦊 {h}h sup : au-delà du contingent annuel de 220h, chaque heure donne droit à une COR (50% >20 salariés, 100% ≤20 salariés).' },
+  { min: 20, max: 999, msg: '🦊 {h}h sup : au-delà du contingent annuel de {contingent}h, chaque heure donne droit à une COR (50% >20 salariés, 100% ≤20 salariés).' },
   { min: 20, max: 999, msg: '🦊 {h}h supplémentaires. À ce niveau, une discussion formelle avec ton employeur sur la charge de travail s\'impose.' },
   { min: 20, max: 999, msg: '🦊 {h}h — ton compteur annuel avance vite. Les heures hors contingent ont un coût légal majoré pour ton employeur.' },
   { min: 20, max: 999, msg: '🦊 {h}h sup. Ces données FOX constituent un historique solide de ta charge de travail.' },
@@ -1038,7 +1142,7 @@ const _kitsuneNormalPools = {
     '🦊 Le médecin du travail peut être consulté en toute confidentialité — il est là pour ta santé, pas pour te juger.',
     '🦊 L\'amplitude de ta journée (début premier service → fin dernier) peut différer de ton temps de travail effectif.',
     '🦊 Heures complémentaires (temps partiel) : limitées à 10% des heures contractuelles, sauf accord prévoyant 1/3 max.',
-    '🦊 Au-delà du contingent annuel (220h), des repos compensateurs obligatoires s\'appliquent (Art. L3121-33).',
+    '🦊 Au-delà du contingent annuel ({contingent}h), des repos compensateurs obligatoires s\'appliquent (Art. L3121-33).',
     '🦊 En France, la durée légale hebdomadaire est 35h — mais ta durée contractuelle peut être différente (ex: 39h avec forfait).',
     '🦊 Si tu as un forfait-jours, le suivi des heures fonctionne différemment — mais le droit au repos de 11h reste absolu.',
     '🦊 Congés : les jours fériés travaillés génèrent des droits supplémentaires selon ton accord collectif.',
@@ -2314,9 +2418,10 @@ function _getDailyDanger() {
 function _analyzeLegalSituation() {
   try {
     const year      = localStorage.getItem('ACTIVE_YEAR_SUFFIX') || String(new Date().getFullYear());
-    const baseHebdo = 35;  // base légale fixe
-    const baseJour  = 7;   // base légale fixe
-    const contingentMax = 220;
+    const _ccnLS    = _kitsuneGetCCN();
+    const baseHebdo = _ccnLS.seuil;          // dynamique CCN
+    const baseJour  = 7;                    // base légale fixe
+    const contingentMax = _ccnLS.contingent; // dynamique CCN
 
     function isoWeekKey(dk) {
       const d = new Date(dk), dow = (d.getDay() + 6) % 7;
@@ -2462,8 +2567,8 @@ function _analyzeLegalSituation() {
       daily:  { hasDailyCrit:false, hasDailyRisk:false, maxDayTotal:0, maxDayExtra:0, baseJour:7, daysOver10:0, daysOver12:0 },
       weekly: { hasWeekViol:false, hasAvgViol:false, hasWeekAlert:false, maxWeekTotal:0, maxAvg12:0, weeksOver48:0, weeksOver44:0, totalWeeks:0 },
       period: { current:null, lastClosed:null, hasClosure:false, all:[] },
-      annual: { annualOT:0, contingentMax:220, contingentPct:0, contingentRem:220, hasContingentAlert:false, hasContingentDanger:false },
-      globalLevel:'ok', baseHebdo:35, baseJour:7
+      annual: { annualOT:0, contingentMax:_kitsuneGetCCN().contingent, contingentPct:0, contingentRem:_kitsuneGetCCN().contingent, hasContingentAlert:false, hasContingentDanger:false },
+      globalLevel:'ok', baseHebdo:_kitsuneGetCCN().seuil, baseJour:7
     };
   }
 }
@@ -2603,7 +2708,7 @@ function _generateDynamicMessage(situation, deltaH, burnoutScore) {
       {
         titre: `${jr} — ${_fmtH(xh)} sup enregistrées`,
         message: `Journée de ${_fmtH(th)} documentée (base 7h + ${_fmtH(xh)} sup). Ces heures s'ajoutent à ton contingent annuel et doivent figurer sur ta prochaine fiche de paie avec majoration (Art. L3121-28).`,
-        actions: ['Vérifier le cumul hebdomadaire dans FOX', 'Anticiper la fiche de paie en fin de mois', 'Surveille le contingent annuel (max 220h)']
+        actions: ['Vérifier le cumul hebdomadaire dans FOX', 'Anticiper la fiche de paie en fin de mois', 'Surveille le contingent annuel (max {contingent}h)']
       },
       {
         titre: `${_fmtH(xh)} sup saisies ce ${jr}`,
@@ -2710,7 +2815,7 @@ function _generateDynamicMessage(situation, deltaH, burnoutScore) {
         actions: ['Respecte ton repos de 11h minimum', 'Si reprise imposée trop tôt : note et signale', 'Surveille ta fatigue accumulée cette semaine'] },
       { titre: _fmtH(total)+' — vérification compteur',
         message: 'Ces '+_fmtH(extra)+' supplémentaires s\'ajoutent à ton compteur annuel. À partir de 220h sup/an, des repos compensateurs obligatoires s\'appliquent (Art. L3121-30).',
-        actions: ['Consulte ton compteur d\'heures sup annuel', 'Vérifie si le seuil de 220h approche', 'Demande un récapitulatif à ton employeur'] },
+        actions: ['Consulte ton compteur d\'heures sup annuel', 'Vérifie si le seuil de {contingent}h approche', 'Demande un récapitulatif à ton employeur'] },
       { titre: 'Journée '+_fmtH(total)+' : article L3121-18',
         message: 'Art. L3121-18 : la durée quotidienne ne peut excéder 10h (dérogation possible jusqu\'à 12h). '+_fmtH(total)+' le '+date+' nécessite une dérogation valide.',
         actions: ['Vérifier la base légale de cette journée', 'Consulter ton représentant syndical si besoin', 'Archiver ton planning de la semaine'] },
@@ -2786,7 +2891,7 @@ function _generateDynamicMessage(situation, deltaH, burnoutScore) {
         message: 'Après '+_fmtH(total)+' de travail, ton repos de 11h s\'impose. Prochaine prise de poste légale au minimum 11h après la fin de journée (Art. L3131-1).',
         actions: ['Calcule ton heure de reprise minimale', 'Si reprise anticipée : signale-le à ton responsable', 'Récupère bien cette nuit'] },
       { titre: _fmtH(total)+' enregistrées ✓',
-        message: 'Bonne saisie. '+_fmtH(total)+' pour cette journée avec '+_fmtH(extra)+' sup. Sur ta semaine en cours, le cumul sup est de '+_fmtH(h)+' — reste sous 220h annuelles.',
+        message: 'Bonne saisie. '+_fmtH(total)+' pour cette journée avec '+_fmtH(extra)+' sup. Sur ta semaine en cours, le cumul sup est de '+_fmtH(h)+' — reste sous {contingent}h annuelles.',
         actions: ['Vérifie ton total hebdomadaire', 'Anticipe les repos compensateurs si >220h cette année', 'Continue à saisir régulièrement'] },
       { titre: 'Journée à '+_fmtH(total)+' : article L3121-19',
         message: 'Art. L3121-19 : des dérogations jusqu\'à 12h/j sont possibles par accord collectif ou autorisation de l\'inspecteur du travail. Vérifie si c\'est le cas dans ton entreprise.',
@@ -2862,7 +2967,7 @@ function _generateDynamicMessage(situation, deltaH, burnoutScore) {
         message: 'Avec '+_fmtH(total)+' cette semaine, tu dépasses le plafond légal de 8h. En logistique/transport, les contingents sont parfois plus élevés — vérifie ton accord.',
         actions: ['Consulter ton accord de branche', 'Vérifier le contingent applicable', 'Documenter les raisons de cette surcharge'] },
       { titre: 'Semaine chargée : '+_fmtH(total)+' enregistrées',
-        message: _fmtH(total)+' = '+(total-35)+'h supplémentaires cette semaine. Ces heures s\'ajoutent à ton contingent annuel. Surveille que tu ne dépasses pas les 220h (Art. L3121-33).',
+        message: _fmtH(total)+' = '+(total-35)+'h supplémentaires cette semaine. Ces heures s\'ajoutent à ton contingent annuel. Surveille que tu ne dépasses pas les {contingent}h (Art. L3121-33).',
         actions: ['Consulte ton contingent annuel dans FOX', 'Anticipe les prochaines semaines', 'Si >175h déjà : alerte jaune'] },
       { titre: _fmtH(total)+' : impact sur la moyenne',
         message: 'Cette semaine à '+_fmtH(total)+' pèse sur ta moyenne 12 semaines. La limite est 44h/sem en moyenne (Art. L3121-22). Surveillance nécessaire.',
@@ -2874,16 +2979,16 @@ function _generateDynamicMessage(situation, deltaH, burnoutScore) {
         message: 'Après une semaine aussi chargée, ton droit au repos hebdomadaire de 35h consécutives doit être respecté (Art. L3132-2). Exige-le si besoin.',
         actions: ['Vérifier que ton repos hebdo est bien prévu', 'Refuser toute intrusion professionnelle pendant ce repos', 'Notifier si le repos est compromis'] },
       { titre: _fmtH(total)+' : vigilance immédiate',
-        message: _fmtH(total)+' en une semaine = '+Math.round((total-35)*1.25*100)/100+' à +25% minimum. Ces majorations apparaissent sur ta fiche de paie.',
+        message: (function(){ const _r=_kitsuneGetCCN(); return _fmtH(total)+' en une semaine = '+Math.round((total-_r.seuil)*(1+_r.taux1/100)*100)/100+' à +'+_r.taux1+'% minimum. Ces majorations apparaissent sur ta fiche de paie.'; })(),
         actions: ['Calcule tes heures à chaque taux', 'Surveille le bulletin de fin de mois', 'Demande un récapitulatif à ton employeur si besoin'] },
       { titre: 'Semaine intensive à '+_fmtH(total)+'',
-        message: 'Rythme soutenu cette semaine. '+_fmtH(total)+' représente '+(Math.round((total/35)*10)/10)+'x la durée légale. Un rythme durable est impossible à ce niveau.',
+        message: (function(){ const _r=_kitsuneGetCCN(); return 'Rythme soutenu cette semaine. '+_fmtH(total)+' représente '+(Math.round((total/_r.seuil)*10)/10)+'x la durée légale. Un rythme durable est impossible à ce niveau.'; })(),
         actions: ['Parle de ta charge à ton responsable', 'Identifie les tâches à reporter', 'Prévois une semaine de récupération'] },
       { titre: _fmtH(total)+' — contingent annuel',
-        message: 'Cette semaine ajoute '+Math.max(0, total-35)+'h à ton contingent annuel. À 220h/an, des repos compensateurs obligatoires s\'appliquent (Art. L3121-30).',
+        message: 'Cette semaine ajoute '+Math.max(0, total-35)+'h à ton contingent annuel. À {contingent}h/an, des repos compensateurs obligatoires s\'appliquent (Art. L3121-30).',
         actions: ['Vérifie ton cumul annuel dans FOX', 'Note l\'approche du seuil de 220h', 'Demande le calcul des repos compensateurs si dépassé'] },
       { titre: '📊 Semaine à '+_fmtH(total)+' : bilan',
-        message: 'Bilan hebdomadaire : '+_fmtH(total)+' travaillées. Heures sup : '+(total-35)+'h. Dont +25% : '+(Math.min(8, total-35))+'h, dont +50% : '+(Math.max(0, total-43))+'h.',
+        message: (function(){ const _r=_kitsuneGetCCN(); const _hs=Math.max(0,total-_r.seuil); return 'Bilan hebdomadaire : '+_fmtH(total)+' travaillées. Heures sup : '+_hs.toFixed(1)+'h. Dont +'+_r.taux1+'% : '+(Math.min(_r.palier1,_hs)).toFixed(1)+'h, dont +'+_r.taux2+'% : '+(Math.max(0,_hs-_r.palier1)).toFixed(1)+'h.'; })(),
         actions: ['Vérifie les calculs sur ta fiche de paie', 'Surveille ton score burn-out FOX', 'Prévois une semaine plus allégée si possible'] },
       { titre: _fmtH(total)+' cette semaine : garde des traces',
         message: 'FOX enregistre cette semaine à '+_fmtH(total)+'. Ces données constituent un historique précieux pour un suivi précis de ta charge de travail.',
@@ -5332,7 +5437,7 @@ function runAnalyse() {
     result = foxScenarioEngine(gs);
   } else {
     // Analyse minimale intégrée
-    const ot = Math.max(0, gs.weeklyHours - 35);
+    const ot = Math.max(0, gs.weeklyHours - _kitsuneGetCCN().seuil);
     const viol = [];
     if (gs.weeklyHours > 48) viol.push({ label:'Semaine > 48h', article:'L3121-20' });
     if (gs.weeklyHours > 44) viol.push({ label:'Semaine > 44h', article:'L3121-22' });
@@ -14187,7 +14292,7 @@ function renderRapport() {
     <div class="rapport-section">
       <div class="rapport-title">⚖️ Situation légale — ${year}</div>
       <div class="rapport-row"><span class="rr-label">Heures sup cumulées</span><span class="rr-val ${annualCol === '#4CAF50' ? 'rr-ok' : annualCol === '#E53935' ? 'rr-danger' : 'rr-warn'}">${_fmtH(dN.totalHS)}</span></div>
-      <div class="rapport-row"><span class="rr-label">% du contingent (220h)</span><span class="rr-val ${annualCol === '#4CAF50' ? 'rr-ok' : annualCol === '#E53935' ? 'rr-danger' : 'rr-warn'}">${pct}%</span></div>
+      <div class="rapport-row"><span class="rr-label">% du contingent ({contingent}h)</span><span class="rr-val ${annualCol === '#4CAF50' ? 'rr-ok' : annualCol === '#E53935' ? 'rr-danger' : 'rr-warn'}">${pct}%</span></div>
       <div class="rapport-row"><span class="rr-label">Journée max détectée</span><span class="rr-val ${s.daily?.hasDailyCrit ? 'rr-danger' : s.daily?.hasDailyRisk ? 'rr-warn' : 'rr-ok'}">${_fmtH(s.daily?.maxDayTotal || 0)}</span></div>
       <div class="rapport-row"><span class="rr-label">Semaine max détectée</span><span class="rr-val ${s.weekly?.hasWeekViol ? 'rr-danger' : s.weekly?.hasWeekAlert ? 'rr-warn' : 'rr-ok'}">${_fmtH(s.weekly?.maxWeekTotal || 35)}</span></div>
       <div class="rapport-row"><span class="rr-label">Niveau global</span><span class="rr-val" style="color:${levelColor(s.globalLevel || 'ok')};text-transform:uppercase;">${s.globalLevel || 'ok'}</span></div>
@@ -14832,5 +14937,36 @@ function buildBadgeStats() {
 
 
 
+
+<script>
+/* ── TOOLTIP TOGGLE ── */
+(function(){
+  var K='SH_TOOLTIPS_OFF';
+  function apply(off){
+    document.body.classList.toggle('no-tooltips',!!off);
+    var b=document.getElementById('tt-toggle-btn');
+    if(!b)return;
+    b.classList.toggle('tt-off',!!off);
+    b.title=off?'Afficher les infobulles (aide)':'Masquer les infobulles';
+    b.setAttribute('aria-pressed',off?'false':'true');
+  }
+  function init(){
+    var off=localStorage.getItem(K)==='1';
+    apply(off);
+    var b=document.createElement('button');
+    b.id='tt-toggle-btn';b.innerHTML='💡';
+    b.title=off?'Afficher les infobulles':'Masquer les infobulles';
+    b.setAttribute('aria-label','Infobulles');
+    b.setAttribute('aria-pressed',off?'false':'true');
+    b.onclick=function(){
+      var next=!document.body.classList.contains('no-tooltips');
+      localStorage.setItem(K,next?'1':'0');apply(next);
+    };
+    document.body.appendChild(b);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
 </body>
 </html>
