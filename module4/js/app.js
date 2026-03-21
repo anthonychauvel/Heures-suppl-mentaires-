@@ -1,3 +1,13 @@
+
+/* ── CCN : seuil dynamique pour app.js ── */
+function _getAppCCNRules() {
+  if (typeof window !== 'undefined' && window.CCN) {
+    const idcc = parseInt((localStorage.getItem('CCN_IDCC')) || '0');
+    return window.CCN.getGroupeForCCN(idcc) || { seuil:35, taux1:25, palier1:8, taux2:50, contingent:220 };
+  }
+  return { seuil:35, taux1:25, palier1:8, taux2:50, contingent:220 };
+}
+
 /**
  * APP.JS — Digital Twin Engine — Orchestrateur principal
  */
@@ -54,8 +64,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Chaque axe = % de conformité (100 = parfait, 0 = violation)
 
         // 1. Heures hebdo vs max 48h (Art. L3121-20)
-        const weeklyH = (norm && norm._recentWeeklyH) || 35;
-        const confHebdo = Math.max(0, Math.min(100, Math.round((1 - Math.max(0, weeklyH - 35) / 13) * 100)));
+        const weeklyH = (norm && norm._recentWeeklyH) || _getAppCCNRules().seuil;
+        const confHebdo = Math.max(0, Math.min(100, Math.round((1 - Math.max(0, weeklyH - _getAppCCNRules().seuil) / 13) * 100)));
 
         // 2. Repos quotidien 11h (Art. L3131-1) — si >10h/j → risque
         const dailyH = (norm && norm._avgH7) || 7;
@@ -122,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const advice = [];
     // norm passé directement pour éviter la dépendance à DTE._state non encore défini
     const _norm  = norm || (DTE._state && DTE._state.norm);
-    const weekH  = (_norm && _norm._recentWeeklyH) || 35;
+    const weekH  = (_norm && _norm._recentWeeklyH) || _getAppCCNRules().seuil;
     const cumW   = (_norm && _norm._cumulWeeks) || 0;
 
     // ─ FATIGUE ─────────────────────────────────────────────────────
@@ -252,6 +262,16 @@ document.addEventListener('DOMContentLoaded', function () {
       if (view === 'predictions') { _predictionsInited = false; initPredictions(); }
       if (view === 'whatif')      initWhatIf();
       if (view === 'heatmap' && DTE.heatmap) DTE.heatmap.render(DTE._state);
+      if (view === 'schedule') {
+        if (typeof DTESchedule !== 'undefined') {
+          DTESchedule.renderSchedulePanel('schedule-container');
+        }
+      }
+      // Réécouter les changements horaires pour relancer l'analyse
+      document.addEventListener('dte:schedule:changed', () => {
+        runAnalysis();
+        if (view === 'predictions') renderPredictions(DTE._state);
+      }, { once: true });
     });
   });
 
@@ -279,8 +299,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const norm      = freshState && freshState.norm;
     // hs = heures HS par jour TRAVAILLÉ (lun-ven) + ajustement slider
     // On utilise _recentWeeklyH pour avoir les HS réelles de la semaine courante
-    const weeklyH   = (norm && norm._recentWeeklyH) || 35;
-    const currentHs = Math.max(0, (weeklyH - 35) / 5);  // HS/jour travaillé
+    const weeklyH   = (norm && norm._recentWeeklyH) || _getAppCCNRules().seuil;
+    const currentHs = Math.max(0, (weeklyH - _getAppCCNRules().seuil) / 5);  // HS/jour travaillé
     const hs        = Math.max(0, currentHs + sliderAdj);
 
     // Mettre à jour le label pour montrer ce que ça représente
